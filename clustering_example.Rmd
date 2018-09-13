@@ -50,11 +50,12 @@ heatmap <- Heatmap(df,
         show_row_dend = FALSE,   # Can show the gene/row cluster if this is changed to TRUE
         column_dend_height = unit(4, "cm"),
         bottom_annotation = annot) # assign the previously made annotation object
-
-# Print out heatmap in the html R notebook 
-heatmap
 ```
+
+<center>
 <img src="HeatmapGSE12955.png" alt = "Heatmap">
+</center>
+
 
 #4) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function and filename within the function to the respective file suffix.
