@@ -36,9 +36,13 @@ num.genes <- nrow(df)
 # Make .gct specific Header with the number of genes and samples in the second line. 
 header <- c("#1.2", paste0(c(num.genes, num.samples), collapse = "\t"))
 
+if (file.exists(output.file)) {
+    stop(paste(output.file, "already exists"))
+}
 # Write the header and then append the data to the header
 write(header, file = output.file)
+
 suppressWarnings(write.table(df, row.names = FALSE, output.file, append = TRUE, quote = FALSE, sep="\t"))
-        
+
 # It will warn us that we are appending column names to the file, but that's what we want to do since we need that header at the top for GenePattern to recognize it.
 
