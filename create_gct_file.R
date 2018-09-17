@@ -1,6 +1,11 @@
 # C. Savonen 2018
 
-# Convert a gene expression tab separated values (tsv) file provided into a gene cluster text (gct) file for use in GenePattern notebooks.
+# Purpose: Convert a gene expression tab separated values (tsv) file provided into a gene cluster text (gct) file for use in GenePattern notebooks.
+# How to use: In command line, reference the create_gct_file.R script, followed by the name of the file in your current directory that you would like to convert.
+# Optionally you can designate the name of the output file by adding an argument following the name of the input file.
+
+# Example of usage in command line:
+# $ Rscript create_gct_file.R GSE111111.tsv outputname
 
 args <- commandArgs(trailingOnly=TRUE)
 
@@ -36,6 +41,7 @@ num.genes <- nrow(df)
 # Make .gct specific Header with the number of genes and samples in the second line. 
 header <- c("#1.2", paste0(c(num.genes, num.samples), collapse = "\t"))
 
+# Produce error if output file already exists. 
 if (file.exists(output.file)) {
     stop(paste(output.file, "already exists"))
 }
