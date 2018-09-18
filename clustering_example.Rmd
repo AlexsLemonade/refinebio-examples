@@ -1,8 +1,8 @@
 ---
 title: "Clustering Data"
 author: "Candace Savonen"
+date: 9/16/2018
 output:
-  pdf_document: default
   html_document: default
 ---
 
@@ -30,11 +30,11 @@ file and a data tsv file. This chunk of code will read the both tsv files and
 add them as data.frames to your environment. 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.table("GSE12955_metadata.tsv", header=TRUE, sep="\t", 
+metadata <- read.delim("GSE12955_metadata.tsv", header=TRUE, 
                        stringsAsFactors = FALSE)
 
 # Read in data tsv file
-df <- read.table("GSE12955.tsv", header=TRUE, sep="\t", row.names= 1, 
+df <- read.delim("GSE12955.tsv", header=TRUE, row.names= 1, 
                  stringsAsFactors = FALSE)
 
 ```
@@ -79,11 +79,9 @@ heatmap <- Heatmap(df.by.var,
         column_dend_height = unit(4, "cm"),
         bottom_annotation = annot) # assign the previously made annotation object
 ```
-
 <center>
 <img src="HeatmapGSE12955.png" alt = "Heatmap">
 </center>
-
 
 #4) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
@@ -100,7 +98,6 @@ dev.off()
 
 # Print session info
 sessionInfo()
-
 ```
 
 
