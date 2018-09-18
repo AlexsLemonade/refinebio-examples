@@ -1,0 +1,88 @@
+---
+title: "Obtaining Annotation for Ensembl IDs"
+author: Candace Savonen 
+date: 9/17/2018
+output: html_notebook
+---
+## Purpose: 
+This script is an example annotation workflow for data obtained from refine.bio
+using Bioconductor annotation packages. Ensembl IDs can be converted to Entrez 
+gene IDs which then can be used to obtain various different annotations at the 
+gene/transcript level. Although this example script uses Ensembl IDs from 
+Zebrafish (<i>Danio reiro</i>), to obtain gene symbols, this script can be easily 
+converted for use with different species or annotation types <i>eg</i> protein 
+IDs, gene ontology, accession numbers. 
+
+<b>For different species</b>, `org.Dr.eg.db` or wherever the abbreviation `Dr` is 
+written, must be replaced with the respective species abbreviation <i>eg</i>
+for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used. A full list of the 
+annotation R packages from Bioconductor is at this <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.
+
+<b>For different types of annotation</b>, other annotation objects besides
+`org.Dr.egSYMBOL` can be used. For a full list annotation objects from a 
+package this command can be used: `ls("package::org.Dr.eg.db")` In this example,
+wherever `egSYMBOL` is written, it would need to be replaced with the name of 
+the desired annotation such as `egACCNUM` for accession numbers.
+
+# 1) Load species-specific annotation package
+```{r Setup}
+# Install the Zebrafish package
+source("https://bioconductor.org/biocLite.R")
+biocLite("org.Dr.eg.db")
+
+# Attach the annotation library 
+library(org.Dr.eg.db)
+```
+
+# 2) Create keys to Entrez gene IDs
+```{r Create Entrez keys}
+# Map Ensembl and gene symbols to Entrez gene identifiers
+mapped.ensembl <- mappedkeys(org.Dr.egENSEMBL)
+mapped.genes <- mappedkeys(org.Dr.egSYMBOL)
+
+# Create Ensembl and gene symbol keys
+ensembl.key <- as.data.frame(org.Dr.egENSEMBL[mapped.ensembl])
+gene.key <- as.data.frame(org.Dr.egSYMBOL[mapped.genes])
+```
+
+# 3) Import refine.bio data that has Ensembl identifiers
+```{r Import data}
+# Ensembl IDs are in the first column and will be read in as the rownames for 
+# this data frame
+df <- read.table("SRP056136.tsv", sep= "\t", row.names = 1, 
+                 stringsAsFactors = FALSE)
+```
+
+# 4) Match Ensembl IDs from data to Entrez IDs in key
+```{r Match Ensembl IDs}
+# Obtain indices of the dataset's Ensembl IDs in the key
+tmp <- match(rownames(df), ensembl.key$ensembl_id)
+
+# Obtain the Entrez ids at those indices 
+entrez.ids <- ensembl.key$gene_id[tmp]
+```
+
+# 5) Obtain gene symbols that correspond to the dataset
+```{r Gene symbols}
+# Obtain indices of Entrez gene IDs in gene symbols key
+tmp <- match(entrez.ids, gene.key$gene_id)
+
+# Obtain gene symbols that correspond to those Entrez genes
+genes <- gene.key$symbol[tmp]
+```
+
+# 6) Append gene symbols to data frame and write to file
+```{r Append to df}
+# Append to existing data frame
+df <- data.frame(genes, df)
+
+# Write altered data frame to output file
+write.table(df, file = "SRP056136wGeneSymbols.tsv", sep = "\t", quote = FALSE)
+
+# Print session info 
+sessionInfo()
+```
+
+
+
+
