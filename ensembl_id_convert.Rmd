@@ -51,7 +51,7 @@ gene.key <- as.data.frame(org.Dr.egSYMBOL[mapped.genes])
 ```{r Import data}
 # Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
-df <- read.table("SRP056136.tsv", sep= "\t", row.names = 1, 
+df <- read.delim("SRP056136.tsv", row.names = 1, 
                  stringsAsFactors = FALSE)
 ```
 
