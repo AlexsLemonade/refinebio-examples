@@ -1,8 +1,10 @@
 ---
 title: "Obtaining Annotation for Ensembl IDs"
-author: Candace Savonen 
-date: 9/17/2018
-output: html_notebook
+author: "Candace Savonen"
+date: "9/17/2018"
+output:
+  html_document:
+    df_print: paged
 ---
 ## Purpose: 
 This script is an example annotation workflow for data obtained from refine.bio
@@ -13,8 +15,8 @@ Zebrafish (<i>Danio reiro</i>), to obtain gene symbols, this script can be easil
 converted for use with different species or annotation types <i>eg</i> protein 
 IDs, gene ontology, accession numbers. 
 
-<b>For different species</b>, `org.Dr.eg.db` or wherever the abbreviation `Dr` is 
-written, must be replaced with the respective species abbreviation <i>eg</i>
+<b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
+written, it must be replaced with the respective species abbreviation <i>eg</i>
 for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used. A full list of the 
 annotation R packages from Bioconductor is at this <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.
 
