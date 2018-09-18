@@ -11,6 +11,14 @@
 # Example of usage in command line:
 # $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
 
+# This script requires optparse library. If optparse library is not installed, 
+# this script will install it for you. 
+
+if (!("optparse" %in% installed.packages())) {
+  message("Installing optparse library...")
+  install.packages("optparse")
+}
+
 # Require optparse
 require(optparse)
 
@@ -29,12 +37,12 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list=option_list))
 
 # Only continue with execution if filename is given
-if (length(opt$file) == 0) {
+if (is.null(opt$file)) {
   stop("Input file name needed. 
   Use '-f' followed by the name of the file you wish to convert", call. = FALSE)
 }
 # If no output file name is specified, use input filename
-if (length(opt$output) == 0) {
+if (is.null(opt$output)) {
   opt$output <- gsub("\\.tsv$", ".gct", opt$file)
 }
 # Check if file is a tsv file
@@ -75,9 +83,8 @@ if (file.exists(opt$output)) {
 # Write the header and then append the data to the header
 write(header, file = opt$output)
 
+# write.table will throw a warning that we are appending column names to the file, 
+# but that's what we want to do since we need that header at the top for GenePattern 
+# to recognize it so we suppress that warning
 suppressWarnings(write.table(df, row.names = FALSE, opt$output, append = TRUE,
                              quote = FALSE, sep="\t"))
-
-# It will warn us that we are appending column names to the file, but that's 
-# what we want to do since we need that header at the top for GenePattern to 
-# recognize it.

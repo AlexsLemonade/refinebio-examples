@@ -1,31 +1,69 @@
-# refinebio-examples
-
-### This repository contains example workflows of how to use data downloaded from <a href="refine.bio.org"> refine.bio </a>
+# <u>Refinebio Examples Guide: </u> 
+This repository contains example workflows of how to use data downloaded 
+from <a href="refine.bio.org"> refine.bio </a>
 
 # Table of Contents
 
-Example workflows using GenePattern 
-    Converting files to GenePattern compatible formats
+### A) Example workflows using GenePattern 
+  <a href="#convertfiles"> 1. Converting files to GenePattern compatible formats</a>  
+  
+### B) Example workflows in R 
+  <a href="#cluster">1. Clustering data</a>  
+  <a href="#diffexp">2. Expression Differential Analyses</a>  
+  <a href="#ensemblannot">3. Annotation using Ensembl IDs</a>  
 
-Example workflows in R 
-    Clustering data 
-    
-# Example workflows using GenePattern 
-## Converting files to GenePattern compatible formats
-<a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern notebooks </a> have numerous ready-made analyses. 
+---
+##A) Example workflows using GenePattern 
+### 1. Converting files to GenePattern compatible formats 
+ <a name="convertfiles"></a> 
+<a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern 
+notebooks </a> have numerous ready-made analyses. 
 
-### Converting files to gct format
-In order to create a gct formatted file from a tsv refin.bio data file, reference the create_gct_file.R script, followed by the name of the file in your current directory that you would like to convert.  
+### gct format conversion
+Convert a gene expression tab separated values (tsv) file provided 
+into a gene cluster text (gct) file for use in GenePattern notebooks. 
+In order to create a gct formatted file from a tsv refine.bio data file, 
+reference the `create_gct_file.R` script, followed by `-f` argument with the name 
+of the file in your current directory that you would like to convert. 
+Note: This script requires optparse library. If optparse library is not 
+installed, this script will install it for you. 
 
-'$ Rscript create_gct_file.R GSE111111.tsv'
+<b>Example of usage in command line:</b>  
+ ```bash
+ $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
+ ```
 
-Optionally you can designate the name of the output file by adding an argument following the name of the input file. The "gct" suffix will be added if you do not add it yourself.  Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg "users/Bob/Desktop/create_gct_file.R"
+Options:<br></br>
+`-f` :name of the file in your current directory that you would like to convert.  
+`-r` :file of the same name as the output will be rewritten  
+`-o` :name for the output file (optional)  
 
-'$ Rscript create_gct_file.R GSE111111.tsv outputname'
+Optionally you can designate the name of the output file by adding an `-o`
+argument. 
+The "gct" suffix will be added if you do not add it yourself. 
+Be sure to either have the script and input file in your current working 
+directory, or put type out the full directory path for the script and/or input
+file. eg `/users/Bob/Desktop/create_gct_file.R`
 
+***
+##B) Example workflows in R
 
-# Example workflows in R
-Clustering data 
+### 1. Clustering data 
+<a name="cluster"></a> 
+This script uses the bioconductor R package ComplexHeatmap for clustering and 
+creating a heatmap. 
+This example also creates a subsetted dataset based on the variance calculated
+for each gene/row.
+This high variances set of genes is then used to create a heatmap. 
 
+### 2. Expression Differential Analyses
+<a name="diffexp"></a> 
+This script illustrates how to identify genes that are differentially expressed 
+in a dataset. 
 
-
+### 3. Annotation using Ensembl IDs 
+<a name="ensemblannot"></a> 
+This script uses bioconductor annotation packages for annotating refine.bio data
+that has Ensembl IDs. 
+Example dataset is returned as an output file with a column
+that includes the gene symbols for each row.

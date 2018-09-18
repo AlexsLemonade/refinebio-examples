@@ -1,19 +1,23 @@
 ---
 title: "Clustering Data"
 author: "Candace Savonen"
-output: html_notebook
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-This script illustrates one way that you can use harmonized data from refine.bio in downstream analyses.
+This script illustrates one way that you can use harmonized data from refine.bio
+in downstream analyses.
 
 ##1) Set Up
-This script uses the bioconductor R package ComplexHeatmap for clustering and creating a heatmap.
-<br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps reveal patterns and correlations in multidimensional genomic data.” Bioinformatics. 
+This script uses the bioconductor R package ComplexHeatmap for clustering and 
+creating a heatmap.
+<br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
+reveal patterns and correlations in multidimensional genomic data.” Bioinformatics. 
 ```{r Install and attach the ComplexHeatmap library}
-
 # Install the ComplexHeatmap package from bioconductor
 source("https://bioconductor.org/biocLite.R")
-biocLite("ComplexHeatmap")
+biocLite("ComplexHeatmap", suppressUpdates = TRUE)
 
 # Attach the library
 library(ComplexHeatmap)
@@ -21,19 +25,42 @@ library(ComplexHeatmap)
 ```
 
 ##2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv") file and a data tsv file. This chunk of code will read the both tsv files and add them as data.frames to your environment. 
+Data downloaded from refine.bio include a metadata tab separated values ("tsv")
+file and a data tsv file. This chunk of code will read the both tsv files and 
+add them as data.frames to your environment. 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.table("GSE12955_metadata.tsv", header=TRUE, sep="\t", stringsAsFactors = FALSE)
+metadata <- read.table("GSE12955_metadata.tsv", header=TRUE, sep="\t", 
+                       stringsAsFactors = FALSE)
 
 # Read in data tsv file
-df <- read.table("GSE12955.tsv", header=TRUE, sep="\t", row.names= 1, stringsAsFactors = FALSE)
+df <- read.table("GSE12955.tsv", header=TRUE, sep="\t", row.names= 1, 
+                 stringsAsFactors = FALSE)
 
 ```
 
+##2) Choose genes of interest
+Although you may want to create a heatmap including all of the genes in the set,
+alternatively, the heatmap could be created using only genes of interest. 
+For this example, we will sort genes by variance, but there are many alternative
+criterion by which you may want to sort your genes <i>eg</i> fold change,
+t-statistic, membership to a particular gene ontology, so on. 
+
+```{r Choose genes}
+# Calculate the variance for each gene
+variances <- apply(df, 1, var)
+
+# Determine summary statistics for gene variances
+sum.stats.var <- summary(variances)
+
+# Subset the data choosing only genes whose variances are in the upper quartile
+df.by.var <- df[which(variances > sum.stats.var[5]), ]
+```
 ##3) Create a heatmap
-To further customize the heatmap, see the vignettes on Bioconductor for a guide at this
-<a href="https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html"> link. </a>
+To further customize the heatmap, see the vignettes on Bioconductor for a guide 
+at this
+<a href="https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html"> 
+link. </a>
 
 ```{r Create a heatmap}
 # Reference the ComplexHeatmap guide for further customizing your heatmap
@@ -44,10 +71,11 @@ annot <- HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), each = 2)
     col = list(Groups = c("SP" = "green", "MP" = "orange")))
 
 # Create the heatmap object
-heatmap <- Heatmap(df, 
+heatmap <- Heatmap(df.by.var, 
         name = "Gene_Expression",
         show_row_names = FALSE,
-        show_row_dend = FALSE,   # Can show the gene/row cluster if this is changed to TRUE
+        show_row_dend = FALSE,   # Can show the gene/row cluster if this is 
+        #changed to TRUE
         column_dend_height = unit(4, "cm"),
         bottom_annotation = annot) # assign the previously made annotation object
 ```
@@ -58,7 +86,8 @@ heatmap <- Heatmap(df,
 
 
 #4) Save heatmap as a png
-You can easily switch this to save to a jpeg or tiff by changing the function and filename within the function to the respective file suffix.
+You can easily switch this to save to a jpeg or tiff by changing the function 
+and filename within the function to the respective file suffix.
 ```{r Save heatmap as a png}
 # Open a png file
 png("HeatmapGSE12955.png")
