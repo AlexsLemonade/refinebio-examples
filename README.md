@@ -25,7 +25,7 @@ general format of data that you will retrieve from refine.bio.
   <a href="#ensemblannot">3. Annotation using Ensembl IDs in R</a>  
 
 ---
-##A) Example workflows using GenePattern 
+## A) Example workflows using GenePattern 
 ### 1. Converting files to GenePattern compatible formats 
  <a name="convertfiles"></a> 
 <a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern 
@@ -100,7 +100,7 @@ Negative Matrix Factorization Clustering Notebook</a>
  Differential Gene Expression Notebook </a>
  
 ***
-##B) Example workflows in R
+## B) Example workflows in R
 
 ### 1. Clustering data in R
 <a name="cluster"></a> 
