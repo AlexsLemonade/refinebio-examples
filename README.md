@@ -13,7 +13,7 @@ from <a href="refine.bio.org"> refine.bio </a>
   <a href="#ensemblannot">3. Annotation using Ensembl IDs</a>  
 
 ---
-##A) Example workflows using GenePattern 
+## A) Example workflows using GenePattern 
 ### 1. Converting files to GenePattern compatible formats 
  <a name="convertfiles"></a> 
 <a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern 
@@ -46,7 +46,7 @@ directory, or put type out the full directory path for the script and/or input
 file. eg `/users/Bob/Desktop/create_gct_file.R`
 
 ***
-##B) Example workflows in R
+## B) Example workflows in R
 
 ### 1. Clustering data 
 <a name="cluster"></a> 
@@ -55,15 +55,3 @@ creating a heatmap.
 This example also creates a subsetted dataset based on the variance calculated
 for each gene/row.
 This high variances set of genes is then used to create a heatmap. 
-
-### 2. Expression Differential Analyses
-<a name="diffexp"></a> 
-This script illustrates how to identify genes that are differentially expressed 
-in a dataset. 
-
-### 3. Annotation using Ensembl IDs 
-<a name="ensemblannot"></a> 
-This script uses bioconductor annotation packages for annotating refine.bio data
-that has Ensembl IDs. 
-Example dataset is returned as an output file with a column
-that includes the gene symbols for each row.
