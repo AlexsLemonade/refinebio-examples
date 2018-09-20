@@ -6,14 +6,12 @@ output:
   html_document:
     df_print: paged
 ---
-## Purpose: 
 This script is an example annotation workflow for data obtained from refine.bio
 using Bioconductor annotation packages.
-Ensembl IDs can be converted to Entrez 
-gene IDs which then can be used to obtain various different annotations at the 
+Ensembl IDs can be used to obtain various different annotations at the 
 gene/transcript level.
-Although this example script uses Ensembl IDs from 
-Zebrafish (<i>Danio rerio</i>), to obtain gene symbols, this script can be easily 
+Although this example script uses Ensembl IDs from Zebrafish,
+ (<i>Danio rerio</i>), to obtain gene symbols this script can be easily 
 converted for use with different species or annotation types <i>eg</i> protein 
 IDs, gene ontology, accession numbers. 
 
@@ -24,7 +22,7 @@ A full list of the annotation R packages from Bioconductor is at this
 <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.
 
 <b>For different types of annotation</b>, other annotation objects besides
-`org.Dr.egSYMBOL` can be used.
+`org.Dr.egSYMBOL` can be used for mapping.
 For a full list annotation objects from a package this command can be used: 
 `ls("package::org.Dr.eg.db")`. 
 In this example, wherever `SYMBOL` is written, it would need to be replaced 
@@ -73,7 +71,3 @@ write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", row.names = FALSE,
 # Print session info 
 sessionInfo()
 ```
-
-
-
-

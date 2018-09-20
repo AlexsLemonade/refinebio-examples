@@ -130,12 +130,9 @@ $(document).ready(function () {
 </div>
 
 
-<div id="purpose" class="section level2">
-<h2>Purpose:</h2>
-<p>This script is an example annotation workflow for data obtained from refine.bio using Bioconductor annotation packages. Ensembl IDs can be converted to Entrez gene IDs which then can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Zebrafish (<i>Danio rerio</i>), to obtain gene symbols, this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p>This script is an example annotation workflow for data obtained from refine.bio using Bioconductor annotation packages. Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
 <p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.</p>
-<p><b>For different types of annotation</b>, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code>. In this example, wherever <code>SYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>ACCNUM</code> for accession numbers.</p>
-</div>
+<p><b>For different types of annotation</b>, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used for mapping. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code>. In this example, wherever <code>SYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>ACCNUM</code> for accession numbers.</p>
 <div id="load-species-specific-annotation-package" class="section level2">
 <h2>1) Load species-specific annotation package</h2>
 <pre class="r"><code># Install the Zebrafish package
@@ -209,7 +206,7 @@ colnames(annot.df)[1] &lt;- &quot;ensembl.id&quot; </code></pre>
 </div>
 <div id="write-to-file" class="section level2">
 <h2>4) Write to file</h2>
-<pre class="r"><code># Write altered data frame to output file
+<pre class="r"><code># Write annotated data frame to output file
 write.table(annot.df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, row.names = FALSE, 
             sep = &quot;\t&quot;, quote = FALSE)
 
