@@ -52,21 +52,20 @@ mappings between our keys and columns but this is okay and is what we expect
 since genes and transcripts do not have a 1:1 relationship
 ```{r Match Ensembl IDs}
 # Map ensembl IDs to their associated gene symbols
-symbol.df <- data.frame('genes' = mapIds(org.Dr.eg.db, keys = rownames(df), 
+symbol.df <- data.frame('gene.symbols' = mapIds(org.Dr.eg.db, keys = rownames(df), 
                                   column = "SYMBOL", keytype = "ENSEMBL"))
 
 # Merge gene symbol annotation with data frame
-annot.df <- merge(symbol.df, df, by = "row.names")
-
-# Change column name of Ensembl IDs to a clear label
-colnames(annot.df)[1] <- "ensembl.id" 
+# Keep Ensembl IDs as row names using transform
+annot.df <- transform(merge(symbol.df, df, by = "row.names"),
+                        row.names = Row.names, Row.names = NULL)
 ```
 
 ## 4) Write to file
 ```{r Write to file}
 # Write annotated data frame to output file
-write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", row.names = FALSE, 
-            sep = "\t", quote = FALSE)
+write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", sep = "\t",
+            quote = FALSE)
 
 # Print session info 
 sessionInfo()

@@ -195,20 +195,19 @@ df &lt;- read.delim(&quot;SRP056136.tsv&quot;, row.names = 1,
 <h2>3) Map Ensembl IDs to gene symbols</h2>
 <p><em>Note</em>: This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect since genes and transcripts do not have a 1:1 relationship</p>
 <pre class="r"><code># Map ensembl IDs to their associated gene symbols
-symbol.df &lt;- data.frame('genes' = mapIds(org.Dr.eg.db, keys = rownames(df), 
+symbol.df &lt;- data.frame('gene.symbols' = mapIds(org.Dr.eg.db, keys = rownames(df), 
                                   column = &quot;SYMBOL&quot;, keytype = &quot;ENSEMBL&quot;))</code></pre>
 <pre><code>## 'select()' returned 1:many mapping between keys and columns</code></pre>
 <pre class="r"><code># Merge gene symbol annotation with data frame
-annot.df &lt;- merge(symbol.df, df, by = &quot;row.names&quot;)
-
-# Change column name of Ensembl IDs to a clear label
-colnames(annot.df)[1] &lt;- &quot;ensembl.id&quot; </code></pre>
+# Keep Ensembl IDs as row names using transform
+annot.df &lt;- transform(merge(symbol.df, df, by = &quot;row.names&quot;),
+                        row.names = Row.names, Row.names = NULL)</code></pre>
 </div>
 <div id="write-to-file" class="section level2">
 <h2>4) Write to file</h2>
 <pre class="r"><code># Write annotated data frame to output file
-write.table(annot.df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, row.names = FALSE, 
-            sep = &quot;\t&quot;, quote = FALSE)
+write.table(annot.df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, sep = &quot;\t&quot;,
+            quote = FALSE)
 
 # Print session info 
 sessionInfo()</code></pre>
