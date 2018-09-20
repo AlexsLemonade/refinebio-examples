@@ -9,7 +9,7 @@ output:
 This script illustrates one way that you can use harmonized data from refine.bio
 in downstream analyses.
 
-##1) Set Up
+## 1) Set Up
 This script uses the bioconductor R package ComplexHeatmap for clustering and 
 creating a heatmap.
 <br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
@@ -23,27 +23,25 @@ biocLite("ComplexHeatmap", suppressUpdates = TRUE)
 library(ComplexHeatmap)
 ```
 
-##2) Import and set up data
+## 2) Import and set up data
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
 add them as data.frames to your environment. 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("GSE12955_metadata.tsv", header=TRUE, 
-                       stringsAsFactors = FALSE)
+metadata <- read.delim("E-GEOD-39842_metadata.tsv", header=TRUE)
 
 # Read in data tsv file
-df <- read.delim("GSE12955.tsv", header=TRUE, row.names= 1, 
+df <- read.delim("E-GEOD-39842.tsv", header=TRUE, row.names= 1, 
                  stringsAsFactors = FALSE)
 ```
 
-##2) Choose genes of interest
+## 3) Choose genes of interest
 Although you may want to create a heatmap including all of the genes in the set,
 alternatively, the heatmap could be created using only genes of interest. 
 For this example, we will sort genes by variance, but there are many alternative
 criterion by which you may want to sort your genes <i>eg</i> fold change,
 t-statistic, membership to a particular gene ontology, so on. 
-
 ```{r Choose genes}
 # Calculate the variance for each gene
 variances <- apply(df, 1, var)
@@ -54,19 +52,40 @@ sum.stats.var <- summary(variances)
 # Subset the data choosing only genes whose variances are in the upper quartile
 df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
-##3) Create a heatmap
+
+## 4) Clean up metadata for use in heatmap annotation 
+Sometimes the annotation that is downloaded from public repositories is not
+organized in a convenient manner. 
+In this dataset, all the sample information is within the title, but we would 
+also like to label our sample by their genotype. Here's an example of how you 
+could do that using the string search function `grepl`.
+```{r Clean up metadata}
+# Create genotype variable based on metadata 'title' variable
+tmp <- as.factor(grepl("wildtype", metadata$title))
+metadata$genotype <- c("dnHIF1a", "wildtype")[tmp]
+
+# Create sample variable based on metadata 'title' variable
+ metadata$sample_id <- as.character(NA)
+for (sample in paste("sample", 1:3)) {
+  metadata$sample_id[grep(sample, metadata$title)] <- sample
+}
+ metadata$sample_id <- as.factor(metadata$sample_id)
+```
+
+## 5) Create a heatmap
 To further customize the heatmap, see the vignettes on Bioconductor for a guide 
 at this
 <a href="https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html"> 
 link. </a>
-
 ```{r Create a heatmap}
 # Reference the ComplexHeatmap guide for further customizing your heatmap
 browseVignettes("ComplexHeatmap")
 
 # Create an annotation that labels samples' groups by color
-annot <- HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), each = 2)),
-    col = list(Groups = c("SP" = "green", "MP" = "orange")))
+annot <- HeatmapAnnotation(df = data.frame(Groups = metadata$treatment,
+        genotype = metadata$genotype),
+    col = list(Groups = c("amputation" = "orange", "none" = "green"),
+               Genotype = c("wildtype" = "blue", "dnHIF1a" = "red")))
 
 # Create the heatmap object
 heatmap <- Heatmap(df.by.var, 
@@ -74,11 +93,12 @@ heatmap <- Heatmap(df.by.var,
         show_row_names = FALSE,
         show_row_dend = FALSE,   # Can show the gene/row cluster if this is 
         #changed to TRUE
-        column_dend_height = unit(4, "cm"),
+        show_column_names = FALSE,
+        column_dend_height = unit(4, 'cm'),
         bottom_annotation = annot) # assign the previously made annotation object
 ```
 <center>
-<img src="HeatmapGSE12955.png" alt = "Heatmap">
+<img src="HeatmapE-GEOD-39842.png" alt = "Heatmap">
 </center>
 
 #4) Save heatmap as a png
@@ -86,7 +106,7 @@ You can easily switch this to save to a jpeg or tiff by changing the function
 and filename within the function to the respective file suffix.
 ```{r Save heatmap as a png}
 # Open a png file
-png("HeatmapGSE12955.png")
+png("HeatmapE-GEOD-39842.png")
 
 # Print your heatmap
 heatmap
