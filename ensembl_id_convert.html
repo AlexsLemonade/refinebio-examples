@@ -132,24 +132,21 @@ $(document).ready(function () {
 
 <div id="purpose" class="section level2">
 <h2>Purpose:</h2>
-<p>This script is an example annotation workflow for data obtained from refine.bio using Bioconductor annotation packages. Ensembl IDs can be converted to Entrez gene IDs which then can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Zebrafish (<i>Danio reiro</i>), to obtain gene symbols, this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p>This script is an example annotation workflow for data obtained from refine.bio using Bioconductor annotation packages. Ensembl IDs can be converted to Entrez gene IDs which then can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Zebrafish (<i>Danio rerio</i>), to obtain gene symbols, this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
 <p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.</p>
-<p><b>For different types of annotation</b>, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code> In this example, wherever <code>egSYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>egACCNUM</code> for accession numbers.</p>
+<p><b>For different types of annotation</b>, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code>. In this example, wherever <code>SYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>ACCNUM</code> for accession numbers.</p>
 </div>
-<div id="load-species-specific-annotation-package" class="section level1">
-<h1>1) Load species-specific annotation package</h1>
+<div id="load-species-specific-annotation-package" class="section level2">
+<h2>1) Load species-specific annotation package</h2>
 <pre class="r"><code># Install the Zebrafish package
 source(&quot;https://bioconductor.org/biocLite.R&quot;)</code></pre>
 <pre><code>## Bioconductor version 3.6 (BiocInstaller 1.28.0), ?biocLite for help</code></pre>
 <pre><code>## A new version of Bioconductor is available after installing the most
 ##   recent version of R; see http://bioconductor.org/install</code></pre>
-<pre class="r"><code>biocLite(&quot;org.Dr.eg.db&quot;)</code></pre>
+<pre class="r"><code>biocLite(&quot;org.Dr.eg.db&quot;, suppressUpdates = TRUE)</code></pre>
 <pre><code>## BioC_mirror: https://bioconductor.org</code></pre>
 <pre><code>## Using Bioconductor 3.6 (BiocInstaller 1.28.0), R 3.4.3 (2017-11-30).</code></pre>
 <pre><code>## Installing package(s) 'org.Dr.eg.db'</code></pre>
-<pre><code>## installation path not writeable, unable to update packages: cluster,
-##   foreign, MASS, Matrix, mgcv, nlme, rpart, survival</code></pre>
-<pre><code>## Old packages: 'littler'</code></pre>
 <pre class="r"><code># Attach the annotation library 
 library(org.Dr.eg.db)</code></pre>
 <pre><code>## Loading required package: AnnotationDbi</code></pre>
@@ -190,46 +187,31 @@ library(org.Dr.eg.db)</code></pre>
 ##     expand.grid</code></pre>
 <pre><code>## </code></pre>
 </div>
-<div id="create-keys-to-entrez-gene-ids" class="section level1">
-<h1>2) Create keys to Entrez gene IDs</h1>
-<pre class="r"><code># Map Ensembl and gene symbols to Entrez gene identifiers
-mapped.ensembl &lt;- mappedkeys(org.Dr.egENSEMBL)
-mapped.genes &lt;- mappedkeys(org.Dr.egSYMBOL)
-
-# Create Ensembl and gene symbol keys
-ensembl.key &lt;- as.data.frame(org.Dr.egENSEMBL[mapped.ensembl])
-gene.key &lt;- as.data.frame(org.Dr.egSYMBOL[mapped.genes])</code></pre>
-</div>
-<div id="import-refine.bio-data-that-has-ensembl-identifiers" class="section level1">
-<h1>3) Import refine.bio data that has Ensembl identifiers</h1>
+<div id="import-refine.bio-data-that-has-ensembl-identifiers" class="section level2">
+<h2>2) Import refine.bio data that has Ensembl identifiers</h2>
 <pre class="r"><code># Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
-df &lt;- read.table(&quot;SRP056136.tsv&quot;, sep= &quot;\t&quot;, row.names = 1, 
+df &lt;- read.delim(&quot;SRP056136.tsv&quot;, row.names = 1, 
                  stringsAsFactors = FALSE)</code></pre>
 </div>
-<div id="match-ensembl-ids-from-data-to-entrez-ids-in-key" class="section level1">
-<h1>4) Match Ensembl IDs from data to Entrez IDs in key</h1>
-<pre class="r"><code># Obtain indices of the dataset's Ensembl IDs in the key
-tmp &lt;- match(rownames(df), ensembl.key$ensembl_id)
+<div id="map-ensembl-ids-to-gene-symbols" class="section level2">
+<h2>3) Map Ensembl IDs to gene symbols</h2>
+<p><em>Note</em>: This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect since genes and transcripts do not have a 1:1 relationship</p>
+<pre class="r"><code># Map ensembl IDs to their associated gene symbols
+symbol.df &lt;- data.frame('genes' = mapIds(org.Dr.eg.db, keys = rownames(df), 
+                                  column = &quot;SYMBOL&quot;, keytype = &quot;ENSEMBL&quot;))</code></pre>
+<pre><code>## 'select()' returned 1:many mapping between keys and columns</code></pre>
+<pre class="r"><code># Merge gene symbol annotation with data frame
+annot.df &lt;- merge(symbol.df, df, by = &quot;row.names&quot;)
 
-# Obtain the Entrez ids at those indices 
-entrez.ids &lt;- ensembl.key$gene_id[tmp]</code></pre>
+# Change column name of Ensembl IDs to a clear label
+colnames(annot.df)[1] &lt;- &quot;ensembl.id&quot; </code></pre>
 </div>
-<div id="obtain-gene-symbols-that-correspond-to-the-dataset" class="section level1">
-<h1>5) Obtain gene symbols that correspond to the dataset</h1>
-<pre class="r"><code># Obtain indices of Entrez gene IDs in gene symbols key
-tmp &lt;- match(entrez.ids, gene.key$gene_id)
-
-# Obtain gene symbols that correspond to those Entrez genes
-genes &lt;- gene.key$symbol[tmp]</code></pre>
-</div>
-<div id="append-gene-symbols-to-data-frame-and-write-to-file" class="section level1">
-<h1>6) Append gene symbols to data frame and write to file</h1>
-<pre class="r"><code># Append to existing data frame
-df &lt;- data.frame(genes, df)
-
-# Write altered data frame to output file
-write.table(df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, sep = &quot;\t&quot;, quote = FALSE)
+<div id="write-to-file" class="section level2">
+<h2>4) Write to file</h2>
+<pre class="r"><code># Write altered data frame to output file
+write.table(annot.df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, row.names = FALSE, 
+            sep = &quot;\t&quot;, quote = FALSE)
 
 # Print session info 
 sessionInfo()</code></pre>
