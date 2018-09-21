@@ -32,6 +32,15 @@ if (!("devtools" %in% installed.packages())) {
 }
 ```
 
+_Note:_ `devtools` requires `git2r` which we've encountered trouble installing
+before.
+Specifically, `git2r` requires the [`libgit2`](https://libgit2.org/) and 
+[`zlib`](https://zlib.net/) system libraries.
+If you're using a Docker image from the 
+[Rocker project](https://www.rocker-project.org/) without these dependencies 
+(e.g., `rocker/rstudio`), follow 
+[these instructions](https://github.com/rocker-org/rocker/wiki/Using-the-RStudio-image#dependencies-external-to-the-r-system).
+
 Now we'll install `hcop` from Github.
 You can control what version of the package is installed by using the `ref` 
 command of `devtools::install_github`.
