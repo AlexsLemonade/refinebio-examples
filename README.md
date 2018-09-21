@@ -5,14 +5,14 @@ from <a href="refine.bio.org"> refine.bio </a>
 # Table of Contents
 
 ### A) Example workflows using GenePattern
-  1.<a href="#convertfiles"> Converting files to GenePattern compatible formats</a>  
-  2.<a href="#gpcluster"> Clustering data in GenePattern</a>  
-  3.<a href="#gpdiffexp"> Expression Differential Analyses in GenePattern
+  1. <a href="#convertfiles">Converting files to GenePattern compatible formats</a>  
+  2. <a href="#gpcluster">Clustering data in GenePattern</a>  
+  3. <a href="#gpdiffexp">Expression Differential Analyses in GenePattern
 
-### B) Example workflows in R
-  1.<a href="#cluster"> Clustering data in R</a>  
-  2.<a href="#ensembl"> Annotation using Ensembl IDs in R</a>  
-  3.<a href="#diffexp"> Expression Differential Analyses in R</a>   
+### B) Example workflows in R  
+  1. <a href="#cluster">Clustering data in R</a>  
+  2. <a href="#ensembl">Annotation using Ensembl IDs in R</a>  
+  3. <a href="#diffexp">Expression Differential Analyses in R</a>   
 ---
 ## A) Example workflows using GenePattern
 
@@ -69,15 +69,16 @@ use one of GenePattern's example notebooks
     a) <a href="https://notebook.genepattern.org/services/sharing/notebooks/23/preview/">
 with microarray data</a>  
     b) <a href="https://notebook.genepattern.org/services/sharing/notebooks/24/preview/">
-with RNA-Seq Data</a>  
+with RNA-Seq Data</a>    
 
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/25/preview/">
-k-Means Clustering Notebook</a>  
+k-Means Clustering Notebook </a>      
 
 
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/26/preview/">
-Negative Matrix Factorization Clustering Notebook</a>  
----
+Negative Matrix Factorization Clustering Notebook</a>      
+
+---    
 
 ### 3. Expression Differential Analyses in GenePattern
  <a name="gpdiffexp"></a>
@@ -98,9 +99,9 @@ This example also creates a subsetted dataset based on the variance calculated
 for each gene/row.
 The high variances set of genes is then used to create a heatmap.
 This script could be easily manipulated to sort by another summary statistic to
-create a heatmap.
-*Input:* GSE111111.tsv, GSE111111_metadata.tsv  
-*Output:* HeatmapGSE111111.png
+create a heatmap.  
+*Input:* GSE111111.tsv, GSE111111_metadata.tsv    
+*Output:* HeatmapGSE111111.png  
 
 ### 2. Annotation using Ensembl IDs in R
 <a name="ensembl"></a>
@@ -109,8 +110,8 @@ script </a> illustrates how to obtain annotation for data based on their Ensembl
 IDs using `AnnotationDb` packages from Bioconductor.
 The script also explains how it can be changed for use with different species
 and/or different types of annotation.
-*Input:* GSE111111.tsv
-*Output:* GSE111111wGeneSymbols.tsv
+*Input:* GSE111111.tsv  
+*Output:* GSE111111wGeneSymbols.tsv  
 
 ### 3. Expression Differential Analyses in R
 <a name="diffexp"></a>
@@ -118,6 +119,6 @@ This  <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/g
 script </a> illustrates how to identify genes that are differentially expressed
 in a dataset using the `limma` package.
 It also creates a volcano plot and Q-Q plot in order to assess the performance
-of the linear model.  
-*Input:* GSE111111.tsv, GSE111111_metadata.tsv  
-*Output:* Q-Q plot, volcano plot, GSE111111limmaResults.tsv
+of the linear model.    
+*Input:* GSE111111.tsv, GSE111111_metadata.tsv    
+*Output:* Q-Q plot, volcano plot, GSE111111limmaResults.tsv  
