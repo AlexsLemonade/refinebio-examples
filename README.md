@@ -118,4 +118,4 @@ in a dataset using the `limma` package.
 It also creates a volcano plot and Q-Q plot in order to assess the performance
 of the linear model.  
 *Input:* GSE111111.tsv, GSE111111_metadata.tsv  
-*Output:* Q-Q plot, volcano plot, results of DE  
+*Output:* Q-Q plot, volcano plot, GSE111111limmaResults.tsv
