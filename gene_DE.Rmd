@@ -92,3 +92,8 @@ abline(0,1)
 # Create volcano plot 
 volcanoplot(fit, main = "Volcano Plot")
 ```
+
+## 5) Write statistics to output results file
+```{r  Write results}
+write.table(stats, file = "E-GEOD-39842limmaResults.tsv", sep = "\t", quote = FALSE)
+```
