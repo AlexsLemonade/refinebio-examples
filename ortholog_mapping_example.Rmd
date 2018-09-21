@@ -52,7 +52,7 @@ devtools::install_github("stephenturner/hcop",
                          ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
 ```
 
-## 2) Mapping zebrafish ensembl gene ids to human symbols
+## 2) Mapping zebrafish Ensembl gene IDs to human symbols
 
 `hcop` supports mapping between zebrafish and human identifiers. 
 Here, we'll use zebrafish data from refine.bio and annotate it with human gene
@@ -69,6 +69,8 @@ library(dplyr)
 
 Let's read in the tsv file from refine.bio. 
 We'll convert _all_ identifiers in the file, rather than selecting a few.
+Because of the formatting of the output of refine.bio, the first column name
+will be filled in with `'X1'`.
 
 ```{r Read in zebrafish gene expression data}
 exprs.df <- readr::read_tsv("GSE12955.tsv")
@@ -121,7 +123,7 @@ readr::write_tsv(human.symbol.df, "GSE12955_mapped_to_human_gene_symbol.tsv")
 
 There are some things to note:
 
-* Multiple zebrafish Ensembl gene ids map to the same human symbol which results
+* Multiple zebrafish Ensembl gene IDs map to the same human symbol which results
 in duplicated human gene symbols. Some downstream tools may need this to be
 resolved.
 * If a zebrafish Ensembl gene id maps to multiple human symbols, the gene 

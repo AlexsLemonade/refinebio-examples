@@ -145,12 +145,12 @@ $(document).ready(function () {
 <pre><code>## Installing hcop</code></pre>
 <pre><code>## '/usr/local/lib/R/bin/R' --no-site-file --no-environ --no-save  \
 ##   --no-restore --quiet CMD INSTALL  \
-##   '/tmp/RtmpbE4dvl/devtools22f43c0096e/stephenturner-hcop-0985fdd'  \
+##   '/tmp/Rtmpxl0tGc/devtools28577ffecfa/stephenturner-hcop-0985fdd'  \
 ##   --library='/usr/local/lib/R/site-library' --install-tests</code></pre>
 <pre><code>## </code></pre>
 </div>
 <div id="mapping-zebrafish-ensembl-gene-ids-to-human-symbols" class="section level2">
-<h2>2) Mapping zebrafish ensembl gene ids to human symbols</h2>
+<h2>2) Mapping zebrafish Ensembl gene IDs to human symbols</h2>
 <p><code>hcop</code> supports mapping between zebrafish and human identifiers. Here, we’ll use zebrafish data from refine.bio and annotate it with human gene symbols.</p>
 <p>In keeping with the <code>hcop</code> documentation, we’ll use tidyverse packages (e.g., <a href="https://dplyr.tidyverse.org/"><code>dplyr</code></a> and <a href="https://readr.tidyverse.org"><code>readr</code></a>) below.</p>
 <pre class="r"><code>library(hcop)
@@ -163,7 +163,7 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from 'package:base':
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<p>Let’s read in the tsv file from refine.bio. We’ll convert <em>all</em> identifiers in the file, rather than selecting a few.</p>
+<p>Let’s read in the tsv file from refine.bio. We’ll convert <em>all</em> identifiers in the file, rather than selecting a few. Because of the formatting of the output of refine.bio, the first column name will be filled in with <code>'X1'</code>.</p>
 <pre class="r"><code>exprs.df &lt;- readr::read_tsv(&quot;GSE12955.tsv&quot;)</code></pre>
 <pre><code>## Warning: Missing column names filled in: 'X1' [1]</code></pre>
 <pre><code>## Parsed with column specification:
@@ -226,7 +226,7 @@ library(dplyr)</code></pre>
 <pre class="r"><code>readr::write_tsv(human.symbol.df, &quot;GSE12955_mapped_to_human_gene_symbol.tsv&quot;)</code></pre>
 <p>There are some things to note:</p>
 <ul>
-<li>Multiple zebrafish Ensembl gene ids map to the same human symbol which results in duplicated human gene symbols. Some downstream tools may need this to be resolved.</li>
+<li>Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols. Some downstream tools may need this to be resolved.</li>
 <li>If a zebrafish Ensembl gene id maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSDARG00000069142</code> example below.</li>
 </ul>
 <pre class="r"><code>human.symbol.df %&gt;%
