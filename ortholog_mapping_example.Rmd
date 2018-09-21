@@ -1,0 +1,126 @@
+---
+title: "Ortholog mapping with `hcop`"
+author: ALSF CCDL 2018
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This notebook demonstrates how you can use the 
+[`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog 
+mapping for data obtained from refine.bio.
+
+HCOP stands for HGNC Comparison of Orthology Predictions.
+You can read more about the package 
+[here](https://stephenturner.github.io/hcop).
+
+## 1) Install `hcop`
+
+We'll need to use the 
+[`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) 
+package to install `hcop` from Github.
+
+`devtools` can be installed using the instructions below.
+Note that this will first check if `devtools` is installed and install it
+if it is not.
+
+```{r Install devtools}
+if (!("devtools" %in% installed.packages())) {
+  install.packages("devtools")
+}
+```
+
+Now we'll install `hcop` from Github.
+You can control what version of the package is installed by using the `ref` 
+command of `devtools::install_github`.
+Here, we'll use the most recent commit at the time that we are putting together
+this example.
+
+```{r Install hcop}
+devtools::install_github("stephenturner/hcop", 
+                         ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
+```
+
+## 2) Mapping zebrafish ensembl gene ids to human symbols
+
+`hcop` supports mapping between zebrafish and human identifiers. 
+Here, we'll use zebrafish data from refine.bio and annotate it with human gene
+symbols.
+
+In keeping with the `hcop` documentation, we'll use tidyverse packages 
+(e.g., [`dplyr`](https://dplyr.tidyverse.org/) and 
+[`readr`](https://readr.tidyverse.org)) below.
+
+```{r Load hcop and dplyr libraries}
+library(hcop)
+library(dplyr)
+```
+
+Let's read in the tsv file from refine.bio. 
+We'll convert _all_ identifiers in the file, rather than selecting a few.
+
+```{r Read in zebrafish gene expression data}
+exprs.df <- readr::read_tsv("GSE12955.tsv")
+```
+
+refine.bio data uses Ensembl gene identifiers, which will be in the first 
+column.
+
+```{r Examine identifiers head}
+head(exprs.df[[1]])
+```
+
+We can see that this also includes Affymetrix control probes in this case.
+These will get dropped using `inner_join` below, because they will not
+map to a human gene symbol.
+
+In zebrafish, Ensembl gene identifiers begin with `ENSDARG`.
+
+```{r Examine ENSDARG}
+head(exprs.df[[1]][grepl("ENSDARG", exprs.df[[1]])])
+```
+
+Let's do the conversion itself!
+We'll use the `zebrafish` data from `hcop`; this is what `zebrafish` looks like.
+
+```{r zebrafish}
+zebrafish
+```
+
+We're interested in the `human_symbol` and `zebrafish_ensembl` columns
+specifically.
+
+```{r Conversion}
+human.symbol.df <- zebrafish %>%
+  # we'll want to subset zebrafish to only the columns we're interested in
+  select(zebrafish_ensembl, human_symbol) %>%
+  # only retain the genes from the expression matrix that are in zebrafish data
+  inner_join(exprs.df, by = c("zebrafish_ensembl" = "X1"))
+```
+
+Here's what the new data.frame looks like:
+
+```{r Head of converted df}
+head(human.symbol.df, 25)
+```
+
+```{r Write to file}
+readr::write_tsv(human.symbol.df, "GSE12955_mapped_to_human_gene_symbol.tsv")
+```
+
+There are some things to note:
+
+* Multiple zebrafish Ensembl gene ids map to the same human symbol which results
+in duplicated human gene symbols. Some downstream tools may need this to be
+resolved.
+* If a zebrafish Ensembl gene id maps to multiple human symbols, the gene 
+expression values get duplicated. Let's look at the `ENSDARG00000069142` 
+example below.
+
+```{r}
+human.symbol.df %>%
+  filter(zebrafish_ensembl == "ENSDARG00000069142")
+```
+
