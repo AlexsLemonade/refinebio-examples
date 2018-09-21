@@ -74,8 +74,10 @@ with RNA-Seq Data</a>
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/25/preview/">
 k-Means Clustering Notebook</a>  
 
+
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/26/preview/">
 Negative Matrix Factorization Clustering Notebook</a>  
+---
 
 ### 3. Expression Differential Analyses in GenePattern
  <a name="gpdiffexp"></a>

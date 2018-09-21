@@ -37,7 +37,7 @@ add them as data.frames to your environment.
 metadata <- read.delim("E-GEOD-39842_metadata.tsv", header = TRUE)
 
 # Read in data tsv file
-df <- read.delim("E-GEOD-39842.tsv", header=TRUE, row.names = 1,
+df <- read.delim("E-GEOD-39842.tsv", header = TRUE, row.names = 1,
                  stringsAsFactors = FALSE)
 ```
 
@@ -86,7 +86,7 @@ gene expression data can be found
 here</a>.
 ```{r  Explore model}
 # Create Q-Q plot
-qqt(fit$t,pch=16,cex=0.2);
+qqt(fit$t, pch = 16, cex = 0.2);
 abline(0,1)
 
 # Create volcano plot 
