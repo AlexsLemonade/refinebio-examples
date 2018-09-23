@@ -1,6 +1,6 @@
 # BSD 3-Clause License
 
-_Copyright (c) 2018, The Trustees of the University of Pennsylvania_
+_Copyright (c) 2018, Alex's Lemonade Stand Foundation_
 _All rights reserved._
 
 Redistribution and use in source and binary forms, with or without
