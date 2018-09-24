@@ -1,14 +1,14 @@
 # <u>Refinebio Examples Guide: </u>
 This repository contains example workflows of how to use data downloaded from 
-<a href="refine.bio.org"> refine.bio </a>
+<a href="refine.bio.org"> refine.bio</a>.
 
 *For most of the example workflows, two general methods of completing the analyses are discussed:*  
 
-##### Workflows using <a href="https://rmarkdown.rstudio.com/articles_intro.html">R notebooks</a>  
-...have the advantage of being written specificially for use with refine.bio data 
-formatted data and metadata. 
+### Workflows using <a href="https://rmarkdown.rstudio.com/articles_intro.html">R notebooks</a>  
+... have example analyses that could be applied to other refine.bio formatted data. The advantage of using 
+these notebooks is that they were specificially for use with refine.bio formatted data and associated metadata. 
 
-##### Workflows using<a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern notebooks</a>  
+### Workflows using<a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern notebooks</a>  
 ...contain <a href="http://genepattern-notebook.org/example-notebooks/"> 
 ready-made analyses</a>.
 For users who are more comfortable with Python, or are not comfortable with 
@@ -29,17 +29,12 @@ directory and are referenced as such in the R Notebooks.
 
 # Table of Contents
 
-  1. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering">
-  Clustering data </a>  
+1. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering">Clustering data </a>  
   
-  2. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert"> 
-  Annotation using Ensembl IDs </a>  
+2. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert"> Annotation using Ensembl IDs </a>  
   
-  3. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">
-  Expression Differential Analyses </a> 
+3. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">Expression Differential Analyses </a> 
   
-  4. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">
-  Ortholog Mapping </a>  
+4. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">Ortholog Mapping </a>  
   
-  5. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts">
-  Other scripts </a>  
+5. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts">Other scripts </a>  

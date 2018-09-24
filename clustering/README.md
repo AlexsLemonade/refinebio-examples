@@ -4,7 +4,7 @@ a heatmap from data downloaded from <a href="refine.bio.org"> refine.bio </a>
 
 ***
 ### Clustering data in R
-This <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering_example.html">
+This <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/clustering_example.html">
 notebook </a> uses the Bioconductor R package `ComplexHeatmap` for clustering and
 creating a heatmap.
 This example also creates a subsetted dataset based on the variance calculated
@@ -26,19 +26,19 @@ first convert your data to gct format and can do so using our ready-made <a href
 script</a> and the instructions below. 
 
 Then you can use one of <b>GenePattern's example clustering notebooks</b>:
-
+  
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/23/preview/">
-Hierarchical Clustering with microarray data</a>
-
+Hierarchical Clustering with microarray data</a>  
+  
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/24/preview/">
-Hierarchical Clustering with RNA-Seq Data</a>    
-
+Hierarchical Clustering with RNA-Seq Data</a>      
+  
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/25/preview/">
-k-Means Clustering Notebook </a>      
-
+k-Means Clustering Notebook </a>       
+  
 <a href="https://notebook.genepattern.org/services/sharing/notebooks/26/preview/">
-Negative Matrix Factorization Clustering Notebook</a>   
-
+Negative Matrix Factorization Clustering Notebook</a>     
+  
 #### Converting data to gct format conversion
 Convert a gene expression tab separated values (tsv) file provided
 into a gene cluster text (gct) file for use in GenePattern notebooks.

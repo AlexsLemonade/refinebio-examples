@@ -5,7 +5,7 @@ expressed genes in data from <a href="refine.bio.org"> refine.bio </a>
 ***
 ### Differential Expression Analyses in R
 
-This  <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/gene_DE.html">
+This  <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/gene_DE.html">
 notebook </a> illustrates how to identify genes that are differentially expressed
 in a dataset using the `limma` package.
 It also creates a volcano plot and Q-Q plot in order to assess the performance
