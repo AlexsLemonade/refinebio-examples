@@ -1,17 +1,15 @@
 ---
 title: "Differential Expression Analysis"
-author: Candace Savonen
+author: "ALSF CCDL - Candace Savonen"
 date: 9/18/18
-output:
-  html_document:
-    df_print: paged
+output: html_document
 ---
 
-This script takes data and metadata from refine.bio and identifies differentially 
+This notebook takes data and metadata from refine.bio and identifies differentially 
 expressed genes. This script is very generally applicable to pre-processed RNA-Seq or
-microarray data. 
+microarray data.
 
-## 1) Set Up
+## 1) Install libraries
 This script uses the bioconductor R package limma to identify differentially 
 expressed genes.  
 The full guide on <a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">
@@ -19,6 +17,7 @@ limma</a> shows examples of limma functions.
 <i>Citation</i>: Ritchie ME, Phipson B, Wu D, Hu Y, Law CW, Shi W, Smyth GK (2015). 
 “limma powers differential expression analyses for RNA-sequencing and microarray
 studies.” Nucleic Acids Research, 43(7), e47. 
+
 ```{r Install limma }
 # Install limma
 source("https://bioconductor.org/biocLite.R")
@@ -32,12 +31,13 @@ library(limma)
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
 add them as data.frames to your environment. 
+
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("E-GEOD-39842_metadata.tsv", header = TRUE)
+metadata <- read.delim("../data/E-GEOD-39842_metadata.tsv", header = TRUE)
 
 # Read in data tsv file
-df <- read.delim("E-GEOD-39842.tsv", header = TRUE, row.names = 1,
+df <- read.delim("../data/E-GEOD-39842.tsv", header = TRUE, row.names = 1,
                  stringsAsFactors = FALSE)
 ```
 
@@ -50,6 +50,7 @@ samples are assigned `1`.
 Note that the metadata variables that signify the treatment groups might be
 different in across datasets and might not always be underneath the "treatment"
 category.
+
 ```{r Set up design matrix}
 # Check if the samples are in the same order in the metadata and data files
 # Have to use gsub to get rid of problematic punctuation and space so they are 
@@ -66,7 +67,8 @@ des.mat <- c(1, 0)[metadata$treatment[tmp]]
 After applying our data to linear model, in this example we apply empircal Bayes
 smoothing and Benjamini-Hochberg multiple testing correction. 
 The `topTable` function default is to use Benjamini Hochberg but this can be
-changed to a different method using the `adjust.method` argument
+changed to a different method using the `adjust.method` argument.
+
 ```{r Apply linear model}
 # Apply linear model to data
 fit <- lmFit(df, design = des.mat)
@@ -84,6 +86,7 @@ your model. A guide to the interpretation of these plots and other statistics fo
 gene expression data can be found 
 <a href="http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf">
 here</a>.
+
 ```{r  Explore model}
 # Create Q-Q plot
 qqt(fit$t, pch = 16, cex = 0.2);
@@ -96,4 +99,9 @@ volcanoplot(fit, main = "Volcano Plot")
 ## 5) Write statistics to output results file
 ```{r  Write results}
 write.table(stats, file = "E-GEOD-39842limmaResults.tsv", sep = "\t", quote = FALSE)
+```
+
+```{r Print session info}
+# Print session info 
+sessionInfo()
 ```
