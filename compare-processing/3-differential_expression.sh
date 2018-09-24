@@ -19,7 +19,7 @@ Rscript scripts/differential_expression.R \
 # SCAN processed, quantile normalized data from dev
 # SCAN processed data from staging
 Rscript scripts/differential_expression.R \
- -e  \
+ -e data/95613466-25bf-4f3d-b2c3-da2d0eb902fa/E-GEOD-39842/E-GEOD-39842.tsv \
  -a results/QN_GSE39842_annotation_df.tsv \
  -p plots/QN_GSE39842_limma_venn.png \
  -r results/QN_GSE39842_results_table.tsv \

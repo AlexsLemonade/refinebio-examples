@@ -17,7 +17,7 @@ Rscript scripts/high_variance_heatmap.R \
 
 # SCAN processed, quantile normalized
 Rscript scripts/high_variance_heatmap.R \
-  -i  \
+  -i data/95613466-25bf-4f3d-b2c3-da2d0eb902fa/E-GEOD-39842/E-GEOD-39842.tsv \
   -g results/QN_GSE39842_high_variance_geneids.tsv \
   -p plots/QN_GSE39842_high_variance_heatmap.png \
   -a results/QN_GSE39842_annotation_df.tsv

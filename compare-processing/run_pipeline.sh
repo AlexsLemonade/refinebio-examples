@@ -16,3 +16,9 @@ mkdir plots
 
 # high variance list of genes and heatmaps
 bash 2-high_variance_genes.sh
+
+# differential expression analyses
+bash 3-differential_expression.sh
+
+# over representation analysis with WebGestaltR
+bash 4-pathway_analysis.sh
