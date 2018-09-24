@@ -5,8 +5,8 @@ date: 9/16/2018
 output: html_document
 ---
 
-This notebook illustrates one way that you can use harmonized data from refine.bio
-in downstream analyses.
+*Purpose*: This notebook illustrates one way that you can use harmonized data 
+from refine.bio in downstream analyses.
 
 ## 1) Install libraries
 This script uses the bioconductor R package ComplexHeatmap for clustering and 

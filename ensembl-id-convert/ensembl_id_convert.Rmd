@@ -5,14 +5,15 @@ date: "9/17/2018"
 output: html_document
 ---
 
-This notebook is an example annotation workflow for data obtained from refine.bio
+*Purpose*: This notebook is an example annotation workflow for data obtained from refine.bio
 using Bioconductor annotation packages.
+
 Ensembl IDs can be used to obtain various different annotations at the 
 gene/transcript level.
-Although this example script uses Ensembl IDs from Zebrafish,
- (<i>Danio rerio</i>), to obtain gene symbols this script can be easily 
-converted for use with different species or annotation types <i>eg</i> protein 
-IDs, gene ontology, accession numbers. 
+Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>),
+to obtain gene symbols this script can be easily converted for use with different 
+species or annotation types <i>eg</i> protein IDs, gene ontology, accession 
+numbers. 
 
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
 written, it must be replaced with the respective species abbreviation <i>eg</i>

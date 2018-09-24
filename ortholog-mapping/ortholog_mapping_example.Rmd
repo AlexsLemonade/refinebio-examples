@@ -5,10 +5,9 @@ date: 9/21/2018
 output: html_document
 ---
 
-This notebook demonstrates how you can use the 
+*Purpose*: This notebook demonstrates how you can use the 
 [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog 
-mapping for data obtained from refine.bio.
-
+mapping for data obtained from refine.bio. 
 HCOP stands for HGNC Comparison of Orthology Predictions.
 You can read more about the package 
 [here](https://stephenturner.github.io/hcop).

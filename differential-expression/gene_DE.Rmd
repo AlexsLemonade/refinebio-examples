@@ -5,8 +5,9 @@ date: 9/18/18
 output: html_document
 ---
 
-This notebook takes data and metadata from refine.bio and identifies differentially 
-expressed genes. This script is very generally applicable to pre-processed RNA-Seq or
+*Purpose*: This notebook takes data and metadata from refine.bio and identifies 
+differentially expressed genes. 
+This script is very generally applicable to pre-processed RNA-Seq or
 microarray data.
 
 ## 1) Install libraries
