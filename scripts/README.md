@@ -1,4 +1,4 @@
-# <u>Refinebio Examples Scripts </u>
+# <u>refine.bio Examples Scripts </u>
 This repository contains scripts for use with  <a href="refine.bio.org">refinebio</a> example workflows
 
 ## Converting files to GenePattern compatible formats
