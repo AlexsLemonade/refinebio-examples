@@ -1,5 +1,7 @@
 # <u>refine.bio Examples: Ensemble ID conversion </u>
-This directory contains example workflows of how to obtain annotation for Ensembl IDs.
+This directory contains example workflows of how to convert from Ensembl gene IDs, 
+which is the gene identifier used by refine.bio, to other types of gene identifiers that
+may be required for downstream analyses.
 IDs downloaded from <a href="refine.bio.org">refine.bio</a>.
 
 ### Annotation using Ensembl IDs in R

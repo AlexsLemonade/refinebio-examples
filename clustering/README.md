@@ -45,10 +45,10 @@ installed, this script will install it for you.
  ```bash
  $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
  ```
- Options:  
-`-f` :name of the file in your current directory that you would like to convert.  
-`-r` :file of the same name as the output will be rewritten (*optional*) 
-`-o` :name for the output file (*optional*)  
+ Options:    
+`-f` :name of the file in your current directory that you would like to convert.   
+`-r` :file of the same name as the output will be rewritten (*optional*)   
+`-o` :name for the output file (*optional*)    
 
 Optionally you can designate the name of the output file by adding an `-o`
 argument.
