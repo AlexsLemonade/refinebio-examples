@@ -1,19 +1,19 @@
 ---
 title: "Obtaining Annotation for Ensembl IDs"
-author: "Candace Savonen"
+author: "ALSF CCDL - Candace Savonen"
 date: "9/17/2018"
-output:
-  html_document:
-    df_print: paged
+output: html_document
 ---
-This script is an example annotation workflow for data obtained from refine.bio
+
+*Purpose*: This notebook is an example annotation workflow for data obtained from refine.bio
 using Bioconductor annotation packages.
+
 Ensembl IDs can be used to obtain various different annotations at the 
 gene/transcript level.
-Although this example script uses Ensembl IDs from Zebrafish,
- (<i>Danio rerio</i>), to obtain gene symbols this script can be easily 
-converted for use with different species or annotation types <i>eg</i> protein 
-IDs, gene ontology, accession numbers. 
+Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>),
+to obtain gene symbols this script can be easily converted for use with different 
+species or annotation types <i>eg</i> protein IDs, gene ontology, accession 
+numbers. 
 
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
 written, it must be replaced with the respective species abbreviation <i>eg</i>
@@ -28,8 +28,8 @@ For a full list annotation objects from a package this command can be used:
 In this example, wherever `SYMBOL` is written, it would need to be replaced 
 with the name of the desired annotation such as `ACCNUM` for accession numbers.
 
-## 1) Load species-specific annotation package
-```{r Setup}
+## 1) Install libraries with species-specific annotation package
+```{r Install libraries}
 # Install the Zebrafish package
 source("https://bioconductor.org/biocLite.R")
 biocLite("org.Dr.eg.db", suppressUpdates = TRUE)
@@ -42,7 +42,7 @@ library(org.Dr.eg.db)
 ```{r Import data}
 # Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
-df <- read.delim("SRP056136.tsv", row.names = 1, 
+df <- read.delim("../data/SRP056136.tsv", row.names = 1, 
                  stringsAsFactors = FALSE)
 ```
 
@@ -66,7 +66,9 @@ annot.df <- transform(merge(symbol.df, df, by = "row.names"),
 # Write annotated data frame to output file
 write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", sep = "\t",
             quote = FALSE)
+```
 
+```{r Print session info}
 # Print session info 
 sessionInfo()
 ```
