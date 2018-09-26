@@ -69,10 +69,8 @@ hif1a.vector[grep("dnHIF1a", colnames(high.var.mat))] <- "dnHIF1a-expressing"
 amp.vector <- rep("post-amputation", ncol(high.var.mat))
 amp.vector[grep("Unamputated", colnames(high.var.mat))] <- "unamputated"
 annot.df <- data.frame(dnHIF1a = hif1a.vector, amputated = amp.vector)
-readr::write_tsv(annot.df %>%
-                   dplyr::mutate(sample_name = colnames(high.var.mat)) %>%
-                   dplyr::select(sample_name, dplyr::everything()), 
-                   annot.output)
+readr::write_tsv(data.frame(sample_name = colnames(high.var.mat), annot.df), 
+                 annot.output)
 
 # make into heatmap annotation, with the addition of color choices
 column.annotation <- ComplexHeatmap::HeatmapAnnotation(
