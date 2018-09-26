@@ -1,0 +1,1383 @@
+userid	genesymbol	genename	entrezgene
+ENSDARG00000040971	zgc:92606	zgc:92606	100000242
+ENSDARG00000091234	si:ch73-335l21.4	si:ch73-335l21.4	100000332
+ENSDARG00000069527	ube2g1b	ubiquitin-conjugating enzyme E2G 1b (UBC7 homolog, yeast)	100000479
+ENSDARG00000027749	hirip3	HIRA interacting protein 3	100000570
+ENSDARG00000103101	si:ch211-235e9.6	si:ch211-235e9.6	100000992
+ENSDARG00000076474	org	oogenesis-related gene	100001110
+ENSDARG00000026654	gosr1	golgi SNAP receptor complex member 1	100001316
+ENSDARG00000058561	fbxo30a	F-box protein 30a	100001417
+ENSDARG00000102097	nfkbiz	nuclear factor of kappa light polypeptide gene enhancer in B-cells inhibitor, zeta	100001781
+ENSDARG00000068894	nrip1b	nuclear receptor interacting protein 1b	100001853
+ENSDARG00000060306	tfcp2	transcription factor CP2	100001906
+ENSDARG00000043179	bag4	BCL2-associated athanogene 4	100001980
+ENSDARG00000061664	zgc:162707	zgc:162707	100002095
+ENSDARG00000057114	zgc:101819	zgc:101819	100002184
+ENSDARG00000069608	zmp:0000000722	zmp:0000000722	100002543
+ENSDARG00000059455	dqx1	DEAQ box RNA-dependent ATPase 1	100002601
+ENSDARG00000078691	NA	GRB10 interacting GYF protein 1	100002679
+ENSDARG00000091531	carm1l	coactivator-associated arginine methyltransferase 1, like	100003090
+ENSDARG00000028228	zbtb18	zinc finger and BTB domain containing 18	100003157
+ENSDARG00000105575	si:dkey-6n21.12	si:dkey-6n21.12	100003436
+ENSDARG00000022944	ecd	ecdysoneless homolog (Drosophila)	100003562
+ENSDARG00000068457	tnnt3b	troponin T type 3b (skeletal, fast)	100003572
+ENSDARG00000069422	nhp2	NHP2 ribonucleoprotein homolog (yeast)	100003787
+ENSDARG00000027187	kat8	K(lysine) acetyltransferase 8	100003790
+ENSDARG00000041140	ddb2	damage-specific DNA binding protein 2	100004133
+ENSDARG00000038587	LOC100004199	uncharacterized LOC100004199	100004199
+ENSDARG00000074060	map3k14a	mitogen-activated protein kinase kinase kinase 14a	100004261
+ENSDARG00000090965	ripk3	receptor-interacting serine-threonine kinase 3	100004555
+ENSDARG00000069603	taok1a	TAO kinase 1a	100004576
+ENSDARG00000036394	pop7	POP7 homolog, ribonuclease P/MRP subunit	100004610
+ENSDARG00000102320	mob1a	MOB kinase activator 1A	100005014
+ENSDARG00000098772	gig2d	grass carp reovirus (GCRV)-induced gene 2d	100005232
+ENSDARG00000006074	uck2a	uridine-cytidine kinase 2a	100005763
+ENSDARG00000023309	spryd4	SPRY domain containing 4	100005939
+ENSDARG00000077515	letm2	leucine zipper-EF-hand containing transmembrane protein 2	100006201
+ENSDARG00000077461	dhx32a	DEAH (Asp-Glu-Ala-His) box polypeptide 32a	100006246
+ENSDARG00000059483	tead1b	TEA domain family member 1b	100006454
+ENSDARG00000076221	zgc:198419	zgc:198419	100006523
+ENSDARG00000045150	csnk1e	casein kinase 1, epsilon	100006858
+ENSDARG00000077818	nrg2a	neuregulin 2a	100006951
+ENSDARG00000068981	glceb	glucuronic acid epimerase b	100007670
+ENSDARG00000079202	parp2	poly (ADP-ribose) polymerase 2	100007906
+ENSDARG00000075161	defbl1	defensin, beta-like 1	100009619
+ENSDARG00000099240	acap3b	ArfGAP with coiled-coil, ankyrin repeat and PH domains 3b	100009646
+ENSDARG00000058462	zgc:158846	zgc:158846	100009654
+ENSDARG00000017423	patl1	protein associated with topoisomerase II homolog 1 (yeast)	100009659
+ENSDARG00000071589	si:dkey-253d23.2	si:dkey-253d23.2	100034432
+ENSDARG00000063219	ubap2l	ubiquitin associated protein 2-like	100034477
+ENSDARG00000071468	mrpl54	mitochondrial ribosomal protein L54	100034614
+ENSDARG00000017653	rgs13	regulator of G-protein signaling 13	100037359
+ENSDARG00000078585	mon1a	MON1 secretory trafficking family member A	100073333
+ENSDARG00000092885	zgc:171977	zgc:171977	100124621
+ENSDARG00000056410	fdx1	ferredoxin 1	100126232
+ENSDARG00000103914	si:ch73-52e5.2	si:ch73-52e5.2	100142654
+ENSDARG00000104414	shmt2	serine hydroxymethyltransferase 2 (mitochondrial)	100144628
+ENSDARG00000059360	srsf3b	serine/arginine-rich splicing factor 3b	100145909
+ENSDARG00000009390	npl	N-acetylneuraminate pyruvate lyase (dihydrodipicolinate synthase)	100148292
+ENSDARG00000069397	zswim8	zinc finger, SWIM-type containing 8	100148379
+ENSDARG00000056128	fastkd1	FAST kinase domains 1	100148546
+ENSDARG00000070331	muc5.1	mucin 5.1, oligomeric mucus/gel-forming	100148804
+ENSDARG00000042090	si:ch73-55i23.1	si:ch73-55i23.1	100148818
+ENSDARG00000089463	dhx58	DEXH (Asp-Glu-X-His) box polypeptide 58	100148871
+ENSDARG00000055900	zswim5	zinc finger, SWIM-type containing 5	100149522
+ENSDARG00000003495	madd	MAP-kinase activating death domain	100150917
+ENSDARG00000092677	coa6	cytochrome c oxidase assembly factor 6	100150991
+ENSDARG00000089204	si:dkey-206d17.5	si:dkey-206d17.5	100190889
+ENSDARG00000078389	si:dkey-188i13.7	si:dkey-188i13.7	100302471
+ENSDARG00000075421	pttg1	pituitary tumor-transforming 1	100307086
+ENSDARG00000040027	osbpl10	oxysterol binding protein-like 10	100319820
+ENSDARG00000102956	mmp17b	matrix metallopeptidase 17b	100322027
+ENSDARG00000087555	si:ch73-308l14.2	si:ch73-308l14.2	100329277
+ENSDARG00000086881	NA	immediate early response 2	100331484
+ENSDARG00000102829	cobll1b	cordon-bleu WH2 repeat protein-like 1b	100332245
+ENSDARG00000100446	si:ch211-286o17.1	si:ch211-286o17.1	100332904
+ENSDARG00000096306	si:ch1073-342h5.2	si:ch1073-342h5.2	100333617
+ENSDARG00000067517	ccdc15	coiled-coil domain containing 15	100333818
+ENSDARG00000090191	psmg4	proteasome (prosome, macropain) assembly chaperone 4	100333944
+ENSDARG00000091967	si:ch73-376l24.6	si:ch73-376l24.6	100334190
+ENSDARG00000073773	tti2	TELO2 interacting protein 2	100334230
+ENSDARG00000100582	si:ch211-195b11.3	si:ch211-195b11.3	100334344
+ENSDARG00000016774	plekho2	pleckstrin homology domain containing, family O member 2	100334463
+ENSDARG00000100946	si:ch211-212k18.9	si:ch211-212k18.9	100334500
+ENSDARG00000061899	iqub	IQ motif and ubiquitin domain containing	100334576
+ENSDARG00000075857	pgs1	phosphatidylglycerophosphate synthase 1	100534896
+ENSDARG00000094729	apela	apelin receptor early endogenous ligand	100536023
+ENSDARG00000089549	si:ch211-101l18.9	si:ch211-101l18.9	100536942
+ENSDARG00000076520	mafb	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog b (paralog b)	100537332
+ENSDARG00000089598	LOC100537687	si:cabz01054396.2	100537687
+ENSDARG00000100624	LOC100537698	si:cabz01066312.1	100537698
+ENSDARG00000094695	si:dkey-204f11.64	si:dkey-204f11.64	100537752
+ENSDARG00000099936	nlrc3l	NLR family, CARD domain containing 3-like	100538217
+ENSDARG00000057907	si:ch73-181d5.4	si:ch73-181d5.4	100538306
+ENSDARG00000097772	si:ch211-185a18.2	si:ch211-185a18.2	100884142
+ENSDARG00000096359	eppk1	epiplakin 1	101885652
+ENSDARG00000053800	LOC103908606	zinc finger protein 239-like	103908606
+ENSDARG00000079150	si:ch211-276i12.9	si:ch211-276i12.9	103908774
+ENSDARG00000101110	NA	LYR motif containing 4	103909737
+ENSDARG00000092327	si:dkeyp-2e4.7	si:dkeyp-2e4.7	108191950
+ENSDARG00000007723	efnb1	ephrin-B1	114377
+ENSDARG00000042277	efnb3b	ephrin-B3b	114378
+ENSDARG00000008434	bcl2l1	bcl2-like 1	114401
+ENSDARG00000102750	cdh1	cadherin 1, type 1, E-cadherin (epithelial)	114424
+ENSDARG00000013207	zeb1b	zinc finger E-box binding homeobox 1b	114425
+ENSDARG00000044575	vars	valyl-tRNA synthetase	114427
+ENSDARG00000068732	spry4	sprouty homolog 4 (Drosophila)	114437
+ENSDARG00000041959	cxcr4b	chemokine (C-X-C motif), receptor 4b	114447
+ENSDARG00000021252	cct6a	chaperonin containing TCP1, subunit 6A (zeta 1)	116994
+ENSDARG00000042667	klf2a	Kruppel-like factor 2a	117508
+ENSDARG00000040432	klf2b	Kruppel-like factor 2b	117509
+ENSDARG00000013168	jag1b	jagged 1b	140423
+ENSDARG00000077467	sox10	SRY (sex determining region Y)-box 10	140616
+ENSDARG00000017905	casp3a	caspase 3, apoptosis-related cysteine peptidase a	140621
+ENSDARG00000013968	psap	prosaposin	140811
+ENSDARG00000036074	cebpa	CCAAT/enhancer binding protein (C/EBP), alpha	140815
+ENSDARG00000037017	ube4b	ubiquitination factor E4B, UFD2 homolog (S. cerevisiae)	170784
+ENSDARG00000019398	psma6a	proteasome subunit alpha 6a	171585
+ENSDARG00000011785	tbx6	T-box 6	192294
+ENSDARG00000015427	hdac1	histone deacetylase 1	192302
+ENSDARG00000012399	adssl	adenylosuccinate synthase, like	192305
+ENSDARG00000025012	tpi1a	triosephosphate isomerase 1a	192309
+ENSDARG00000017762	srrt	serrate RNA effector molecule homolog (Arabidopsis)	192311
+ENSDARG00000003527	mak16	MAK16 homolog (S. cerevisiae)	192312
+ENSDARG00000070828	actl6a	actin-like 6A	192313
+ENSDARG00000007385	cct7	chaperonin containing TCP1, subunit 7 (eta)	192324
+ENSDARG00000014898	ncbp2	nuclear cap binding protein subunit 2	192325
+ENSDARG00000016173	cct3	chaperonin containing TCP1, subunit 3 (gamma)	192327
+ENSDARG00000009871	snrpc	small nuclear ribonucleoprotein polypeptide C	192330
+ENSDARG00000011648	snrpd1	small nuclear ribonucleoprotein D1 polypeptide	192331
+ENSDARG00000001939	b3gat3	beta-1,3-glucuronyltransferase 3 (glucuronosyltransferase I)	192334
+ENSDARG00000005699	ddx19	DEAD/H (Asp-Glu-Ala-Asp/His) box polypeptide 19 (DBP5 homolog, yeast)	192339
+ENSDARG00000098312	scarb2	scavenger receptor class B, member 2	192340
+ENSDARG00000044299	lmnb1	lamin B1	195816
+ENSDARG00000037153	atp6ap1b	ATPase, H+ transporting, lysosomal accessory protein 1b	195824
+ENSDARG00000021339	cpa5	carboxypeptidase A5	246092
+ENSDARG00000020072	thbs4b	thrombospondin 4b	252850
+ENSDARG00000071403	oaz1a	ornithine decarboxylase antizyme 1a	259192
+ENSDARG00000103308	mst1	macrophage stimulating 1	259260
+ENSDARG00000021172	cyp2ad2	cytochrome P450, family 2, subfamily AD, polypeptide 2	259306
+ENSDARG00000044356	tp63	tumor protein p63	260407
+ENSDARG00000103383	dnah9	dynein, axonemal, heavy polypeptide 9	266676
+ENSDARG00000102096	adra2b	adrenoceptor alpha 2B	266751
+ENSDARG00000091277	adra2da	adrenergic, alpha-2D-, receptor a	266754
+ENSDARG00000054667	adra2db	adrenergic, alpha-2D-, receptor b	266755
+ENSDARG00000005675	sec61a1l	Sec61 translocon alpha 1 subunit, like	266796
+ENSDARG00000102896	jmjd6	jumonji domain containing 6	266962
+ENSDARG00000014329	npm1a	nucleophosmin 1a (nucleolar phosphoprotein B23, numatrin)	266985
+ENSDARG00000043976	etf1b	eukaryotic translation termination factor 1b	266989
+ENSDARG00000037109	pwp2h	PWP2 periodic tryptophan protein homolog (yeast)	266990
+ENSDARG00000029072	klf6a	Kruppel-like factor 6a	280650
+ENSDARG00000052348	smarca5	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily a, member 5	282615
+ENSDARG00000056160	hspd1	heat shock 60 protein 1	282676
+ENSDARG00000045155	phf5a	PHD finger protein 5A	286774
+ENSDARG00000012113	c19h1orf109	c19h1orf109 homolog (H. sapiens)	286778
+ENSDARG00000010770	sox19a	SRY (sex determining region Y)-box 19a	30038
+ENSDARG00000035326	nccrp1	non-specific cytotoxic cell receptor protein 1	30078
+ENSDARG00000052856	khdrbs1a	KH domain containing, RNA binding, signal transduction associated 1a	30082
+ENSDARG00000013505	ube2kb	ubiquitin-conjugating enzyme E2Kb (UBC1 homolog, yeast)	30100
+ENSDARG00000071208	wnt4a	wingless-type MMTV integration site family, member 4a	30123
+ENSDARG00000011703	clocka	clock circadian regulator a	30140
+ENSDARG00000006911	wnt8b	wingless-type MMTV integration site family, member 8b	30144
+ENSDARG00000025641	gli2a	GLI family zinc finger 2a	30154
+ENSDARG00000102470	mpp7a	membrane protein, palmitoylated 7a (MAGUK p55 subfamily member 7)	30166
+ENSDARG00000003487	nup93	nucleoporin 93	30172
+ENSDARG00000018968	acvr1ba	activin A receptor, type IBa	30183
+ENSDARG00000022531	ntn1b	netrin 1b	30192
+ENSDARG00000026531	alcama	activated leukocyte cell adhesion molecule a	30194
+ENSDARG00000002952	smo	smoothened, frizzled class receptor	30225
+ENSDARG00000026599	eng2a	engrailed homeobox 2a	30243
+ENSDARG00000019235	sema3aa	sema domain, immunoglobulin domain (Ig), short basic domain, secreted, (semaphorin) 3Aa	30266
+ENSDARG00000013087	ndrg3a	ndrg family member 3a	30286
+ENSDARG00000006514	her6	hairy-related 6	30288
+ENSDARG00000002193	rho	rhodopsin	30295
+ENSDARG00000104808	jak2a	Janus kinase 2a	30307
+ENSDARG00000010591	foxn4	forkhead box N4	30315
+ENSDARG00000011166	cahz	carbonic anhydrase	30331
+ENSDARG00000095019	lmo2	LIM domain only 2 (rhombotin-like 1)	30332
+ENSDARG00000056012	eve1	even-skipped-like1	30335
+ENSDARG00000025420	fzd5	frizzled class receptor 5	30364
+ENSDARG00000038225	nras	neuroblastoma RAS viral (v-ras) oncogene homolog	30380
+ENSDARG00000070787	jupa	junction plakoglobin a	30415
+ENSDARG00000052695	nr2f1a	nuclear receptor subfamily 2, group F, member 1a	30418
+ENSDARG00000036254	hoxa13b	homeobox A13b	30438
+ENSDARG00000020890	tmod4	tropomodulin 4 (muscle)	30441
+ENSDARG00000030703	otx1a	orthodenticle homeobox 1a	30462
+ENSDARG00000024844	max	myc associated factor X	30467
+ENSDARG00000097478	qkia	QKI, KH domain containing, RNA binding a	30471
+ENSDARG00000040321	rx2	retinal homeobox gene 2	30473
+ENSDARG00000013477	gata1a	GATA binding protein 1a	30481
+ENSDARG00000038159	tcf7l1a	transcription factor 7-like 1a (T-cell specific, HMG-box)	30523
+ENSDARG00000020417	emx3	empty spiracles homeobox 3	30536
+ENSDARG00000004586	ntrk1	neurotrophic tyrosine kinase, receptor, type 1	30546
+ENSDARG00000007369	tcf7l1b	transcription factor 7-like 1b (T-cell specific, HMG-box)	30556
+ENSDARG00000014626	dlx3b	distal-less homeobox 3b	30585
+ENSDARG00000027199	smad1	SMAD family member 1	30628
+ENSDARG00000033443	mdm2	MDM2 oncogene, E3 ubiquitin protein ligase	30637
+ENSDARG00000004616	mtmr2	myotubularin related protein 2	30644
+ENSDARG00000012234	psme3	proteasome activator subunit 3	30649
+ENSDARG00000018418	pth1rb	parathyroid hormone 1 receptor b	30651
+ENSDARG00000004932	anos1b	anosmin 1b	30652
+ENSDARG00000017354	epha2a	eph receptor A2 a	30689
+ENSDARG00000031894	lef1	lymphoid enhancer-binding factor 1	30701
+ENSDARG00000011027	fgfr1a	fibroblast growth factor receptor 1a	30705
+ENSDARG00000006963	cse1l	CSE1 chromosome segregation 1-like (yeast)	30707
+ENSDARG00000018643	igf2a	insulin-like growth factor 2a	30710
+ENSDARG00000005780	npy8br	neuropeptide Y receptor Y8b	30713
+ENSDARG00000040059	gbp	glycogen synthase kinase binding protein	30719
+ENSDARG00000038695	elavl1	ELAV like RNA binding protein 1	30736
+ENSDARG00000034541	tgfbr2	transforming growth factor, beta receptor II	30739
+ENSDARG00000104100	bmpr1ba	bone morphogenetic protein receptor, type IBa	30742
+ENSDARG00000019930	tal1	T-cell acute lymphocytic leukemia 1	30766
+ENSDARG00000010266	igf2bp3	insulin-like growth factor 2 mRNA binding protein 3	30967
+ENSDARG00000099351	igfbp1a	insulin-like growth factor binding protein 1a	317638
+ENSDARG00000005772	tsr2	TSR2, 20S rRNA accumulation, homolog (S. cerevisiae)	317639
+ENSDARG00000040666	nifk	nucleolar protein interacting with the FHA domain of MKI67	317644
+ENSDARG00000002591	ruvbl1	RuvB-like AAA ATPase 1	317679
+ENSDARG00000008816	glud1a	glutamate dehydrogenase 1a	317737
+ENSDARG00000022232	ppan	peter pan homolog (Drosophila)	317739
+ENSDARG00000011079	wdr3	WD repeat domain 3	321058
+ENSDARG00000023299	snu13b	SNU13 homolog, small nuclear ribonucleoprotein b (U4/U6.U5)	321114
+ENSDARG00000033539	paics	phosphoribosylaminoimidazole carboxylase, phosphoribosylaminoimidazole succinocarboxamide synthetase	321193
+ENSDARG00000037960	lrrc17	leucine rich repeat containing 17	321202
+ENSDARG00000071697	zgc:66433	zgc:66433	321250
+ENSDARG00000005454	tacc3	transforming, acidic coiled-coil containing protein 3	321283
+ENSDARG00000002487	noc3l	NOC3-like DNA replication regulator	321289
+ENSDARG00000057414	phb	prohibitin	321346
+ENSDARG00000074161	tnrc6b	trinucleotide repeat containing 6b	321362
+ENSDARG00000029544	id2b	inhibitor of DNA binding 2, dominant negative helix-loop-helix protein, b	321364
+ENSDARG00000039215	arrb2a	arrestin, beta 2a	321378
+ENSDARG00000071586	tgfbi	transforming growth factor, beta-induced	321421
+ENSDARG00000036102	ctdsp2	CTD (carboxy-terminal domain, RNA polymerase II, polypeptide A) small phosphatase 2	321465
+ENSDARG00000007960	hnrnpaba	heterogeneous nuclear ribonucleoprotein A/Ba	321466
+ENSDARG00000005551	hnrnph1l	heterogeneous nuclear ribonucleoprotein H1, like	321556
+ENSDARG00000053691	maea	macrophage erythroblast attacher	321575
+ENSDARG00000003287	wdr12	WD repeat domain 12	321652
+ENSDARG00000037837	ogfr	opioid growth factor receptor	321658
+ENSDARG00000033597	api5	apoptosis inhibitor 5	321676
+ENSDARG00000026767	nol11	nucleolar protein 11	321700
+ENSDARG00000011999	ybey	ybeY metallopeptidase	321718
+ENSDARG00000029058	rbbp4	retinoblastoma binding protein 4	321726
+ENSDARG00000040287	ywhabl	tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein, beta polypeptide like	321729
+ENSDARG00000003235	nup88	nucleoporin 88	321744
+ENSDARG00000059337	tgif1	TGFB-induced factor homeobox 1	321756
+ENSDARG00000074057	calm3b	calmodulin 3b (phosphorylase kinase, delta)	321808
+ENSDARG00000016132	keap1a	kelch-like ECH-associated protein 1a	321837
+ENSDARG00000014244	rbmx	RNA binding motif protein, X-linked	321860
+ENSDARG00000105177	ilf3b	interleukin enhancer binding factor 3b	321868
+ENSDARG00000006219	gnl3	guanine nucleotide binding protein-like 3 (nucleolar)	321897
+ENSDARG00000052377	psmd12	proteasome 26S subunit, non-ATPase 12	321898
+ENSDARG00000100317	ahsa1b	AHA1, activator of heat shock protein ATPase homolog 1b	321945
+ENSDARG00000010246	prmt1	protein arginine methyltransferase 1	321974
+ENSDARG00000090309	ubxn1	UBX domain protein 1	322073
+ENSDARG00000013655	tpd52l2b	tumor protein D52-like 2b	322103
+ENSDARG00000013623	vdac2	voltage-dependent anion channel 2	322126
+ENSDARG00000042864	rpl7l1	ribosomal protein L7-like 1	322251
+ENSDARG00000045399	cct5	chaperonin containing TCP1, subunit 5 (epsilon)	322258
+ENSDARG00000021494	hnf4a	hepatocyte nuclear factor 4, alpha	322358
+ENSDARG00000012458	zgc:77849	zgc:77849	322387
+ENSDARG00000101127	map1lc3b	microtubule-associated protein 1 light chain 3 beta	322425
+ENSDARG00000016412	agt	angiotensinogen	322485
+ENSDARG00000010250	nqo1	NAD(P)H dehydrogenase, quinone 1	322506
+ENSDARG00000041110	dnajc3a	DnaJ (Hsp40) homolog, subfamily C, member 3a	322544
+ENSDARG00000092112	tomm40	translocase of outer mitochondrial membrane 40 homolog (yeast)	322645
+ENSDARG00000011521	upb1	ureidopropionase, beta	322660
+ENSDARG00000089260	dus1l	dihydrouridine synthase 1-like (S. cerevisiae)	322715
+ENSDARG00000008461	anapc5	anaphase promoting complex subunit 5	322854
+ENSDARG00000041896	dnajc5ga	DnaJ (Hsp40) homolog, subfamily C, member 5 gamma a	322863
+ENSDARG00000017454	nup50	nucleoporin 50	322969
+ENSDARG00000008803	marcksb	myristoylated alanine-rich protein kinase C substrate b	323201
+ENSDARG00000040224	krcp	kelch repeat-containing protein	323406
+ENSDARG00000012495	mphosph10	M-phase phosphoprotein 10 (U3 small nucleolar ribonucleoprotein)	323426
+ENSDARG00000104431	slc1a3a	solute carrier family 1 (glial high affinity glutamate transporter), member 3a	323439
+ENSDARG00000026476	tia1l	cytotoxic granule-associated RNA binding protein 1, like	323447
+ENSDARG00000015352	lsg1	large 60S subunit nuclear export GTPase 1	323464
+ENSDARG00000103981	bhlha9	basic helix-loop-helix family, member a9	323481
+ENSDARG00000020258	ewsr1a	EWS RNA-binding protein 1a	323597
+ENSDARG00000070435	vapb	VAMP (vesicle-associated membrane protein)-associated protein B and C	323628
+ENSDARG00000056184	dvl2	dishevelled segment polarity protein 2	323630
+ENSDARG00000021443	zfp36l1b	zinc finger protein 36, C3H type-like 1b	323671
+ENSDARG00000003213	naa15a	N(alpha)-acetyltransferase 15, NatA auxiliary subunit a	323672
+ENSDARG00000073997	srpk1a	SRSF protein kinase 1a	323679
+ENSDARG00000103893	srsf2b	serine/arginine-rich splicing factor 2b	323700
+ENSDARG00000006497	rtn1a	reticulon 1a	323706
+ENSDARG00000104223	lmbrd1	LMBR1 domain containing 1	323720
+ENSDARG00000052518	stx4	syntaxin 4	323735
+ENSDARG00000001890	stt3b	STT3B, subunit of the oligosaccharyltransferase complex (catalytic)	323918
+ENSDARG00000056127	polr2gl	polymerase (RNA) II (DNA directed) polypeptide G-like	324088
+ENSDARG00000018890	snrpa	small nuclear ribonucleoprotein polypeptide A	324121
+ENSDARG00000026070	cd82b	CD82 molecule b	324137
+ENSDARG00000027183	namptb	nicotinamide phosphoribosyltransferase b	324211
+ENSDARG00000075682	orc6	origin recognition complex, subunit 6	324256
+ENSDARG00000053047	eif2s2	eukaryotic translation initiation factor 2, subunit 2 beta	324365
+ENSDARG00000042533	gstm.1	glutathione S-transferase mu, tandem duplicate 1	324366
+ENSDARG00000045129	fkbp10b	FK506 binding protein 10b	324381
+ENSDARG00000004060	bhlhe40	basic helix-loop-helix family, member e40	324413
+ENSDARG00000058660	ilf3a	interleukin enhancer binding factor 3a	324431
+ENSDARG00000027649	cpsf3	cleavage and polyadenylation specific factor 3	324554
+ENSDARG00000004891	pex19	peroxisomal biogenesis factor 19	324778
+ENSDARG00000001969	txlng	taxilin gamma	324984
+ENSDARG00000007744	tsr1	TSR1, 20S rRNA accumulation, homolog (S. cerevisiae)	325037
+ENSDARG00000002720	utp15	utp15, U3 small nucleolar ribonucleoprotein, homolog	325106
+ENSDARG00000000568	ell	elongation factor RNA polymerase II	325221
+ENSDARG00000035507	ddx31	DEAD (Asp-Glu-Ala-Asp) box polypeptide 31	325248
+ENSDARG00000055291	rab18a	RAB18A, member RAS oncogene family	325255
+ENSDARG00000056665	nsun2	NOP2/Sun RNA methyltransferase family, member 2	325292
+ENSDARG00000036577	atp6v0cb	ATPase, H+ transporting, lysosomal, V0 subunit cb	325402
+ENSDARG00000042522	katnbl1	katanin p80 subunit B-like 1	325430
+ENSDARG00000037361	kdelr2b	KDEL (Lys-Asp-Glu-Leu) endoplasmic reticulum protein retention receptor 2b	325464
+ENSDARG00000044404	pars2	prolyl-tRNA synthetase 2, mitochondrial (putative)	325494
+ENSDARG00000006225	ddx39aa	DEAD (Asp-Glu-Ala-Asp) box polypeptide 39Aa	325550
+ENSDARG00000003216	anxa2a	annexin A2a	325557
+ENSDARG00000009106	serinc1	serine incorporator 1	325690
+ENSDARG00000014915	ndufab1b	NADH dehydrogenase (ubiquinone) 1, alpha/beta subcomplex, 1b	325712
+ENSDARG00000102070	tbc1d10aa	TBC1 domain family, member 10Aa	325772
+ENSDARG00000025693	tmem9b	TMEM9 domain family, member B	325931
+ENSDARG00000040799	sst1.1	somatostatin 1, tandem duplicate 1	326018
+ENSDARG00000013031	mta2	metastasis associated 1 family, member 2	326078
+ENSDARG00000029019	epb41b	erythrocyte membrane protein band 4.1b	326287
+ENSDARG00000008740	esf1	ESF1, nucleolar pre-rRNA processing protein, homolog (S. cerevisiae)	326718
+ENSDARG00000063646	lnpa	limb and neural patterns a	326761
+ENSDARG00000036060	exosc6	exosome component 6	326786
+ENSDARG00000027099	psmc4	proteasome 26S subunit, ATPase 4	326884
+ENSDARG00000087331	si:dkey-77f5.3	si:dkey-77f5.3	326903
+ENSDARG00000037291	dpf2l	D4, zinc and double PHD fingers family 2, like	326933
+ENSDARG00000067639	prpf4	PRP4 pre-mRNA processing factor 4 homolog (yeast)	326944
+ENSDARG00000099663	cox5ab	cytochrome c oxidase subunit Vab	326962
+ENSDARG00000011841	atp5l	ATP synthase, H+ transporting, mitochondrial F0 complex, subunit g	326977
+ENSDARG00000015853	rnps1	RNA binding protein S1, serine-rich domain	327020
+ENSDARG00000013478	rrp15	ribosomal RNA processing 15 homolog	327053
+ENSDARG00000032373	rnf145b	ring finger protein 145b	327056
+ENSDARG00000018618	cpsf6	cleavage and polyadenylation specific factor 6	327069
+ENSDARG00000010437	fam46c	family with sequence similarity 46, member C	327154
+ENSDARG00000053152	pcmtd1	protein-L-isoaspartate (D-aspartate) O-methyltransferase domain containing 1	327176
+ENSDARG00000055885	tex10	testis expressed 10	327196
+ENSDARG00000102874	immt	inner membrane protein, mitochondrial (mitofilin)	327206
+ENSDARG00000003931	cndp2	CNDP dipeptidase 2 (metallopeptidase M20 family)	327288
+ENSDARG00000045130	klhl11	kelch-like family member 11	327313
+ENSDARG00000102417	psmd7	proteasome 26S subunit, non-ATPase 7	327330
+ENSDARG00000074715	stk17a	serine/threonine kinase 17a	327345
+ENSDARG00000058461	ice1	KIAA0947-like (H. sapiens)	327355
+ENSDARG00000041565	tnfaip1	tumor necrosis factor, alpha-induced protein 1 (endothelial)	327399
+ENSDARG00000043873	arid4a	AT rich interactive domain 4A (RBP1-like)	327404
+ENSDARG00000025953	rhoq	ras homolog family member Q	327510
+ENSDARG00000079994	wu:fi15d04	wu:fi15d04	327519
+ENSDARG00000004306	klhl18	kelch-like family member 18	327574
+ENSDARG00000098296	gnsb	glucosamine (N-acetyl)-6-sulfatase (Sanfilippo disease IIID), b	327635
+ENSDARG00000018953	gclm	glutamate-cysteine ligase, modifier subunit	333974
+ENSDARG00000032469	ampd3b	adenosine monophosphate deaminase 3b	333997
+ENSDARG00000074790	c23h20orf24	c23h20orf24 homolog (H. sapiens)	334006
+ENSDARG00000077847	olfm2a	olfactomedin 2a	334035
+ENSDARG00000023028	cdv3	carnitine deficiency-associated gene expressed in ventricle 3	334102
+ENSDARG00000022456	eno1a	enolase 1a, (alpha)	334116
+ENSDARG00000017708	lrrc40	leucine rich repeat containing 40	334130
+ENSDARG00000054963	alg1	ALG1, chitobiosyldiphosphodolichol beta-mannosyltransferase	334161
+ENSDARG00000018426	aldh7a1	aldehyde dehydrogenase 7 family, member A1	334197
+ENSDARG00000013946	ivns1abpb	influenza virus NS1A binding protein b	334334
+ENSDARG00000058566	wu:fi42h12	wu:fi42h12	334358
+ENSDARG00000059711	nol6	nucleolar protein 6 (RNA-associated)	334362
+ENSDARG00000044090	zmpste24	zinc metallopeptidase, STE24 homolog	334380
+ENSDARG00000017835	brf1a	BRF1, RNA polymerase III transcription initiation factor a	334402
+ENSDARG00000008200	ugp2b	UDP-glucose pyrophosphorylase 2b	334420
+ENSDARG00000029931	atp13a1	ATPase type 13A1	334466
+ENSDARG00000037872	foxk1	forkhead box K1	334470
+ENSDARG00000004735	hnrnpub	heterogeneous nuclear ribonucleoprotein Ub	334490
+ENSDARG00000079717	rbm12b	RNA binding motif protein 12B	334496
+ENSDARG00000041570	mrpl39	mitochondrial ribosomal protein L39	334588
+ENSDARG00000057167	eif4g2b	eukaryotic translation initiation factor 4, gamma 2b	334618
+ENSDARG00000074335	boc	BOC cell adhesion associated, oncogene regulated	334628
+ENSDARG00000035152	ap2b1	adaptor-related protein complex 2, beta 1 subunit	334632
+ENSDARG00000027078	cnppd1	cyclin Pas1/PHO80 domain containing 1	334868
+ENSDARG00000005251	rpe	ribulose-5-phosphate-3-epimerase	334897
+ENSDARG00000002830	trmt2a	tRNA methyltransferase 2 homolog A	334936
+ENSDARG00000036695	calcoco1a	calcium binding and coiled-coil domain 1a	334971
+ENSDARG00000069046	wu:fk65c09	wu:fk65c09	335078
+ENSDARG00000021366	fbp1a	fructose-1,6-bisphosphatase 1a	335231
+ENSDARG00000046143	prkab1b	protein kinase, AMP-activated, beta 1 non-catalytic subunit, b	335232
+ENSDARG00000014218	mecp2	methyl CpG binding protein 2	335250
+ENSDARG00000059287	mak	male germ cell-associated kinase	335339
+ENSDARG00000025081	grnb	granulin b	335453
+ENSDARG00000009657	fgfr1op2	FGFR1 oncogene partner 2	335511
+ENSDARG00000017741	g3bp1	GTPase activating protein (SH3 domain) binding protein 1	335512
+ENSDARG00000070480	agr2	anterior gradient 2	335616
+ENSDARG00000040485	dfna5b	deafness, autosomal dominant 5 b	335722
+ENSDARG00000025889	usp14	ubiquitin specific peptidase 14 (tRNA-guanine transglycosylase)	335736
+ENSDARG00000004754	hspa4a	heat shock protein 4a	335865
+ENSDARG00000009724	rpn2	ribophorin II	335985
+ENSDARG00000003531	tcea1	transcription elongation factor A (SII), 1	336105
+ENSDARG00000039958	utp11l	UTP11-like, U3 small nucleolar ribonucleoprotein (yeast)	336149
+ENSDARG00000075545	si:dkey-89b17.4	si:dkey-89b17.4	336271
+ENSDARG00000011665	aldoaa	aldolase a, fructose-bisphosphate, a	336425
+ENSDARG00000056378	ifi30	interferon, gamma-inducible protein 30	336503
+ENSDARG00000098820	ftr67	finTRIM family, member 67	336567
+ENSDARG00000028542	si:ch211-114c12.2	si:ch211-114c12.2	336578
+ENSDARG00000009212	ppiaa	peptidylprolyl isomerase Aa (cyclophilin A)	336612
+ENSDARG00000035018	thy1	Thy-1 cell surface antigen	336617
+ENSDARG00000009350	atg3	autophagy related 3	336632
+ENSDARG00000002344	tubb4b	tubulin, beta 4B class IVb	336681
+ENSDARG00000054312	slc38a6	solute carrier family 38, member 6	336741
+ENSDARG00000039345	drg1	developmentally regulated GTP binding protein 1	336823
+ENSDARG00000024026	sdf2	stromal cell-derived factor 2	336879
+ENSDARG00000030116	susd6	sushi domain containing 6	336888
+ENSDARG00000045514	atp5c1	ATP synthase, H+ transporting, mitochondrial F1 complex, gamma polypeptide 1	336957
+ENSDARG00000014817	ranbp1	RAN binding protein 1	337046
+ENSDARG00000043357	tbl2	transducin (beta)-like 2	337068
+ENSDARG00000054530	rars	arginyl-tRNA synthetase	337070
+ENSDARG00000056804	si:dkey-40g16.6	si:dkey-40g16.6	337166
+ENSDARG00000077297	nbr1	neighbor of brca1 gene 1	337168
+ENSDARG00000033738	zgc:153867	zgc:153867	337226
+ENSDARG00000100742	reep5	receptor accessory protein 5	337237
+ENSDARG00000068404	tbcb	tubulin folding cofactor B	337350
+ENSDARG00000071031	snx1a	sorting nexin 1a	337386
+ENSDARG00000006915	arl8ba	ADP-ribosylation factor-like 8Ba	337424
+ENSDARG00000076318	atp6v1ab	ATPase, H+ transporting, lysosomal, V1 subunit Ab	337583
+ENSDARG00000039830	gng5	guanine nucleotide binding protein (G protein), gamma 5	337838
+ENSDARG00000056557	copb1	coatomer protein complex, subunit beta 1	338138
+ENSDARG00000008219	crygm4	crystallin, gamma M4	338225
+ENSDARG00000007682	ppdpfa	pancreatic progenitor cell differentiation and proliferation factor a	338304
+ENSDARG00000051957	selm	selenoprotein M	352913
+ENSDARG00000025436	msrb1a	methionine sulfoxide reductase B1a	352916
+ENSDARG00000104093	mchr1a	melanin-concentrating hormone receptor 1a	353181
+ENSDARG00000018958	nrarpb	notch-regulated ankyrin repeat protein b	353225
+ENSDARG00000010097	f9a	coagulation factor IXa	359826
+ENSDARG00000088048	fgf18a	fibroblast growth factor 18a	359829
+ENSDARG00000061226	timp2a	TIMP metallopeptidase inhibitor 2a	359835
+ENSDARG00000102824	pcdh10b	protocadherin 10b	360138
+ENSDARG00000027552	mapk1	mitogen-activated protein kinase 1	360144
+ENSDARG00000077383	anxa11a	annexin A11a	368215
+ENSDARG00000055455	gpm6aa	glycoprotein M6Aa	368223
+ENSDARG00000037654	pmm2	phosphomannomutase 2	368229
+ENSDARG00000035913	yars	tyrosyl-tRNA synthetase	368235
+ENSDARG00000088828	paqr8	progestin and adipoQ receptor family member VIII	368254
+ENSDARG00000004311	ldlrap1a	low density lipoprotein receptor adaptor protein 1a	368278
+ENSDARG00000035957	gmnn	geminin, DNA replication inhibitor	368320
+ENSDARG00000014013	lbr	lamin B receptor	368360
+ENSDARG00000000019	ube2h	ubiquitin-conjugating enzyme E2H (UBC8 homolog, yeast)	368425
+ENSDARG00000068557	htr5ab	5-hydroxytryptamine (serotonin) receptor 5A, genome duplicate b	368475
+ENSDARG00000040730	wdr75	WD repeat domain 75	368478
+ENSDARG00000000476	pms1	PMS1 homolog 1, mismatch repair system component	368631
+ENSDARG00000079605	prmt5	protein arginine methyltransferase 5	368664
+ENSDARG00000007989	nedd8	neural precursor cell expressed, developmentally down-regulated 8	368667
+ENSDARG00000039578	pa2g4a	proliferation-associated 2G4, a	368737
+ENSDARG00000036787	abcb3l1	ATP-binding cassette, sub-family B (MDR/TAP), member 3 like 1	368771
+ENSDARG00000000540	asnsd1	asparagine synthetase domain containing 1	368827
+ENSDARG00000100209	prpf39	PRP39 pre-mRNA processing factor 39 homolog (yeast)	368864
+ENSDARG00000014159	mtdha	metadherin a	368910
+ENSDARG00000022303	higd1a	HIG1 hypoxia inducible domain family, member 1A	373084
+ENSDARG00000003035	hspa9	heat shock protein 9	373085
+ENSDARG00000008363	mcl1b	myeloid cell leukemia 1b	373102
+ENSDARG00000016143	xiap	X-linked inhibitor of apoptosis	373108
+ENSDARG00000019335	hes6	hes family bHLH transcription factor 6	373116
+ENSDARG00000058088	aifm1	apoptosis-inducing factor, mitochondrion-associated 1	373125
+ENSDARG00000058702	vax2	ventral anterior homeobox 2	373869
+ENSDARG00000021916	vax1	ventral anterior homeobox 1	373870
+ENSDARG00000104290	ripk2	receptor-interacting serine-threonine kinase 2	373874
+ENSDARG00000015474	ppp2r5ea	protein phosphatase 2, regulatory subunit B', epsilon isoform a	373881
+ENSDARG00000051746	cecr1a	cat eye syndrome chromosome region, candidate 1a	373884
+ENSDARG00000017882	rdh1	retinol dehydrogenase 1	378440
+ENSDARG00000070781	gjd2b	gap junction protein delta 2b	378444
+ENSDARG00000059460	sbf2	SET binding factor 2	378456
+ENSDARG00000006603	csrp1a	cysteine and glycine-rich protein 1a	378726
+ENSDARG00000012135	fbxl2	F-box and leucine-rich repeat protein 2	378737
+ENSDARG00000012684	atp2b1a	ATPase, Ca++ transporting, plasma membrane 1a	378746
+ENSDARG00000091831	ddx27	DEAD (Asp-Glu-Ala-Asp) box polypeptide 27	378844
+ENSDARG00000103846	hspa5	heat shock protein 5	378848
+ENSDARG00000037618	ddit4	DNA-damage-inducible transcript 4	378866
+ENSDARG00000002330	lhx8a	LIM homeobox 8a	378959
+ENSDARG00000033735	ncf1	neutrophil cytosolic factor 1	378966
+ENSDARG00000069099	tmco1	transmembrane and coiled-coil domains 1	378980
+ENSDARG00000039211	zgc:77439	zgc:77439	378987
+ENSDARG00000003570	hsp90b1	heat shock protein 90, beta (grp94), member 1	386590
+ENSDARG00000012899	ddx49	DEAD (Asp-Glu-Ala-Asp) box polypeptide 49	386632
+ENSDARG00000102407	cep97	centrosomal protein 97	386640
+ENSDARG00000029075	pfkfb4b	6-phosphofructo-2-kinase/fructose-2,6-biphosphatase 4b	386663
+ENSDARG00000037997	tubb5	tubulin, beta 5	386701
+ENSDARG00000058868	apc	adenomatous polyposis coli	386762
+ENSDARG00000044167	padi2	peptidyl arginine deiminase, type II	386792
+ENSDARG00000037397	ssrp1a	structure specific recognition protein 1a	386844
+ENSDARG00000053130	pcp4a	Purkinje cell protein 4a	386848
+ENSDARG00000020232	eif6	eukaryotic translation initiation factor 6	386850
+ENSDARG00000096749	si:dkey-21c1.6	si:dkey-21c1.6	386981
+ENSDARG00000036967	smox	spermine oxidase	387290
+ENSDARG00000031100	ivns1abpa	influenza virus NS1A binding protein a	387591
+ENSDARG00000007092	xab2	XPA binding protein 2	387600
+ENSDARG00000020986	ctu1	cytosolic thiouridylase subunit 1 homolog (S. pombe)	393098
+ENSDARG00000043972	ppp2r3c	protein phosphatase 2, regulatory subunit B'', gamma	393100
+ENSDARG00000030830	cmtr1	cap methyltransferase 1	393102
+ENSDARG00000098433	utp6	UTP6, small subunit (SSU) processome component, homolog (yeast)	393107
+ENSDARG00000042978	cyp2p6	cytochrome P450, family 2, subfamily P, polypeptide 6	393108
+ENSDARG00000052419	ankrd12	ankyrin repeat domain 12	393119
+ENSDARG00000019581	uso1	USO1 vesicle transport factor	393124
+ENSDARG00000004160	reep3b	receptor accessory protein 3b	393130
+ENSDARG00000104177	cpne3	copine III	393136
+ENSDARG00000038432	actr10	actin-related protein 10 homolog (S. cerevisiae)	393139
+ENSDARG00000020764	slmapb	sarcolemma associated protein b	393146
+ENSDARG00000041376	rmi1	RMI1, RecQ mediated genome instability 1, homolog (S. cerevisiae)	393149
+ENSDARG00000007302	sh3gl3b	SH3-domain GRB2-like 3b	393150
+ENSDARG00000016255	chmp4ba	charged multivesicular body protein 4Ba	393164
+ENSDARG00000042630	hebp2	heme binding protein 2	393167
+ENSDARG00000044766	mitd1	MIT, microtubule interacting and transport, domain containing 1	393170
+ENSDARG00000044513	tpst1l	tyrosylprotein sulfotransferase 1, like	393171
+ENSDARG00000087962	rpap3	RNA polymerase II associated protein 3	393173
+ENSDARG00000056984	rad9a	RAD9 checkpoint clamp component A	393176
+ENSDARG00000002967	pdap1b	pdgfa associated protein 1b	393179
+ENSDARG00000040033	trmt11	tRNA methyltransferase 11 homolog (S. cerevisiae)	393185
+ENSDARG00000002754	pdcd2l	programmed cell death 2-like	393192
+ENSDARG00000090219	wdr45	WD repeat domain 45	393200
+ENSDARG00000036848	slc43a2a	solute carrier family 43 (amino acid system L transporter), member 2a	393221
+ENSDARG00000015254	fzr1a	fizzy/cell division cycle 20 related 1a	393223
+ENSDARG00000023950	znhit3	zinc finger, HIT-type containing 3	393243
+ENSDARG00000002298	ankrd22	ankyrin repeat domain 22	393244
+ENSDARG00000070674	psmd6	proteasome 26S subunit, non-ATPase 6	393261
+ENSDARG00000029445	zgc:56676	zgc:56676	393273
+ENSDARG00000007405	strap	serine/threonine kinase receptor associated protein	393274
+ENSDARG00000069878	snu13a	SNU13 homolog, small nuclear ribonucleoprotein a (U4/U6.U5)	393282
+ENSDARG00000023160	snrnp40	small nuclear ribonucleoprotein 40 (U5)	393292
+ENSDARG00000041237	med18	mediator of RNA polymerase II transcription, subunit 18 homolog (yeast)	393306
+ENSDARG00000028957	maff	v-maf avian musculoaponeurotic fibrosarcoma oncogene homolog F	393307
+ENSDARG00000042873	slc25a27	solute carrier family 25, member 27	393312
+ENSDARG00000045877	ube2nb	ubiquitin-conjugating enzyme E2Nb	393313
+ENSDARG00000100531	abhd14b	abhydrolase domain containing 14B	393338
+ENSDARG00000022560	clcnk	chloride channel K	393353
+ENSDARG00000036040	atg13	ATG13 autophagy related 13 homolog (S. cerevisiae)	393405
+ENSDARG00000017931	ddx26b	DEAD/H (Asp-Glu-Ala-Asp/His) box polypeptide 26B	393406
+ENSDARG00000035544	etnppl	ethanolamine-phosphate phospho-lyase	393421
+ENSDARG00000016775	aqr	aquarius intron-binding spliceosomal factor	393436
+ENSDARG00000016481	ptpn2a	protein tyrosine phosphatase, non-receptor type 2, a	393438
+ENSDARG00000026629	gmds	GDP-mannose 4,6-dehydratase	393461
+ENSDARG00000051902	prmt7	protein arginine methyltransferase 7	393475
+ENSDARG00000012261	eftud2	elongation factor Tu GTP binding domain containing 2	393480
+ENSDARG00000033436	mboat7	membrane bound O-acyltransferase domain containing 7	393509
+ENSDARG00000001880	stx3a	syntaxin 3A	393515
+ENSDARG00000022845	lias	lipoic acid synthetase	393528
+ENSDARG00000043581	gadd45aa	growth arrest and DNA-damage-inducible, alpha, a	393548
+ENSDARG00000017388	gstt1b	glutathione S-transferase theta 1b	393556
+ENSDARG00000055857	dopey2	dopey family member 2	393582
+ENSDARG00000032277	rars2	arginyl-tRNA synthetase 2, mitochondrial (putative)	393589
+ENSDARG00000054259	nat10	N-acetyltransferase 10	393617
+ENSDARG00000045661	irf7	interferon regulatory factor 7	393650
+ENSDARG00000098355	atp5h	ATP synthase, H+ transporting, mitochondrial Fo complex, subunit d	393675
+ENSDARG00000013414	lin7a	lin-7 homolog A (C. elegans)	393682
+ENSDARG00000028889	ndufb10	NADH dehydrogenase (ubiquinone) 1 beta subcomplex, 10	393703
+ENSDARG00000003151	skp1	S-phase kinase-associated protein 1	393716
+ENSDARG00000013044	ndufv2	NADH dehydrogenase (ubiquinone) flavoprotein 2	393720
+ENSDARG00000098588	gchfr	GTP cyclohydrolase I feedback regulator	393735
+ENSDARG00000027418	trappc4	trafficking protein particle complex 4	393737
+ENSDARG00000008706	paip2b	poly(A) binding protein interacting protein 2B	393739
+ENSDARG00000059304	chchd2	coiled-coil-helix-coiled-coil-helix domain containing 2	393740
+ENSDARG00000007285	mrpl57	mitochondrial ribosomal protein L57	393748
+ENSDARG00000016676	gnao1a	guanine nucleotide binding protein (G protein), alpha activating activity polypeptide O, a	393760
+ENSDARG00000019752	rom1a	retinal outer segment membrane protein 1a	393767
+ENSDARG00000008551	pole3	polymerase (DNA directed), epsilon 3 (p17 subunit)	393774
+ENSDARG00000056642	hdac9b	histone deacetylase 9b	393789
+ENSDARG00000035719	arl5c	ADP-ribosylation factor-like 5C	393819
+ENSDARG00000010113	ndufb8	NADH dehydrogenase (ubiquinone) 1 beta subcomplex, 8	393829
+ENSDARG00000032098	c8g	complement component 8, gamma polypeptide	393837
+ENSDARG00000011958	ctnnbl1	catenin, beta like 1	393840
+ENSDARG00000015006	dnm1l	dynamin 1-like	393896
+ENSDARG00000026801	stau2	staufen double-stranded RNA binding protein 2	393899
+ENSDARG00000020497	rab7	RAB7, member RAS oncogene family	393902
+ENSDARG00000031971	kdelc1	KDEL (Lys-Asp-Glu-Leu) containing 1	393905
+ENSDARG00000044484	cdc23	CDC23 (cell division cycle 23, yeast, homolog)	393907
+ENSDARG00000012946	syap1	synapse associated protein 1	393916
+ENSDARG00000016239	psmd13	proteasome 26S subunit, non-ATPase 13	393922
+ENSDARG00000002271	zfand5b	zinc finger, AN1-type domain 5b	393923
+ENSDARG00000021647	gnai1	guanine nucleotide binding protein (G protein), alpha inhibiting activity polypeptide 1	393946
+ENSDARG00000076526	gar1	GAR1 homolog, ribonucleoprotein	393950
+ENSDARG00000026180	prpf8	pre-mRNA processing factor 8	393951
+ENSDARG00000011418	sigmar1	sigma non-opioid intracellular receptor 1	393952
+ENSDARG00000033175	snrpe	small nuclear ribonucleoprotein polypeptide E	393979
+ENSDARG00000043105	qtrt1	queuine tRNA-ribosyltransferase 1	393985
+ENSDARG00000038074	ergic3	ERGIC and golgi 3	393990
+ENSDARG00000045463	ralaa	v-ral simian leukemia viral oncogene homolog Aa (ras related)	393993
+ENSDARG00000090778	ttll1	tubulin tyrosine ligase-like family, member 1	393994
+ENSDARG00000090585	gpc1b	glypican 1b	393995
+ENSDARG00000010442	rnf11a	ring finger protein 11a	393996
+ENSDARG00000013561	pgm1	phosphoglucomutase 1	394000
+ENSDARG00000055760	srm	spermidine synthase	394009
+ENSDARG00000008243	cct8	chaperonin containing TCP1, subunit 8 (theta)	394037
+ENSDARG00000035427	surf6	surfeit 6	394040
+ENSDARG00000002002	lmcd1	LIM and cysteine-rich domains 1	394045
+ENSDARG00000018106	eif2b3	eukaryotic translation initiation factor 2B, subunit 3 gamma	394049
+ENSDARG00000104555	sh2d3cb	SH2 domain containing 3Cb	394051
+ENSDARG00000102978	eif4a3	eukaryotic translation initiation factor 4A3	394053
+ENSDARG00000024209	wasf2	WAS protein family, member 2	394056
+ENSDARG00000042851	srp9	signal recognition particle 9	394071
+ENSDARG00000003200	foxm1	forkhead box M1	394072
+ENSDARG00000035324	hnrpl	heterogeneous nuclear ribonucleoprotein L	394074
+ENSDARG00000001057	bysl	bystin-like	394081
+ENSDARG00000054578	arl6ip1	ADP-ribosylation factor-like 6 interacting protein 1	394087
+ENSDARG00000010789	homer3	homer scaffolding protein 3	394088
+ENSDARG00000011555	spag7	sperm associated antigen 7	394100
+ENSDARG00000021439	ncoa4	nuclear receptor coactivator 4	394104
+ENSDARG00000007959	hibadhb	3-hydroxyisobutyrate dehydrogenase b	394135
+ENSDARG00000016375	asns	asparagine synthetase	394138
+ENSDARG00000044688	dusp4	dual specificity phosphatase 4	394146
+ENSDARG00000012295	bcs1l	BC1 (ubiquinol-cytochrome c reductase) synthesis-like	394157
+ENSDARG00000012572	polr3f	polymerase (RNA) III (DNA directed) polypeptide F	394162
+ENSDARG00000099256	pum1	pumilio RNA-binding family member 1	394176
+ENSDARG00000056601	plekha3	pleckstrin homology domain containing, family A (phosphoinositide binding specific) member 3	394182
+ENSDARG00000021220	hmgcl	3-hydroxymethyl-3-methylglutaryl-CoA lyase	394190
+ENSDARG00000013397	bnip2	BCL2/adenovirus E1B interacting protein 2	394197
+ENSDARG00000003952	pfn2	profilin 2	394235
+ENSDARG00000008383	arpc1a	actin related protein 2/3 complex, subunit 1A	394243
+ENSDARG00000013076	bmi1b	bmi1 polycomb ring finger oncogene 1b	394249
+ENSDARG00000019062	arpc5b	actin related protein 2/3 complex, subunit 5B	399482
+ENSDARG00000037203	insig2	insulin induced gene 2	399645
+ENSDARG00000039130	cdkn3	cyclin-dependent kinase inhibitor 3	402796
+ENSDARG00000016093	qtrtd1	queuine tRNA-ribosyltransferase domain containing 1	402798
+ENSDARG00000075380	kri1	KRI1 homolog	402800
+ENSDARG00000070454	pla2g12a	phospholipase A2, group XIIA	402802
+ENSDARG00000039338	gadd45gip1	growth arrest and DNA-damage-inducible, gamma interacting protein 1	402803
+ENSDARG00000041991	rrp9	ribosomal RNA processing 9, small subunit (SSU) processome component, homolog (yeast)	402808
+ENSDARG00000003757	cnpy1	canopy1	402819
+ENSDARG00000042900	gtpbp1l	GTP binding protein 1, like	402863
+ENSDARG00000005870	mmadhc	methylmalonic aciduria (cobalamin deficiency) cblD type, with homocystinuria	402886
+ENSDARG00000005799	smim14	small integral membrane protein 14	402894
+ENSDARG00000003845	chm	choroideremia (Rab escort protein 1)	402935
+ENSDARG00000071116	eepd1	endonuclease/exonuclease/phosphatase family domain containing 1	402965
+ENSDARG00000011125	snrpb	small nuclear ribonucleoprotein polypeptides B and B1	402966
+ENSDARG00000011740	u2af2b	U2 small nuclear RNA auxiliary factor 2b	402989
+ENSDARG00000042252	eif4h	eukaryotic translation initiation factor 4h	402996
+ENSDARG00000044685	nr0b2a	nuclear receptor subfamily 0, group B, member 2a	403010
+ENSDARG00000003526	psma5	proteasome subunit alpha 5	403011
+ENSDARG00000075883	bub3	BUB3 mitotic checkpoint protein	403012
+ENSDARG00000040812	ncf4	neutrophil cytosolic factor 4	403014
+ENSDARG00000035679	si:rp71-45k5.4	si:rp71-45k5.4	403015
+ENSDARG00000029911	casc3	cancer susceptibility candidate 3	403025
+ENSDARG00000023062	zgc:85866	cysteine-rich, angiogenic inducer, 61	403033
+ENSDARG00000054533	araf	A-Raf proto-oncogene, serine/threonine kinase	403063
+ENSDARG00000098368	aplp1	amyloid beta (A4) precursor-like protein 1	404233
+ENSDARG00000027491	uros	uroporphyrinogen III synthase	404731
+ENSDARG00000031095	veph1	ventricular zone expressed PH domain-containing 1	405756
+ENSDARG00000001803	kcnh6a	potassium voltage-gated channel, subfamily H (eag-related), member 6a	405763
+ENSDARG00000091555	ostf1	osteoclast stimulating factor 1	405783
+ENSDARG00000102995	rbm24a	RNA binding motif protein 24a	405801
+ENSDARG00000099774	cyb5b	cytochrome b5 type B	405812
+ENSDARG00000016233	sdr16c5a	short chain dehydrogenase/reductase family 16C, member 5a	405814
+ENSDARG00000043884	nup43	nucleoporin 43	405828
+ENSDARG00000014015	zgc:77086	zgc:77086	405841
+ENSDARG00000018593	parp16	poly (ADP-ribose) polymerase family, member 16	405842
+ENSDARG00000038910	pccb	propionyl CoA carboxylase, beta polypeptide	405861
+ENSDARG00000039667	mrpl38	mitochondrial ribosomal protein L38	405881
+ENSDARG00000053194	pdzd11	PDZ domain containing 11	405893
+ENSDARG00000036721	tomm40l	translocase of outer mitochondrial membrane 40 homolog, like	405895
+ENSDARG00000051916	cdk7	cyclin-dependent kinase 7	405897
+ENSDARG00000021372	tob1b	transducer of ERBB2, 1b	406245
+ENSDARG00000041505	itm2bb	integral membrane protein 2Bb	406248
+ENSDARG00000015111	ddx39ab	DEAD (Asp-Glu-Ala-Asp) box polypeptide 39Ab	406249
+ENSDARG00000053912	fbl	fibrillarin	406275
+ENSDARG00000020311	cnih1	cornichon family AMPA receptor auxiliary protein 1	406282
+ENSDARG00000056473	chaf1b	chromatin assembly factor 1, subunit B	406285
+ENSDARG00000018461	zgc:56095	zgc:56095	406286
+ENSDARG00000009342	txndc5	thioredoxin domain containing 5	406289
+ENSDARG00000058454	dynll1	dynein, light chain, LC8-type 1	406297
+ENSDARG00000103163	tomm20a	translocase of outer mitochondrial membrane 20	406309
+ENSDARG00000075323	srfbp1	serum response factor binding protein 1	406321
+ENSDARG00000007216	abce1	ATP-binding cassette, sub-family E (OABP), member 1	406324
+ENSDARG00000037559	uba1	ubiquitin-like modifier activating enzyme 1	406335
+ENSDARG00000029292	zgc:55943	zgc:55943	406337
+ENSDARG00000100515	dusp1	dual specificity phosphatase 1	406340
+ENSDARG00000100741	cdc20	cell division cycle 20 homolog	406353
+ENSDARG00000020529	hacl1	2-hydroxyacyl-CoA lyase 1	406358
+ENSDARG00000101047	rtcb	RNA 2',3'-cyclic phosphate and 5'-OH ligase	406376
+ENSDARG00000019924	cmpk	cytidylate kinase	406383
+ENSDARG00000043371	mdh2	malate dehydrogenase 2, NAD (mitochondrial)	406405
+ENSDARG00000009534	wls	wntless Wnt ligand secretion mediator	406420
+ENSDARG00000021346	pdhb	pyruvate dehydrogenase (lipoamide) beta	406428
+ENSDARG00000039969	akirin1	akirin 1	406432
+ENSDARG00000037284	ptges3a	prostaglandin E synthase 3a (cytosolic)	406449
+ENSDARG00000075014	sqstm1	sequestosome 1	406452
+ENSDARG00000037158	rcc1	regulator of chromosome condensation 1	406457
+ENSDARG00000020114	slc20a1a	solute carrier family 20, member 1a	406458
+ENSDARG00000031795	abcf1	ATP-binding cassette, sub-family F (GCN20), member 1	406467
+ENSDARG00000014386	galnt6	UDP-N-acetyl-alpha-D-galactosamine:polypeptide N-acetylgalactosaminyltransferase 6 (GalNAc-T6)	406477
+ENSDARG00000070475	khdrbs1b	KH domain containing, RNA binding, signal transduction associated 1b	406516
+ENSDARG00000014591	ilf2	interleukin enhancer binding factor 2	406517
+ENSDARG00000032708	arl4cb	ADP-ribosylation factor-like 4Cb	406531
+ENSDARG00000006125	csnk1db	casein kinase 1, delta b	406533
+ENSDARG00000013856	amy2a	amylase, alpha 2A (pancreatic)	406539
+ENSDARG00000043716	cldn5a	claudin 5a	406559
+ENSDARG00000058148	dnajc7	DnaJ (Hsp40) homolog, subfamily C, member 7	406579
+ENSDARG00000099241	ppp2cb	protein phosphatase 2, catalytic subunit, beta isozyme	406582
+ENSDARG00000016156	fam53b	family with sequence similarity 53, member B	406586
+ENSDARG00000099865	hnrnpabb	heterogeneous nuclear ribonucleoprotein A/Bb	406594
+ENSDARG00000017757	pik3cg	phosphatidylinositol-4,5-bisphosphate 3-kinase, catalytic subunit gamma	406598
+ENSDARG00000014313	atp5j	ATP synthase, H+ transporting, mitochondrial Fo complex, subunit F6	406599
+ENSDARG00000098635	irf2bp2b	interferon regulatory factor 2 binding protein 2b	406614
+ENSDARG00000036942	gpd1c	glycerol-3-phosphate dehydrogenase 1c	406615
+ENSDARG00000014517	usp5	ubiquitin specific protease 5	406618
+ENSDARG00000100363	dcun1d5	DCN1, defective in cullin neddylation 1, domain containing 5 (S. cerevisiae)	406622
+ENSDARG00000033855	rqcd1	RCD1 required for cell differentiation1 homolog (S. pombe)	406632
+ENSDARG00000105014	mre11a	MRE11 homolog A, double strand break repair nuclease	406637
+ENSDARG00000039980	ppt1	palmitoyl-protein thioesterase 1 (ceroid-lipofuscinosis, neuronal 1, infantile)	406648
+ENSDARG00000087927	nudt9	nudix (nucleoside diphosphate linked moiety X)-type motif 9	406661
+ENSDARG00000033666	pi4k2a	phosphatidylinositol 4-kinase type 2 alpha	406667
+ENSDARG00000028614	mospd1	motile sperm domain containing 1	406678
+ENSDARG00000017093	emc8	ER membrane protein complex subunit 8	406679
+ENSDARG00000010279	scamp2	secretory carrier membrane protein 2	406687
+ENSDARG00000043209	nsun5	NOP2/Sun domain family, member 5	406690
+ENSDARG00000030106	stmn4	stathmin-like 4	406710
+ENSDARG00000030573	nudt1	nudix (nucleoside diphosphate linked moiety X)-type motif 1	406727
+ENSDARG00000030064	plekha1a	pleckstrin homology domain containing, family A (phosphoinositide binding specific) member 1a	406745
+ENSDARG00000013122	maf1	MAF1 homolog, negative regulator of RNA polymerase III	406750
+ENSDARG00000007323	chmp4bb	charged multivesicular body protein 4Bb	406766
+ENSDARG00000103978	sh3bp5b	SH3-domain binding protein 5b (BTK-associated)	406767
+ENSDARG00000045199	zgc:55262	zgc:55262	406768
+ENSDARG00000003808	aqp3a	aquaporin 3a	406777
+ENSDARG00000012314	usp25	ubiquitin specific peptidase 25	406790
+ENSDARG00000104372	gnb1b	guanine nucleotide binding protein (G protein), beta polypeptide 1b	406796
+ENSDARG00000008748	ube2na	ubiquitin-conjugating enzyme E2Na	406807
+ENSDARG00000053101	prpf38b	pre-mRNA processing factor 38B	406810
+ENSDARG00000103553	sf3b3	splicing factor 3b, subunit 3	406824
+ENSDARG00000023820	faxdc2	fatty acid hydroxylase domain containing 2	406828
+ENSDARG00000036831	rnf41	ring finger protein 41	406837
+ENSDARG00000002184	igbp1	immunoglobulin (CD79A) binding protein 1	406843
+ENSDARG00000015757	tmem50a	transmembrane protein 50A	406850
+ENSDARG00000010078	nup133	nucleoporin 133	406852
+ENSDARG00000020926	creb3l3l	cAMP responsive element binding protein 3-like 3 like	406853
+ENSDARG00000038185	gh1	growth hormone 1	407639
+ENSDARG00000015851	pnn	pinin, desmosome associated protein	407733
+ENSDARG00000021869	rcan2	regulator of calcineurin 2	407988
+ENSDARG00000014866	hprt1l	hypoxanthine phosphoribosyltransferase 1, like	415146
+ENSDARG00000038566	gnptg	N-acetylglucosamine-1-phosphate transferase, gamma subunit	415147
+ENSDARG00000091402	eif2b1	eukaryotic translation initiation factor 2B, subunit 1 alpha	415150
+ENSDARG00000036995	lsm6	LSM6 homolog, U6 small nuclear RNA and mRNA degradation associated	415167
+ENSDARG00000035573	zgc:86811	zgc:86811	415208
+ENSDARG00000020279	efcab7	EF-hand calcium binding domain 7	415210
+ENSDARG00000001241	puf60b	poly-U binding splicing factor b	415211
+ENSDARG00000056479	rab1bb	RAB1B, member RAS oncogene family b	415219
+ENSDARG00000020454	psmd8	proteasome 26S subunit, non-ATPase 8	415221
+ENSDARG00000044241	dram2b	DNA-damage regulated autophagy modulator 2b	415225
+ENSDARG00000033370	ppil3	peptidylprolyl isomerase (cyclophilin)-like 3	415236
+ENSDARG00000041592	dcun1d2b	DCN1, defective in cullin neddylation 1, domain containing 2b	415246
+ENSDARG00000028379	trub2	TruB pseudouridine (psi) synthase family member 2	431747
+ENSDARG00000104571	gadd45ab	growth arrest and DNA-damage-inducible, alpha, b	431763
+ENSDARG00000043722	cpa4	carboxypeptidase A4	431764
+ENSDARG00000018658	aar2	AAR2 splicing factor homolog (S. cerevisiae)	431768
+ENSDARG00000026198	enoph1	enolase-phosphatase 1	431773
+ENSDARG00000034178	cpsf1	cleavage and polyadenylation specific factor 1	432372
+ENSDARG00000041870	ift172	intraflagellar transport 172	432389
+ENSDARG00000038066	kpna2	karyopherin alpha 2 (RAG cohort 1, importin alpha 1)	436607
+ENSDARG00000013776	thop1	thimet oligopeptidase 1	436628
+ENSDARG00000016649	akr7a3	aldo-keto reductase family 7, member A3 (aflatoxin aldehyde reductase)	436642
+ENSDARG00000038567	tsr3	TSR3, 20S rRNA accumulation, homolog (S. cerevisiae)	436643
+ENSDARG00000057630	galm	galactose mutarotase	436646
+ENSDARG00000053485	aldh6a1	aldehyde dehydrogenase 6 family, member A1	436647
+ENSDARG00000031776	zgc:92066	zgc:92066	436651
+ENSDARG00000038693	gng7	guanine nucleotide binding protein (G protein), gamma 7	436670
+ENSDARG00000019222	mrpl24	mitochondrial ribosomal protein L24	436674
+ENSDARG00000104907	ing2	inhibitor of growth family, member 2	436721
+ENSDARG00000089245	dusp23b	dual specificity phosphatase 23b	436735
+ENSDARG00000058297	timm13	translocase of inner mitochondrial membrane 13 homolog (yeast)	436738
+ENSDARG00000102590	polr3h	polymerase (RNA) III (DNA directed) polypeptide H	436749
+ENSDARG00000029064	uqcrq	ubiquinol-cytochrome c reductase, complex III subunit VII	436768
+ENSDARG00000007720	sub1b	SUB1 homolog, transcriptional regulator b	436778
+ENSDARG00000026281	lyrm1	LYR motif containing 1	436779
+ENSDARG00000101259	hgh1	HGH1 homolog (S. cerevisiae)	436795
+ENSDARG00000044402	nop16	NOP16 nucleolar protein homolog (yeast)	436807
+ENSDARG00000039882	ap3s2	adaptor-related protein complex 3, sigma 2 subunit	436812
+ENSDARG00000070131	rpp25l	ribonuclease P/MRP 25 subunit-like	436813
+ENSDARG00000027547	zgc:92789	zgc:92789	436818
+ENSDARG00000046048	vapal	VAMP (vesicle-associated membrane protein)-associated protein A, like	436819
+ENSDARG00000037855	taf11	TAF11 RNA polymerase II, TATA box binding protein (TBP)-associated factor	436821
+ENSDARG00000016745	slc35f6	solute carrier family 35, member F6	436832
+ENSDARG00000056510	gstk1	glutathione S-transferase kappa 1	436833
+ENSDARG00000052712	suclg1	succinate-CoA ligase, alpha subunit	436850
+ENSDARG00000057241	tnfsf10	tumor necrosis factor (ligand) superfamily, member 10	436866
+ENSDARG00000040513	zgc:92313	zgc:92313	436869
+ENSDARG00000023591	nrbf2b	nuclear receptor binding factor 2b	436886
+ENSDARG00000022183	gsto1	glutathione S-transferase omega 1	436894
+ENSDARG00000038789	tmem53	transmembrane protein 53	436910
+ENSDARG00000005104	limk2	LIM domain kinase 2	436924
+ENSDARG00000005945	sart1	squamous cell carcinoma antigen recognised by T cells	436946
+ENSDARG00000096829	blvrb	biliverdin reductase B	436959
+ENSDARG00000035625	snrnp27	small nuclear ribonucleoprotein 27 (U4/U6.U5)	436976
+ENSDARG00000054540	imp4	IMP4, U3 small nucleolar ribonucleoprotein, homolog (yeast)	436992
+ENSDARG00000089517	zgc:92594	zgc:92594	436996
+ENSDARG00000088276	zgc:92591	zgc:92591	436997
+ENSDARG00000020595	gnl3l	guanine nucleotide binding protein-like 3 (nucleolar)-like	442932
+ENSDARG00000104508	slc10a7	solute carrier family 10, member 7	445025
+ENSDARG00000015394	thoc7	THO complex 7	445035
+ENSDARG00000069734	zgc:92880	zgc:92880	445037
+ENSDARG00000013749	zgc:92113	zgc:92113	445054
+ENSDARG00000007181	nadk2	NAD kinase 2, mitochondrial	445071
+ENSDARG00000008811	cmtm3	CKLF-like MARVEL transmembrane domain containing 3	445074
+ENSDARG00000012674	rpusd4	RNA pseudouridylate synthase domain containing 4	445101
+ENSDARG00000031814	dhrs13b	dehydrogenase/reductase (SDR family) member 13b	445116
+ENSDARG00000005023	fkbp9	FK506 binding protein 9	445126
+ENSDARG00000033376	chchd4a	coiled-coil-helix-coiled-coil-helix domain containing 4a	445144
+ENSDARG00000104687	slc16a9b	solute carrier family 16, member 9b	445158
+ENSDARG00000004618	stx2a	syntaxin 2a	445167
+ENSDARG00000026183	polr2eb	polymerase (RNA) II (DNA directed) polypeptide E, b	445170
+ENSDARG00000043010	camk2d1	calcium/calmodulin-dependent protein kinase (CaM kinase) II delta 1	445208
+ENSDARG00000035907	fam49a	family with sequence similarity 49, member A	445212
+ENSDARG00000033973	mrps23	mitochondrial ribosomal protein S23	445221
+ENSDARG00000093007	mphosph6	M-phase phosphoprotein 6	445224
+ENSDARG00000036811	ifrd2	interferon-related developmental regulator 2	445227
+ENSDARG00000055635	crk	v-crk avian sarcoma virus CT10 oncogene homolog	445234
+ENSDARG00000023989	pef1	penta-EF-hand domain containing 1	445249
+ENSDARG00000022340	ufc1	ubiquitin-fold modifier conjugating enzyme 1	445256
+ENSDARG00000035678	zgc:91910	zgc:91910	445276
+ENSDARG00000015315	psmc5	proteasome 26S subunit, ATPase 5	445285
+ENSDARG00000015123	zgc:101000	zgc:101000	445317
+ENSDARG00000025854	ddx51	DEAD (Asp-Glu-Ala-Asp) box polypeptide 51	445387
+ENSDARG00000020913	ddx56	DEAD (Asp-Glu-Ala-Asp) box helicase 56	445399
+ENSDARG00000105037	snrpf	small nuclear ribonucleoprotein polypeptide F	445404
+ENSDARG00000030139	sdhdb	succinate dehydrogenase complex, subunit D, integral membrane protein b	445500
+ENSDARG00000041113	wdr18	WD repeat domain 18	445819
+ENSDARG00000037930	rnf113a	ring finger protein 113A	446116
+ENSDARG00000035562	mpdu1a	mannose-P-dolichol utilization defect 1a	447806
+ENSDARG00000034852	nt5c2l1	5'-nucleotidase, cytosolic II, like 1	447810
+ENSDARG00000069360	ppp3r1b	protein phosphatase 3 (formerly 2B), regulatory s1ubunit B, alpha isoform, b	447814
+ENSDARG00000016830	rimkla	ribosomal modification protein rimK-like family member A	447815
+ENSDARG00000052783	cdc42ep3	CDC42 effector protein (Rho GTPase binding) 3	447829
+ENSDARG00000014179	pfkma	phosphofructokinase, muscle a	447836
+ENSDARG00000056720	utp3	UTP3, small subunit (SSU) processome component, homolog (S. cerevisiae)	447856
+ENSDARG00000100850	rnf103	ring finger protein 103	447861
+ENSDARG00000042509	glod4	glyoxalase domain containing 4	447874
+ENSDARG00000056583	ndufs6	NADH dehydrogenase (ubiquinone) Fe-S protein 6	447913
+ENSDARG00000075677	mrpl17	mitochondrial ribosomal protein L17	447945
+ENSDARG00000069706	prmt6	protein arginine methyltransferase 6	448867
+ENSDARG00000101116	vps33a	vacuolar protein sorting 33A	448942
+ENSDARG00000007135	cnot3a	CCR4-NOT transcription complex, subunit 3a	449540
+ENSDARG00000103824	hint1	histidine triad nucleotide binding protein 1	449551
+ENSDARG00000045999	saa	serum amyloid A	449557
+ENSDARG00000013250	tars	threonyl-tRNA synthetase	449661
+ENSDARG00000034826	park7	parkinson protein 7	449674
+ENSDARG00000058285	cpt1b	carnitine palmitoyltransferase 1B (muscle)	449677
+ENSDARG00000098785	glrx3	glutaredoxin 3	449777
+ENSDARG00000036190	txnl4a	thioredoxin-like 4A	449780
+ENSDARG00000033201	zgc:101840	zgc:101840	449795
+ENSDARG00000102615	fra10ac1	FRA10A associated CGG repeat 1	449836
+ENSDARG00000038030	rbx1	ring-box 1, E3 ubiquitin protein ligase	449846
+ENSDARG00000015653	tnip1	TNFAIP3 interacting protein 1	449958
+ENSDARG00000040443	polr2i	polymerase (RNA) II (DNA directed) polypeptide I	449992
+ENSDARG00000026655	tspo	translocator protein	450011
+ENSDARG00000043003	pcyt2	phosphate cytidylyltransferase 2, ethanolamine	450016
+ENSDARG00000070431	fip1l1b	FIP1 like 1b (S. cerevisiae)	450021
+ENSDARG00000053395	cdkn2aipnl	CDKN2A interacting protein N-terminal like	450034
+ENSDARG00000029003	eif1axa	eukaryotic translation initiation factor 1A, X-linked, a	450062
+ENSDARG00000019228	mogat2	monoacylglycerol O-acyltransferase 2	450063
+ENSDARG00000017781	hsd17b10	hydroxysteroid (17-beta) dehydrogenase 10	450078
+ENSDARG00000024654	pgm3	phosphoglucomutase 3	474321
+ENSDARG00000021112	c1d	C1D nuclear receptor corepressor	474329
+ENSDARG00000044874	zgc:92107	zgc:92107	492329
+ENSDARG00000070801	opa1	optic atrophy 1 (autosomal dominant)	492332
+ENSDARG00000037865	cln3	ceroid-lipofuscinosis, neuronal 3	492340
+ENSDARG00000026941	fbxl4	F-box and leucine-rich repeat protein 4	492349
+ENSDARG00000100083	sgut1	SGT1 homolog, MIS12 kinetochore complex assembly cochaperone	492489
+ENSDARG00000011122	pptc7a	PTC7 protein phosphatase homolog a	492506
+ENSDARG00000033451	fam173b	family with sequence similarity 173, member B	492519
+ENSDARG00000040453	wdfy2	WD repeat and FYVE domain containing 2	492636
+ENSDARG00000035859	angptl4	angiopoietin-like 4	492647
+ENSDARG00000057218	tbc1d15	TBC1 domain family, member 15	492676
+ENSDARG00000052522	snx11	sorting nexin 11	492678
+ENSDARG00000077883	fam83d	family with sequence similarity 83, member D	492689
+ENSDARG00000004325	casp9	caspase 9, apoptosis-related cysteine peptidase	492763
+ENSDARG00000057983	svopl	SVOP-like	492766
+ENSDARG00000010738	zgc:101716	zgc:101716	492784
+ENSDARG00000037410	med28	mediator complex subunit 28	493610
+ENSDARG00000040046	snai2	snail family zinc finger 2	494038
+ENSDARG00000015224	cd2ap	CD2-associated protein	494040
+ENSDARG00000099273	zgc:103508	zgc:103508	494062
+ENSDARG00000051889	dhodh	dihydroorotate dehydrogenase	494065
+ENSDARG00000039666	tsta3	tissue specific transplantation antigen P35B	494077
+ENSDARG00000073848	arhgef7b	Rho guanine nucleotide exchange factor (GEF) 7b	494081
+ENSDARG00000042827	adoa	2-aminoethanethiol (cysteamine) dioxygenase a	494091
+ENSDARG00000021324	nsun4	NOL1/NOP2/Sun domain family, member 4	494106
+ENSDARG00000104353	nop58	NOP58 ribonucleoprotein homolog (yeast)	494152
+ENSDARG00000018485	cyp2v1	cytochrome P450, family 2, subfamily V, polypeptide 1	494153
+ENSDARG00000021509	tab2	TGF-beta activated kinase 1/MAP3K7 binding protein 2	494163
+ENSDARG00000100729	tln1	talin 1	494453
+ENSDARG00000038577	cox6c	cytochrome c oxidase subunit VIc	494577
+ENSDARG00000057272	slc30a9	solute carrier family 30 (zinc transporter), member 9	497184
+ENSDARG00000103370	lrrc8da	leucine rich repeat containing 8 family, member Da	497399
+ENSDARG00000030449	crabp2b	cellular retinoic acid binding protein 2, b	503502
+ENSDARG00000055524	rnf7	ring finger protein 7	503534
+ENSDARG00000020979	fam65c	family with sequence similarity 65, member C	503535
+ENSDARG00000025549	ndufaf1	NADH dehydrogenase (ubiquinone) complex I, assembly factor 1	503714
+ENSDARG00000017014	ywhae2	tyrosine 3-monooxygenase/tryptophan 5-monooxygenase activation protein, epsilon polypeptide 2	503763
+ENSDARG00000070780	rln3a	relaxin 3a	503864
+ENSDARG00000053113	ly75	lymphocyte antigen 75	504036
+ENSDARG00000023110	mapk7	mitogen-activated protein kinase 7	541323
+ENSDARG00000039346	ndufa5	NADH dehydrogenase (ubiquinone) 1 alpha subcomplex, 5	541328
+ENSDARG00000071203	sptssa	serine palmitoyltransferase, small subunit A	541337
+ENSDARG00000104771	timm44	translocase of inner mitochondrial membrane 44 homolog (yeast)	541380
+ENSDARG00000102115	ndufc2	NADH dehydrogenase (ubiquinone) 1, subcomplex unknown, 2	541390
+ENSDARG00000032049	enah	enabled homolog (Drosophila)	541394
+ENSDARG00000070358	smim12	small integral membrane protein 12	541401
+ENSDARG00000036070	znrd1	zinc ribbon domain containing 1	541428
+ENSDARG00000052124	accs	1-aminocyclopropane-1-carboxylate synthase homolog (Arabidopsis)(non-functional)	541510
+ENSDARG00000020642	gtdc1	glycosyltransferase-like domain containing 1	550132
+ENSDARG00000104071	zgc:110091	zgc:110091	550239
+ENSDARG00000100060	exosc7	exosome component 7	550247
+ENSDARG00000020488	arhgap17a	Rho GTPase activating protein 17a	550254
+ENSDARG00000102887	abhd4	abhydrolase domain containing 4	550276
+ENSDARG00000036063	ppp1r11	protein phosphatase 1, regulatory (inhibitor) subunit 11	550290
+ENSDARG00000019791	prmt3	protein arginine methyltransferase 3	550348
+ENSDARG00000017910	pdss1	prenyl (decaprenyl) diphosphate synthase, subunit 1	550349
+ENSDARG00000014963	triap1	TP53 regulated inhibitor of apoptosis 1	550367
+ENSDARG00000042866	cx35.4	connexin 35.4	550380
+ENSDARG00000038768	mrpl12	mitochondrial ribosomal protein L12	550391
+ENSDARG00000070623	med10	mediator complex subunit 10	550394
+ENSDARG00000045416	mppe1	metallophosphoesterase 1	550396
+ENSDARG00000043587	srd5a2a	steroid-5-alpha-reductase, alpha polypeptide 2a	550398
+ENSDARG00000024124	sde2	SDE2 telomere maintenance homolog (S. pombe)	550448
+ENSDARG00000007065	mrps18b	mitochondrial ribosomal protein S18B	550455
+ENSDARG00000099640	eed	embryonic ectoderm development	550463
+ENSDARG00000015425	slc24a4a	solute carrier family 24 (sodium/potassium/calcium exchanger), member 4a	550467
+ENSDARG00000088439	gm2a	GM2 ganglioside activator	550529
+ENSDARG00000030441	ppa1b	pyrophosphatase (inorganic) 1b	550531
+ENSDARG00000012274	eif4e1c	eukaryotic translation initiation factor 4E family member 1c	550549
+ENSDARG00000025106	ppp3cb	protein phosphatase 3, catalytic subunit, beta isozyme	550554
+ENSDARG00000057973	dph1	diphthamide biosynthesis 1	550559
+ENSDARG00000019845	pdlim1	PDZ and LIM domain 1 (elfin)	550568
+ENSDARG00000087196	fibinb	fin bud initiation factor b	550571
+ENSDARG00000038271	zgc:113293	zgc:113293	550593
+ENSDARG00000003751	lats1	large tumor suppressor kinase 1	553164
+ENSDARG00000021398	mul1a	mitochondrial E3 ubiquitin protein ligase 1a	553180
+ENSDARG00000052390	tmed8	transmembrane p24 trafficking protein 8	553196
+ENSDARG00000054746	uggt1	UDP-glucose glycoprotein glucosyltransferase 1	553288
+ENSDARG00000010978	trmt1	tRNA methyltransferase 1	553298
+ENSDARG00000041493	ipo4	importin 4	553305
+ENSDARG00000099966	polr2a	polymerase (RNA) II (DNA directed) polypeptide A	553347
+ENSDARG00000105083	chd5	chromodomain helicase DNA binding protein 5	553422
+ENSDARG00000070545	top1l	topoisomerase (DNA) I, like	553496
+ENSDARG00000040326	dhx29	DEAH (Asp-Glu-Ala-His) box polypeptide 29	553505
+ENSDARG00000077301	mlf1	myeloid leukemia factor 1	553527
+ENSDARG00000029747	mep1a.1	meprin A, alpha (PABA peptide hydrolase), tandem duplicate 1	553530
+ENSDARG00000037965	srrm2	serine/arginine repetitive matrix 2	553531
+ENSDARG00000057105	nle1	notchless homolog 1 (Drosophila)	553606
+ENSDARG00000059075	nip7	NIP7, nucleolar pre-rRNA processing protein	553616
+ENSDARG00000003205	ngly1	N-glycanase 1	553627
+ENSDARG00000101323	trnau1apa	tRNA selenocysteine 1 associated protein 1a	553636
+ENSDARG00000044692	eri1	exoribonuclease 1	553641
+ENSDARG00000008068	tma16	translation machinery associated 16 homolog	553647
+ENSDARG00000025212	cpsf3l	cleavage and polyadenylation specific factor 3-like	553648
+ENSDARG00000005651	hrasb	-Ha-ras Harvey rat sarcoma viral oncogene homolog b	553656
+ENSDARG00000093406	zgc:111986	zgc:111986	553664
+ENSDARG00000020976	ubald1b	UBA-like domain containing 1b	553697
+ENSDARG00000053155	alg3	asparagine-linked glycosylation 3 (alpha-1,3-mannosyltransferase)	553725
+ENSDARG00000006434	polr1e	polymerase (RNA) I polypeptide E	553733
+ENSDARG00000078315	zgc:110063	zgc:110063	553772
+ENSDARG00000071878	trmt112	tRNA methyltransferase 11-2 homolog (S. cerevisiae)	553790
+ENSDARG00000036903	irak1bp1	interleukin-1 receptor-associated kinase 1 binding protein 1	553809
+ENSDARG00000089767	rnf130	ring finger protein 130	553950
+ENSDARG00000056029	cyp26c1	cytochrome P450, family 26, subfamily C, polypeptide 1	554036
+ENSDARG00000045565	noc4l	nucleolar complex associated 4 homolog	554096
+ENSDARG00000057805	mrpl28	mitochondrial ribosomal protein L28	554098
+ENSDARG00000035146	polr2j	polymerase (RNA) II (DNA directed) polypeptide J	554099
+ENSDARG00000098304	taok1b	TAO kinase 1b	554108
+ENSDARG00000013613	anxa13l	annexin A13, like	554118
+ENSDARG00000021984	ndufa2	NADH dehydrogenase (ubiquinone) 1 alpha subcomplex, 2	554125
+ENSDARG00000034957	hddc2	HD domain containing 2	554129
+ENSDARG00000038397	rpap2	RNA polymerase II associated protein 2	554138
+ENSDARG00000056338	szrd1	SUZ RNA binding domain containing 1	554231
+ENSDARG00000025600	or102-5	odorant receptor, family C, subfamily 102, member 5	554781
+ENSDARG00000068708	ifrd1	interferon-related developmental regulator 1	555178
+ENSDARG00000005453	foxp2	forkhead box P2	555242
+ENSDARG00000043877	mmachc	methylmalonic aciduria (cobalamin deficiency) cblC type, with homocystinuria	555267
+ENSDARG00000061757	rabgap1l	RAB GTPase activating protein 1-like	555272
+ENSDARG00000036179	myo1ea	myosin IE, a	555285
+ENSDARG00000062278	si:dkey-202e17.1	si:dkey-202e17.1	555344
+ENSDARG00000007737	zyg11	zyg-11 homolog (C. elegans)	555349
+ENSDARG00000071361	si:ch211-197g15.10	si:ch211-197g15.10	555357
+ENSDARG00000005595	adgb	androglobin	555435
+ENSDARG00000069045	chtf8	CTF8, chromosome transmission fidelity factor 8 homolog (S. cerevisiae)	555570
+ENSDARG00000013528	mcm9	minichromosome maintenance 9 homologous recombination repair factor	555610
+ENSDARG00000053877	cpdb	carboxypeptidase D, b	555848
+ENSDARG00000099143	fnta	farnesyltransferase, CAAX box, alpha	555882
+ENSDARG00000061177	mov10b.1	Moloney leukemia virus 10b, tandem duplicate 1	556024
+ENSDARG00000076317	plod3	procollagen-lysine, 2-oxoglutarate 5-dioxygenase 3	556077
+ENSDARG00000098317	dync1li1	dynein, cytoplasmic 1, light intermediate chain 1	556103
+ENSDARG00000092123	si:dkey-20d21.12	si:dkey-20d21.12	556245
+ENSDARG00000059475	camsap3	calmodulin regulated spectrin-associated protein family, member 3	556256
+ENSDARG00000075129	mrps11	mitochondrial ribosomal protein S11	556272
+ENSDARG00000061204	ddx20	DEAD (Asp-Glu-Ala-Asp) box polypeptide 20	556273
+ENSDARG00000096651	LOC556363	protein GPR108	556363
+ENSDARG00000088087	kdm6ba	lysine (K)-specific demethylase 6B, a	556678
+ENSDARG00000077299	yars2	tyrosyl-tRNA synthetase 2, mitochondrial	556702
+ENSDARG00000045525	tmcc3	transmembrane and coiled-coil domain family 3	556763
+ENSDARG00000032117	ddx1	DEAD (Asp-Glu-Ala-Asp) box helicase 1	556790
+ENSDARG00000017901	tln2a	talin 2a	556842
+ENSDARG00000067630	zgc:154075	zgc:154075	556929
+ENSDARG00000058946	LOC556989	myosin-IIIb	556989
+ENSDARG00000063218	ppm1la	protein phosphatase, Mg2+/Mn2+ dependent, 1La	556994
+ENSDARG00000068344	mmab	methylmalonic aciduria (cobalamin deficiency) cblB type	557077
+ENSDARG00000007179	sash1a	SAM and SH3 domain containing 1a	557132
+ENSDARG00000054374	alg13	ALG13, UDP-N-acetylglucosaminyltransferase subunit	557181
+ENSDARG00000099579	aldh18a1	aldehyde dehydrogenase 18 family, member A1	557186
+ENSDARG00000100968	si:ch211-1a19.3	si:ch211-1a19.3	557223
+ENSDARG00000016080	nob1	NIN1/RPN12 binding protein 1 homolog (S. cerevisiae)	557254
+ENSDARG00000077533	eif3f	eukaryotic translation initiation factor 3, subunit F	557270
+ENSDARG00000055339	si:ch73-1a9.4	si:ch73-1a9.4	557349
+ENSDARG00000079276	ube2ql1	ubiquitin-conjugating enzyme E2Q family-like 1	557472
+ENSDARG00000029100	chchd1	coiled-coil-helix-coiled-coil-helix domain containing 1	557606
+ENSDARG00000022891	zgc:175214	zgc:175214	557610
+ENSDARG00000059308	golt1bb	golgi transport 1Bb	557646
+ENSDARG00000056259	tmem131	transmembrane protein 131	557719
+ENSDARG00000076939	znf451	zinc finger protein 451	557758
+ENSDARG00000077403	col8a1a	collagen, type VIII, alpha 1a	557795
+ENSDARG00000079584	zgc:194930	zgc:194930	557813
+ENSDARG00000014041	smarcad1a	SWI/SNF-related, matrix-associated actin-dependent regulator of chromatin, subfamily a, containing DEAD/H box 1 a	557875
+ENSDARG00000003592	surf1	surfeit 1	557970
+ENSDARG00000079198	usp13	ubiquitin specific peptidase 13 (isopeptidase T-3)	558011
+ENSDARG00000015422	ppil1	peptidylprolyl isomerase (cyclophilin)-like 1	558042
+ENSDARG00000034943	LOC558202	transmembrane 9 superfamily member 2-like	558202
+ENSDARG00000095774	emd	emerin (Emery-Dreifuss muscular dystrophy)	558212
+ENSDARG00000063182	rc3h1b	ring finger and CCCH-type domains 1b	558213
+ENSDARG00000073756	slc12a7a	solute carrier family 12 (potassium/chloride transporter), member 7a	558214
+ENSDARG00000016532	suco	SUN domain containing ossification factor	558218
+ENSDARG00000073764	si:ch211-113j14.1	si:ch211-113j14.1	558239
+ENSDARG00000006683	arhgef6	Rac/Cdc42 guanine nucleotide exchange factor (GEF) 6	558288
+ENSDARG00000078041	xpo1a	exportin 1 (CRM1 homolog, yeast) a	558395
+ENSDARG00000013009	ubiad1	UbiA prenyltransferase domain containing 1	558410
+ENSDARG00000044083	peli1b	pellino E3 ubiquitin protein ligase 1b	558420
+ENSDARG00000061214	lipin2	lipin 2	558422
+ENSDARG00000070098	lcorl	ligand dependent nuclear receptor corepressor-like	558430
+ENSDARG00000061796	rasgrp4	RAS guanyl releasing protein 4	558453
+ENSDARG00000078125	rusc1	RUN and SH3 domain containing 1	558727
+ENSDARG00000076533	nfe2l1b	nuclear factor, erythroid 2-like 1b	558772
+ENSDARG00000036412	si:ch211-81a5.5	si:ch211-81a5.5	558774
+ENSDARG00000016630	tprb	translocated promoter region b, nuclear basket protein	558883
+ENSDARG00000075795	nol7	nucleolar protein 7	558911
+ENSDARG00000061993	wdr74	WD repeat domain 74	558996
+ENSDARG00000087657	fasn	fatty acid synthase	559001
+ENSDARG00000078500	dap3	death associated protein 3	559007
+ENSDARG00000079900	shroom4	shroom family member 4	559035
+ENSDARG00000070658	zbtb12.2	zinc finger and BTB domain containing 12, tandem duplicate 2	559081
+ENSDARG00000060094	ptgis	prostaglandin I2 (prostacyclin) synthase	559148
+ENSDARG00000030022	nup188	nucleoporin 188	559225
+ENSDARG00000079020	gcfc2	GC-rich sequence DNA-binding factor 2	559280
+ENSDARG00000044102	znf593	zinc finger protein 593	559352
+ENSDARG00000073696	frmd8	FERM domain containing 8	559410
+ENSDARG00000087893	rnf216	ring finger protein 216	559441
+ENSDARG00000078113	atp5ia	ATP synthase, H+ transporting, mitochondrial Fo complex, subunit Ea	559659
+ENSDARG00000060109	aggf1	angiogenic factor with G patch and FHA domains 1	559905
+ENSDARG00000060415	arhgef28	Rho guanine nucleotide exchange factor (GEF) 28	559941
+ENSDARG00000036147	ano5b	anoctamin 5b	560102
+ENSDARG00000057890	si:dkey-33c12.4	si:dkey-33c12.4	560112
+ENSDARG00000062651	zc3hc1	zinc finger, C3HC-type containing 1	560141
+ENSDARG00000069014	nphp4	nephronophthisis 4	560234
+ENSDARG00000078748	si:ch211-137a8.4	si:ch211-137a8.4	560240
+ENSDARG00000063661	nuak2	NUAK family, SNF1-like kinase, 2	560275
+ENSDARG00000017199	elp2	elongator acetyltransferase complex subunit 2	560338
+ENSDARG00000101010	hpdl	4-hydroxyphenylpyruvate dioxygenase-like	560428
+ENSDARG00000079687	rnf10	ring finger protein 10	560444
+ENSDARG00000070568	atad5a	ATPase family, AAA domain containing 5a	560591
+ENSDARG00000099518	si:ch211-119e14.1	si:ch211-119e14.1	560599
+ENSDARG00000043307	srd5a3	steroid 5 alpha-reductase 3	560717
+ENSDARG00000009023	ankrd28b	ankyrin repeat domain 28b	560747
+ENSDARG00000040988	tpi1b	triosephosphate isomerase 1b	560753
+ENSDARG00000060695	znf346	zinc finger protein 346	560756
+ENSDARG00000075048	lonrf1	LON peptidase N-terminal domain and ring finger 1	560773
+ENSDARG00000079312	kmt2ca	lysine (K)-specific methyltransferase 2Ca	560793
+ENSDARG00000103699	ptpn13	protein tyrosine phosphatase, non-receptor type 13	560883
+ENSDARG00000076239	si:ch211-74f19.2	si:ch211-74f19.2	560941
+ENSDARG00000077410	NA	myosin IXb	560956
+ENSDARG00000056725	hmgb3a	high mobility group box 3a	561025
+ENSDARG00000056873	and3	actinodin3	561047
+ENSDARG00000011466	lace1a	lactation elevated 1a	561238
+ENSDARG00000058821	sema5a	sema domain, seven thrombospondin repeats (type 1 and type 1-like), transmembrane domain (TM) and short cytoplasmic domain, (semaphorin) 5A	561295
+ENSDARG00000068759	si:ch211-244o22.2	si:ch211-244o22.2	561487
+ENSDARG00000037555	atoh8	atonal bHLH transcription factor 8	561606
+ENSDARG00000103195	dync1i2b	dynein, cytoplasmic 1, intermediate chain 2b	561612
+ENSDARG00000035986	ptpn2b	protein tyrosine phosphatase, non-receptor type 2, b	561613
+ENSDARG00000044808	slc4a4b	solute carrier family 4 (sodium bicarbonate cotransporter), member 4b	561618
+ENSDARG00000079122	tmx2a	thioredoxin-related transmembrane protein 2a	561718
+ENSDARG00000092920	si:ch211-106h4.12	si:ch211-106h4.12	561742
+ENSDARG00000045159	zdhhc4	zinc finger, DHHC-type containing 4	561817
+ENSDARG00000075007	chst2a	carbohydrate (N-acetylglucosamine-6-O) sulfotransferase 2a	561896
+ENSDARG00000010785	thbs1b	thrombospondin 1b	561901
+ENSDARG00000044436	rps6ka4	ribosomal protein S6 kinase, polypeptide 4	561959
+ENSDARG00000060494	eprs	glutamyl-prolyl-tRNA synthetase	562037
+ENSDARG00000105669	si:dkey-10f23.2	si:dkey-10f23.2	562071
+ENSDARG00000089230	si:ch211-253b8.2	si:ch211-253b8.2	562114
+ENSDARG00000100419	ints1	integrator complex subunit 1	562131
+ENSDARG00000079905	mark2a	MAP/microtubule affinity-regulating kinase 2a	562231
+ENSDARG00000062915	polr3b	polymerase (RNA) III (DNA directed) polypeptide B	562329
+ENSDARG00000089303	wu:fa25f02	wu:fa25f02	562425
+ENSDARG00000057286	swap70b	SWAP switching B-cell complex 70b subunit 70b	562490
+ENSDARG00000060917	anln	anillin, actin binding protein	562517
+ENSDARG00000041708	csrp2bp	csrp2 binding protein	562636
+ENSDARG00000070006	rcn1	reticulocalbin 1, EF-hand calcium binding domain	562671
+ENSDARG00000062209	mrps5	mitochondrial ribosomal protein S5	562703
+ENSDARG00000033760	pmelb	premelanosome protein b	562810
+ENSDARG00000058984	rad23ab	RAD23 homolog A, nucleotide excision repair protein b	562839
+ENSDARG00000061981	lap3	leucine aminopeptidase 3	562854
+ENSDARG00000002994	itpkca	inositol-trisphosphate 3-kinase Ca	562919
+ENSDARG00000079818	helq	helicase, POLQ-like	562952
+ENSDARG00000069313	oxa1l	oxidase (cytochrome c) assembly 1-like	562963
+ENSDARG00000055648	cpda	carboxypeptidase D, a	563008
+ENSDARG00000052429	syngr2a	synaptogyrin 2a	563028
+ENSDARG00000071014	s100u	S100 calcium binding protein U	563060
+ENSDARG00000001729	strn3	striatin, calmodulin binding protein 3	563124
+ENSDARG00000063573	vps41	vacuolar protein sorting 41 homolog (S. cerevisiae)	563215
+ENSDARG00000095705	si:ch211-239e6.4	si:ch211-239e6.4	563220
+ENSDARG00000074624	si:ch211-198a12.6	si:ch211-198a12.6	563253
+ENSDARG00000104726	si:ch211-162e15.3	si:ch211-162e15.3	563358
+ENSDARG00000031228	podxl	podocalyxin-like	563365
+ENSDARG00000077864	rasgrp3	RAS guanyl releasing protein 3 (calcium and DAG-regulated)	563441
+ENSDARG00000071026	mllt11	myeloid/lymphoid or mixed-lineage leukemia; translocated to, 11	563531
+ENSDARG00000034227	si:dkey-243i1.1	si:dkey-243i1.1	563653
+ENSDARG00000032087	sgsh	N-sulfoglucosamine sulfohydrolase (sulfamidase)	563849
+ENSDARG00000071562	mtus1a	microtubule associated tumor suppressor 1a	563853
+ENSDARG00000055786	LOC563933	serine protease 23-like	563933
+ENSDARG00000042428	gstt1a	glutathione S-transferase theta 1a	563972
+ENSDARG00000028431	adnp2b	ADNP homeobox 2b	564171
+ENSDARG00000077822	si:dkey-6i22.5	si:dkey-6i22.5	564240
+ENSDARG00000095090	tspan37	tetraspanin 37	564334
+ENSDARG00000062330	si:ch211-233a24.2	si:ch211-233a24.2	564367
+ENSDARG00000002877	reps1	RALBP1 associated Eps domain containing 1	564535
+ENSDARG00000062109	shdb	Src homology 2 domain containing transforming protein D, b	564537
+ENSDARG00000034685	tmem198b	transmembrane protein 198b	564608
+ENSDARG00000078929	abhd16a	abhydrolase domain containing 16A	564613
+ENSDARG00000103422	usp10	ubiquitin specific peptidase 10	564632
+ENSDARG00000061688	arvcfb	armadillo repeat gene deleted in velocardiofacial syndrome b	564669
+ENSDARG00000068438	gucd1	guanylyl cyclase domain containing 1	564677
+ENSDARG00000043402	zgc:171480	zgc:171480	564733
+ENSDARG00000060383	mmaa	methylmalonic aciduria (cobalamin deficiency) cblA type	564760
+ENSDARG00000103046	rest	RE1-silencing transcription factor	564772
+ENSDARG00000006812	wdr26b	WD repeat domain 26b	564794
+ENSDARG00000073716	cpxm1a	carboxypeptidase X (M14 family), member 1a	564830
+ENSDARG00000095538	senp3a	SUMO1/sentrin/SMT3 specific peptidase 3a	564950
+ENSDARG00000057648	dnttip2	deoxynucleotidyltransferase, terminal, interacting protein 2	564961
+ENSDARG00000069433	tnk2b	tyrosine kinase, non-receptor, 1	565029
+ENSDARG00000056741	senp3b	SUMO1/sentrin/SMT3 specific peptidase 3b	565123
+ENSDARG00000031647	stat2	signal transducer and activator of transcription 2	565200
+ENSDARG00000059534	si:ch211-146m13.3	si:ch211-146m13.3	565205
+ENSDARG00000058030	hspa14	heat shock protein 14	565232
+ENSDARG00000093182	eif2ak1	eukaryotic translation initiation factor 2-alpha kinase 1	565338
+ENSDARG00000013110	dmtn	dematin actin binding protein	565367
+ENSDARG00000057255	emc1	ER membrane protein complex subunit 1	565399
+ENSDARG00000026165	col11a1a	collagen, type XI, alpha 1a	565402
+ENSDARG00000077317	snx29	sorting nexin 29	565513
+ENSDARG00000034753	tspan3a	tetraspanin 3a	565579
+ENSDARG00000063095	ctsf	cathepsin F	565588
+ENSDARG00000062266	edc4	enhancer of mRNA decapping 4	565659
+ENSDARG00000003968	zgc:162969	zgc:162969	565767
+ENSDARG00000068397	tns2b	tensin 2b	565809
+ENSDARG00000019596	nrd1a	nardilysin a (N-arginine dibasic convertase)	565850
+ENSDARG00000011240	ift46	intraflagellar transport 46 homolog (Chlamydomonas)	565922
+ENSDARG00000079166	ace	angiotensin I converting enzyme (peptidyl-dipeptidase A) 1	565980
+ENSDARG00000095750	si:dkey-71l1.3	si:dkey-71l1.3	566022
+ENSDARG00000092310	si:ch211-199g17.2	si:ch211-199g17.2	566074
+ENSDARG00000061095	stk36	serine/threonine kinase 36 (fused homolog, Drosophila)	566154
+ENSDARG00000007413	arid2	AT rich interactive domain 2 (ARID, RFX-like)	566352
+ENSDARG00000054473	tinf2	TERF1 (TRF1)-interacting nuclear factor 2	566362
+ENSDARG00000019033	tmem59	transmembrane protein 59	566384
+ENSDARG00000061131	kif21a	kinesin family member 21A	566481
+ENSDARG00000023766	gnsa	glucosamine (N-acetyl)-6-sulfatase a	566506
+ENSDARG00000045886	slc38a2	solute carrier family 38, member 2	566537
+ENSDARG00000062063	tab3	TGF-beta activated kinase 1/MAP3K7 binding protein 3	566547
+ENSDARG00000003020	lrrc4.2	leucine rich repeat containing 4.2	566572
+ENSDARG00000091996	si:ch211-117m20.5	si:ch211-117m20.5	566658
+ENSDARG00000094380	zzef1	zinc finger, ZZ-type with EF hand domain 1	566682
+ENSDARG00000079973	pus10	pseudouridylate synthase 10	566689
+ENSDARG00000089877	si:dkeyp-75h12.5	si:dkeyp-75h12.5	566718
+ENSDARG00000043973	znf292b	zinc finger protein 292b	566732
+ENSDARG00000011449	fes	FES proto-oncogene, tyrosine kinase	566739
+ENSDARG00000089162	afap1l1a	actin filament associated protein 1-like 1a	566757
+ENSDARG00000044281	erbb2ip	erbb2 interacting protein	566811
+ENSDARG00000060697	kmt2bb	lysine (K)-specific methyltransferase 2Bb	566825
+ENSDARG00000077323	thap4	THAP domain containing 4	567037
+ENSDARG00000034643	fhl3a	four and a half LIM domains 3a	567097
+ENSDARG00000011783	stag2a	stromal antigen 2a	567168
+ENSDARG00000035352	pafah1b2	platelet-activating factor acetylhydrolase 1b, catalytic subunit 2	567170
+ENSDARG00000060319	scn4bb	sodium channel, voltage-gated, type IV, beta b	567239
+ENSDARG00000055678	akap12b	A kinase (PRKA) anchor protein 12b	567365
+ENSDARG00000062003	myo5b	myosin VB	567402
+ENSDARG00000061378	smg8	SMG8 nonsense mediated mRNA decay factor	567424
+ENSDARG00000030636	tex30	testis expressed 30	567483
+ENSDARG00000055563	rnasen	ribonuclease type III, nuclear	567505
+ENSDARG00000053087	mthfr	methylenetetrahydrofolate reductase (NAD(P)H)	567547
+ENSDARG00000070959	si:ch211-288g17.3	si:ch211-288g17.3	567638
+ENSDARG00000062058	slc12a7b	solute carrier family 12 (potassium/chloride transporter), member 7b	567667
+ENSDARG00000104047	si:ch211-262i1.3	si:ch211-262i1.3	567688
+ENSDARG00000077751	nol9	nucleolar protein 9	567715
+ENSDARG00000023583	coq9	coenzyme Q9 homolog (S. cerevisiae)	567716
+ENSDARG00000060748	tsfm	Ts translation elongation factor, mitochondrial	567785
+ENSDARG00000008235	cog5	component of oligomeric golgi complex 5	567886
+ENSDARG00000062315	sik2b	salt-inducible kinase 2b	567919
+ENSDARG00000062382	snapin	SNAP-associated protein	567959
+ENSDARG00000100630	lye	lymphocyte antigen-6, epidermis	567961
+ENSDARG00000079317	dlc1	DLC1 Rho GTPase activating protein	567965
+ENSDARG00000057437	apodb	apolipoprotein Db	567972
+ENSDARG00000070038	rbp2a	retinol binding protein 2a, cellular	568032
+ENSDARG00000079725	dhx9	DEAH (Asp-Glu-Ala-His) box helicase 9	568043
+ENSDARG00000019961	znf513	zinc finger protein 513	568216
+ENSDARG00000057929	naf1	nuclear assembly factor 1 homolog (S. cerevisiae)	568328
+ENSDARG00000069538	gtf3c4	general transcription factor IIIC, polypeptide 4	568510
+ENSDARG00000077228	ntrk3a	neurotrophic tyrosine kinase, receptor, type 3a	568668
+ENSDARG00000074331	eif4g3b	eukaryotic translation initiation factor 4 gamma, 3b	568761
+ENSDARG00000075446	naa25	N(alpha)-acetyltransferase 25, NatB auxiliary subunit	568789
+ENSDARG00000075687	anapc1	anaphase promoting complex subunit 1	568795
+ENSDARG00000074084	strip1	striatin interacting protein 1	568805
+ENSDARG00000091801	serpinb14	serpin peptidase inhibitor, clade B (ovalbumin), member 14	569051
+ENSDARG00000024030	angptl2a	angiopoietin-like 2a	569092
+ENSDARG00000031434	rcor1	REST corepressor 1	569294
+ENSDARG00000046087	brd2b	bromodomain containing 2b	569354
+ENSDARG00000040245	kpnb3	karyopherin (importin) beta 3	569455
+ENSDARG00000078435	anapc13	anaphase promoting complex subunit 13	569473
+ENSDARG00000070898	si:ch211-262h13.3	si:ch211-262h13.3	569577
+ENSDARG00000097746	si:rp71-77l1.1	si:rp71-77l1.1	569583
+ENSDARG00000043026	ttbk2b	tau tubulin kinase 2b	569881
+ENSDARG00000099572	hmgn2	high mobility group nucleosomal binding domain 2	569904
+ENSDARG00000074581	add2	adducin 2 (beta)	570147
+ENSDARG00000063003	alkbh5	alkB homolog 5, RNA demethylase	570158
+ENSDARG00000076176	ptcd1	pentatricopeptide repeat domain 1	570247
+ENSDARG00000003217	urb2	URB2 ribosome biogenesis 2 homolog (S. cerevisiae)	570267
+ENSDARG00000078882	slc22a31	solute carrier family 22, member 31	570565
+ENSDARG00000092170	apoc1l	apolipoprotein C-I like	570638
+ENSDARG00000057138	zgc:174164	zgc:174164	570656
+ENSDARG00000060065	ubap2b	ubiquitin associated protein 2b	570789
+ENSDARG00000003311	pank2	pantothenate kinase 2	570866
+ENSDARG00000018049	sf3b2	splicing factor 3b, subunit 2	570994
+ENSDARG00000094277	mrpl44	mitochondrial ribosomal protein L44	571210
+ENSDARG00000098477	tec	tec protein tyrosine kinase	571588
+ENSDARG00000016263	zdhhc5a	zinc finger, DHHC-type containing 5a	571795
+ENSDARG00000103598	siva1	SIVA1, apoptosis-inducing factor	571845
+ENSDARG00000103516	sec24c	SEC24 homolog C, COPII coat complex component	571870
+ENSDARG00000038414	b3galt6	UDP-Gal:betaGal beta 1,3-galactosyltransferase polypeptide 6	572324
+ENSDARG00000041314	ndufb9	NADH dehydrogenase (ubiquinone) 1 beta subcomplex, 9	573021
+ENSDARG00000035987	psmg2	proteasome (prosome, macropain) assembly chaperone 2	573107
+ENSDARG00000026489	khsrp	KH-type splicing regulatory protein	573145
+ENSDARG00000052840	ndufs4	NADH dehydrogenase (ubiquinone) Fe-S protein 4, (NADH-coenzyme Q reductase)	573689
+ENSDARG00000058202	pex16	peroxisomal biogenesis factor 16	573990
+ENSDARG00000052073	blcap	bladder cancer associated protein	57918
+ENSDARG00000010792	cdc25b	cell division cycle 25B	57925
+ENSDARG00000037870	actb2	actin, beta 2	57935
+ENSDARG00000099358	hccsb	holocytochrome c synthase b	58016
+ENSDARG00000033551	fbxw4	F-box and WD repeat domain containing 4	58035
+ENSDARG00000000503	stx1b	syntaxin 1B	58038
+ENSDARG00000030490	sptb	spectrin, beta, erythrocytic	58040
+ENSDARG00000059001	pim2	Pim-2 proto-oncogene, serine/threonine kinase	58054
+ENSDARG00000020610	tnnt2a	troponin T type 2a (cardiac)	58071
+ENSDARG00000018840	trpc4apa	transient receptor potential cation channel, subfamily C, member 4 associated protein a	58090
+ENSDARG00000036096	smad3a	SMAD family member 3a	58092
+ENSDARG00000041381	arntl2	aryl hydrocarbon receptor nuclear translocator-like 2	58099
+ENSDARG00000009779	mcl1a	myeloid cell leukemia 1a	58122
+ENSDARG00000008818	hsf1	heat shock transcription factor 1	58123
+ENSDARG00000007697	fabp7a	fatty acid binding protein 7, brain, a	58128
+ENSDARG00000017917	her7	hairy and enhancer of split related-7	58132
+ENSDARG00000041609	adarb1a	adenosine deaminase, RNA-specific, B1a	58134
+ENSDARG00000013441	hey2	hes-related family bHLH transcription factor with YRPW motif 2	58146
+ENSDARG00000008305	hand2	heart and neural crest derivatives expressed 2	58150
+ENSDARG00000000241	slc40a1	solute carrier family 40 (iron-regulated transporter), member 1	58153
+ENSDARG00000033967	trmt2b	tRNA methyltransferase 2 homolog B	606657
+ENSDARG00000016484	dkc1	dyskeratosis congenita 1, dyskerin	613144
+ENSDARG00000036772	pygo2	pygopus homolog 2 (Drosophila)	613247
+ENSDARG00000069583	zgc:114181	zgc:114181	619255
+ENSDARG00000035602	dao.1	D-amino-acid oxidase, tandem duplicate 1	619259
+ENSDARG00000057452	ston2	stonin 2	619262
+ENSDARG00000055763	tmem115	transmembrane protein 115	619264
+ENSDARG00000017809	stard3	StAR-related lipid transfer (START) domain containing 3	63998
+ENSDARG00000029729	clybl	citrate lyase beta like	641475
+ENSDARG00000059398	myef2	myelin expression factor 2	641483
+ENSDARG00000039082	zgc:123010	zgc:123010	641500
+ENSDARG00000037962	psmb7	proteasome subunit beta 7	64278
+ENSDARG00000006640	eomesa	eomesodermin homolog a	64603
+ENSDARG00000038643	alas2	aminolevulinate, delta-, synthase 2	64607
+ENSDARG00000018259	atp1a3a	ATPase, Na+/K+ transporting, alpha 3a polypeptide	64610
+ENSDARG00000003251	zbtb22b	zinc finger and BTB domain containing 22b	64809
+ENSDARG00000040266	sox19b	SRY (sex determining region Y)-box 19b	64812
+ENSDARG00000039434	oprm1	opioid receptor, mu 1	65088
+ENSDARG00000042993	try	trypsin	65223
+ENSDARG00000057007	ctbp1	C-terminal binding protein 1	65229
+ENSDARG00000031983	six4b	SIX homeobox 4b	65232
+ENSDARG00000004695	six4a	SIX homeobox 4a	65233
+ENSDARG00000009870	mapk8b	mitogen-activated protein kinase 8b	65236
+ENSDARG00000000857	mapk14a	mitogen-activated protein kinase 14a	65237
+ENSDARG00000069852	lipt2	lipoyl(octanoyl) transferase 2 (putative)	664765
+ENSDARG00000021866	upk1a	uroplakin 1a	678515
+ENSDARG00000045754	mettl25	methyltransferase like 25	678519
+ENSDARG00000060457	pmp22b	peripheral myelin protein 22b	678607
+ENSDARG00000031709	mllt1b	myeloid/lymphoid or mixed-lineage leukemia; translocated to, 1b	678639
+ENSDARG00000057013	cadm3	cell adhesion molecule 3	692273
+ENSDARG00000053293	ftr14	finTRIM family, member 14	692298
+ENSDARG00000030964	pde12	phosphodiesterase 12	692319
+ENSDARG00000070097	vimp	VCP-interacting membrane selenoprotein	735249
+ENSDARG00000090834	epor	erythropoietin receptor	751109
+ENSDARG00000068958	frmd7	FERM domain containing 7	751637
+ENSDARG00000090462	mrpl20	mitochondrial ribosomal protein L20	751640
+ENSDARG00000067717	tomm7	translocase of outer mitochondrial membrane 7 homolog (yeast)	751649
+ENSDARG00000101619	minos1	mitochondrial inner membrane organizing system 1	751699
+ENSDARG00000061201	acsf2	acyl-CoA synthetase family member 2	751707
+ENSDARG00000039543	mrps6	mitochondrial ribosomal protein S6	751746
+ENSDARG00000058828	ccdc51	coiled-coil domain containing 51	751752
+ENSDARG00000054833	nucb1	nucleobindin 1	751753
+ENSDARG00000060316	cish	cytokine inducible SH2-containing protein	767678
+ENSDARG00000068582	rnf44	ring finger protein 44	767686
+ENSDARG00000063177	manf	mesencephalic astrocyte-derived neurotrophic factor	767691
+ENSDARG00000063292	ssuh2rs1	ssu-2 homolog, related sequence 1	767720
+ENSDARG00000104436	zgc:153426	zgc:153426	767746
+ENSDARG00000068940	atp5ib	ATP synthase, H+ transporting, mitochondrial Fo complex, subunit Eb	767750
+ENSDARG00000070589	mrpl35	mitochondrial ribosomal protein L35	767758
+ENSDARG00000061057	cyhr1	cysteine/histidine-rich 1	767773
+ENSDARG00000098578	pdgfab	platelet-derived growth factor alpha polypeptide b	767790
+ENSDARG00000034605	zgc:153169	zgc:153169	767799
+ENSDARG00000097660	trappc2	trafficking protein particle complex 2	767808
+ENSDARG00000060035	rnf32	ring finger protein 32	768120
+ENSDARG00000045980	cst14b.1	cystatin 14b, tandem duplicate 1	768128
+ENSDARG00000102531	anapc11	APC11 anaphase promoting complex subunit 11 homolog (yeast)	768140
+ENSDARG00000105098	dr1	down-regulator of transcription 1	768171
+ENSDARG00000060199	mrpl18	mitochondrial ribosomal protein L18	768187
+ENSDARG00000060411	ddx28	DEAD (Asp-Glu-Ala-Asp) box polypeptide 28	768189
+ENSDARG00000062304	pdpk1a	3-phosphoinositide dependent protein kinase 1a	768202
+ENSDARG00000003846	mrpl21	mitochondrial ribosomal protein L21	768305
+ENSDARG00000015922	zgc:153952	zgc:153952	777621
+ENSDARG00000063627	bop1	block of proliferation 1	777627
+ENSDARG00000101808	zgc:152816	zgc:152816	777712
+ENSDARG00000071872	zdhhc15b	zinc finger, DHHC-type containing 15b	777734
+ENSDARG00000041538	mrps28	mitochondrial ribosomal protein S28	777746
+ENSDARG00000062450	rnf115	ring finger protein 115	790928
+ENSDARG00000070792	lrrc15	leucine rich repeat containing 15	791200
+ENSDARG00000002217	scocb	short coiled-coil protein b	791709
+ENSDARG00000056087	ecrg4a	esophageal cancer related gene 4a	791762
+ENSDARG00000077339	ptrh2	peptidyl-tRNA hydrolase 2	791795
+ENSDARG00000071395	camk2g1	calcium/calmodulin-dependent protein kinase (CaM kinase) II gamma 1	791855
+ENSDARG00000036282	rnaset2	ribonuclease T2	791890
+ENSDARG00000023724	cdc42se1	CDC42 small effector 1	791998
+ENSDARG00000043713	asf1bb	anti-silencing function 1Bb histone chaperone	792029
+ENSDARG00000054609	slco2b1	solute carrier organic anion transporter family, member 2B1	792084
+ENSDARG00000022413	ing5a	inhibitor of growth family, member 5a	792168
+ENSDARG00000005464	dnase1l3	deoxyribonuclease I-like 3	792196
+ENSDARG00000002945	bgnb	biglycan b	792197
+ENSDARG00000045352	cst14a.2	cystatin 14a, tandem duplicate 2	792225
+ENSDARG00000075113	nanog	nanog homeobox	792333
+ENSDARG00000029695	pgp	phosphoglycolate phosphatase	792824
+ENSDARG00000077559	LOC792958	nuclear receptor coactivator 7-like	792958
+ENSDARG00000052074	si:ch211-122f10.4	si:ch211-122f10.4	792966
+ENSDARG00000091247	fars2	phenylalanyl-tRNA synthetase 2, mitochondrial	793097
+ENSDARG00000056206	camk2g2	calcium/calmodulin-dependent protein kinase (CaM kinase) II gamma 2	793359
+ENSDARG00000091902	b3gnt2b	UDP-GlcNAc:betaGal beta-1,3-N-acetylglucosaminyltransferase 2b	793362
+ENSDARG00000103388	znf609a	zinc finger protein 609a	793767
+ENSDARG00000070714	zgc:173544	zgc:173544	793869
+ENSDARG00000087528	snip1	Smad nuclear interacting protein	793873
+ENSDARG00000075720	il2rb	interleukin 2 receptor, beta	793920
+ENSDARG00000077777	tmsb4x	thymosin, beta 4 x	793949
+ENSDARG00000019438	rnf13	ring finger protein 13	793981
+ENSDARG00000061629	ndufaf5	NADH dehydrogenase (ubiquinone) complex I, assembly factor 5	794020
+ENSDARG00000052480	pdcd11	programmed cell death 11	794079
+ENSDARG00000042056	mau2	MAU2 sister chromatid cohesion factor	794129
+ENSDARG00000056322	ldb3a	LIM domain binding 3a	794339
+ENSDARG00000061590	cachd1	cache domain containing 1	794807
+ENSDARG00000052623	bsdc1	BSD domain containing 1	794882
+ENSDARG00000037964	lhx2a	LIM homeobox 2a	795283
+ENSDARG00000004757	ybx1	Y box binding protein 1	795398
+ENSDARG00000074852	myo15b	myosin XVB	795537
+ENSDARG00000069009	si:ch211-147a11.3	si:ch211-147a11.3	795658
+ENSDARG00000023920	llgl2	lethal giant larvae homolog 2 (Drosophila)	795670
+ENSDARG00000057910	mrps34	mitochondrial ribosomal protein S34	795846
+ENSDARG00000024398	get4	golgi to ER traffic protein 4 homolog (S. cerevisiae)	796309
+ENSDARG00000040864	si:dkey-286j15.1	si:dkey-286j15.1	796378
+ENSDARG00000019338	adprhl2	ADP-ribosylhydrolase like 2	796446
+ENSDARG00000102048	slc25a43	solute carrier family 25, member 43	796731
+ENSDARG00000062889	fam78bb	family with sequence similarity 78, member B b	796762
+ENSDARG00000045976	sidt2	SID1 transmembrane family, member 2	796833
+ENSDARG00000068064	sirt1	sirtuin 1	797132
+ENSDARG00000030665	tcerg1b	transcription elongation regulator 1b (CA150)	797473
+ENSDARG00000068711	crfb4	cytokine receptor family member b4	797527
+ENSDARG00000100536	nkrf	NFKB repressing factor	797627
+ENSDARG00000052705	pkp1b	plakophilin 1b	797838
+ENSDARG00000054807	sec13	SEC13 homolog, nuclear pore and COPII coat complex component	798071
+ENSDARG00000011609	si:ch211-262e15.1	si:ch211-262e15.1	798356
+ENSDARG00000053279	apln	apelin	798375
+ENSDARG00000007678	ttyh3b	tweety family member 3b	798421
+ENSDARG00000008494	myl6	myosin, light chain 6, alkali, smooth muscle and non-muscle	798632
+ENSDARG00000105255	zbtb4	zinc finger and BTB domain containing 4	798710
+ENSDARG00000078606	zgc:194224	zgc:194224	799070
+ENSDARG00000056252	sort1b	sortilin 1b	799153
+ENSDARG00000078133	kdm2ab	lysine (K)-specific demethylase 2Ab	799441
+ENSDARG00000042409	si:ch211-251j10.3	si:ch211-251j10.3	799483
+ENSDARG00000033647	smarcb1a	SWI/SNF related, matrix associated, actin dependent regulator of chromatin, subfamily b, member 1a	799716
+ENSDARG00000054414	spata17	spermatogenesis associated 17	799739
+ENSDARG00000053625	anxa2b	annexin A2b	799806
+ENSDARG00000011925	spns1	spinster homolog 1 (Drosophila)	799873
+ENSDARG00000078310	cecr2	cat eye syndrome chromosome region, candidate 2	799918
+ENSDARG00000036090	pard6gb	par-6 family cell polarity regulator gamma b	80959
+ENSDARG00000003835	stom	stomatin	81534
+ENSDARG00000006865	glra4a	glycine receptor, alpha 4a	83413
+ENSDARG00000005230	ssr2	signal sequence receptor, beta	83414
+ENSDARG00000012881	slc4a1a	solute carrier family 4 (anion exchanger), member 1a (Diego blood group)	84703

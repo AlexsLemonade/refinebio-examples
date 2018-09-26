@@ -1,0 +1,106 @@
+---
+title: "Summarize results"
+author: ALSF CCDL - Jaclyn Taroni
+output: html_notebook
+---
+
+Plot venn diagrams examining the overlap between different processing methods
+in:
+
+* Which genes are considered high variance genes
+* Which genes are differentially expressed in conditions of interest (e.g.,
+input into WebGestalt)
+* Which genesets are over represented as determined by using WebGestaltR
+
+### Overlap between high variance genes
+
+```{r}
+rma.var <- readr::read_tsv("results/RMA_GSE39842_high_variance_geneids.tsv")
+scan.var <- 
+  readr::read_tsv("results/SCANfast_GSE39842_high_variance_geneids.tsv")
+qn.var <- readr::read_tsv("results/QN_GSE39842_high_variance_geneids.tsv")
+```
+
+```{r}
+# make list for use with Venn Diagram
+var.list <- list()
+var.list$RMA <- as.vector(as.matrix(rma.var))
+var.list$SCANfast <- as.vector(as.matrix(scan.var))
+var.list$QN <- as.vector(as.matrix(qn.var))
+```
+
+```{r}
+VennDiagram::venn.diagram(var.list, 
+                          filename = file.path("plots", 
+                                               "high_variance_genes_venn.png"),
+                          main = "High Variance Genes",
+                          fontfamily = "Helvetica",
+                          main.fontfamily = "Helvetica",
+                          main.fontface = "bold",
+                          sub.fontfamily = "Helvetica",
+                          cat.fontfamily = "Helvetica")
+```
+
+### Overlap between differentially expressed genes
+
+```{r}
+rma.diff <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                                      "Project_RMA", 
+                                      "interestingGene_Mappingtable_RMA.txt"))
+scan.diff <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                                       "Project_SCANfast", 
+                                       "interestingGene_Mappingtable_SCANfast.txt"))
+qn.diff <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                                      "Project_QN", 
+                                      "interestingGene_Mappingtable_QN.txt"))
+```
+
+```{r}
+diff.list <- list()
+diff.list$RMA <- rma.diff$userid
+diff.list$SCANfast <- scan.diff$userid
+diff.list$QN <- qn.diff$userid
+```
+
+```{r}
+VennDiagram::venn.diagram(diff.list, 
+                          filename = file.path("plots", 
+                                               "diff_exp_genes_venn.png"),
+                          main = "Differentially Expressed Genes",
+                          fontfamily = "Helvetica",
+                          main.fontfamily = "Helvetica",
+                          main.fontface = "bold",
+                          sub.fontfamily = "Helvetica",
+                          cat.fontfamily = "Helvetica")
+```
+
+### Overlap at the pathway level
+
+```{r}
+rma.path <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                            "Project_RMA", "enrichment_results_RMA.txt"))
+scan.path <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                             "Project_SCANfast", "enrichment_results_SCANfast.txt"))
+qn.path <- readr::read_tsv(file.path("results", "pathway_analysis", 
+                           "Project_QN", "enrichment_results_QN.txt"))
+```
+
+```{r}
+path.list <- list()
+path.list$RMA <- rma.path$geneset
+path.list$SCANfast <- scan.path$geneset
+path.list$QN <- qn.path$geneset
+```
+
+```{r}
+VennDiagram::venn.diagram(path.list, 
+                          filename = file.path("plots", 
+                                               "significant_genesets_venn.png"),
+                          main = "ORA Genesets",
+                          fontfamily = "Helvetica",
+                          main.fontfamily = "Helvetica",
+                          main.fontface = "bold",
+                          sub.fontfamily = "Helvetica",
+                          cat.fontfamily = "Helvetica")
+```
+
