@@ -100,7 +100,7 @@ cont.matrix <- limma::makeContrasts(
 fit2 <- limma::contrasts.fit(fit, cont.matrix)
 fit2 <- limma::eBayes(fit2)
 
-# make a venn diagram of differentially expressed genes
+# make a Venn diagram of differentially expressed genes
 results <- limma::decideTests(fit2)
 png(venn.output, width = 7, height = 7, units = "in", res = 300)
 limma::vennDiagram(results)
