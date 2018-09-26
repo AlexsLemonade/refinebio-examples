@@ -103,7 +103,8 @@ fit2 <- limma::eBayes(fit2)
 # make a Venn diagram of differentially expressed genes
 results <- limma::decideTests(fit2)
 png(venn.output, width = 7, height = 7, units = "in", res = 300)
-limma::vennDiagram(results)
+limma::vennDiagram(results, cex = c(1, 1, 1),
+                   circle.col = c("#000000", "#FFC125", "#00BFFF", "#43CD80"))
 dev.off()
 
 # write top and results tables to file
