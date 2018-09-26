@@ -14,7 +14,13 @@ exprs.data <- readr::read_delim(series.matrix.file,
 # get sample title from line 29 of the series matrix
 conn <- file(series.matrix.file)
 open(conn)
-sample.title <- as.vector(as.matrix(read.table(conn, skip = 28, nrow = 1)))
+n.lines <- grep("!Sample_title", readLines(conn)) - 1
+close(conn)
+
+# get sample title from line 29 of the series matrix
+conn <- file(series.matrix.file)
+open(conn)
+sample.title <- as.vector(as.matrix(read.table(conn, skip = n.lines, nrow = 1)))
 close(conn)
 
 # set the column names as the titles and write to file
