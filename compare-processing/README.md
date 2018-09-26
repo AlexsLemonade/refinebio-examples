@@ -97,7 +97,13 @@ A number of the genes identified in the original publication (e.g., _jak2a_, _th
 
 ### WebGestalt analysis
 
-We used the differentially expressed genes described above as an "interesting" gene list input into [`WebGestaltR`](https://cran.r-project.org/package=WebGestaltR).
+We used the differentially expressed genes described above as an "interesting" gene list input into [`WebGestaltR`](https://cran.r-project.org/package=WebGestaltR) for overrepresentation analysis.
+
+The WEB-based GEne SeT AnaLysis Toolkit (WebGestalt) results for each of the processing pipelines, including gene identifier conversions (`User ID Mapping Table` tab) and the enriched gene sets (`Enrichment Results` tab), can be viewed by opening the following HTML files in a web browser: 
+* [`results/pathway_analysis/Project_RMA/Report_RMA.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_RMA/Report_RMA.html)
+* [`results/pathway_analysis/Project_SCANfast/Report_SCANfast.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_SCANfast/Report_SCANfast.html)
+* [`results/pathway_analysis/Project_QN/Report_QN.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_QN/Report_QN.html)
+
 Enriched gene sets were used to generate the Venn diagram below:
 
 ![pathway-venn](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/plots/significant_genesets_venn.png)
