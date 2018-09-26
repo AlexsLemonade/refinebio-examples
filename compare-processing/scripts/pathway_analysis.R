@@ -8,6 +8,7 @@
 #     -o <PATHWAY_RESULTS_DIRECTORY> \
 #     -p <PROJECT_NAME>
 
+# magrittr pipe
 `%>%` <- dplyr::`%>%`
 
 #### command line arguments ----------------------------------------------------
