@@ -53,11 +53,7 @@ toptable.output <- opt$toptable
 #### read in data --------------------------------------------------------------
 
 # gene expression matrix
-exprs.df <- readr::read_tsv(exprs.file)
-colnames(exprs.df)[1] <- "ENSEMBL"
-exprs.mat <- as.data.frame(exprs.df) %>%
-  tibble::column_to_rownames("ENSEMBL") %>%
-  as.matrix()
+exprs.mat <- as.matrix(read.delim(exprs.file, row.names = 1, header = 1))
 
 # file generated during heatmap plotting
 annot.df <- readr::read_tsv(annot.file)
