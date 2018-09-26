@@ -64,10 +64,15 @@ readr::write_tsv(high.var.exprs.df[, 1], geneids.output)
 high.var.mat <- as.matrix(high.var.exprs.df[, -1])
 
 # make a data.frame for the column annotation of the heatmap
+# one vector to capture the genotype
 hif1a.vector <- rep("wildtype", ncol(high.var.mat))
 hif1a.vector[grep("dnHIF1a", colnames(high.var.mat))] <- "dnHIF1a-expressing"
+
+# now to capture timepoint (pre- v. post-amputation) information
 amp.vector <- rep("post-amputation", ncol(high.var.mat))
 amp.vector[grep("Unamputated", colnames(high.var.mat))] <- "unamputated"
+
+# make a data.frame
 annot.df <- data.frame(dnHIF1a = hif1a.vector, amputated = amp.vector)
 readr::write_tsv(data.frame(sample_name = colnames(high.var.mat), annot.df), 
                  annot.output)
