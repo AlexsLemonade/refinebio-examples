@@ -44,7 +44,7 @@ docker pull jtaroni/refinebio-examples:compare-processing
 
 For more information, see the [`Dockerfile`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/docker/Dockerfile).
 
-You can run the entire pipeline, with the exception of generating the venn diagrams in `5-summarize_results`, like so:
+You can run the entire pipeline, with the exception of generating the Venn diagrams in `5-summarize_results`, like so:
 
 ```bash
 bash run_pipeline.sh
@@ -88,7 +88,7 @@ We used [`limma`](http://bioconductor.org/packages/release/bioc/html/limma.html)
 * which genes are different between wildtype and transgenics pre-amputation
 
 In keeping with our interpretation of the analyses conducted by the authors of the original publication (Jopling, et al.), we considered genes that responded to amputation in wildtype, did not respond in transgenic animals, and are not different between genotypes pre-amputation.
-These are the lists used to make the following venn diagram:
+These are the lists used to make the following Venn diagram:
 
 ![diff-venn](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/plots/diff_exp_genes_venn.png)
 
@@ -98,7 +98,7 @@ A number of the genes identified in the original publication (e.g., _jak2a_, _th
 ### WebGestalt analysis
 
 We used the differentially expressed genes described above as an "interesting" gene list input into [`WebGestaltR`](https://cran.r-project.org/package=WebGestaltR).
-Enriched gene sets were used to generate the venn diagram below:
+Enriched gene sets were used to generate the Venn diagram below:
 
 ![pathway-venn](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/plots/significant_genesets_venn.png)
 
