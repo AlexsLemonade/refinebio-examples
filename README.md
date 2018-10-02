@@ -33,7 +33,7 @@ of the page, in a gray button that says "Branch:".
 In each directory, there is a `README` that explains how to complete the analyses
 with the R or GenePattern notebooks. If you are following the instructions for completing 
 the analyses in R, open the R markdown (`Rmd`) and follow the instructions. 
-You will also see the example output files which are generally tsv or png files.
+You will also see the example output files which are generally TSV or PNG files.
 All the data used in these examples are deposited into the `data/` 
 directory and are referenced as such in the R Notebooks.
 
