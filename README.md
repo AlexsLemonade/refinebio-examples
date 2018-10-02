@@ -1,6 +1,6 @@
 # <u>refine.bio Examples Guide: </u>
 This repository contains example workflows of how to use data downloaded from 
-<a href="refine.bio.org"> refine.bio</a>.
+<a href="refine.bio"> refine.bio</a>.
 
 *For most of the example workflows, two general methods of completing the analyses are discussed:*  
 
