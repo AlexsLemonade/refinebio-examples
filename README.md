@@ -1,24 +1,24 @@
 # <u>refine.bio Examples Guide: </u>
 This repository contains example workflows of how to use data downloaded from 
-<a href="https://www.refine.bio"> refine.bio</a>.
+[refine.bio](https://www.refine.bio).
 
 *For most of the example workflows, two general methods of completing the analyses are discussed:*  
 
-### <a href="https://rmarkdown.rstudio.com/articles_intro.html">R notebooks</a>  
-Workflows using R notebooks have example analyses that could be applied to other refine.bio formatted data. The advantage of using 
-these notebooks is that they were specificially for use with refine.bio formatted data and associated metadata. 
+### [R markdown](https://rmarkdown.rstudio.com/articles_intro.html)  
+Workflows using R markdown have example analyses that could be applied to other refine.bio formatted data. The advantage of using 
+these examples is that they were specificially for use with refine.bio formatted data and associated metadata. 
 
-### <a href="http://genepattern-notebook.org/example-notebooks/">GenePattern notebooks</a>  
-Workflows using GenePattern notebooks contain <a href="http://genepattern-notebook.org/example-notebooks/"> 
-ready-made analyses</a>.
+### [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
+Workflows using GenePattern notebooks contain 
+[ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
 For users who are more comfortable with Python, or are not comfortable with 
 using scripts, the GenePattern notebooks are written in Python but can be 
 run using a graphics user interface (GUI).
 In order to use GenePattern notebooks, data from refine.bio needs to be converted 
-to GenePattern <a href="http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide">
-formats</a>. 
-This repository includes <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/">
-scripts </a> for easy conversion of refine.bio data into these formats from 
+to GenePattern 
+[formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide). 
+This repository includes
+[scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/) for easy conversion of refine.bio data into these formats from 
 command line.
 
 #### How to use: 
@@ -39,13 +39,13 @@ directory and are referenced as such in the R Notebooks.
 
 # Table of Contents
 
-1. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering">Clustering data </a>  
+1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering) 
   
-2. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert"> Annotation using Ensembl IDs </a>  
+2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
   
-3. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">Expression Differential Analyses </a> 
+3. [Differential Expression Analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression) 
   
-4. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression">Ortholog Mapping </a>  
+4. [Ortholog Mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
   
-5. <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts">Other scripts </a>  
+5. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts) 
 
