@@ -28,7 +28,7 @@ this repository and following the examples.
 However, if you are less comfortable with GitHub, you can also use the green button that says 
 "Clone or download" to "Download ZIP" and then use these notebooks as you please 
 on your own computer. Make sure you are on the master branch. Which is indicated toward the top 
-of the page, in a gray button that says "Button:".
+of the page, in a gray button that says "Branch:".
 
 In each directory, there is a `README` that explains how to complete the analyses
 with the R or GenePattern notebooks. If you are following the instructions for completing 
