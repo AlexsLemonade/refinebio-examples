@@ -1,0 +1,27 @@
+INFO [2018-10-05 13:27:08] [[1]]
+INFO [2018-10-05 13:27:08] var.list
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $filename
+INFO [2018-10-05 13:27:08] file.path("plots", "high_variance_genes_venn.png")
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $main
+INFO [2018-10-05 13:27:08] [1] "High Variance Genes"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $fontfamily
+INFO [2018-10-05 13:27:08] [1] "Helvetica"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $main.fontfamily
+INFO [2018-10-05 13:27:08] [1] "Helvetica"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $main.fontface
+INFO [2018-10-05 13:27:08] [1] "bold"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $sub.fontfamily
+INFO [2018-10-05 13:27:08] [1] "Helvetica"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $cat.fontfamily
+INFO [2018-10-05 13:27:08] [1] "Helvetica"
+INFO [2018-10-05 13:27:08] 
+INFO [2018-10-05 13:27:08] $imagetype
+INFO [2018-10-05 13:27:08] [1] "png"
+INFO [2018-10-05 13:27:08] 

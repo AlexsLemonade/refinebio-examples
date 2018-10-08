@@ -38,7 +38,8 @@ VennDiagram::venn.diagram(var.list,
                           main.fontfamily = "Helvetica",
                           main.fontface = "bold",
                           sub.fontfamily = "Helvetica",
-                          cat.fontfamily = "Helvetica")
+                          cat.fontfamily = "Helvetica",
+                          imagetype = "png")
 ```
 
 ### Overlap between differentially expressed genes
@@ -71,7 +72,8 @@ VennDiagram::venn.diagram(diff.list,
                           main.fontfamily = "Helvetica",
                           main.fontface = "bold",
                           sub.fontfamily = "Helvetica",
-                          cat.fontfamily = "Helvetica")
+                          cat.fontfamily = "Helvetica",
+                          imagetype = "png")
 ```
 
 ### Overlap at the pathway level
@@ -101,6 +103,7 @@ VennDiagram::venn.diagram(path.list,
                           main.fontfamily = "Helvetica",
                           main.fontface = "bold",
                           sub.fontfamily = "Helvetica",
-                          cat.fontfamily = "Helvetica")
+                          cat.fontfamily = "Helvetica",
+                          imagetype = "png")
 ```
 
