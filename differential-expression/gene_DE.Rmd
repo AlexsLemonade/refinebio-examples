@@ -35,11 +35,12 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("../data/E-GEOD-39842_metadata.tsv", header = TRUE)
+metadata <- read.delim(file.path("..", "data", "metadata_GSE71270.tsv"),
+                       header = TRUE)
 
 # Read in data tsv file
-df <- read.delim("../data/E-GEOD-39842.tsv", header = TRUE, row.names = 1,
-                 stringsAsFactors = FALSE)
+df <- read.delim(file.path("..", "data", "GSE71270.tsv"), header = TRUE,
+                 row.names = 1, stringsAsFactors = FALSE)
 ```
 
 ## 3) Set up design matrix
@@ -56,12 +57,12 @@ category.
 # Check if the samples are in the same order in the metadata and data files
 # Have to use gsub to get rid of problematic punctuation and space so they are 
 # matching
-tmp <- match(gsub("X|\\.", "", colnames(df)), gsub("-| |,", "", metadata$title))
+tmp <- match(gsub("X|\\.", "", colnames(df)), metadata$geo_accession)
 
 # Use the indices identified in the line above to rearrange the design matrix to
 # be in the same order as the data
 # Create the design matrix
-des.mat <- c(1, 0)[metadata$treatment[tmp]]
+des.mat <- model.matrix(~metadata$genotype.variation[tmp])
 ```
 
 ## 3) Apply linear model
@@ -88,7 +89,7 @@ gene expression data can be found
 <a href="http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf">
 here</a>.
 
-```{r  Explore model}
+```{r  Explore model, warning=FALSE}
 # Create Q-Q plot
 qqt(fit$t, pch = 16, cex = 0.2);
 abline(0,1)
@@ -99,7 +100,7 @@ volcanoplot(fit, main = "Volcano Plot")
 
 ## 5) Write statistics to output results file
 ```{r  Write results}
-write.table(stats, file = "E-GEOD-39842limmaResults.tsv", sep = "\t", quote = FALSE)
+write.table(stats, file = "GSE71270limmaResults.tsv", sep = "\t", quote = FALSE)
 ```
 
 ```{r Print session info}
