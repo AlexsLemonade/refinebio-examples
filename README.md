@@ -6,14 +6,16 @@ This repository contains example workflows of how to use data downloaded from
 
 If you are comfortable with GitHub, we recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
 this repository and following the examples.
-However, if you are less comfortable with GitHub, you can also use the green button that says
-"Clone or download" to "Download ZIP" and then use these notebooks as you please
-on your own computer. Make sure you are on the master branch. Which is indicated toward the top
-of the page, in a gray button that says "Branch:".
+However, if you are less comfortable with GitHub, you can also use the green 
+button that says "Clone or download" to "Download ZIP" and then use these 
+notebooks as you please on your own computer. 
+Make sure you are on the master branch. 
+Which is indicated toward the top of the page, in a gray button that says "Branch:".
 
-In each directory, there is a `README` that explains how to complete the analyses
-with the R or GenePattern notebooks. If you are following the instructions for completing
-the analyses in R, open the R markdown (`Rmd`) and follow the instructions.
+In each directory, there is a `README` that explains how to complete the 
+analyses with the R or GenePattern notebooks. 
+If you are following the instructions for completing the analyses in R, open the
+R markdown (`Rmd`) and follow the instructions.
 You will also see the example output files which are generally TSV or PNG files.
 All the data used in these examples are deposited into the `data/`
 directory and are referenced as such in the R Notebooks.
@@ -21,8 +23,10 @@ directory and are referenced as such in the R Notebooks.
 *For most of the example workflows, two general methods of completing the analyses are discussed:*  
 
 ### [R markdown](https://rmarkdown.rstudio.com/articles_intro.html)  
-Workflows using R markdown have example analyses that could be applied to other refine.bio formatted data. The advantage of using
-these examples is that they were specifically for use with refine.bio formatted data and associated metadata.
+Workflows using R markdown have example analyses that could be applied to other 
+refine.bio formatted data. 
+The advantage of using these examples is that they were specifically for use 
+with refine.bio formatted data and associated metadata.
 
 ### [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
 Workflows using GenePattern notebooks contain
@@ -34,14 +38,13 @@ In order to use GenePattern notebooks, data from refine.bio needs to be converte
 to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 This repository includes
-[scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/) for easy conversion of refine.bio data into these formats from
-command line.
+[scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/) 
+for easy conversion of refine.bio data into these formats from command line.
 
 #### Converting files to GenePattern compatible formats
 Example <a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern
 notebooks </a> have numerous ready-made analyses but generally require special
-<a href="http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guideformats">
-formats</a>.
+<a href="http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guideformats">formats</a>.
 
 #### gct format conversion
 Convert a gene expression tab separated values (tsv) file provided
@@ -86,4 +89,6 @@ file from your data, you can create a a CLS format using GenePattern's online
 
 4. [Ortholog Mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
 
-5. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)
+5. [Batch Correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
+
+6. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)
