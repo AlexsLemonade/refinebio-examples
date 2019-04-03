@@ -28,14 +28,18 @@ Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
 add them as data.frames to your environment.
 
-```{r Import data from .tsv files}
-# Read in metadata tsv file
-metadata <- readr::read_tsv("../data/GSE12955_metadata.tsv")
-
+```{r Import refine.bio data}
 # Read in data tsv file
 df <- readr::read_tsv("../data/GSE12955.tsv") %>% 
   tibble::column_to_rownames('X1') 
 # Make the gene column the rownames so the gene names are out of the way for calculations
+```
+
+Prep metadata to be in proper format for batch info to be used by ComBat
+
+```{r Prep metadata}
+# Read in metadata tsv file
+metadata <- readr::read_tsv("../data/GSE12955_metadata.tsv")
 ```
 
 ## 3) Perform Principal Components Analysis
@@ -46,9 +50,11 @@ pca <- prcomp(t(df))
 ```
 
 ## 4) Peform ComBat correction
+To run ComBat, we need a sample information file. 
+For more details on ComBat usage see [the documentation.](https://www.bu.edu/jlab/wp-assets/ComBat/Usage.html) 
 
 ```{r ComBat correction}
-norm_df <- 
+norm_df <- ComBat(df, sample.info)
 ```
 
 ## 5) Re-evaluate PCA after normalization
