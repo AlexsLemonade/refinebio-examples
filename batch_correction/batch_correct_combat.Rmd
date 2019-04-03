@@ -1,5 +1,5 @@
 ---
-title: "Clustering Data"
+title: "Batch Correction"
 author: "ALSF CCDL - Candace Savonen"
 date: 4/3/2019
 output: html_document
