@@ -1,0 +1,66 @@
+---
+title: "Clustering Data"
+author: "ALSF CCDL - Candace Savonen"
+date: 4/3/2019
+output: html_document
+---
+
+*Purpose*: This notebook illustrates how to assess batch effects and how to use
+comBat to correct for them. 
+
+## 1) Upload ComBat function
+Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
+
+```{r Upload ComBat functions}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Download ComBat functions
+download.file("https://www.bu.edu/jlab/wp-assets/ComBat/Download_files/ComBat.R", 
+         destfile = file.path("..", "scripts", "ComBat.R"))
+
+# Load in the ComBat functions
+source(file.path("..", "scripts", "ComBat.R"))
+```
+
+## 2) Import and set up data
+Data downloaded from refine.bio include a metadata tab separated values ("tsv")
+file and a data tsv file. This chunk of code will read the both tsv files and 
+add them as data.frames to your environment.
+
+```{r Import data from .tsv files}
+# Read in metadata tsv file
+metadata <- readr::read_tsv("../data/GSE12955_metadata.tsv")
+
+# Read in data tsv file
+df <- readr::read_tsv("../data/GSE12955.tsv") %>% 
+  tibble::column_to_rownames('X1') 
+# Make the gene column the rownames so the gene names are out of the way for calculations
+```
+
+## 3) Perform Principal Components Analysis
+
+```{r Choose genes}
+# Calculate PCA
+pca <- prcomp(t(df))
+```
+
+## 4) Peform ComBat correction
+
+```{r ComBat correction}
+norm_df <- 
+```
+
+## 5) Re-evaluate PCA after normalization
+
+```{r Re-evaluate Batch}
+# Calculate PCA
+pca <- prcomp(t(norm_df))
+```
+
+Session info: 
+
+```{r Print session info}
+# Print session info 
+sessionInfo()
+```
