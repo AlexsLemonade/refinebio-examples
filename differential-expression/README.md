@@ -21,4 +21,5 @@ For a general introduction in how to use the notebooks found on GenePattern,
 go [here](http://genepattern-notebook.org/public-notebooks/).
 For this [Gene Pattern notebook](https://notebook.genepattern.org/services/sharing/notebooks/22/preview/)
 you will need to have a gct and CLS file, so follow
-[these instructions](https://github.com/AlexsLemonade/refinebio-examples/blob/master) if you haven't created those files from your data yet.  
+[these instructions](https://github.com/AlexsLemonade/refinebio-examples/blob/master) 
+if you haven't created those files from your data yet.  
