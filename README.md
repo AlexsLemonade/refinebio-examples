@@ -1,4 +1,4 @@
-# <u>refine.bio Examples Guide: </u>
+# __refine.bio Examples Guide:__
 This repository contains example workflows of how to use data downloaded from
 [refine.bio](https://www.refine.bio).
 
@@ -42,21 +42,21 @@ This repository includes
 for easy conversion of refine.bio data into these formats from command line.
 
 #### Converting files to GenePattern compatible formats
-Example <a href="http://genepattern-notebook.org/example-notebooks/"> GenePattern
-notebooks </a> have numerous ready-made analyses but generally require special
-<a href="http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guideformats">formats</a>.
+Example [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
+have numerous ready-made analyses but generally require 
+[special formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guideformats).
 
 #### gct format conversion
 Convert a gene expression tab separated values (tsv) file provided
 into a gene cluster text (gct) file for use in GenePattern notebooks.
 In order to create a gct formatted file from a tsv refine.bio data file,
-reference the <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R">
-`create_gct_file.R` script</a>, followed by `-f` argument with the name
+reference the
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name
 of the file in your current directory that you would like to convert.
 Note: This script requires optparse library. If optparse library is not
 installed, this script will install it for you.
 
-<b>Example of usage in command line:</b>  
+##### Example of usage in command line:  
  ```bash
  $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
  ```
@@ -77,18 +77,18 @@ CLS formatted files tell information regarding the groups or phenotype of the
 different samples and are necessary for doing gene expression differential
 analysis using GenePattern's notebooks. If you've already created a gct format
 file from your data, you can create a a CLS format using GenePattern's online
-<a href="http://genepattern.broadinstitute.org/gp/pages/index.jsf?lsid=urn:lsid:broad.mit.edu:cancer.software.genepattern.module.visualizer:00261:3">CLsFileCreator</a>.
+[CLsFileCreator](http://genepattern.broadinstitute.org/gp/pages/index.jsf?lsid=urn:lsid:broad.mit.edu:cancer.software.genepattern.module.visualizer:00261:3)
+  
+# Table of Contents  
 
-# Table of Contents
-
-1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)
+1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
 
 2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
 
-3. [Differential Expression Analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)
+3. [Differential Expression Analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
 
 4. [Ortholog Mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
 
 5. [Batch Correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
 
-6. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)
+6. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
