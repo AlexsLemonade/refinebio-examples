@@ -32,8 +32,11 @@ file and a data tsv file. This chunk of code will read the both tsv files and
 add them as data.frames to your environment.
 
 ```{r Import refine.bio data}
+# Put name of data file
+data.filename <- file.path("..", "data", "aggregated_MUS_MUSCULUS.tsv")
+
 # Read in data tsv file
-df <- readr::read_tsv("../data/aggregated_MUS_MUSCULUS.tsv") %>% 
+df <- readr::read_tsv(data.filename) %>% 
   tibble::column_to_rownames('X1') 
 # Make the gene column the rownames so the gene names are out of the way for calculations
 ```
@@ -69,15 +72,43 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
 To run ComBat, we need a sample information file. 
 For more details on ComBat usage see [the documentation.](https://www.bu.edu/jlab/wp-assets/ComBat/Usage.html) 
 
-```{r ComBat correction}
-norm_df <- ComBat(df, sample.info)
+```{r Create sample info file}
+# Create file name and path for sample info file
+sample.info.file <- file.path("sample_info.txt")
+
+# Make data frame with sample info
+sample.info <- data.frame(Array = colnames(df), Sample = colnames(df), 
+                          Batch = levels(dataset))
+
+# Write to txt file
+readr::write_tsv(sample.info, sample.info.file)
 ```
 
-## 5) Re-evaluate PCA after normalization
+Using the sample info we created, we will use `ComBat` to correct for batch.
+Here we are using `skip = 1` so that `ComBat` will ignore the gene column.
 
-```{r Re-evaluate Batch}
+```{r ComBat correction}
+corrected.df <- ComBat(data.filename, sample.info.file, skip = 1, write = FALSE)
+```
+
+## 5) Re-evaluate PCA after batch correction
+Let's see if ComBat helped with making PC scores less divided by batches. 
+
+```{r Choose genes}
 # Calculate PCA
-pca <- prcomp(t(norm_df))
+corrected.pca <- prcomp(t(corrected.df))
+
+# Make into dataframe for plotting with ggplot2
+corrected.pca.df <- data.frame(corrected.pca$x[, 1:2], 
+                     dataset)
+```
+
+Plot these batch corrected data PC scores.
+
+```{r}
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
+  geom_point() + 
+  ggtitle("Non-batch corrected")
 ```
 
 Session info: 
