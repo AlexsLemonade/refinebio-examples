@@ -44,7 +44,7 @@ for easy conversion of refine.bio data into these formats from command line.
 #### Converting files to GenePattern compatible formats
 Example [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
 have numerous ready-made analyses but generally require 
-[special formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guideformats).
+[special formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 
 #### gct format conversion
 Convert a gene expression tab separated values (tsv) file provided

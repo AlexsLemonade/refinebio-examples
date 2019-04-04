@@ -1,13 +1,13 @@
-# <u>refine.bio Examples: Differential Expression </u>
+# __refine.bio Examples: Differential Expression__
 This directory contains example workflows of how to use identify differentially
-expressed genes in data from <a href="refine.bio.org">refine.bio</a>.
+expressed genes in data from [refine.bio](refine.bio.org).
 
 ***
 ### Differential Expression Analyses in R
 
-This  <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/gene_DE.Rmd">
-notebook </a> illustrates how to identify genes that are differentially expressed
-in a dataset using the `limma` package.
+[This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/gene_DE.Rmd) 
+illustrates how to identify genes that are differentially expressed in a dataset
+using the `limma` package.
 It also creates a volcano plot and Q-Q plot in order to assess the performance
 of the linear model.    
 
@@ -18,7 +18,7 @@ of the linear model.
 ### Differential Expression Analyses in GenePattern
 
 For a general introduction in how to use the notebooks found on GenePattern,
-go <a href="http://genepattern-notebook.org/public-notebooks/">here</a>.
-For this <a href="https://notebook.genepattern.org/services/sharing/notebooks/22/preview/">
-Gene Pattern notebook </a> you will need to have a gct and CLS file, so follow
+go [here](http://genepattern-notebook.org/public-notebooks/).
+For this [Gene Pattern notebook](https://notebook.genepattern.org/services/sharing/notebooks/22/preview/)
+you will need to have a gct and CLS file, so follow
 [these instructions](https://github.com/AlexsLemonade/refinebio-examples/blob/master) if you haven't created those files from your data yet.  
