@@ -15,6 +15,9 @@ Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarr
 # Magrittr pipe
 `%>%` <- dplyr::`%>%`
 
+# Load ggplot2 for graphing
+library(ggplot2)
+
 # Download ComBat functions
 download.file("https://www.bu.edu/jlab/wp-assets/ComBat/Download_files/ComBat.R", 
          destfile = file.path("..", "scripts", "ComBat.R"))
@@ -30,7 +33,7 @@ add them as data.frames to your environment.
 
 ```{r Import refine.bio data}
 # Read in data tsv file
-df <- readr::read_tsv("../data/GSE12955.tsv") %>% 
+df <- readr::read_tsv("../data/aggregated_MUS_MUSCULUS.tsv") %>% 
   tibble::column_to_rownames('X1') 
 # Make the gene column the rownames so the gene names are out of the way for calculations
 ```
@@ -38,8 +41,8 @@ df <- readr::read_tsv("../data/GSE12955.tsv") %>%
 Prep metadata to be in proper format for batch info to be used by ComBat
 
 ```{r Prep metadata}
-# Read in metadata tsv file
-metadata <- readr::read_tsv("../data/GSE12955_metadata.tsv")
+# Use sample names to create a dataset label vector 
+dataset <- as.factor(stringr::word(colnames(df), sep = "-", 3))
 ```
 
 ## 3) Perform Principal Components Analysis
@@ -47,6 +50,19 @@ metadata <- readr::read_tsv("../data/GSE12955_metadata.tsv")
 ```{r Choose genes}
 # Calculate PCA
 pca <- prcomp(t(df))
+
+# Make into dataframe for plotting with ggplot2
+pca.df <- data.frame(pca$x[, 1:2], 
+                     dataset)
+```
+
+Plot these PC scores.
+We will likely see a difference between the datasets.
+
+```{r}
+ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
+  geom_point() + 
+  ggtitle("Non-batch corrected")
 ```
 
 ## 4) Peform ComBat correction
