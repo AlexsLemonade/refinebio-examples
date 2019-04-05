@@ -19,8 +19,8 @@ Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarr
 library(ggplot2)
 
 # Download ComBat functions
-download.file("https://www.bu.edu/jlab/wp-assets/ComBat/Download_files/ComBat.R", 
-         destfile = file.path("..", "scripts", "ComBat.R"))
+#download.file("https://www.bu.edu/jlab/wp-assets/ComBat/Download_files/ComBat.R", 
+#         destfile = file.path("..", "scripts", "ComBat.R"))
 
 # Load in the ComBat functions
 source(file.path("..", "scripts", "ComBat.R"))
@@ -33,7 +33,7 @@ add them as data.frames to your environment.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path("..", "data", "aggregated_MUS_MUSCULUS.tsv")
+data.filename <- file.path("..", "data", "DANIO_RERIO.tsv")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename) %>% 
@@ -44,8 +44,17 @@ df <- readr::read_tsv(data.filename) %>%
 Prep metadata to be in proper format for batch info to be used by ComBat
 
 ```{r Prep metadata}
-# Use sample names to create a dataset label vector 
-dataset <- as.factor(stringr::word(colnames(df), sep = "-", 3))
+# Metadata file name
+metadata.filename <- file.path("..", "data", "metadata_DANIO_RERIO.tsv")
+
+# Read in data tsv file
+metadata <- readr::read_tsv(metadata.filename)
+
+# dataset <- as.factor(stringr::word(colnames(df), sep = ":", 1))
+df <- df[, metadata$refinebio_accession_code]
+all.equal(metadata$refinebio_accession_code, colnames(df))
+
+metadata$protocol[is.na(metadata$protocol)] <- "not amputated"
 ```
 
 ## 3) Perform Principal Components Analysis
@@ -56,7 +65,7 @@ pca <- prcomp(t(df))
 
 # Make into dataframe for plotting with ggplot2
 pca.df <- data.frame(pca$x[, 1:2], 
-                     dataset)
+                     dataset = metadata$series_id)
 ```
 
 Plot these PC scores.
@@ -78,7 +87,8 @@ sample.info.file <- file.path("sample_info.txt")
 
 # Make data frame with sample info
 sample.info <- data.frame(Array = colnames(df), Sample = colnames(df), 
-                          Batch = levels(dataset))
+                          Batch = metadata$series_id, 
+                          Covariate = metadata$protocol)
 
 # Write to txt file
 readr::write_tsv(sample.info, sample.info.file)
@@ -106,7 +116,7 @@ corrected.pca.df <- data.frame(corrected.pca$x[, 1:2],
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = metadata$series_id)) +
   geom_point() + 
   ggtitle("Non-batch corrected")
 ```
