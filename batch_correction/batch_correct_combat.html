@@ -381,7 +381,7 @@ $(document).ready(function () {
 </div>
 
 
-<p><em>Purpose</em>: This notebook illustrates how to assess batch effects and how to use comBat to correct for them.</p>
+<p><em>Purpose</em>: This notebook illustrates how to assess batch effects and how to use ComBat to correct for them.</p>
 <div id="set-up-libraries" class="section level2">
 <h2>1) Set up libraries</h2>
 <p>Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.</p>
@@ -441,7 +441,7 @@ all.equal(metadata$refinebio_accession_code, colnames(df))</code></pre>
 <pre class="r"><code># Change metadata NA&#39;s to be the controls as well
 metadata$protocol[is.na(metadata$protocol)] &lt;- &quot;not amputated&quot;
 
-
+# Take a look at the information we have for these data
 metadata</code></pre>
 <pre><code>## # A tibble: 27 x 59
 ##    refinebio_acces… refinebio_age refinebio_cell_… refinebio_compo…

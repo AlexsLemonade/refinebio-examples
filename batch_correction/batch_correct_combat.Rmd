@@ -6,7 +6,7 @@ output: html_document
 ---
 
 *Purpose*: This notebook illustrates how to assess batch effects and how to use
-comBat to correct for them. 
+ComBat to correct for them. 
 
 ## 1) Set up libraries
 Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
@@ -52,7 +52,7 @@ all.equal(metadata$refinebio_accession_code, colnames(df))
 # Change metadata NA's to be the controls as well
 metadata$protocol[is.na(metadata$protocol)] <- "not amputated"
 
-
+# Take a look at the information we have for these data
 metadata
 ```
 
