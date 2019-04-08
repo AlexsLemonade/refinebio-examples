@@ -8,7 +8,7 @@ output: html_document
 *Purpose*: This notebook illustrates how to assess batch effects and how to use
 comBat to correct for them. 
 
-## 1) Upload ComBat function
+## 1) Set up libraries
 Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
 
 ```{r Upload ComBat functions}
@@ -17,13 +17,6 @@ Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarr
 
 # Load ggplot2 for graphing
 library(ggplot2)
-
-# Download ComBat functions
-#download.file("https://www.bu.edu/jlab/wp-assets/ComBat/Download_files/ComBat.R", 
-#         destfile = file.path("..", "scripts", "ComBat.R"))
-
-# Load in the ComBat functions
-source(file.path("..", "scripts", "ComBat.R"))
 ```
 
 ## 2) Import and set up data
@@ -52,14 +45,20 @@ metadata <- readr::read_tsv(metadata.filename)
 
 # dataset <- as.factor(stringr::word(colnames(df), sep = ":", 1))
 df <- df[, metadata$refinebio_accession_code]
+
+# Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
 
+# Change metadata NA's to be the controls as well
 metadata$protocol[is.na(metadata$protocol)] <- "not amputated"
+
+
+metadata
 ```
 
 ## 3) Perform Principal Components Analysis
 
-```{r Choose genes}
+```{r}
 # Calculate PCA
 pca <- prcomp(t(df))
 
@@ -79,46 +78,30 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
 
 ## 4) Peform ComBat correction
 To run ComBat, we need a sample information file. 
-For more details on ComBat usage see [the documentation.](https://www.bu.edu/jlab/wp-assets/ComBat/Usage.html) 
-
-```{r Create sample info file}
-# Create file name and path for sample info file
-sample.info.file <- file.path("sample_info.txt")
-
-# Make data frame with sample info
-sample.info <- data.frame(Array = colnames(df), Sample = colnames(df), 
-                          Batch = metadata$series_id, 
-                          Covariate = metadata$protocol)
-
-# Write to txt file
-readr::write_tsv(sample.info, sample.info.file)
-```
-
-Using the sample info we created, we will use `ComBat` to correct for batch.
-Here we are using `skip = 1` so that `ComBat` will ignore the gene column.
+For more details on ComBat
 
 ```{r ComBat correction}
-corrected.df <- ComBat(data.filename, sample.info.file, skip = 1, write = FALSE)
+corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
 ```
 
 ## 5) Re-evaluate PCA after batch correction
 Let's see if ComBat helped with making PC scores less divided by batches. 
 
-```{r Choose genes}
+```{r}
 # Calculate PCA
 corrected.pca <- prcomp(t(corrected.df))
 
 # Make into dataframe for plotting with ggplot2
 corrected.pca.df <- data.frame(corrected.pca$x[, 1:2], 
-                     dataset)
+                               dataset = metadata$series_id)
 ```
 
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = metadata$series_id)) +
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   geom_point() + 
-  ggtitle("Non-batch corrected")
+  ggtitle("Batch corrected")
 ```
 
 Session info: 
