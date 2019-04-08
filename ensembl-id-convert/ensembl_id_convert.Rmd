@@ -1,8 +1,10 @@
 ---
 title: "Obtaining Annotation for Ensembl IDs"
 author: "ALSF CCDL - Candace Savonen"
-date: "9/17/2018"
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook is an example annotation workflow for data obtained from refine.bio
@@ -18,10 +20,9 @@ numbers.
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
 written, it must be replaced with the respective species abbreviation <i>eg</i>
 for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
-A full list of the annotation R packages from Bioconductor is at this 
-<a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.
+A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).
 
-<b>For different types of annotation</b>, other annotation objects besides
+For different types of annotation, other annotation objects besides
 `org.Dr.egSYMBOL` can be used for mapping.
 For a full list annotation objects from a package this command can be used: 
 `ls("package::org.Dr.eg.db")`. 
@@ -29,16 +30,22 @@ In this example, wherever `SYMBOL` is written, it would need to be replaced
 with the name of the desired annotation such as `ACCNUM` for accession numbers.
 
 ## 1) Install libraries with species-specific annotation package
-```{r Install libraries}
+
+```{r Install libraries, eval=FALSE}
 # Install the Zebrafish package
 source("https://bioconductor.org/biocLite.R")
 biocLite("org.Dr.eg.db", suppressUpdates = TRUE)
+```
 
+Attach the `org.Dr.eg.db` library:
+
+```{r}
 # Attach the annotation library 
 library(org.Dr.eg.db)
 ```
 
 ## 2) Import refine.bio data that has Ensembl identifiers
+
 ```{r Import data}
 # Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
@@ -50,6 +57,7 @@ df <- read.delim("../data/SRP056136.tsv", row.names = 1,
 *Note*: This code chunk will return a message that indicates that there are many
 mappings between our keys and columns but this is okay and is what we expect 
 since genes and transcripts do not have a 1:1 relationship
+
 ```{r Match Ensembl IDs}
 # Map ensembl IDs to their associated gene symbols
 symbol.df <- data.frame('gene.symbols' = mapIds(org.Dr.eg.db, keys = rownames(df), 
@@ -62,13 +70,16 @@ annot.df <- transform(merge(symbol.df, df, by = "row.names"),
 ```
 
 ## 4) Write to file
+
 ```{r Write to file}
 # Write annotated data frame to output file
 write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", sep = "\t",
             quote = FALSE)
 ```
 
-```{r Print session info}
+Print session info:
+
+```{r}
 # Print session info 
 sessionInfo()
 ```
