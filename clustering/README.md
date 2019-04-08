@@ -1,6 +1,6 @@
 # refine.bio Examples: Clustering
 This directory contains example workflows of how to filter, cluster and create
-a heatmap from data downloaded from [refine.bio](https://www.refine.bio.org).
+a heatmap from data downloaded from [refine.bio](https://www.refine.bio).
 
 ***
 ### Clustering data in R

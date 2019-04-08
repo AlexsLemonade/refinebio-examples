@@ -1,6 +1,6 @@
 # refine.bio Examples Guide
 This repository contains example workflows of how to use data downloaded from
-[refine.bio](https://www.refine.bio.org).
+[refine.bio](https://www.refine.bio).
 
 ## How to use:
 

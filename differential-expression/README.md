@@ -1,6 +1,6 @@
 # refine.bio Examples: Differential Expression  
 This directory contains example workflows of how to use identify differentially
-expressed genes in data from [refine.bio](https://www.refine.bio.org).
+expressed genes in data from [refine.bio](https://www.refine.bio).
 
 ***
 ### Differential Expression Analyses in R
