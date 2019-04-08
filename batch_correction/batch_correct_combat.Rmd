@@ -1,8 +1,10 @@
 ---
 title: "Batch Correction"
 author: "ALSF CCDL - Candace Savonen"
-date: 4/3/2019
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook illustrates how to assess batch effects and how to use
