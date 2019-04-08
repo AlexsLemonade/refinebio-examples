@@ -1,8 +1,10 @@
 ---
 title: "Obtaining Annotation for Ensembl IDs"
 author: "ALSF CCDL - Candace Savonen"
-date: "9/17/2018"
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook is an example annotation workflow for data obtained from refine.bio

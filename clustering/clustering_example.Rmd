@@ -1,8 +1,10 @@
 ---
 title: "Clustering Data"
 author: "ALSF CCDL - Candace Savonen"
-date: 9/16/2018
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook illustrates one way that you can use harmonized data 

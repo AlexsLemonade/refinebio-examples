@@ -1,8 +1,10 @@
 ---
 title: "Ortholog Mapping with `hcop`"
 author: ALSF CCDL - Jaclyn Taroni
-date: 9/21/2018
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook demonstrates how you can use the 
