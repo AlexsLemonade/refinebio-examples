@@ -1,3 +1,3 @@
-# <u>refine.bio Examples: Batch Correction </u>
+# __refine.bio Examples: Batch Correction__
 This notebook illustrates how to assess batch effects and how to use
-comBat to correct for them using from data downloaded from <a href="refine.bio.org"> refine.bio </a>
+ComBat to correct for them using from data downloaded from [refine.bio](refine.bio.org)
