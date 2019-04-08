@@ -16,13 +16,18 @@ creating a heatmap.
 <br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
 reveal patterns and correlations in multidimensional genomic data.” Bioinformatics.
 
-```{r Install and attach the ComplexHeatmap library}
+```{r Install and attach the ComplexHeatmap library, eval=FALSE}
 # Install the ComplexHeatmap package from bioconductor
 source("https://bioconductor.org/biocLite.R")
 biocLite("ComplexHeatmap", suppressUpdates = TRUE)
+```
 
+```{r}
 # Attach the library
 library(ComplexHeatmap)
+
+# Set the seed so our results are reproducible:
+set.seed(12345)
 ```
 
 ## 2) Import and set up data
