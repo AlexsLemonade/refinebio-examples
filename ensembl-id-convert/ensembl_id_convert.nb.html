@@ -2938,108 +2938,26 @@ div.tocify {
 <!-- rnb-text-begin -->
 <p><em>Purpose</em>: This notebook is an example annotation workflow for data obtained from refine.bio using Bioconductor annotation packages.</p>
 <p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="http://bioconductor.org/packages/release/data/annotation"> link</a>.</p>
-<p><b>For different types of annotation</b>, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used for mapping. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code>. In this example, wherever <code>SYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>ACCNUM</code> for accession numbers.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">link</a>.</p>
+<p>For different types of annotation, other annotation objects besides <code>org.Dr.egSYMBOL</code> can be used for mapping. For a full list annotation objects from a package this command can be used: <code>ls(&quot;package::org.Dr.eg.db&quot;)</code>. In this example, wherever <code>SYMBOL</code> is written, it would need to be replaced with the name of the desired annotation such as <code>ACCNUM</code> for accession numbers.</p>
 <div id="install-libraries-with-species-specific-annotation-package" class="section level2">
 <h2>1) Install libraries with species-specific annotation package</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBJbnN0YWxsIHRoZSBaZWJyYWZpc2ggcGFja2FnZVxuc291cmNlKFwiaHR0cHM6Ly9iaW9jb25kdWN0b3Iub3JnL2Jpb2NMaXRlLlJcIilcbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjpbIiMgSW5zdGFsbCB0aGUgWmVicmFmaXNoIHBhY2thZ2UiLCJzb3VyY2UoXCJodHRwczovL2Jpb2NvbmR1Y3Rvci5vcmcvYmlvY0xpdGUuUlwiKSIsImJpb2NMaXRlKFwib3JnLkRyLmVnLmRiXCIsIHN1cHByZXNzVXBkYXRlcyA9IFRSVUUpIl19 -->
 <pre class="r"><code># Install the Zebrafish package
-source(&quot;https://bioconductor.org/biocLite.R&quot;)</code></pre>
+source(&quot;https://bioconductor.org/biocLite.R&quot;)
+biocLite(&quot;org.Dr.eg.db&quot;, suppressUpdates = TRUE)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiQmlvY29uZHVjdG9yIHZlcnNpb24gMy43IChCaW9jSW5zdGFsbGVyIDEuMzAuMCksID9iaW9jTGl0ZSBmb3IgaGVscFxuQSBuZXdlciB2ZXJzaW9uIG9mIEJpb2NvbmR1Y3RvciBpcyBhdmFpbGFibGUgZm9yIHRoaXMgdmVyc2lvbiBvZiBSLCA/QmlvY1VwZ3JhZGUgZm9yIGhlbHBcbiJ9 -->
-<pre><code>Bioconductor version 3.7 (BiocInstaller 1.30.0), ?biocLite for help
-A newer version of Bioconductor is available for this version of R, ?BiocUpgrade for help</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmlvY0xpdGUoXCJvcmcuRHIuZWcuZGJcIiwgc3VwcHJlc3NVcGRhdGVzID0gVFJVRSlcbmBgYCJ9 -->
-<pre class="r"><code>biocLite(&quot;org.Dr.eg.db&quot;, suppressUpdates = TRUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiQmlvQ19taXJyb3I6IGh0dHBzOi8vYmlvY29uZHVjdG9yLm9yZ1xuVXNpbmcgQmlvY29uZHVjdG9yIDMuNyAoQmlvY0luc3RhbGxlciAxLjMwLjApLCBSIDMuNS4xICgyMDE4LTA3LTAyKS5cbkluc3RhbGxpbmcgcGFja2FnZShzKSDigJhvcmcuRHIuZWcuZGLigJlcbnRyeWluZyBVUkwgJ2h0dHBzOi8vYmlvY29uZHVjdG9yLm9yZy9wYWNrYWdlcy8zLjcvZGF0YS9hbm5vdGF0aW9uL3NyYy9jb250cmliL29yZy5Eci5lZy5kYl8zLjYuMC50YXIuZ3onXG5Db250ZW50IHR5cGUgJ2FwcGxpY2F0aW9uL3gtZ3ppcCcgbGVuZ3RoIDI4MzA2NTkyIGJ5dGVzICgyNy4wIE1CKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbmRvd25sb2FkZWQgMjcuMCBNQlxuIn0= -->
-<pre><code>BioC_mirror: https://bioconductor.org
-Using Bioconductor 3.7 (BiocInstaller 1.30.0), R 3.5.1 (2018-07-02).
-Installing package(s) ‘org.Dr.eg.db’
-trying URL &#39;https://bioconductor.org/packages/3.7/data/annotation/src/contrib/org.Dr.eg.db_3.6.0.tar.gz&#39;
-Content type &#39;application/x-gzip&#39; length 28306592 bytes (27.0 MB)
-==================================================
-downloaded 27.0 MB</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBGaWxlIC9Vc2Vycy9jYW5kYWNlc2F2b25lbi8uUmVudmlyb24gY29udGFpbnMgaW52YWxpZCBsaW5lKHMpXG4gICAgICBHSVRIVUJfUEFUYmIwYmY3ZjBjODg3YTNkMGU1YjY4ZGRiODc0OWJiMzA5ODZjYTY5ZlxuICAgVGhleSB3ZXJlIGlnbm9yZWRcbiJ9 -->
-<pre><code>
-   File /Users/candacesavonen/.Renviron contains invalid line(s)
-      GITHUB_PATbb0bf7f0c887a3d0e5b68ddb8749bb30986ca69f
-   They were ignored</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiKiBpbnN0YWxsaW5nICpzb3VyY2UqIHBhY2thZ2Ug4oCYb3JnLkRyLmVnLmRi4oCZIC4uLlxuKiogUlxuKiogaW5zdFxuKiogYnl0ZS1jb21waWxlIGFuZCBwcmVwYXJlIHBhY2thZ2UgZm9yIGxhenkgbG9hZGluZ1xuKiogaGVscFxuKioqIGluc3RhbGxpbmcgaGVscCBpbmRpY2VzXG4qKiBidWlsZGluZyBwYWNrYWdlIGluZGljZXNcbioqIHRlc3RpbmcgaWYgaW5zdGFsbGVkIHBhY2thZ2UgY2FuIGJlIGxvYWRlZFxuIn0= -->
-<pre><code>* installing *source* package ‘org.Dr.eg.db’ ...
-** R
-** inst
-** byte-compile and prepare package for lazy loading
-** help
-*** installing help indices
-** building package indices
-** testing if installed package can be loaded</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4gICBGaWxlIC9Vc2Vycy9jYW5kYWNlc2F2b25lbi8uUmVudmlyb24gY29udGFpbnMgaW52YWxpZCBsaW5lKHMpXG4gICAgICBHSVRIVUJfUEFUYmIwYmY3ZjBjODg3YTNkMGU1YjY4ZGRiODc0OWJiMzA5ODZjYTY5ZlxuICAgVGhleSB3ZXJlIGlnbm9yZWRcbiJ9 -->
-<pre><code>
-   File /Users/candacesavonen/.Renviron contains invalid line(s)
-      GITHUB_PATbb0bf7f0c887a3d0e5b68ddb8749bb30986ca69f
-   They were ignored</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiKiBET05FIChvcmcuRHIuZWcuZGIpXG5cblRoZSBkb3dubG9hZGVkIHNvdXJjZSBwYWNrYWdlcyBhcmUgaW5cblx04oCYL3ByaXZhdGUvdmFyL2ZvbGRlcnMvMWMva3hzeDUwMzkzX2c4cWtoZDgzc2t0Z204MDAwMGduL1QvUnRtcDFNbmJKTi9kb3dubG9hZGVkX3BhY2thZ2Vz4oCZXG4ifQ== -->
-<pre><code>* DONE (org.Dr.eg.db)
-
-The downloaded source packages are in
-    ‘/private/var/folders/1c/kxsx50393_g8qkhd83sktgm80000gn/T/Rtmp1MnbJN/downloaded_packages’</code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Attach the <code>org.Dr.eg.db</code> library:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBBdHRhY2ggdGhlIGFubm90YXRpb24gbGlicmFyeSBcbmxpYnJhcnkob3JnLkRyLmVnLmRiKVxuYGBgIn0= -->
 <pre class="r"><code># Attach the annotation library 
 library(org.Dr.eg.db)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBBbm5vdGF0aW9uRGJpXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IHN0YXRzNFxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBCaW9jR2VuZXJpY3NcbkxvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogcGFyYWxsZWxcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmEJpb2NHZW5lcmljc+KAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6cGFyYWxsZWzigJk6XG5cbiAgICBjbHVzdGVyQXBwbHksIGNsdXN0ZXJBcHBseUxCLCBjbHVzdGVyQ2FsbCwgY2x1c3RlckV2YWxRLCBjbHVzdGVyRXhwb3J0LCBjbHVzdGVyTWFwLFxuICAgIHBhckFwcGx5LCBwYXJDYXBwbHksIHBhckxhcHBseSwgcGFyTGFwcGx5TEIsIHBhclJhcHBseSwgcGFyU2FwcGx5LCBwYXJTYXBwbHlMQlxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmxpbW1h4oCZOlxuXG4gICAgcGxvdE1BXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIGZyb20g4oCYcGFja2FnZTpzdGF0c+KAmTpcblxuICAgIElRUiwgbWFkLCBzZCwgdmFyLCB4dGFic1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGFueUR1cGxpY2F0ZWQsIGFwcGVuZCwgYXMuZGF0YS5mcmFtZSwgYmFzZW5hbWUsIGNiaW5kLCBjb2xNZWFucywgY29sbmFtZXMsIGNvbFN1bXMsXG4gICAgZGlybmFtZSwgZG8uY2FsbCwgZHVwbGljYXRlZCwgZXZhbCwgZXZhbHEsIEZpbHRlciwgRmluZCwgZ2V0LCBncmVwLCBncmVwbCwgaW50ZXJzZWN0LFxuICAgIGlzLnVuc29ydGVkLCBsYXBwbHksIGxlbmd0aHMsIE1hcCwgbWFwcGx5LCBtYXRjaCwgbWdldCwgb3JkZXIsIHBhc3RlLCBwbWF4LCBwbWF4LmludCxcbiAgICBwbWluLCBwbWluLmludCwgUG9zaXRpb24sIHJhbmssIHJiaW5kLCBSZWR1Y2UsIHJvd01lYW5zLCByb3duYW1lcywgcm93U3Vtcywgc2FwcGx5LFxuICAgIHNldGRpZmYsIHNvcnQsIHRhYmxlLCB0YXBwbHksIHVuaW9uLCB1bmlxdWUsIHVuc3BsaXQsIHdoaWNoLCB3aGljaC5tYXgsIHdoaWNoLm1pblxuXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IEJpb2Jhc2VcbldlbGNvbWUgdG8gQmlvY29uZHVjdG9yXG5cbiAgICBWaWduZXR0ZXMgY29udGFpbiBpbnRyb2R1Y3RvcnkgbWF0ZXJpYWw7IHZpZXcgd2l0aCAnYnJvd3NlVmlnbmV0dGVzKCknLiBUbyBjaXRlXG4gICAgQmlvY29uZHVjdG9yLCBzZWUgJ2NpdGF0aW9uKFwiQmlvYmFzZVwiKScsIGFuZCBmb3IgcGFja2FnZXMgJ2NpdGF0aW9uKFwicGtnbmFtZVwiKScuXG5cbkxvYWRpbmcgcmVxdWlyZWQgcGFja2FnZTogSVJhbmdlc1xuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBTNFZlY3RvcnNcblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmFM0VmVjdG9yc+KAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmJhc2XigJk6XG5cbiAgICBleHBhbmQuZ3JpZFxuIn0= -->
-<pre><code>Loading required package: AnnotationDbi
-Loading required package: stats4
-Loading required package: BiocGenerics
-Loading required package: parallel
-
-Attaching package: ‘BiocGenerics’
-
-The following objects are masked from ‘package:parallel’:
-
-    clusterApply, clusterApplyLB, clusterCall, clusterEvalQ, clusterExport, clusterMap,
-    parApply, parCapply, parLapply, parLapplyLB, parRapply, parSapply, parSapplyLB
-
-The following object is masked from ‘package:limma’:
-
-    plotMA
-
-The following objects are masked from ‘package:stats’:
-
-    IQR, mad, sd, var, xtabs
-
-The following objects are masked from ‘package:base’:
-
-    anyDuplicated, append, as.data.frame, basename, cbind, colMeans, colnames, colSums,
-    dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep, grepl, intersect,
-    is.unsorted, lapply, lengths, Map, mapply, match, mget, order, paste, pmax, pmax.int,
-    pmin, pmin.int, Position, rank, rbind, Reduce, rowMeans, rownames, rowSums, sapply,
-    setdiff, sort, table, tapply, union, unique, unsplit, which, which.max, which.min
-
-Loading required package: Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with &#39;browseVignettes()&#39;. To cite
-    Bioconductor, see &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
-
-Loading required package: IRanges
-Loading required package: S4Vectors
-
-Attaching package: ‘S4Vectors’
-
-The following object is masked from ‘package:base’:
-
-    expand.grid</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -3089,13 +3007,14 @@ write.table(annot.df, file = &quot;SRP056136wGeneSymbols.tsv&quot;, sep = &quot;
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Print session info:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBQcmludCBzZXNzaW9uIGluZm8gXG5zZXNzaW9uSW5mbygpXG5gYGAifQ== -->
 <pre class="r"><code># Print session info 
 sessionInfo()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4xICgyMDE4LTA3LTAyKVxuUGxhdGZvcm06IHg4Nl82NC1hcHBsZS1kYXJ3aW4xNy42LjAgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IG1hY09TICAxMC4xNC4zXG5cbk1hdHJpeCBwcm9kdWN0czogZGVmYXVsdFxuQkxBUzogL1N5c3RlbS9MaWJyYXJ5L0ZyYW1ld29ya3MvQWNjZWxlcmF0ZS5mcmFtZXdvcmsvVmVyc2lvbnMvQS9GcmFtZXdvcmtzL3ZlY0xpYi5mcmFtZXdvcmsvVmVyc2lvbnMvQS9saWJCTEFTLmR5bGliXG5MQVBBQ0s6IC9TeXN0ZW0vTGlicmFyeS9GcmFtZXdvcmtzL0FjY2VsZXJhdGUuZnJhbWV3b3JrL1ZlcnNpb25zL0EvRnJhbWV3b3Jrcy92ZWNMaWIuZnJhbWV3b3JrL1ZlcnNpb25zL0EvbGliTEFQQUNLLmR5bGliXG5cbmxvY2FsZTpcblsxXSBlbl9VUy5VVEYtOC9lbl9VUy5VVEYtOC9lbl9VUy5VVEYtOC9DL2VuX1VTLlVURi04L2VuX1VTLlVURi04XG5cbmF0dGFjaGVkIGJhc2UgcGFja2FnZXM6XG5bMV0gcGFyYWxsZWwgIHN0YXRzNCAgICBzdGF0cyAgICAgZ3JhcGhpY3MgIGdyRGV2aWNlcyB1dGlscyAgICAgZGF0YXNldHMgIG1ldGhvZHMgICBiYXNlICAgICBcblxub3RoZXIgYXR0YWNoZWQgcGFja2FnZXM6XG5bMV0gb3JnLkRyLmVnLmRiXzMuNi4wICAgQW5ub3RhdGlvbkRiaV8xLjQyLjEgSVJhbmdlc18yLjE0LjEyICAgICAgUzRWZWN0b3JzXzAuMTguMyAgICBcbls1XSBCaW9iYXNlXzIuNDAuMCAgICAgICBCaW9jR2VuZXJpY3NfMC4yNi4wICBCaW9jSW5zdGFsbGVyXzEuMzAuMCBsaW1tYV8zLjM2LjUgICAgICAgIFxuXG5sb2FkZWQgdmlhIGEgbmFtZXNwYWNlIChhbmQgbm90IGF0dGFjaGVkKTpcbiBbMV0gUmNwcF8wLjEyLjE5ICAgIGtuaXRyXzEuMjIgICAgICBtYWdyaXR0cl8xLjUgICAgYml0XzEuMS0xNCAgICAgIGJsb2JfMS4xLjEgICAgICBzdHJpbmdyXzEuNC4wICBcbiBbN10gdG9vbHNfMy41LjEgICAgIHhmdW5fMC42ICAgICAgICBEQklfMS4wLjAgICAgICAgaHRtbHRvb2xzXzAuMy42IHlhbWxfMi4yLjAgICAgICBiaXQ2NF8wLjktNyAgICBcblsxM10gZGlnZXN0XzAuNi4xOCAgIGJhc2U2NGVuY18wLjEtMyBtZW1vaXNlXzEuMS4wICAgZXZhbHVhdGVfMC4xMyAgIFJTUUxpdGVfMi4xLjEgICBybWFya2Rvd25fMS4xMiBcblsxOV0gc3RyaW5naV8xLjQuMyAgIGNvbXBpbGVyXzMuNS4xICBqc29ubGl0ZV8xLjYgICAgcGtnY29uZmlnXzIuMC4yXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4xICgyMDE4LTA3LTAyKVxuUGxhdGZvcm06IHg4Nl82NC1hcHBsZS1kYXJ3aW4xNy42LjAgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IG1hY09TICAxMC4xNC4zXG5cbk1hdHJpeCBwcm9kdWN0czogZGVmYXVsdFxuQkxBUzogL1N5c3RlbS9MaWJyYXJ5L0ZyYW1ld29ya3MvQWNjZWxlcmF0ZS5mcmFtZXdvcmsvVmVyc2lvbnMvQS9GcmFtZXdvcmtzL3ZlY0xpYi5mcmFtZXdvcmsvVmVyc2lvbnMvQS9saWJCTEFTLmR5bGliXG5MQVBBQ0s6IC9TeXN0ZW0vTGlicmFyeS9GcmFtZXdvcmtzL0FjY2VsZXJhdGUuZnJhbWV3b3JrL1ZlcnNpb25zL0EvRnJhbWV3b3Jrcy92ZWNMaWIuZnJhbWV3b3JrL1ZlcnNpb25zL0EvbGliTEFQQUNLLmR5bGliXG5cbmxvY2FsZTpcblsxXSBlbl9VUy5VVEYtOC9lbl9VUy5VVEYtOC9lbl9VUy5VVEYtOC9DL2VuX1VTLlVURi04L2VuX1VTLlVURi04XG5cbmF0dGFjaGVkIGJhc2UgcGFja2FnZXM6XG4gWzFdIGdyaWQgICAgICBwYXJhbGxlbCAgc3RhdHM0ICAgIHN0YXRzICAgICBncmFwaGljcyAgZ3JEZXZpY2VzIHV0aWxzICAgICBkYXRhc2V0cyAgbWV0aG9kcyAgIGJhc2UgICAgIFxuXG5vdGhlciBhdHRhY2hlZCBwYWNrYWdlczpcbiBbMV0gQ29tcGxleEhlYXRtYXBfMS4xOC4xIGJpbmRyY3BwXzAuMi4yICAgICAgICBkcGx5cl8wLjcuOCAgICAgICAgICAgaGNvcF8wLjEuMSAgICAgICAgICAgXG4gWzVdIG9yZy5Eci5lZy5kYl8zLjYuMCAgICBBbm5vdGF0aW9uRGJpXzEuNDIuMSAgSVJhbmdlc18yLjE0LjEyICAgICAgIFM0VmVjdG9yc18wLjE4LjMgICAgIFxuIFs5XSBCaW9iYXNlXzIuNDAuMCAgICAgICAgQmlvY0dlbmVyaWNzXzAuMjYuMCAgIEJpb2NJbnN0YWxsZXJfMS4zMC4wICBsaW1tYV8zLjM2LjUgICAgICAgICBcblxubG9hZGVkIHZpYSBhIG5hbWVzcGFjZSAoYW5kIG5vdCBhdHRhY2hlZCk6XG4gWzFdIFJjcHBfMC4xMi4xOSAgICAgICAgY2lyY2xpemVfMC40LjYgICAgICBwcmV0dHl1bml0c18xLjAuMiAgIHBzXzEuMy4wICAgICAgICAgICAgYXNzZXJ0dGhhdF8wLjIuMCAgIFxuIFs2XSBycHJvanJvb3RfMS4zLTIgICAgIGRpZ2VzdF8wLjYuMTggICAgICAgUjZfMi40LjAgICAgICAgICAgICBiYWNrcG9ydHNfMS4xLjMgICAgIFJTUUxpdGVfMi4xLjEgICAgICBcblsxMV0gZXZhbHVhdGVfMC4xMyAgICAgICBwaWxsYXJfMS4zLjEgICAgICAgIEdsb2JhbE9wdGlvbnNfMC4xLjAgcmxhbmdfMC4zLjQgICAgICAgICBjdXJsXzMuMyAgICAgICAgICAgXG5bMTZdIHJzdHVkaW9hcGlfMC4xMCAgICAgY2FsbHJfMy4yLjAgICAgICAgICBibG9iXzEuMS4xICAgICAgICAgIEdldG9wdExvbmdfMC4xLjcgICAgcm1hcmtkb3duXzEuMTIgICAgIFxuWzIxXSBkZXNjXzEuMi4wICAgICAgICAgIGRldnRvb2xzXzIuMC4xICAgICAgcmVhZHJfMS4zLjEgICAgICAgICBzdHJpbmdyXzEuNC4wICAgICAgIGJpdF8xLjEtMTQgICAgICAgICBcblsyNl0gY29tcGlsZXJfMy41LjEgICAgICB4ZnVuXzAuNiAgICAgICAgICAgIHBrZ2NvbmZpZ18yLjAuMiAgICAgYmFzZTY0ZW5jXzAuMS0zICAgICBwa2didWlsZF8xLjAuMyAgICAgXG5bMzFdIHNoYXBlXzEuNC40ICAgICAgICAgaHRtbHRvb2xzXzAuMy42ICAgICB0aWR5c2VsZWN0XzAuMi41ICAgIHRpYmJsZV8yLjEuMSAgICAgICAgY3JheW9uXzEuMy40ICAgICAgIFxuWzM2XSB3aXRocl8yLjEuMiAgICAgICAgIGpzb25saXRlXzEuNiAgICAgICAgREJJXzEuMC4wICAgICAgICAgICBtYWdyaXR0cl8xLjUgICAgICAgIGNsaV8xLjEuMCAgICAgICAgICBcbls0MV0gc3RyaW5naV8xLjQuMyAgICAgICBmc18xLjIuNyAgICAgICAgICAgIHJlbW90ZXNfMi4wLjIgICAgICAgdGVzdHRoYXRfMi4wLjEgICAgICBSQ29sb3JCcmV3ZXJfMS4xLTIgXG5bNDZdIHJqc29uXzAuMi4yMCAgICAgICAgdG9vbHNfMy41LjEgICAgICAgICBiaXQ2NF8wLjktNyAgICAgICAgIGdsdWVfMS4zLjEgICAgICAgICAgcHVycnJfMC4zLjIgICAgICAgIFxuWzUxXSBobXNfMC40LjIgICAgICAgICAgIHByb2Nlc3N4XzMuMy4wICAgICAgcGtnbG9hZF8xLjAuMiAgICAgICB5YW1sXzIuMi4wICAgICAgICAgIGNvbG9yc3BhY2VfMS40LTEgICBcbls1Nl0gc2Vzc2lvbmluZm9fMS4xLjEgICBtZW1vaXNlXzEuMS4wICAgICAgIGtuaXRyXzEuMjIgICAgICAgICAgYmluZHJfMC4xLjEgICAgICAgICB1c2V0aGlzXzEuNS4wICAgICAgXG4ifQ== -->
 <pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin17.6.0 (64-bit)
 Running under: macOS  10.14.3
@@ -3108,22 +3027,31 @@ locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
-[1] parallel  stats4    stats     graphics  grDevices utils     datasets  methods   base     
+ [1] grid      parallel  stats4    stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] org.Dr.eg.db_3.6.0   AnnotationDbi_1.42.1 IRanges_2.14.12      S4Vectors_0.18.3    
-[5] Biobase_2.40.0       BiocGenerics_0.26.0  BiocInstaller_1.30.0 limma_3.36.5        
+ [1] ComplexHeatmap_1.18.1 bindrcpp_0.2.2        dplyr_0.7.8           hcop_0.1.1           
+ [5] org.Dr.eg.db_3.6.0    AnnotationDbi_1.42.1  IRanges_2.14.12       S4Vectors_0.18.3     
+ [9] Biobase_2.40.0        BiocGenerics_0.26.0   BiocInstaller_1.30.0  limma_3.36.5         
 
 loaded via a namespace (and not attached):
- [1] Rcpp_0.12.19    knitr_1.22      magrittr_1.5    bit_1.1-14      blob_1.1.1      stringr_1.4.0  
- [7] tools_3.5.1     xfun_0.6        DBI_1.0.0       htmltools_0.3.6 yaml_2.2.0      bit64_0.9-7    
-[13] digest_0.6.18   base64enc_0.1-3 memoise_1.1.0   evaluate_0.13   RSQLite_2.1.1   rmarkdown_1.12 
-[19] stringi_1.4.3   compiler_3.5.1  jsonlite_1.6    pkgconfig_2.0.2</code></pre>
+ [1] Rcpp_0.12.19        circlize_0.4.6      prettyunits_1.0.2   ps_1.3.0            assertthat_0.2.0   
+ [6] rprojroot_1.3-2     digest_0.6.18       R6_2.4.0            backports_1.1.3     RSQLite_2.1.1      
+[11] evaluate_0.13       pillar_1.3.1        GlobalOptions_0.1.0 rlang_0.3.4         curl_3.3           
+[16] rstudioapi_0.10     callr_3.2.0         blob_1.1.1          GetoptLong_0.1.7    rmarkdown_1.12     
+[21] desc_1.2.0          devtools_2.0.1      readr_1.3.1         stringr_1.4.0       bit_1.1-14         
+[26] compiler_3.5.1      xfun_0.6            pkgconfig_2.0.2     base64enc_0.1-3     pkgbuild_1.0.3     
+[31] shape_1.4.4         htmltools_0.3.6     tidyselect_0.2.5    tibble_2.1.1        crayon_1.3.4       
+[36] withr_2.1.2         jsonlite_1.6        DBI_1.0.0           magrittr_1.5        cli_1.1.0          
+[41] stringi_1.4.3       fs_1.2.7            remotes_2.0.2       testthat_2.0.1      RColorBrewer_1.1-2 
+[46] rjson_0.2.20        tools_3.5.1         bit64_0.9-7         glue_1.3.1          purrr_0.3.2        
+[51] hms_0.4.2           processx_3.3.0      pkgload_1.0.2       yaml_2.2.0          colorspace_1.4-1   
+[56] sessioninfo_1.1.1   memoise_1.1.0       knitr_1.22          bindr_0.1.1         usethis_1.5.0      </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiT2J0YWluaW5nIEFubm90YXRpb24gZm9yIEVuc2VtYmwgSURzIgphdXRob3I6ICJBTFNGIENDREwgLSBDYW5kYWNlIFNhdm9uZW4iCm91dHB1dDogICAKICBodG1sX25vdGVib29rOiAKICAgIHRvYzogdHJ1ZQogICAgdG9jX2Zsb2F0OiB0cnVlCi0tLQoKKlB1cnBvc2UqOiBUaGlzIG5vdGVib29rIGlzIGFuIGV4YW1wbGUgYW5ub3RhdGlvbiB3b3JrZmxvdyBmb3IgZGF0YSBvYnRhaW5lZCBmcm9tIHJlZmluZS5iaW8KdXNpbmcgQmlvY29uZHVjdG9yIGFubm90YXRpb24gcGFja2FnZXMuCgpFbnNlbWJsIElEcyBjYW4gYmUgdXNlZCB0byBvYnRhaW4gdmFyaW91cyBkaWZmZXJlbnQgYW5ub3RhdGlvbnMgYXQgdGhlIApnZW5lL3RyYW5zY3JpcHQgbGV2ZWwuCkFsdGhvdWdoIHRoaXMgZXhhbXBsZSBzY3JpcHQgdXNlcyBFbnNlbWJsIElEcyBmcm9tIFplYnJhZmlzaCwgKDxpPkRhbmlvIHJlcmlvPC9pPiksCnRvIG9idGFpbiBnZW5lIHN5bWJvbHMgdGhpcyBzY3JpcHQgY2FuIGJlIGVhc2lseSBjb252ZXJ0ZWQgZm9yIHVzZSB3aXRoIGRpZmZlcmVudCAKc3BlY2llcyBvciBhbm5vdGF0aW9uIHR5cGVzIDxpPmVnPC9pPiBwcm90ZWluIElEcywgZ2VuZSBvbnRvbG9neSwgYWNjZXNzaW9uIApudW1iZXJzLiAKCjxiPkZvciBkaWZmZXJlbnQgc3BlY2llczwvYj4sIHdoZXJldmVyIHRoZSBhYmJyZXZpYXRpb24gYG9yZy5Eci5lZy5kYmAgb3IgYERyYCBpcyAKd3JpdHRlbiwgaXQgbXVzdCBiZSByZXBsYWNlZCB3aXRoIHRoZSByZXNwZWN0aXZlIHNwZWNpZXMgYWJicmV2aWF0aW9uIDxpPmVnPC9pPgpmb3I8aT4gSG9tbyBzYXBpZW5zPC9pPiBgb3JnLkhzLmVnLmRiYCBvciBgSHNgIHdvdWxkIGJlIHVzZWQuCkEgZnVsbCBsaXN0IG9mIHRoZSBhbm5vdGF0aW9uIFIgcGFja2FnZXMgZnJvbSBCaW9jb25kdWN0b3IgaXMgYXQgdGhpcyAKPGEgaHJlZj0iaHR0cDovL2Jpb2NvbmR1Y3Rvci5vcmcvcGFja2FnZXMvcmVsZWFzZS9kYXRhL2Fubm90YXRpb24iPiBsaW5rPC9hPi4KCjxiPkZvciBkaWZmZXJlbnQgdHlwZXMgb2YgYW5ub3RhdGlvbjwvYj4sIG90aGVyIGFubm90YXRpb24gb2JqZWN0cyBiZXNpZGVzCmBvcmcuRHIuZWdTWU1CT0xgIGNhbiBiZSB1c2VkIGZvciBtYXBwaW5nLgpGb3IgYSBmdWxsIGxpc3QgYW5ub3RhdGlvbiBvYmplY3RzIGZyb20gYSBwYWNrYWdlIHRoaXMgY29tbWFuZCBjYW4gYmUgdXNlZDogCmBscygicGFja2FnZTo6b3JnLkRyLmVnLmRiIilgLiAKSW4gdGhpcyBleGFtcGxlLCB3aGVyZXZlciBgU1lNQk9MYCBpcyB3cml0dGVuLCBpdCB3b3VsZCBuZWVkIHRvIGJlIHJlcGxhY2VkIAp3aXRoIHRoZSBuYW1lIG9mIHRoZSBkZXNpcmVkIGFubm90YXRpb24gc3VjaCBhcyBgQUNDTlVNYCBmb3IgYWNjZXNzaW9uIG51bWJlcnMuCgojIyAxKSBJbnN0YWxsIGxpYnJhcmllcyB3aXRoIHNwZWNpZXMtc3BlY2lmaWMgYW5ub3RhdGlvbiBwYWNrYWdlCmBgYHtyIEluc3RhbGwgbGlicmFyaWVzfQojIEluc3RhbGwgdGhlIFplYnJhZmlzaCBwYWNrYWdlCnNvdXJjZSgiaHR0cHM6Ly9iaW9jb25kdWN0b3Iub3JnL2Jpb2NMaXRlLlIiKQpiaW9jTGl0ZSgib3JnLkRyLmVnLmRiIiwgc3VwcHJlc3NVcGRhdGVzID0gVFJVRSkKCiMgQXR0YWNoIHRoZSBhbm5vdGF0aW9uIGxpYnJhcnkgCmxpYnJhcnkob3JnLkRyLmVnLmRiKQpgYGAKCiMjIDIpIEltcG9ydCByZWZpbmUuYmlvIGRhdGEgdGhhdCBoYXMgRW5zZW1ibCBpZGVudGlmaWVycwpgYGB7ciBJbXBvcnQgZGF0YX0KIyBFbnNlbWJsIElEcyBhcmUgaW4gdGhlIGZpcnN0IGNvbHVtbiBhbmQgd2lsbCBiZSByZWFkIGluIGFzIHRoZSByb3duYW1lcyBmb3IgCiMgdGhpcyBkYXRhIGZyYW1lCmRmIDwtIHJlYWQuZGVsaW0oIi4uL2RhdGEvU1JQMDU2MTM2LnRzdiIsIHJvdy5uYW1lcyA9IDEsIAogICAgICAgICAgICAgICAgIHN0cmluZ3NBc0ZhY3RvcnMgPSBGQUxTRSkKYGBgCgojIyAzKSBNYXAgRW5zZW1ibCBJRHMgdG8gZ2VuZSBzeW1ib2xzCipOb3RlKjogVGhpcyBjb2RlIGNodW5rIHdpbGwgcmV0dXJuIGEgbWVzc2FnZSB0aGF0IGluZGljYXRlcyB0aGF0IHRoZXJlIGFyZSBtYW55Cm1hcHBpbmdzIGJldHdlZW4gb3VyIGtleXMgYW5kIGNvbHVtbnMgYnV0IHRoaXMgaXMgb2theSBhbmQgaXMgd2hhdCB3ZSBleHBlY3QgCnNpbmNlIGdlbmVzIGFuZCB0cmFuc2NyaXB0cyBkbyBub3QgaGF2ZSBhIDE6MSByZWxhdGlvbnNoaXAKYGBge3IgTWF0Y2ggRW5zZW1ibCBJRHN9CiMgTWFwIGVuc2VtYmwgSURzIHRvIHRoZWlyIGFzc29jaWF0ZWQgZ2VuZSBzeW1ib2xzCnN5bWJvbC5kZiA8LSBkYXRhLmZyYW1lKCdnZW5lLnN5bWJvbHMnID0gbWFwSWRzKG9yZy5Eci5lZy5kYiwga2V5cyA9IHJvd25hbWVzKGRmKSwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2x1bW4gPSAiU1lNQk9MIiwga2V5dHlwZSA9ICJFTlNFTUJMIikpCgojIE1lcmdlIGdlbmUgc3ltYm9sIGFubm90YXRpb24gd2l0aCBkYXRhIGZyYW1lCiMgS2VlcCBFbnNlbWJsIElEcyBhcyByb3cgbmFtZXMgdXNpbmcgdHJhbnNmb3JtCmFubm90LmRmIDwtIHRyYW5zZm9ybShtZXJnZShzeW1ib2wuZGYsIGRmLCBieSA9ICJyb3cubmFtZXMiKSwKICAgICAgICAgICAgICAgICAgICAgICAgcm93Lm5hbWVzID0gUm93Lm5hbWVzLCBSb3cubmFtZXMgPSBOVUxMKQpgYGAKCiMjIDQpIFdyaXRlIHRvIGZpbGUKYGBge3IgV3JpdGUgdG8gZmlsZX0KIyBXcml0ZSBhbm5vdGF0ZWQgZGF0YSBmcmFtZSB0byBvdXRwdXQgZmlsZQp3cml0ZS50YWJsZShhbm5vdC5kZiwgZmlsZSA9ICJTUlAwNTYxMzZ3R2VuZVN5bWJvbHMudHN2Iiwgc2VwID0gIlx0IiwKICAgICAgICAgICAgcXVvdGUgPSBGQUxTRSkKYGBgCgpgYGB7ciBQcmludCBzZXNzaW9uIGluZm99CiMgUHJpbnQgc2Vzc2lvbiBpbmZvIApzZXNzaW9uSW5mbygpCmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiT2J0YWluaW5nIEFubm90YXRpb24gZm9yIEVuc2VtYmwgSURzIgphdXRob3I6ICJBTFNGIENDREwgLSBDYW5kYWNlIFNhdm9uZW4iCm91dHB1dDogICAKICBodG1sX25vdGVib29rOiAKICAgIHRvYzogdHJ1ZQogICAgdG9jX2Zsb2F0OiB0cnVlCi0tLQoKKlB1cnBvc2UqOiBUaGlzIG5vdGVib29rIGlzIGFuIGV4YW1wbGUgYW5ub3RhdGlvbiB3b3JrZmxvdyBmb3IgZGF0YSBvYnRhaW5lZCBmcm9tIHJlZmluZS5iaW8KdXNpbmcgQmlvY29uZHVjdG9yIGFubm90YXRpb24gcGFja2FnZXMuCgpFbnNlbWJsIElEcyBjYW4gYmUgdXNlZCB0byBvYnRhaW4gdmFyaW91cyBkaWZmZXJlbnQgYW5ub3RhdGlvbnMgYXQgdGhlIApnZW5lL3RyYW5zY3JpcHQgbGV2ZWwuCkFsdGhvdWdoIHRoaXMgZXhhbXBsZSBzY3JpcHQgdXNlcyBFbnNlbWJsIElEcyBmcm9tIFplYnJhZmlzaCwgKDxpPkRhbmlvIHJlcmlvPC9pPiksCnRvIG9idGFpbiBnZW5lIHN5bWJvbHMgdGhpcyBzY3JpcHQgY2FuIGJlIGVhc2lseSBjb252ZXJ0ZWQgZm9yIHVzZSB3aXRoIGRpZmZlcmVudCAKc3BlY2llcyBvciBhbm5vdGF0aW9uIHR5cGVzIDxpPmVnPC9pPiBwcm90ZWluIElEcywgZ2VuZSBvbnRvbG9neSwgYWNjZXNzaW9uIApudW1iZXJzLiAKCjxiPkZvciBkaWZmZXJlbnQgc3BlY2llczwvYj4sIHdoZXJldmVyIHRoZSBhYmJyZXZpYXRpb24gYG9yZy5Eci5lZy5kYmAgb3IgYERyYCBpcyAKd3JpdHRlbiwgaXQgbXVzdCBiZSByZXBsYWNlZCB3aXRoIHRoZSByZXNwZWN0aXZlIHNwZWNpZXMgYWJicmV2aWF0aW9uIDxpPmVnPC9pPgpmb3I8aT4gSG9tbyBzYXBpZW5zPC9pPiBgb3JnLkhzLmVnLmRiYCBvciBgSHNgIHdvdWxkIGJlIHVzZWQuCkEgZnVsbCBsaXN0IG9mIHRoZSBhbm5vdGF0aW9uIFIgcGFja2FnZXMgZnJvbSBCaW9jb25kdWN0b3IgaXMgYXQgdGhpcyBbbGlua10oaHR0cHM6Ly9iaW9jb25kdWN0b3Iub3JnL3BhY2thZ2VzL3JlbGVhc2UvYmlvYy92aWduZXR0ZXMvbGltbWEvaW5zdC9kb2MvdXNlcnNndWlkZS5wZGYpLgoKRm9yIGRpZmZlcmVudCB0eXBlcyBvZiBhbm5vdGF0aW9uLCBvdGhlciBhbm5vdGF0aW9uIG9iamVjdHMgYmVzaWRlcwpgb3JnLkRyLmVnU1lNQk9MYCBjYW4gYmUgdXNlZCBmb3IgbWFwcGluZy4KRm9yIGEgZnVsbCBsaXN0IGFubm90YXRpb24gb2JqZWN0cyBmcm9tIGEgcGFja2FnZSB0aGlzIGNvbW1hbmQgY2FuIGJlIHVzZWQ6IApgbHMoInBhY2thZ2U6Om9yZy5Eci5lZy5kYiIpYC4gCkluIHRoaXMgZXhhbXBsZSwgd2hlcmV2ZXIgYFNZTUJPTGAgaXMgd3JpdHRlbiwgaXQgd291bGQgbmVlZCB0byBiZSByZXBsYWNlZCAKd2l0aCB0aGUgbmFtZSBvZiB0aGUgZGVzaXJlZCBhbm5vdGF0aW9uIHN1Y2ggYXMgYEFDQ05VTWAgZm9yIGFjY2Vzc2lvbiBudW1iZXJzLgoKIyMgMSkgSW5zdGFsbCBsaWJyYXJpZXMgd2l0aCBzcGVjaWVzLXNwZWNpZmljIGFubm90YXRpb24gcGFja2FnZQoKYGBge3IgSW5zdGFsbCBsaWJyYXJpZXMsIGV2YWw9RkFMU0V9CiMgSW5zdGFsbCB0aGUgWmVicmFmaXNoIHBhY2thZ2UKc291cmNlKCJodHRwczovL2Jpb2NvbmR1Y3Rvci5vcmcvYmlvY0xpdGUuUiIpCmJpb2NMaXRlKCJvcmcuRHIuZWcuZGIiLCBzdXBwcmVzc1VwZGF0ZXMgPSBUUlVFKQpgYGAKCkF0dGFjaCB0aGUgYG9yZy5Eci5lZy5kYmAgbGlicmFyeToKCmBgYHtyfQojIEF0dGFjaCB0aGUgYW5ub3RhdGlvbiBsaWJyYXJ5IApsaWJyYXJ5KG9yZy5Eci5lZy5kYikKYGBgCgojIyAyKSBJbXBvcnQgcmVmaW5lLmJpbyBkYXRhIHRoYXQgaGFzIEVuc2VtYmwgaWRlbnRpZmllcnMKCmBgYHtyIEltcG9ydCBkYXRhfQojIEVuc2VtYmwgSURzIGFyZSBpbiB0aGUgZmlyc3QgY29sdW1uIGFuZCB3aWxsIGJlIHJlYWQgaW4gYXMgdGhlIHJvd25hbWVzIGZvciAKIyB0aGlzIGRhdGEgZnJhbWUKZGYgPC0gcmVhZC5kZWxpbSgiLi4vZGF0YS9TUlAwNTYxMzYudHN2Iiwgcm93Lm5hbWVzID0gMSwgCiAgICAgICAgICAgICAgICAgc3RyaW5nc0FzRmFjdG9ycyA9IEZBTFNFKQpgYGAKCiMjIDMpIE1hcCBFbnNlbWJsIElEcyB0byBnZW5lIHN5bWJvbHMKKk5vdGUqOiBUaGlzIGNvZGUgY2h1bmsgd2lsbCByZXR1cm4gYSBtZXNzYWdlIHRoYXQgaW5kaWNhdGVzIHRoYXQgdGhlcmUgYXJlIG1hbnkKbWFwcGluZ3MgYmV0d2VlbiBvdXIga2V5cyBhbmQgY29sdW1ucyBidXQgdGhpcyBpcyBva2F5IGFuZCBpcyB3aGF0IHdlIGV4cGVjdCAKc2luY2UgZ2VuZXMgYW5kIHRyYW5zY3JpcHRzIGRvIG5vdCBoYXZlIGEgMToxIHJlbGF0aW9uc2hpcAoKYGBge3IgTWF0Y2ggRW5zZW1ibCBJRHN9CiMgTWFwIGVuc2VtYmwgSURzIHRvIHRoZWlyIGFzc29jaWF0ZWQgZ2VuZSBzeW1ib2xzCnN5bWJvbC5kZiA8LSBkYXRhLmZyYW1lKCdnZW5lLnN5bWJvbHMnID0gbWFwSWRzKG9yZy5Eci5lZy5kYiwga2V5cyA9IHJvd25hbWVzKGRmKSwgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb2x1bW4gPSAiU1lNQk9MIiwga2V5dHlwZSA9ICJFTlNFTUJMIikpCgojIE1lcmdlIGdlbmUgc3ltYm9sIGFubm90YXRpb24gd2l0aCBkYXRhIGZyYW1lCiMgS2VlcCBFbnNlbWJsIElEcyBhcyByb3cgbmFtZXMgdXNpbmcgdHJhbnNmb3JtCmFubm90LmRmIDwtIHRyYW5zZm9ybShtZXJnZShzeW1ib2wuZGYsIGRmLCBieSA9ICJyb3cubmFtZXMiKSwKICAgICAgICAgICAgICAgICAgICAgICAgcm93Lm5hbWVzID0gUm93Lm5hbWVzLCBSb3cubmFtZXMgPSBOVUxMKQpgYGAKCiMjIDQpIFdyaXRlIHRvIGZpbGUKCmBgYHtyIFdyaXRlIHRvIGZpbGV9CiMgV3JpdGUgYW5ub3RhdGVkIGRhdGEgZnJhbWUgdG8gb3V0cHV0IGZpbGUKd3JpdGUudGFibGUoYW5ub3QuZGYsIGZpbGUgPSAiU1JQMDU2MTM2d0dlbmVTeW1ib2xzLnRzdiIsIHNlcCA9ICJcdCIsCiAgICAgICAgICAgIHF1b3RlID0gRkFMU0UpCmBgYAoKUHJpbnQgc2Vzc2lvbiBpbmZvOgoKYGBge3J9CiMgUHJpbnQgc2Vzc2lvbiBpbmZvIApzZXNzaW9uSW5mbygpCmBgYAo=</div>
 
 
 </div>
