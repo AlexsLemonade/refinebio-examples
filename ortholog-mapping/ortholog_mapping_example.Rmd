@@ -1,8 +1,10 @@
 ---
 title: "Ortholog Mapping with `hcop`"
 author: ALSF CCDL - Jaclyn Taroni
-date: 9/21/2018
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook demonstrates how you can use the 
@@ -41,7 +43,7 @@ command of `devtools::install_github`.
 Here, we'll use the most recent commit at the time that we are putting together
 this example.
 
-```{r Install hcop}
+```{r Install hcop, eval=FALSE}
 devtools::install_github("stephenturner/hcop", 
                          ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
 ```
@@ -128,7 +130,9 @@ human.symbol.df %>%
   filter(zebrafish_ensembl == "ENSDARG00000069142")
 ```
 
-```{r Print session info}
+Print session info:
+
+```{r}
 # Print session info 
 sessionInfo()
 ```

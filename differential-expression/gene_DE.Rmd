@@ -1,8 +1,10 @@
 ---
 title: "Differential Expression Analysis"
 author: "ALSF CCDL - Candace Savonen"
-date: 9/18/18
-output: html_document
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
 ---
 
 *Purpose*: This notebook takes data and metadata from refine.bio and identifies 
@@ -13,17 +15,21 @@ microarray data.
 ## 1) Install libraries
 This script uses the bioconductor R package limma to identify differentially 
 expressed genes.  
-The full guide on <a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">
-limma</a> shows examples of limma functions. 
+The full guide on [limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) 
+shows examples of limma functions. 
 <i>Citation</i>: Ritchie ME, Phipson B, Wu D, Hu Y, Law CW, Shi W, Smyth GK (2015). 
 “limma powers differential expression analyses for RNA-sequencing and microarray
 studies.” Nucleic Acids Research, 43(7), e47. 
 
-```{r Install limma }
+```{r Install limma, eval=FALSE}
 # Install limma
 source("https://bioconductor.org/biocLite.R")
 biocLite("limma", suppressUpdates = TRUE)
+```
 
+Attach the `limma` library:
+
+```{r}
 # Attach library
 library(limma)
 ```
@@ -85,9 +91,7 @@ stats <- topTable(fit, number = nrow(df))
 ## 4) Explore fitness of model
 Here we will use two different plots that can be used to assess the quality of
 your model. A guide to the interpretation of these plots and other statistics for 
-gene expression data can be found 
-<a href="http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf">
-here</a>.
+gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf).
 
 ```{r  Explore model, warning=FALSE}
 # Create Q-Q plot
@@ -99,11 +103,14 @@ volcanoplot(fit, main = "Volcano Plot")
 ```
 
 ## 5) Write statistics to output results file
+
 ```{r  Write results}
 write.table(stats, file = "GSE71270limmaResults.tsv", sep = "\t", quote = FALSE)
 ```
 
-```{r Print session info}
+Print session info:
+
+```{r}
 # Print session info 
 sessionInfo()
 ```
