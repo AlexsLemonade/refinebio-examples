@@ -1,0 +1,5 @@
+refinebio_accession_code	refinebio_age	refinebio_cell_line	refinebio_compound	refinebio_disease	refinebio_disease_stage	refinebio_genetic_information	refinebio_organism	refinebio_platform	refinebio_race	refinebio_sex	refinebio_source_archive_url	refinebio_source_database	refinebio_specimen_part	refinebio_subject	refinebio_time	refinebio_title	refinebio_treatment
+SRR1914395							DANIO_RERIO	Illumina HiSeq 2000 (IlluminaHiSeq2000)				SRA				foxo3b MO 48hpf	
+SRR1914394							DANIO_RERIO	Illumina HiSeq 2000 (IlluminaHiSeq2000)				SRA				Control 48hpf	
+SRR1914393							DANIO_RERIO	IlluminaHiSeq2000 (IlluminaHiSeq2000)				SRA				foxo3b MO 24hpf	
+SRR1914392							DANIO_RERIO	IlluminaHiSeq2000 (IlluminaHiSeq2000)				SRA				Control 24hpf	

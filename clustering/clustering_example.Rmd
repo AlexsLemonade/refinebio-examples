@@ -39,7 +39,7 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("../data/GSE12955_metadata.tsv", header=TRUE, 
+metadata <- read.delim("../data/metadata_GSE12955.tsv", header=TRUE, 
                        stringsAsFactors = FALSE)
 
 # Read in data tsv file
