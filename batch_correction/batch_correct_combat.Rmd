@@ -56,7 +56,7 @@ hek293 <- grep("hek293|hek-293|hek 293", metadata$refinebio_cell_line,
 
 # Only keep these in the data and metadata
 metadata <- metadata[hek293, ]
-df <- df[, hek293]
+df <- as.matrix(df[, hek293])
 
 # Take a look at the information we have for these data
 metadata
