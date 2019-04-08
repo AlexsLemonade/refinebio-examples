@@ -1,4 +1,4 @@
-# __refine.bio Examples: Clustering__
+# refine.bio Examples: Clustering
 This directory contains example workflows of how to filter, cluster and create
 a heatmap from data downloaded from [refine.bio](refine.bio.org).
 
