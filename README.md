@@ -6,14 +6,14 @@ This repository contains example workflows of how to use data downloaded from
 
 If you are comfortable with GitHub, we recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
 this repository and following the examples.
-However, if you are less comfortable with GitHub, you can also use the green 
-button that says "Clone or download" to "Download ZIP" and then use these 
-notebooks as you please on your own computer. 
-Make sure you are on the master branch. 
+However, if you are less comfortable with GitHub, you can also use the green
+button that says "Clone or download" to "Download ZIP" and then use these
+notebooks as you please on your own computer.
+Make sure you are on the master branch.
 Which is indicated toward the top of the page, in a gray button that says "Branch:".
 
-In each directory, there is a `README` that explains how to complete the 
-analyses with the R or GenePattern notebooks. 
+In each directory, there is a `README` that explains how to complete the
+analyses with the R or GenePattern notebooks.
 If you are following the instructions for completing the analyses in R, open the
 R markdown (`Rmd`) and follow the instructions.
 You will also see the example output files which are generally TSV or PNG files.
@@ -23,9 +23,9 @@ directory and are referenced as such in the R Notebooks.
 *For most of the example workflows, two general methods of completing the analyses are discussed:*  
 
 ### [R markdown](https://rmarkdown.rstudio.com/articles_intro.html)  
-Workflows using R markdown have example analyses that could be applied to other 
-refine.bio formatted data. 
-The advantage of using these examples is that they were specifically for use 
+Workflows using R markdown have example analyses that could be applied to other
+refine.bio formatted data.
+The advantage of using these examples is that they were specifically for use
 with refine.bio formatted data and associated metadata.
 
 ### [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
@@ -38,12 +38,12 @@ In order to use GenePattern notebooks, data from refine.bio needs to be converte
 to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 This repository includes
-[scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/) 
+[scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/)
 for easy conversion of refine.bio data into these formats from command line.
 
 #### Converting files to GenePattern compatible formats
 Example [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
-have numerous ready-made analyses but generally require 
+have numerous ready-made analyses but generally require
 [special formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 
 #### gct format conversion
@@ -77,8 +77,8 @@ CLS formatted files tell information regarding the groups or phenotype of the
 different samples and are necessary for doing gene expression differential
 analysis using GenePattern's notebooks. If you've already created a gct format
 file from your data, you can create a a CLS format using GenePattern's online
-[CLsFileCreator](http://genepattern.broadinstitute.org/gp/pages/index.jsf?lsid=urn:lsid:broad.mit.edu:cancer.software.genepattern.module.visualizer:00261:3)
-  
+[CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
+
 # Table of Contents  
 
 1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
