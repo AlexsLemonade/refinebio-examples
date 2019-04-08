@@ -2,7 +2,7 @@
 This directory contains example workflows of how to convert from Ensembl gene IDs,
 which is the gene identifier used by refine.bio, to other types of gene identifiers that
 may be required for downstream analyses.
-IDs downloaded from [refine.bio](refine.bio.org).
+IDs downloaded from [refine.bio](https://www.refine.bio.org).
 
 ### Annotation using Ensembl IDs in R
 This [notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert/ensembl_id_convert.Rmd)

@@ -1,15 +1,14 @@
 # refine.bio Examples Guide
 This repository contains example workflows of how to use data downloaded from
-[refine.bio](https://www.refine.bio).
+[refine.bio](https://www.refine.bio.org).
 
 ## How to use:
 
 If you are comfortable with GitHub, we recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
 this repository and following the examples.
-You can also use the green button that says "Clone or download" to "Download 
-ZIP" and then use these notebooks as you please on your own computer, if you 
+You can also use the green button that says "Clone or download" to "Download
+ZIP" and then use these notebooks as you please on your own computer, if you
 prefer.
-Which is indicated toward the top of the page, in a gray button that says "Branch:".
 
 In each directory, there is a `README` that explains how to complete the
 analyses with the R or GenePattern notebooks.

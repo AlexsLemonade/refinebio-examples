@@ -1,11 +1,11 @@
 # refine.bio Examples: Clustering
 This directory contains example workflows of how to filter, cluster and create
-a heatmap from data downloaded from [refine.bio](refine.bio.org).
+a heatmap from data downloaded from [refine.bio](https://www.refine.bio.org).
 
 ***
 ### Clustering data in R
-[This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/clustering_example.Rmd) 
-uses the Bioconductor R package `ComplexHeatmap` for clustering and creating a 
+[This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/clustering_example.Rmd)
+uses the Bioconductor R package `ComplexHeatmap` for clustering and creating a
 heatmap.
 In this example, the gene expression matrix is subset to only include genes with high variance.
 The high variances set of genes is then used to create a heatmap.
