@@ -40,6 +40,9 @@ the search term "HEK 293" and then aggregating by `species`.
 # Put name of data file
 data.filename <- file.path("..", "data", "HOMO_SAPIENS.tsv")
 
+# Unzip the file and direct it to the data folder
+unzip(paste0(data.filename, ".zip"), exdir = file.path("..", "data"))
+
 # Read in data tsv file
 df <- readr::read_tsv(data.filename) %>% 
   tibble::column_to_rownames('X1') 
