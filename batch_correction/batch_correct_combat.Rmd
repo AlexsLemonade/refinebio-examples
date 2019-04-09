@@ -122,6 +122,13 @@ ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   ggtitle("Batch corrected")
 ```
 
+## 5) Save batch corrected data to tsv file
+```{r}
+corrected.df %>% as.data.frame() %>% 
+  tibble::rownames_to_column("gene") %>%
+  readr::write_tsv("HEK293_batch_corrected_exprs.tsv")
+```
+
 Session info: 
 
 ```{r Print session info}
