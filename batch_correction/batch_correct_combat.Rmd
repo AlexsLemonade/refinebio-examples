@@ -30,8 +30,9 @@ library(ggplot2)
 
 ## 2) Import and set up data
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. This chunk of code will read the both tsv files and 
-add them as data.frames to your environment.
+file and a data tsv file. 
+These files were obtained from [refine.bio](https://www.refine.bio/) by entering
+the search term "HEK 293" and then aggregating by `species`.
 
 ```{r Import refine.bio data}
 # Put name of data file
@@ -59,7 +60,11 @@ df <- df[, metadata$refinebio_accession_code]
 all.equal(metadata$refinebio_accession_code, colnames(df))
 ```
 
-Do some filtering so we know we are only really looking at HEK293 sets
+The refine.bio search gave us some cells that aren't HEK293 so we will need to 
+do some filtering. 
+Because the metadata obtained from combining multiple datasets are not always 
+able to be harmonized, we are going to have to search for HEK 293 cells in a 
+couple different columns. 
 
 ```{r}
 # Keep only things that have evidence that they are HEK cells
