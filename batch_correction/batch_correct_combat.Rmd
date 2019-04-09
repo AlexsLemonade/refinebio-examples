@@ -28,7 +28,7 @@ add them as data.frames to your environment.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path("..", "data", "DANIO_RERIO.tsv")
+data.filename <- file.path("..", "data", "HOMO_SAPIENS.tsv")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename) %>% 
@@ -40,7 +40,7 @@ Prep metadata to be in proper format for batch info to be used by ComBat
 
 ```{r Prep metadata}
 # Metadata file name
-metadata.filename <- file.path("..", "data", "metadata_DANIO_RERIO.tsv")
+metadata.filename <- file.path("..", "data", "metadata_HOMO_SAPIENS.tsv")
 
 # Read in data tsv file
 metadata <- readr::read_tsv(metadata.filename)
@@ -51,8 +51,10 @@ df <- df[, metadata$refinebio_accession_code]
 # Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
 
-# Change metadata NA's to be the controls as well
-metadata$protocol[is.na(metadata$protocol)] <- "not amputated"
+# Keep only things that have evidence that they are HEK cells
+hek293 <- grep("hek|293|hek 293|hek-293", 
+               paste0(metadata$refinebio_cell_line, metadata$`cell line`, metadata$title), 
+               ignore.case = TRUE)
 
 # Only keep these in the data and metadata
 metadata <- metadata[hek293, ]
@@ -79,6 +81,7 @@ We will likely see a difference between the datasets.
 ```{r}
 ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   geom_point() + 
+  theme(legend.position = "none") +
   ggtitle("Non-batch corrected")
 ```
 
@@ -107,6 +110,7 @@ Plot these batch corrected data PC scores.
 ```{r}
 ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   geom_point() + 
+  theme(legend.position = "none") +
   ggtitle("Batch corrected")
 ```
 
