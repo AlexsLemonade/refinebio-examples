@@ -106,8 +106,8 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
 ```
 
 ## 4) Peform ComBat correction
-To run ComBat, we need a sample information file. 
-For more details on ComBat
+To run ComBat, we need batch information, in this case we will use the dataset
+ids.
 
 ```{r ComBat correction}
 corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
