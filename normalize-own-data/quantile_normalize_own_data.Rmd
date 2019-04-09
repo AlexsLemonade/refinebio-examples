@@ -1,0 +1,235 @@
+---
+title: "Quantile normalizing your own data to make it more comparable to refine.bio data"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: J. Taroni for CCDL
+date: 2019
+---
+
+## Background
+
+Datasets that are downloaded from the web interface of 
+[refine.bio](http://www.refine.bio) are 
+[quantile normalized](https://en.wikipedia.org/wiki/Quantile_normalization) 
+because we allow users to aggregate multiple platforms (e.g., microarray 
+chips) and even multiple technologies.
+Quantile normalization (QN) ensures that the underlying distributions of samples
+are the same.
+
+If you are interested in comparing your own data to data you have downloaded
+from the refine.bio website, you may wish to quantile normalize it using the
+reference distribution we've used in refine.bio.
+
+You can read more about the reference distribution and how it is generated in 
+the [quantile normalization section](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization) 
+of our [documentation](http://docs.refine.bio/en/latest/).
+
+In this example, we'll demonstrate how to obtain the reference distribution
+from the refine.bio API and apply it to your own data in R.
+
+### Dataset
+
+We used [`GSE39842`](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE39842) 
+in another module of the GitHub repository of examples: [`AlexsLemonade/refinebio-examples/compare-processing`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/compare-processing).
+
+The submitters used RMA to process their data. 
+We have already converted the gene identifiers to Ensembl gene ids and can
+obtain the TSV file with these data from GitHub, placing it in the `data` 
+directory we create below with `bash`.
+
+```{bash}
+mkdir data
+wget --directory-prefix=data https://github.com/AlexsLemonade/refinebio-examples/raw/c97cad6a8342d9bb54f120dbd7c7f12b03e3f799/compare-processing/data/GSE39842_RMA_converted.tsv
+```
+
+## Obtaining a refine.bio QN target 
+
+We'll use the terms "QN target" and "reference distribution" interchangeably to
+refer to the vector of values we use to quantile normalize `GSE39842`.
+
+We can query the refine.bio API like so:
+
+```
+https://api.refine.bio/qn_targets/?organism=<SCIENTIFIC_NAME>
+```
+
+where we would replace `<SCIENTIFIC_NAME>` with the name of the species we are
+interested in.
+
+We'd query the API for the zebrafish QN target like so:
+
+```
+https://api.refine.bio/qn_targets/?organism=DANIO_RERIO
+```
+
+Here, we'll use the `jsonlite` R package to extract the information we need to
+obtain the TSV file with the zebrafish reference distribution values. 
+
+```{r}
+qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/qn_targets/?organism=DANIO_RERIO")
+```
+
+TODO: This is wrong because the organism filter is broken! https://github.com/AlexsLemonade/refinebio/issues/1224
+Pretty sure I am using the mouse target with this method but wanted to get the plotting, etc. prepped!
+
+There are, at the time of this example, 12 quantile normalization targets that
+are available.
+
+```{r}
+dim(qn_target_info)
+```
+
+```{r}
+colnames(qn_target_info)
+```
+
+Let's look at when these were created with some help from the `lubridate` 
+package.
+
+```{r}
+lubridate::as_datetime(qn_target_info$created_at)
+```
+
+We can find the index of the _latest_ QN target with `which.max`.
+
+```{r}
+latest_index <- which.max(lubridate::as_datetime(qn_target_info$created_at))
+```
+
+For posterity, we're using QN target created at 
+**`r lubridate::as_datetime(qn_target_info$created_at)[latest_index]`**
+here.
+
+We need the `s3_url`, which tells us the link where the file is available for
+download from.
+We can read this data into R with the URL directly later on in this notebook.
+
+```{r}
+latest_qn_url <- qn_target_info$s3_url[latest_index]
+```
+
+This is all the information we need to continue.
+
+```{r}
+rm(qn_target_info)
+```
+
+## Set up 
+
+We need the [`preprocessCore`](https://bioconductor.org/packages/release/bioc/html/preprocessCore.html) 
+package to perform quantile normalization. 
+
+```{r}
+if (!("preprocessCore" %in% installed.packages())) {
+  BiocManager::install("preprocessCore", update = FALSE)
+}
+```
+
+```{r}
+`%>%` <- dplyr::`%>%`
+```
+
+### Read in data
+
+First, the gene expression matrix.
+
+```{r}
+expression_file <- file.path("data", "GSE39842_RMA_converted.tsv")
+expression_df <- readr::read_tsv(expression_file)
+```
+```{r}
+expression_matrix <- expression_df %>%
+  # filter out any of the control probes
+  dplyr::filter(!grepl("AFFX", ENSEMBL)) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("ENSEMBL") %>%
+  as.matrix()
+```
+
+Now, the QN target -- this will ultimately need to be a vector.
+
+```{r}
+qn_target <- as.vector(as.matrix(readr::read_tsv(latest_qn_url,
+                                                 col_names = FALSE)))
+```
+
+## Quantile normalization
+
+```{r}
+qn_matrix <- preprocessCore::normalize.quantiles.use.target(expression_matrix,
+                                                            qn_target)
+```
+
+To write this to file or to do plotting with `ggplot2`, we'll want to neaten 
+things a bit (e.g., use column names).
+
+```{r}
+colnames(qn_matrix) <- colnames(expression_df)[-1]
+qn_df <- data.frame(Gene = rownames(expression_matrix),
+                    qn_matrix)
+```
+
+### Plotting
+
+Let's make some density plots to demonstrate the effect of quantile 
+normalization.
+
+#### Before
+
+```{r}
+# we need this information in long format to make the plots
+exprs_long_df <- expression_df %>% 
+  reshape2::melt() %>%
+  dplyr::mutate(Sample = variable) %>%
+  dplyr::select(-variable)
+```
+
+```{r}
+exprs_long_df %>%
+  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
+  ggplot2::geom_density(alpha = 0.2) +
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "Before quantile normalization",
+                x = "expression value")
+```
+
+The distributions look pretty similar, but they're not the _same_.
+
+#### After
+
+```{r}
+qn_long_df <- qn_df %>% 
+  reshape2::melt() %>%
+  # because the sample names were the column names, they are not pretty!
+  dplyr::mutate(Sample = gsub("X7", "7", 
+                              gsub("[[:punct:]]", " ", variable))) %>%
+  dplyr::select(-variable) 
+```
+
+```{r}
+qn_long_df %>%
+  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
+  ggplot2::geom_density(alpha = 0.2) +
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "After quantile normalization",
+                x = "expression value")
+```
+
+This looks like all the samples follow the same distribution.
+We can use `facet_wrap` to get a better look.
+
+```{r}
+qn_long_df %>%
+  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
+  ggplot2::geom_density(alpha = 0.2) +
+  ggplot2::theme_bw() +
+  ggplot2::labs(title = "After quantile normalization",
+                x = "expression value") +
+  ggplot2::facet_wrap(~ Sample, ncol = 4) +
+  ggplot2::theme(legend.position = "none",
+                 strip.background = ggplot2::element_blank(),
+                 strip.text = ggplot2::element_blank())
+```
+
