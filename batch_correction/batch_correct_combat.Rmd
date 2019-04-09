@@ -13,6 +13,13 @@ ComBat to correct for them.
 ## 1) Set up libraries
 Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
 
+Install `sva` if you haven't done so before.
+
+```{r eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("sva", suppressUpdates = TRUE)
+```
+
 ```{r Upload ComBat functions}
 # Magrittr pipe
 `%>%` <- dplyr::`%>%`
@@ -122,7 +129,8 @@ ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   ggtitle("Batch corrected")
 ```
 
-## 5) Save batch corrected data to tsv file
+## 6) Save batch corrected data to tsv file
+
 ```{r}
 corrected.df %>% as.data.frame() %>% 
   tibble::rownames_to_column("gene") %>%
