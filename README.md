@@ -87,4 +87,6 @@ file from your data, you can create a a CLS format using GenePattern's online
 
 4. [Ortholog Mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
 
-5. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
+5. [Batch Correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
+
+6. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
