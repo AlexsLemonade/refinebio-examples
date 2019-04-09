@@ -11,8 +11,7 @@ output:
 ComBat to correct for them. 
 
 ## 1) Set up libraries
-Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in 
-microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
+Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
 
 ```{r Upload ComBat functions}
 # Magrittr pipe
@@ -29,7 +28,7 @@ add them as data.frames to your environment.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path("..", "data", "HOMO_SAPIENS.tsv")
+data.filename <- file.path("..", "data", "DANIO_RERIO.tsv")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename) %>% 
@@ -41,7 +40,7 @@ Prep metadata to be in proper format for batch info to be used by ComBat
 
 ```{r Prep metadata}
 # Metadata file name
-metadata.filename <- file.path("..", "data", "metadata_HOMO_SAPIENS.tsv")
+metadata.filename <- file.path("..", "data", "metadata_DANIO_RERIO.tsv")
 
 # Read in data tsv file
 metadata <- readr::read_tsv(metadata.filename)
@@ -52,9 +51,8 @@ df <- df[, metadata$refinebio_accession_code]
 # Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
 
-# Select out what samples are actually hek 293:
-hek293 <- grep("hek293|hek-293|hek 293", metadata$refinebio_cell_line, 
-               ignore.case = TRUE)
+# Change metadata NA's to be the controls as well
+metadata$protocol[is.na(metadata$protocol)] <- "not amputated"
 
 # Only keep these in the data and metadata
 metadata <- metadata[hek293, ]
@@ -72,16 +70,15 @@ pca <- prcomp(t(df))
 
 # Make into dataframe for plotting with ggplot2
 pca.df <- data.frame(pca$x[, 1:2], 
-                     metadata)
+                     dataset = metadata$series_id)
 ```
 
 Plot these PC scores.
 We will likely see a difference between the datasets.
 
 ```{r}
-ggplot(pca.df, aes(x = PC1, y = PC2, color =  metadata$series_id)) +
+ggplot(pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   geom_point() + 
-  theme(legend.position="none") +
   ggtitle("Non-batch corrected")
 ```
 
@@ -90,7 +87,7 @@ To run ComBat, we need a sample information file.
 For more details on ComBat
 
 ```{r ComBat correction}
-corrected.df <- sva::ComBat(as.matrix(df), metadata$refinebio_platform)
+corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
 ```
 
 ## 5) Re-evaluate PCA after batch correction
@@ -102,16 +99,15 @@ corrected.pca <- prcomp(t(corrected.df))
 
 # Make into dataframe for plotting with ggplot2
 corrected.pca.df <- data.frame(corrected.pca$x[, 1:2], 
-                               dataset = metadata$refinebio_platform)
+                               dataset = metadata$series_id)
 ```
 
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = metadata$series_id)) +
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = dataset)) +
   geom_point() + 
-  ggtitle("Batch corrected") +
-  theme(legend.position="none")
+  ggtitle("Batch corrected")
 ```
 
 Session info: 
