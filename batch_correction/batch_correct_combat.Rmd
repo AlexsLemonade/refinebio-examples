@@ -50,15 +50,23 @@ df <- df[, metadata$refinebio_accession_code]
 
 # Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
+```
 
+Do some filtering so we know we are only really looking at HEK293 sets
+
+```{r}
 # Keep only things that have evidence that they are HEK cells
 hek293 <- grep("hek|293|hek 293|hek-293", 
                paste0(metadata$refinebio_cell_line, metadata$`cell line`, metadata$title), 
                ignore.case = TRUE)
 
 # Only keep these in the data and metadata
-metadata <- metadata[hek293, ]
-df <- as.matrix(df[, hek293])
+metadata <- metadata[hek293, ] %>% 
+  readr::write_tsv("filtered_metadata_HOMO_SAPIENS.tsv")
+
+# Only keep these in the data and metadata
+df <- df[, hek293] %>% 
+  readr::write_tsv("filtered_HOMO_SAPIENS.tsv")
 
 # Take a look at the information we have for these data
 metadata
