@@ -58,7 +58,7 @@ metadata.filename <- file.path("..", "data", "metadata_HOMO_SAPIENS.tsv")
 # Read in data tsv file
 metadata <- readr::read_tsv(metadata.filename)
 
-# dataset <- as.factor(stringr::word(colnames(df), sep = ":", 1))
+# Put samples in the same order in the dataframe
 df <- df[, metadata$refinebio_accession_code]
 
 # Check if the samples are in the same order
