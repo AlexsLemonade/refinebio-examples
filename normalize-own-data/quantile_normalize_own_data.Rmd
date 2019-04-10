@@ -113,7 +113,7 @@ expression_file <- file.path("data", "GSE39842_RMA_converted.tsv")
 expression_df <- readr::read_tsv(expression_file)
 ```
 
-We need a matrix of our expression data to perform the quantile normalization.
+We need a matrix of our expression data to perform quantile normalization.
 
 ```{r}
 expression_matrix <- expression_df %>%
