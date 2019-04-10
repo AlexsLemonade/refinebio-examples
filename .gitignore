@@ -8,7 +8,6 @@ differential-expression/.DS_Store
 # Ignore ID refinery mappings for irrelevant platforms
 compare-processing/data/id_refinery/all_1536267482.zip
 
-# Ignore big data files
-*/data/*
-*/results/*
+# This data is downloaded from another part of the repo in essence
+normalize-own-data/data/GSE39842_RMA_converted.tsv
 
