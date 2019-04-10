@@ -39,11 +39,11 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("../data/metadata_GSE12955.tsv", header=TRUE, 
+metadata <- read.delim(file.path("data", "metadata_GSE12955.tsv"), header=TRUE, 
                        stringsAsFactors = FALSE)
 
 # Read in data tsv file
-df <- read.delim("../data/GSE12955.tsv", header=TRUE, row.names= 1, 
+df <- read.delim(file.path("data", "GSE12955.tsv"), header=TRUE, row.names= 1, 
                  stringsAsFactors = FALSE)
 ```
 
@@ -96,7 +96,7 @@ and filename within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png("HeatmapGSE12955.png")
+png(file.path("results", "HeatmapGSE12955.png"))
 
 # Print your heatmap
 heatmap

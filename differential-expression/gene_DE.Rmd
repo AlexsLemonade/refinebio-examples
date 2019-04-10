@@ -41,11 +41,11 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim(file.path("..", "data", "metadata_GSE71270.tsv"),
+metadata <- read.delim(file.path("data", "metadata_GSE71270.tsv"),
                        header = TRUE)
 
 # Read in data tsv file
-df <- read.delim(file.path("..", "data", "GSE71270.tsv"), header = TRUE,
+df <- read.delim(file.path("data", "GSE71270.tsv"), header = TRUE,
                  row.names = 1, stringsAsFactors = FALSE)
 ```
 
@@ -105,7 +105,7 @@ volcanoplot(fit, main = "Volcano Plot")
 ## 5) Write statistics to output results file
 
 ```{r  Write results}
-write.table(stats, file = "GSE71270limmaResults.tsv", sep = "\t", quote = FALSE)
+readr::write_tsv(stats, file.path("results", "GSE71270_limma_results.tsv"))
 ```
 
 Print session info:

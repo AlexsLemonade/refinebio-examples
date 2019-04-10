@@ -49,8 +49,7 @@ library(org.Dr.eg.db)
 ```{r Import data}
 # Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
-df <- read.delim("../data/SRP056136.tsv", row.names = 1, 
-                 stringsAsFactors = FALSE)
+df <- readr::read_tsv(file.path("data", "SRP056136.tsv"))
 ```
 
 ## 3) Map Ensembl IDs to gene symbols
@@ -60,21 +59,15 @@ since genes and transcripts do not have a 1:1 relationship
 
 ```{r Match Ensembl IDs}
 # Map ensembl IDs to their associated gene symbols
-symbol.df <- data.frame('gene.symbols' = mapIds(org.Dr.eg.db, keys = rownames(df), 
-                                  column = "SYMBOL", keytype = "ENSEMBL"))
-
-# Merge gene symbol annotation with data frame
-# Keep Ensembl IDs as row names using transform
-annot.df <- transform(merge(symbol.df, df, by = "row.names"),
-                        row.names = Row.names, Row.names = NULL)
+annot.df <- data.frame("Symbols" = mapIds(org.Dr.eg.db, keys = df$Gene, 
+                                         column = "SYMBOL", keytype = "ENSEMBL"), df)
 ```
 
 ## 4) Write to file
 
 ```{r Write to file}
 # Write annotated data frame to output file
-write.table(annot.df, file = "SRP056136wGeneSymbols.tsv", sep = "\t",
-            quote = FALSE)
+readr::write_tsv(annot.df, file.path("results", "SRP056136wGeneSymbols.tsv"))
 ```
 
 Print session info:
