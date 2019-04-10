@@ -83,10 +83,12 @@ file from your data, you can create a a CLS format using GenePattern's online
 
 2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
 
-3. [Differential Expression Analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
+3. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
 
-4. [Ortholog Mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
+4. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
 
-5. [Batch Correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
+5. [Batch correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
 
-6. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
+6. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data) 
+
+7. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
