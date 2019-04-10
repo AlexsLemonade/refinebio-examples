@@ -166,7 +166,7 @@ exprs_long_df %>%
 
 The distributions look pretty similar, but they're not the _same_.
 
-#### After
+#### After normalization
 
 ```{r}
 qn_long_df <- qn_df %>% 
