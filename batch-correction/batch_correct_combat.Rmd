@@ -15,7 +15,9 @@ Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarr
 expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
 
 ## 1) Set up libraries
-Install `sva` if you haven't done so before.
+Install `sva` if you haven't done so before. 
+[This tutorial](https://bioconductor.org/packages/release/bioc/vignettes/sva/inst/doc/sva.pdf)
+takes you through strategies for tackling batch effects with `sva`.
 
 ```{r eval=FALSE}
 source("https://bioconductor.org/biocLite.R")
