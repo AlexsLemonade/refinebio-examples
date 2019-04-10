@@ -39,7 +39,7 @@ We have already converted the gene identifiers to Ensembl gene ids and can
 obtain the TSV file with these data from GitHub, placing it in the `data` 
 directory we create below with `bash`.
 
-```{bash}
+```{bash, eval=FALSE}
 mkdir data
 wget --directory-prefix=data https://github.com/AlexsLemonade/refinebio-examples/raw/c97cad6a8342d9bb54f120dbd7c7f12b03e3f799/compare-processing/data/GSE39842_RMA_converted.tsv
 ```
@@ -71,43 +71,12 @@ obtain the TSV file with the zebrafish reference distribution values.
 qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/qn_targets/?organism=DANIO_RERIO")
 ```
 
-TODO: This is wrong because the organism filter is broken! https://github.com/AlexsLemonade/refinebio/issues/1224
-Pretty sure I am using the mouse target with this method but wanted to get the plotting, etc. prepped!
-
-There are, at the time of this example, 12 quantile normalization targets that
-are available.
-
-```{r}
-dim(qn_target_info)
-```
-
-```{r}
-colnames(qn_target_info)
-```
-
-Let's look at when these were created with some help from the `lubridate` 
-package.
-
-```{r}
-lubridate::as_datetime(qn_target_info$created_at)
-```
-
-We can find the index of the _latest_ QN target with `which.max`.
-
-```{r}
-latest_index <- which.max(lubridate::as_datetime(qn_target_info$created_at))
-```
-
-For posterity, we're using QN target created at 
-**`r lubridate::as_datetime(qn_target_info$created_at)[latest_index]`**
-here.
-
 We need the `s3_url`, which tells us the link where the file is available for
 download from.
 We can read this data into R with the URL directly later on in this notebook.
 
 ```{r}
-latest_qn_url <- qn_target_info$s3_url[latest_index]
+qn_url <- qn_target_info$s3_url
 ```
 
 This is all the information we need to continue.
@@ -151,7 +120,7 @@ expression_matrix <- expression_df %>%
 Now, the QN target -- this will ultimately need to be a vector.
 
 ```{r}
-qn_target <- as.vector(as.matrix(readr::read_tsv(latest_qn_url,
+qn_target <- as.vector(as.matrix(readr::read_tsv(qn_url,
                                                  col_names = FALSE)))
 ```
 
@@ -233,3 +202,6 @@ qn_long_df %>%
                  strip.text = ggplot2::element_blank())
 ```
 
+Quantile normalization was successful.
+The values for the RMA-normalized GSE39842 data are now more comparable to any
+data we would obtain through refine.bio.
