@@ -39,7 +39,7 @@ We have already converted the gene identifiers to Ensembl gene ids and can
 obtain the TSV file with these data from GitHub, placing it in the `data` 
 directory we create below with `bash`.
 
-```{bash, eval=FALSE}
+```{bash eval=FALSE}
 mkdir data
 wget --directory-prefix=data https://github.com/AlexsLemonade/refinebio-examples/raw/c97cad6a8342d9bb54f120dbd7c7f12b03e3f799/compare-processing/data/GSE39842_RMA_converted.tsv
 ```
