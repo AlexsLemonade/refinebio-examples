@@ -85,8 +85,9 @@ metadata <- metadata[hek293, ] %>%
 df <- df[, hek293] %>% 
   readr::write_tsv(file.path("data", "filtered_HOMO_SAPIENS.tsv"))
 
-summary(as.factor(metadata$refinebio_platform))
-metadata %>% dplyr::filter(refinebio_platform == "Illumina MouseWG-6 v2.0 expression beadchip (Illumina_MouseWG-6_v2.0)")
+# Select only helpful variables from metadata:
+metadata %>% dplyr::select('series_id')
+
 # Take a look at the information we have for these data
 metadata
 ```
@@ -106,7 +107,8 @@ Plot these PC scores.
 We will likely see a difference between the datasets.
 
 ```{r}
-ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_platform)) +
+ggplot(pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
+       color = metadata$series_id)) +
   geom_point() + 
   theme(legend.position = "none") +
   ggtitle("Non-batch corrected")
@@ -117,14 +119,13 @@ To run ComBat, we need batch information, in this case we will use the dataset
 ids.
 
 ```{r ComBat correction}
-
 # modcombat <- model.matrix(~1, data = as.factor(metadata$series_id))
 
-corrected.df <- sva::ComBat(dat = as.matrix(df), 
-                            batch = as.factor(metadata$refinebio_platform), 
-                            par.prior = FALSE)
+# corrected.df <- sva::ComBat(dat = as.matrix(df), 
+                            # batch = as.factor(metadata$refinebio_platform), 
+                            # par.prior = FALSE)
 
-# corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
+corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
 ```
 
 ## 5) Re-evaluate PCA after batch correction
@@ -142,8 +143,10 @@ corrected.pca.df <- data.frame(corrected.pca$x[, 1:2],
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_platform)) +
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = as.factor(metadata$refinebio_platform), 
+       color = metadata$series_id)) +
   geom_point() + 
+  theme(legend.position = "none") +
   ggtitle("Batch corrected")
 ```
 
