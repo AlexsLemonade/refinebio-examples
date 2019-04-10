@@ -56,7 +56,7 @@ Prep metadata to be in proper format for batch info to be used by ComBat
 metadata.filename <- file.path("data", "metadata_HOMO_SAPIENS.tsv")
 
 # Read in data tsv file
-metadata <- readr::read_tsv(metadata.filename)
+metadata <- readr::read_tsv(metadata.filename, progress = FALSE)
 
 # Put samples in the same order in the dataframe
 df <- df[, metadata$refinebio_accession_code]
