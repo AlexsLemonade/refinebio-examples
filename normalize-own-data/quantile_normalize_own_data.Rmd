@@ -68,6 +68,10 @@ Here, we'll use the `jsonlite` R package to extract the information we need to
 obtain the TSV file with the zebrafish reference distribution values. 
 
 ```{r}
+if (!("jsonlite" %in% installed.packages())) {
+  install.packages("jsonlite")
+}
+
 qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/qn_targets/?organism=DANIO_RERIO")
 ```
 
@@ -108,6 +112,9 @@ First, the gene expression matrix.
 expression_file <- file.path("data", "GSE39842_RMA_converted.tsv")
 expression_df <- readr::read_tsv(expression_file)
 ```
+
+We need a matrix of our expression data to perform the quantile normalization.
+
 ```{r}
 expression_matrix <- expression_df %>%
   # filter out any of the control probes
@@ -117,7 +124,7 @@ expression_matrix <- expression_df %>%
   as.matrix()
 ```
 
-Now, the QN target -- this will ultimately need to be a vector.
+The QN target will ultimately need to be a vector:
 
 ```{r}
 qn_target <- as.vector(as.matrix(readr::read_tsv(qn_url,
@@ -138,6 +145,13 @@ things a bit (e.g., use column names).
 colnames(qn_matrix) <- colnames(expression_df)[-1]
 qn_df <- data.frame(Gene = rownames(expression_matrix),
                     qn_matrix)
+```
+
+Let's write the quantile normalized data to file.
+
+```{r}
+qn_expression_file <- file.path("data", "GSE39842_RMA_refinebio_QN.tsv")
+readr::write_tsv(qn_df, path = qn_expression_file)
 ```
 
 ### Plotting
@@ -178,24 +192,20 @@ qn_long_df <- qn_df %>%
 ```
 
 ```{r}
-qn_long_df %>%
+qn_p <- qn_long_df %>%
   ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
   ggplot2::geom_density(alpha = 0.2) +
   ggplot2::theme_bw() +
   ggplot2::labs(title = "After quantile normalization",
                 x = "expression value")
+qn_p
 ```
 
 This looks like all the samples follow the same distribution.
 We can use `facet_wrap` to get a better look.
 
 ```{r}
-qn_long_df %>%
-  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
-  ggplot2::geom_density(alpha = 0.2) +
-  ggplot2::theme_bw() +
-  ggplot2::labs(title = "After quantile normalization",
-                x = "expression value") +
+qn_p +
   ggplot2::facet_wrap(~ Sample, ncol = 4) +
   ggplot2::theme(legend.position = "none",
                  strip.background = ggplot2::element_blank(),
