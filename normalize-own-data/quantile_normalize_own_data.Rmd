@@ -145,7 +145,7 @@ qn_df <- data.frame(Gene = rownames(expression_matrix),
 Let's make some density plots to demonstrate the effect of quantile 
 normalization.
 
-#### Before
+#### Before normalization
 
 ```{r}
 # we need this information in long format to make the plots
