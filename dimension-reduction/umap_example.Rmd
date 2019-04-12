@@ -23,6 +23,9 @@ install.packages("umap")
 ```
 
 ```{r}
+# Set seed
+set.seed(12345)
+
 # Magrittr pipe
 `%>%` <- dplyr::`%>%`
 
@@ -32,6 +35,10 @@ library(ggplot2)
 # Make a results directory if it isn't created yet
 if (!dir.exists("results")) {
   dir.create("results")
+}
+# Make a plots directory if it isn't created yet
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -89,16 +96,26 @@ Label the data points based on their subgroup.
 
 ```{r}
 # Make a scatterplot with ggplot2
-ggplot(umap.df, aes(x = X1, y = X2, color = subgroup)) +
+umap.plot <- ggplot(umap.df, aes(x = X1, y = X2, color = subgroup)) +
   geom_point() + 
   theme_classic()
+
+# Print out plot here
+umap.plot
+```
+
+## 4) Save plot to png.
+
+```{r}
+# Save as a png
+ggsave(file.path("plots", "umap_scatterplot.png"))
 ```
 
 ## 5) Save UMAP coordinates to tsv file.
 
 ```{r}
 umap.df %>% as.data.frame() %>% 
-  readr::write_tsv(file.path("results", "UMAP_scores.tsv"))
+  readr::write_tsv(file.path("results", "umap_scores.tsv"))
 ```
 
 Session info: 

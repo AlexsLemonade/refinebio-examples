@@ -14,7 +14,7 @@ Recommended articles on PCA:
 - [Overall Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c)  
 - [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/)  
   
-## 1) Set up libraries
+## 1) Set up
 
 ```{r}
 # Magrittr pipe
@@ -26,6 +26,10 @@ library(ggplot2)
 # Make a results directory if it isn't created yet
 if (!dir.exists("results")) {
   dir.create("results")
+}
+# Make a plots directory if it isn't created yet
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -83,16 +87,26 @@ Label the data points based on their genotype group.
 
 ```{r}
 # Make a scatterplot with ggplot2
-ggplot(pca.df, aes(x = PC1, y = PC2, color = subgroup)) +
+pca.plot <- ggplot(pca.df, aes(x = PC1, y = PC2, color = subgroup)) +
   geom_point() + 
   theme_classic()
+
+# Print out plot here
+pca.plot
+```
+
+## 4) Save plot to png.
+
+```{r}
+# Save as a png
+ggsave(file.path("plots", "pca_scatterplot.png"))
 ```
 
 ## 5) Save PC scores to tsv file.
 
 ```{r}
 pca.df %>% as.data.frame() %>% 
-  readr::write_tsv(file.path("results", "PCA_scores.tsv"))
+  readr::write_tsv(file.path("results", "pca_scores.tsv"))
 ```
 
 Session info: 
