@@ -12,7 +12,7 @@ and plot the coordinates using ggplot2.
 
 Recommended articles on UMAP:   
 - [How UMAP works with visuals](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)  
-- [Original Paper on UMAP](https://arxiv.org/abs/1802.03426) by McGinnes, Healy & Melville.  
+- [Original paper on UMAP](https://arxiv.org/abs/1802.03426) by McGinnes, Healy & Melville.  
 
 ## 1) Set up libraries
 Install [`umap` R package](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) 
