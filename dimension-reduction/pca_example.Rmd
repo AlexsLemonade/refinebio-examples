@@ -50,24 +50,13 @@ Import the metadata for this dataset
 # Metadata file name
 metadata.filename <- file.path("data", "metadata_GSE71270.tsv")
 
-# Read in data tsv file get rid of variables that have NA in the first row
-metadata <- readr::read_tsv(metadata.filename) 
+# Read in metadata tsv file
+metadata <- readr::read_tsv(metadata.filename) %>% 
+  # Get rid of columns that have only NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
 
 # Print out metadata so we can get an idea of what we have
 metadata
-```
-
-Check sample order
-
-```{r}
-# Check if the samples are in the same order
-all.equal(metadata$refinebio_accession_code, colnames(df))
-
-# Put samples in the same order in the dataframe
-df <- df[, metadata$refinebio_accession_code]
-
-# Re-check if the samples are in the same order
-all.equal(metadata$refinebio_accession_code, colnames(df))
 ```
 
 ## 3) Perform Principal Components Analysis.
