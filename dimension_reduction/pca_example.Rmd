@@ -32,15 +32,11 @@ if (!dir.exists("results")) {
 ## 2) Import and set up data
 Data downloaded from refine.bio are in tab separated values ("tsv") files and 
 include a metadata in a separate tsv file. 
-These liver gene expression files were obtained from [refine.bio](https://www.refine.bio/) 
-by entering and then aggregating by `species`.
+These data set was obtained from [refine.bio](https://www.refine.bio/). 
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path("data", "GSE49243.tsv")
-
-# Unzip the file and direct it to the data folder
-unzip(paste0(data.filename, ".zip"), exdir = "data")
+data.filename <- file.path("data", "GSE71270.tsv")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>% 
@@ -52,7 +48,7 @@ Import the metadata for this dataset
 
 ```{r Prep metadata}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_GSE49243.tsv")
+metadata.filename <- file.path("data", "metadata_GSE71270.tsv")
 
 # Read in data tsv file get rid of variables that have NA in the first row
 metadata <- readr::read_tsv(metadata.filename) 
@@ -85,10 +81,10 @@ pca.df <- data.frame(pca$x[, 1:2])
 ```
 
 Plot these PC scores for the first two principal components.
+Label the data points based on their genotype group.
 
 ```{r}
-ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_age, 
-                   shape = metadata$histology)) +
+ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$`genotype/variation`)) +
   geom_point() + 
   theme_classic()
 ```
@@ -110,7 +106,7 @@ head(sort(pca$rotation[, 2], decreasing = TRUE))
 ```{r}
 pca.df %>% as.data.frame() %>% 
   tibble::rownames_to_column("gene") %>%
-  readr::write_tsv(file.path("results", "Medulloblastoma_PCA_scores.tsv"))
+  readr::write_tsv(file.path("results", "PCA_scores.tsv"))
 ```
 
 Session info: 
