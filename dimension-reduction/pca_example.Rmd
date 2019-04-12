@@ -70,7 +70,9 @@ pca.df <- data.frame(pca$x[, 1:2]) %>%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring the metadata into this df; match by sample ids
-  dplyr::inner_join(metadata, by = 'refinebio_accession_code')
+  dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, 
+                                  source_name_ch1, `genotype/variation`), 
+                    by = 'refinebio_accession_code')
 ```
 
 Plot these PC scores for the first two principal components.
