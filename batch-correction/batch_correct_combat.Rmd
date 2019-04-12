@@ -40,7 +40,7 @@ the search term "HEK 293" and then aggregating by `species`.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path( "data", "HOMO_SAPIENS.tsv")
+data.filename <- file.path( "data", "Liver_HOMO_SAPIENS.tsv")
 
 # Unzip the file and direct it to the data folder
 unzip(paste0(data.filename, ".zip"), exdir = "data")
@@ -55,43 +55,19 @@ Prep metadata to be in proper format for batch info to be used by ComBat
 
 ```{r Prep metadata}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_HOMO_SAPIENS.tsv")
+metadata.filename <- file.path("data", "Liver_metadata_HOMO_SAPIENS.tsv")
 
 # Read in data tsv file
 metadata <- readr::read_tsv(metadata.filename, progress = FALSE)
+
+# Fill in Array Express dataset labels
+metadata$series_id[is.na(metadata$series_id)] <- "E-TABM-292"
 
 # Put samples in the same order in the dataframe
 df <- df[, metadata$refinebio_accession_code]
 
 # Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
-```
-
-The refine.bio search gave us some cells that aren't HEK293 so we will need to 
-do some filtering. 
-Because the metadata obtained from combining multiple datasets are not always 
-able to be harmonized, we are going to have to search for HEK 293 cells in a 
-couple different columns. 
-
-```{r}
-# Keep only things that have evidence that they are HEK cells
-hek293 <- grep("hek|293|hek 293|hek-293", 
-               paste0(metadata$refinebio_cell_line, metadata$`cell line`, metadata$title), 
-               ignore.case = TRUE)
-
-# Only keep these in the data and metadata
-metadata <- metadata[hek293, ] %>% 
-  readr::write_tsv(file.path("data", "filtered_metadata_HOMO_SAPIENS.tsv"))
-
-# Only keep these in the data and metadata
-df <- df[, hek293] %>% 
-  readr::write_tsv(file.path("data", "filtered_HOMO_SAPIENS.tsv"))
-
-# Select only helpful variables from metadata:
-metadata %>% dplyr::select('series_id')
-
-# Take a look at the information we have for these data
-metadata
 ```
 
 ## 3) Perform Principal Components Analysis
@@ -101,8 +77,7 @@ metadata
 pca <- prcomp(t(df))
 
 # Make into dataframe for plotting with ggplot2
-pca.df <- data.frame(pca$x[, 1:2], 
-                     dataset = metadata$series_id)
+pca.df <- data.frame(pca$x[, 1:2])
 ```
 
 Plot these PC scores.
@@ -112,7 +87,6 @@ We will likely see a difference between the datasets.
 ggplot(pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
        color = metadata$series_id)) +
   geom_point() + 
-  theme(legend.position = "none") +
   ggtitle("Non-batch corrected")
 ```
 
@@ -145,10 +119,9 @@ corrected.pca.df <- data.frame(corrected.pca$x[, 1:2],
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = as.factor(metadata$refinebio_platform), 
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
        color = metadata$series_id)) +
   geom_point() + 
-  theme(legend.position = "none") +
   ggtitle("Batch corrected")
 ```
 
@@ -157,7 +130,7 @@ ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = as.factor(metadata$refine
 ```{r}
 corrected.df %>% as.data.frame() %>% 
   tibble::rownames_to_column("gene") %>%
-  readr::write_tsv(file.path("results", "HEK293_batch_corrected_exprs.tsv"))
+  readr::write_tsv(file.path("results", "Liver_batch_corrected_exprs.tsv"))
 ```
 
 Session info: 
