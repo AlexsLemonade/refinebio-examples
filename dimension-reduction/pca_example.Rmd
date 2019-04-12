@@ -89,7 +89,6 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = `genotype/variation`)) +
 
 ```{r}
 pca.df %>% as.data.frame() %>% 
-  tibble::rownames_to_column("sample") %>%
   readr::write_tsv(file.path("results", "PCA_scores.tsv"))
 ```
 
