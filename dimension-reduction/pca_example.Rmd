@@ -83,18 +83,6 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = `genotype/variation`)) +
   theme_classic()
 ```
 
-## 4) Take a look at the gene loadings. 
-
-```{r}
-# Taking a look at PC1's biggest loadings:
-head(sort(pca$rotation[, 1], decreasing = TRUE))
-```
-
-```{r}
-# Taking a look at PC2's biggest loadings:
-head(sort(pca$rotation[, 2], decreasing = TRUE))
-```
-
 ## 5) Save PC scores to tsv file.
 
 ```{r}
