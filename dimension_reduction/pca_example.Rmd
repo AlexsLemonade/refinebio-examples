@@ -10,6 +10,10 @@ output:
 *Purpose*: This notebook illustrates how to perform Principal Components 
 Analysis and plot the scores using ggplot2. 
 
+Recommended articles on PCA: 
+- [Overall Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c)
+- [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/)
+
 ## 1) Set up libraries
 
 ```{r}
@@ -18,17 +22,22 @@ Analysis and plot the scores using ggplot2.
 
 # Load ggplot2 for graphing
 library(ggplot2)
+
+# Make a results directory if it isn't created yet
+if (!dir.exists("results")) {
+  dir.create("results")
+}
 ```
 
 ## 2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. 
-These Liver gene expression files were obtained from [refine.bio](https://www.refine.bio/) 
+Data downloaded from refine.bio are in tab separated values ("tsv") files and 
+include a metadata in a separate tsv file. 
+These liver gene expression files were obtained from [refine.bio](https://www.refine.bio/) 
 by entering and then aggregating by `species`.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path("data", "HOMO_SAPIENS.tsv")
+data.filename <- file.path("data", "GSE49243.tsv")
 
 # Unzip the file and direct it to the data folder
 unzip(paste0(data.filename, ".zip"), exdir = "data")
@@ -39,14 +48,17 @@ df <- readr::read_tsv(data.filename, progress = FALSE) %>%
 # Make the gene column the rownames so the gene names are out of the way for calculations
 ```
 
-Prep metadata
+Import the metadata for this dataset
 
 ```{r Prep metadata}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_HOMO_SAPIENS.tsv")
+metadata.filename <- file.path("data", "metadata_GSE49243.tsv")
 
-# Read in data tsv file
-metadata <- readr::read_tsv(metadata.filename)
+# Read in data tsv file get rid of variables that have NA in the first row
+metadata <- readr::read_tsv(metadata.filename) 
+
+# Print out metadata so we can get an idea of what we have
+metadata
 ```
 
 Check sample order
@@ -57,6 +69,9 @@ all.equal(metadata$refinebio_accession_code, colnames(df))
 
 # Put samples in the same order in the dataframe
 df <- df[, metadata$refinebio_accession_code]
+
+# Re-check if the samples are in the same order
+all.equal(metadata$refinebio_accession_code, colnames(df))
 ```
 
 ## 3) Perform Principal Components Analysis.
@@ -66,25 +81,28 @@ df <- df[, metadata$refinebio_accession_code]
 pca <- prcomp(t(df))
 
 # Make into dataframe for plotting with ggplot2
-pca.df <- data.frame(pca$x[, 1:2], 
-                     dataset = metadata$series_id)
+pca.df <- data.frame(pca$x[, 1:2])
 ```
 
-Plot these PC scores.
-We will likely see a difference between the datasets.
+Plot these PC scores for the first two principal components.
 
 ```{r}
-ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_platform,
-       shape = metadata$series_id)) +
+ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_age, 
+                   shape = metadata$histology)) +
   geom_point() + 
-  theme(legend.position = "none") +
-  ggtitle("PC scores")
+  theme_classic()
 ```
 
-## 4) Take a look at the gene loadings.
+## 4) Take a look at the gene loadings. 
 
 ```{r}
+# Taking a look at PC1's biggest loadings:
+head(sort(pca$rotation[, 1], decreasing = TRUE))
+```
 
+```{r}
+# Taking a look at PC2's biggest loadings:
+head(sort(pca$rotation[, 2], decreasing = TRUE))
 ```
 
 ## 5) Save PC scores to tsv file.
@@ -92,7 +110,7 @@ ggplot(pca.df, aes(x = PC1, y = PC2, color = metadata$refinebio_platform,
 ```{r}
 pca.df %>% as.data.frame() %>% 
   tibble::rownames_to_column("gene") %>%
-  readr::write_tsv(file.path("results", "Liver_PCA_scores.tsv"))
+  readr::write_tsv(file.path("results", "Medulloblastoma_PCA_scores.tsv"))
 ```
 
 Session info: 
