@@ -1,5 +1,5 @@
 ---
-title: "PCA"
+title: "PCA Visualization"
 author: "ALSF CCDL - Candace Savonen"
 output:   
   html_notebook: 
