@@ -18,8 +18,11 @@ Recommended articles on UMAP:
 Install [`umap` R package](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) 
 if you have not installed it previously. 
 
-```{r eval = FALSE}
-install.packages("umap")
+```{r}
+# Install umap if it isn't in the list of installed packages
+if (!("umap" %in% installed.packages())) {
+  install.packages("umap")
+}
 ```
 
 ```{r}
