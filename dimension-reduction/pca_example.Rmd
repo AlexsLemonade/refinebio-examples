@@ -22,7 +22,11 @@ Recommended articles on PCA:
 
 # Load ggplot2 for graphing
 library(ggplot2)
+```
 
+Set up output directories
+
+```{r}
 # Make a results directory if it isn't created yet
 if (!dir.exists("results")) {
   dir.create("results")
