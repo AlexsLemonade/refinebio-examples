@@ -10,3 +10,6 @@ compare-processing/data/id_refinery/all_1536267482.zip
 
 # This data is downloaded from another part of the repo in essence
 normalize-own-data/data/GSE39842_RMA_converted.tsv
+
+# don't track msigdb pathway files
+pathway-analysis/gene-sets/
