@@ -1,5 +1,5 @@
 ---
-title: "Differential Expression Analysis"
+title: "Comparing Differential Expression Analysis"
 author: "ALSF CCDL - Candace Savonen"
 output:   
   html_notebook: 
@@ -7,10 +7,8 @@ output:
     toc_float: true
 ---
 
-*Purpose*: This notebook takes data and metadata from refine.bio and identifies 
-differentially expressed genes. 
-This script is very generally applicable to pre-processed RNA-Seq or
-microarray data.
+*Purpose*: This notebook takes data processed byrefine.bio and compares the 
+differential expression results to the author submitted versions of the data.
 
 ## 1) Install libraries
 This script uses the bioconductor R package limma to identify differentially 
@@ -21,35 +19,93 @@ shows examples of limma functions.
 “limma powers differential expression analyses for RNA-sequencing and microarray
 studies.” Nucleic Acids Research, 43(7), e47. 
 
-```{r Install limma, eval=FALSE}
-# Install limma
-source("https://bioconductor.org/biocLite.R")
-biocLite("limma", suppressUpdates = TRUE)
+```{r Install limma}
+if (!("limma" %in% installed.packages())) {
+  # Install limma
+  BiocManager::install("limma", update = FALSE)
+}
+if (!("GEOquery" %in% installed.packages())) {
+  # Install limma
+  BiocManager::install("GEOquery", update = FALSE)
+}
 ```
 
 Attach the `limma` library:
 
 ```{r}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
 # Attach library
 library(limma)
 ```
 
-## 2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. This chunk of code will read the both tsv files and 
-add them as data.frames to your environment. 
+Set up output directories.
 
-```{r Import data from .tsv files}
-# Read in metadata tsv file
-metadata <- read.delim(file.path("data", "metadata_GSE71270.tsv"),
-                       header = TRUE)
-
-# Read in data tsv file
-df <- read.delim(file.path("data", "GSE71270.tsv"), header = TRUE,
-                 row.names = 1, stringsAsFactors = FALSE)
+```{r}
+# Make a results directory if it isn't created yet
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+# Make a plots directory if it isn't created yet
+if (!dir.exists("plots")) {
+  dir.create("plots")
+}
 ```
 
-## 3) Set up design matrix
+## 2) Import and set up refine.bio processed data.
+Data downloaded from refine.bio are in tab separated values ("tsv") files and 
+include a metadata in a separate tsv file. 
+These data set was obtained from [refine.bio](https://www.refine.bio/). 
+
+```{r}
+# Put name of data file
+refine.bio.data.filename <- file.path("data", "GSE37382.tsv")
+
+# Unzip the file and direct it to the data folder
+unzip(paste0(refine.bio.data.filename, ".zip"), exdir = "data")
+
+# Read in data tsv file
+refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
+  # Make the gene column the rownames so the gene names are out of the way for calculations
+  tibble::column_to_rownames('X1') 
+```
+
+## 3) Import and set up author processed data from GEO
+
+```{r}
+# Download author processed data file directly to `data` folder
+GEOquery::getGEO("GSE37382", destdir = "data", GSEMatrix = TRUE)
+
+# unzip the .gz file with the gene matrix in it
+GEOquery::gunzip(file.path("data", "GSE37382_series_matrix.txt.gz"))
+
+# Read in the author processed gene matrix
+author.df <- readr::read_tsv(file.path("data", "GSE37382_series_matrix.txt"), 
+                             comment = "!")
+```
+Convert the Affy IDs to gene ids
+
+```{r}
+
+```
+
+## 4) Import the metadata for this dataset
+
+```{r}
+# Metadata file name
+metadata.filename <- file.path("data", "metadata_GSE37382.tsv")
+
+# Read in metadata tsv file
+metadata <- readr::read_tsv(metadata.filename) %>% 
+  # Get rid of columns that have only NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+
+# Print out metadata so we can get an idea of what we have
+metadata
+```
+
+## 4) Set up design matrix
 limma needs a numeric design matrix to signify which are treatment and control
 samples. 
 Here we are using the treatments supplied in the metadata to create
@@ -71,7 +127,7 @@ tmp <- match(gsub("X|\\.", "", colnames(df)), metadata$geo_accession)
 des.mat <- model.matrix(~metadata$genotype.variation[tmp])
 ```
 
-## 3) Apply linear model
+## 5) Apply linear model
 After applying our data to linear model, in this example we apply empircal Bayes
 smoothing and Benjamini-Hochberg multiple testing correction. 
 The `topTable` function default is to use Benjamini Hochberg but this can be
@@ -88,7 +144,7 @@ fit <- eBayes(fit)
 stats <- topTable(fit, number = nrow(df))
 ```
 
-## 4) Explore fitness of model
+## 6) Explore fitness of model
 Here we will use two different plots that can be used to assess the quality of
 your model. A guide to the interpretation of these plots and other statistics for 
 gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf).
@@ -102,7 +158,7 @@ abline(0,1)
 volcanoplot(fit, main = "Volcano Plot")
 ```
 
-## 5) Write statistics to output results file
+## 7) Write statistics to output results file
 
 ```{r  Write results}
 readr::write_tsv(stats, file.path("results", "GSE71270_limma_results.tsv"))
