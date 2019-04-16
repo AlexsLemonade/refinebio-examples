@@ -211,6 +211,7 @@ timepoint_qusage_results <- qusage(eset = exprs_mat,
 
 We can look at the results with the `qsTable` function.
 This will give us the top 20 pathways by default.
+(This can be changed via the `number` argument to `qsTable`.)
 
 ```{r}
 qsTable(timepoint_qusage_results)
