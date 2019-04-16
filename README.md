@@ -89,6 +89,8 @@ file from your data, you can create a a CLS format using GenePattern's online
 
 5. [Batch correction with ComBat](https://github.com/AlexsLemonade/refinebio-examples/blob/master/batch_correction)
 
-6. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data) 
+6. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
 
-7. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
+7. [Validate differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
+
+8. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
