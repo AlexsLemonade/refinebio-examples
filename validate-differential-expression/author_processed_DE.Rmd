@@ -117,10 +117,8 @@ colnames(des.mat) <- levels(group)
 ```
 
 ## 5) Apply linear model
-After applying our data to linear model, in this example we apply empircal Bayes
+After applying our data to linear model, in this example we apply empirical Bayes
 smoothing and Benjamini-Hochberg multiple testing correction. 
-The `topTable` function default is to use Benjamini Hochberg but this can be
-changed to a different method using the `adjust.method` argument.
 
 ```{r Apply linear model}
 # Apply linear model to data
