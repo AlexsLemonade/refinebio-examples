@@ -1,0 +1,290 @@
+---
+title: "Comparing Differential Expression Analysis"
+author: "ALSF CCDL - Candace Savonen"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+*Purpose*: This notebook takes data processed by refine.bio and compares the 
+differential expression results to the author-submitted versions of the data.
+
+## 1) Set up
+
+```{r}
+if (!("limma" %in% installed.packages())) {
+  # Install limma
+  BiocManager::install("limma", update = FALSE)
+}
+if (!("R.utils" %in% installed.packages())) {
+  # Install R.utils
+  install.packages("R.utils", suppressUpdates = FALSE)
+}
+```
+
+Attach the `limma` library:
+
+```{r}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Attach library
+library(limma)
+```
+
+Set up output directories.
+
+```{r}
+# Make a results directory if it isn't created yet
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+# Make a plots directory if it isn't created yet
+if (!dir.exists("plots")) {
+  dir.create("plots")
+}
+```
+
+## 2) Import our separate differential expression results
+Import the `limma` results output we created in `author_processed_DE.Rmd`.
+
+```{r}
+# Load in the summary statistics from limma run
+author.results <- readr::read_tsv(file.path("results", "GSE37382_limma_results.tsv")) 
+```
+
+## 3) Convert these affymetrix ids into Ensembl gene IDs (what refine.bio datasets have)
+Here we need to convert our Affymetrix transcript cluster ids into Ensembl gene
+ids. 
+If you are using this notebook for your own data, and need more information on 
+`ensembl_id_convert.Rmd` in this repository. 
+You can also use the [id conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
+The pre-made id conversion key files themselves for refine.bio supported 
+microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
+
+```{r}
+if (file.exists("hugene11st.tsv.zip")) {
+  # Unzip hugene11st id conversion file obtained from identifier refinery
+  unzip(file.path("data", "hugene11st.tsv.zip"))
+}
+
+# Read in the probe conversion info - this step may take some time
+probe.conversion <- readr::read_tsv(file.path("data", "hugene11st.tsv")) %>% 
+  dplyr::select("PROBEID", "ENSEMBL", "SYMBOL")
+
+# Add annotation to imported author limma results 
+author.full.results <- author.results %>%
+  dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
+  dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL))
+```
+
+Summarize probe sets that all correspond to the same gene. 
+In this case, for each gene, we will keep the probeset data that has the lowest 
+adjusted p-value.
+
+```{r}
+# Summarize each gene by the minimum p value probeset
+author.results <- author.full.results %>%
+  # Group by Ensembl gene id
+  dplyr::group_by(ENSEMBL) %>%
+  # Choose the probe with the smallest p value
+  dplyr::slice(which.min(adj.P.Val))
+```
+
+## 4) Import and set up refine.bio processed data.
+Data downloaded from refine.bio are in tab separated values ("tsv") files and 
+include a metadata in a separate tsv file. 
+This data set was obtained from [refine.bio](https://www.refine.bio/). 
+
+```{r}
+# Put name of data file
+refine.bio.data.filename <- file.path("data", "GSE37418.tsv")
+
+# Unzip the file and direct it to the data folder
+unzip(paste0(refine.bio.data.filename, ".zip"), exdir = "data")
+
+# Read in data tsv file
+refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
+  as.data.frame() %>%
+  # Make the gene column the rownames so the gene names are out of the way for calculations
+  tibble::column_to_rownames('X1') 
+```
+
+Set up the metadata for this set.
+
+```{r}
+# Metadata file name
+metadata.filename <- file.path("data", "metadata_GSE37418.tsv")
+
+# Read in metadata tsv file
+metadata <- readr::read_tsv(metadata.filename) %>% 
+  # Get rid of columns that have only NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+
+# Print out metadata so we can get an idea of what we have
+metadata
+```
+
+Let's reformat our variable `subgroup` that we will be using for testing. 
+To make the comparisons more reasonably similar, we will get rid of samples 
+that *aren't* SHH, Group3, or Group4.
+
+```{r}
+# Reformat subgroup names to make Group 3 and 4 into "Non_SHH"
+metadata$subgroup <- gsub("G3|G4", "Non_SHH", metadata$subgroup)
+
+# Check out subgroup summary
+summary(as.factor(metadata$subgroup))
+```
+
+To make the comparisons more reasonably similar to our imported dataset (which
+only has SHH, Group3, or Group4), we will get rid of samples that *aren't* in 
+one of these classifications.
+Note that the `$` is a special character after `SHH` is just to signify that we 
+only want samples that have `SHH` and end with those characters (So we are also 
+excluding the `SHH OUTLIER` sample). 
+Here's a [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+on other special characters in R (known as regex - 'Regular Expressions')
+
+```{r}
+# Only keep samples that are Group3, Group 4 or SHH
+metadata <- metadata[grep("SHH$", metadata$subgroup), ]
+```
+
+Make refine.bio metadata and data are same samples, in the same order.
+
+```{r}
+# Reorder/filter data to match metadata
+refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code, 
+                           colnames(refine.bio.df))]
+
+# Check if they are the same:
+all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
+```
+
+## 4) Do differential expression for refine.bio
+limma needs a numeric design matrix to signify which are treatment and control
+samples. 
+Note that we are using the medulloblastoma subgroups as our variable for testing.
+This is the same type of variable we used for our imported author processed 
+dataset
+
+## 4) Set up design matrix
+limma needs a numeric design matrix to signify which are treatment and control
+samples. 
+
+```{r Set up design matrix}
+# Make subgroup a factor
+metadata$subgroup <- as.factor(metadata$subgroup)
+
+# Create the design matrix
+des.mat <- model.matrix( ~ 0 + metadata$subgroup)
+
+# Change names of columns in design matrix to match
+colnames(des.mat) <- levels(metadata$subgroup)
+```
+
+## 5) Apply linear model
+After applying our data to linear model, in this example we apply empirical Bayes
+smoothing and Benjamini-Hochberg multiple testing correction. 
+
+```{r Apply linear model}
+# Initial fit
+fit <- limma::lmFit(refine.bio.df, des.mat)
+
+# eBayes for smoothing
+refine.bio.fit <- eBayes(fit)
+```
+
+Obtain summary statistics:
+
+```{r}
+# Apply multiple testing correction and obtain stats
+refine.bio.results <- topTableF(refine.bio.fit, number = nrow(refine.bio.df)) %>%
+  tibble::rownames_to_column("ENSEMBL")
+
+# Print out stats
+refine.bio.results
+```
+
+Write these results to an output file
+```{r  Write results}
+readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_results.tsv"))
+```
+
+## 6) Set up exploration of overlap of the datasets differential expression
+Combine limma results into one dataset.
+
+```{r}
+# First combine the two datasets summaries
+combined.stats <- refine.bio.results %>%
+  # Match by the Ensembl gene ids
+  dplyr::inner_join(author.results, by = 'ENSEMBL', suffix = c(".refinebio", ".author")) %>%
+  # Convert the dataset into significant and direction summaries
+  dplyr::mutate("sig_refinebio" = adj.P.Val.refinebio < 0.05, 
+                "sig_author" = adj.P.Val.author < 0.05,
+                "direction_refinebio" = SHH.refinebio/Non_SHH.refinebio > 1,
+                "direction_author" = SHH.author/Non_SHH.author > 1) 
+```
+
+Create a logical matrix that has summarizes whether each dataset was significantly
+upregulated or downregulated.
+
+```{r}
+logical.mat <- combined.stats %>%
+  dplyr::transmute("refinebio_up" = sig_refinebio & direction_refinebio,
+                   "author_up" = sig_author & direction_author,
+                   "refinebio_down" = sig_refinebio & !direction_refinebio,
+                   "author_down" = sig_author & !direction_author)
+```
+
+## 7) Make Venn diagrams
+Make Venn diagram of up-regulation results
+
+```{r}
+# Make a Venn diagram of up-regulated genes
+up.venn.plot <- logical.mat %>% 
+  dplyr::select(dplyr::contains("up")) %>%
+  limma::vennDiagram(cex = c(1, 1, 1),
+                     circle.col = c("#000000", "#FFC125", "#00BFFF"))
+
+# Print plot here
+up.venn.plot
+```
+
+Save up-regulated Venn diagram to png
+
+```{r}
+png("up-regulated_venn_northcott_vs_robinson.png")
+up.venn.plot
+dev.off()
+```
+
+Do the same thing but for down-regulation results.
+
+```{r}
+# Make a Venn diagram of down-regulated genes
+down.venn.plot <-logical.mat %>% 
+  dplyr::select(dplyr::contains("down")) %>%
+  limma::vennDiagram(cex = c(1, 1, 1),
+                     circle.col = c("#000000", "#FFC125", "#00BFFF"))
+
+# Print plot here
+down.venn.plot 
+```
+
+Save down-regulated Venn diagram to png
+
+```{r}
+png("down-regulated_venn_northcott_vs_robinson.png")
+up.venn.plot
+dev.off()
+```
+
+Print session info:
+
+```{r}
+# Print session info 
+sessionInfo()
+```
