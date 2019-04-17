@@ -95,8 +95,7 @@ author.df <- readr::read_tsv(file.path("data", "GSE37382_series_matrix.txt"),
 # Extract metadata
 metadata <- data.frame(geo.data[[1]]@phenoData@data) %>% 
   # Get rid of columns that have only NAs
-  dplyr::select(-which(apply(is.na(.), 2, all))) %>% 
-  readr::write_tsv(file.path("data", "geo_obtained_GSE37382_metadata.tsv"))
+  dplyr::select(-which(apply(is.na(.), 2, all))) 
 
 # Double check if metadata and data are in same order
 all.equal(metadata$geo_accession, colnames(author.df))
