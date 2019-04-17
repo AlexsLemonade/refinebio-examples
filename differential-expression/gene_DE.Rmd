@@ -99,7 +99,8 @@ fit <- lmFit(df, design = des.mat)
 fit <- eBayes(fit)
 
 # Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(df))
+stats <- topTable(fit, number = nrow(df)) %>% 
+  tibble::rownames_to_column("Genes")
 ```
 
 ## 4) Explore fitness of model

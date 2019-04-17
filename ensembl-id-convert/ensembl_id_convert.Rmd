@@ -71,7 +71,8 @@ since genes and transcripts do not have a 1:1 relationship
 ```{r Match Ensembl IDs}
 # Map ensembl IDs to their associated gene symbols
 annot.df <- data.frame("Symbols" = mapIds(org.Dr.eg.db, keys = df$Gene, 
-                                         column = "SYMBOL", keytype = "ENSEMBL"), df)
+                                         column = "SYMBOL", keytype = "ENSEMBL"),
+                       df)
 ```
 
 ## 4) Write to file
