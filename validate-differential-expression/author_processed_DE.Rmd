@@ -118,6 +118,9 @@ des.mat <- model.matrix( ~ 0 + group)
 
 # Change names of columns in design matrix to match
 colnames(des.mat) <- levels(group)
+
+# Initial fit
+fit <- limma::lmFit(author.df, des.mat)
 ```
 
 ## 5) Apply linear model
@@ -125,25 +128,27 @@ After applying our data to linear model, in this example we apply empirical Baye
 smoothing and Benjamini-Hochberg multiple testing correction. 
 
 ```{r Apply linear model}
-# Apply linear model to data
-fit <- lmFit(author.df, design = des.mat)
-
-# Apply empirical Bayes to  smooth standard errors
-fit <- eBayes(fit)
-
 # Make contrasts
-makeContrasts(
+cont.matrix <- makeContrasts(
   SHHvsGroup3 = SHH-Group3,
   Group3vsGroup4 = Group3-Group4,
   Group4vsSHH = Group4-SHH,
   levels = des.mat)
+
+# Apply linear model to data
+fit2 <- lmFit(author.df, design = des.mat)
+
+# Apply empirical Bayes to smooth standard errors
+fit2 <- contrasts.fit(fit2, cont.matrix)
+fit2 <- eBayes(fit2)
 ```
 
 Obtain summary statistics:
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(author.df))
+stats <- topTable(fit2, number = nrow(author.df)) %>% 
+  tibble::rownames_to_column("affy_probe_ids")
 
 # Print out stats
 stats
