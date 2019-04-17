@@ -21,10 +21,11 @@ shows examples of limma functions.
 “limma powers differential expression analyses for RNA-sequencing and microarray
 studies.” Nucleic Acids Research, 43(7), e47. 
 
-```{r Install limma, eval=FALSE}
-# Install limma
-source("https://bioconductor.org/biocLite.R")
-biocLite("limma", suppressUpdates = TRUE)
+```{r Install limma}
+if (!("limma" %in% installed.packages())) {
+  # Install ComplexHeatmap
+  BiocManager::install("limma", update = FALSE)
+}
 ```
 
 Attach the `limma` library:

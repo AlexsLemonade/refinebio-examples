@@ -55,6 +55,10 @@ if (!dir.exists("results")) {
 if (!dir.exists("plots")) {
   dir.create("plots")
 }
+# Make a data directory if it isn't created yet
+if (!dir.exists("data")) {
+  dir.create("data")
+}
 ```
 
 ## 2) Import and set up author processed data from GEO
