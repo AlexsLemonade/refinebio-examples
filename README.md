@@ -90,5 +90,3 @@ file from your data, you can create a a CLS format using GenePattern's online
 5. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
 
 6. [Validate differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
-
-7. [Other scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts)  
