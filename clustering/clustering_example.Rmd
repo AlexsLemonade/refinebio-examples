@@ -36,9 +36,9 @@ set.seed(12345)
 Create output folder.
 
 ```{r}
-# Create the results folder if it doesn't exist
-if (!dir.exists("results")) {
-  dir.create("results")
+# Create the plots folder if it doesn't exist
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -106,7 +106,7 @@ and filename within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png(file.path("results", "HeatmapGSE12955.png"))
+png(file.path("plots", "HeatmapGSE12955.png"))
 
 # Print your heatmap
 heatmap
