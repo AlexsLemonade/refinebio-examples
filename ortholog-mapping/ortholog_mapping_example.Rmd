@@ -48,6 +48,15 @@ devtools::install_github("stephenturner/hcop",
                          ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
 ```
 
+Create output folder.
+
+```{r}
+# Create the results folder if it doesn't exist
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+```
+
 ## 2) Mapping zebrafish Ensembl gene IDs to human symbols
 `hcop` supports mapping between zebrafish and human identifiers. 
 Here, we'll use zebrafish data from refine.bio and annotate it with human gene
