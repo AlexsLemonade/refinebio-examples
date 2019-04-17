@@ -35,12 +35,16 @@ Attach the `limma` library:
 library(limma)
 ```
 
-Create output folder.
+Create output folders.
 
 ```{r}
 # Create the results folder if it doesn't exist
 if (!dir.exists("results")) {
   dir.create("results")
+}
+# Create the plots folder if it doesn't exist
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
