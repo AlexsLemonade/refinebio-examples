@@ -187,7 +187,7 @@ from the mouse gene symbols.
 kegg_mouse_list[[grep("POLYMERASE", names(kegg_mouse_list))]]
 ```
 
-### Write new `GMT` format
+### Write mouse pathway list in `GMT` format
 
 We need to write this new mouse pathway list to file in [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), as this will facilitate use with downstream pathway analysis.
 
