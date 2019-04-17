@@ -244,3 +244,9 @@ We can double check how this went by reading it back in with `qusage::read.gmt`.
 mouse_read_list <- qusage::read.gmt(mouse_file)
 all.equal(mouse_read_list, kegg_mouse_list)
 ```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
