@@ -31,10 +31,12 @@ with the name of the desired annotation such as `ACCNUM` for accession numbers.
 
 ## 1) Install libraries with species-specific annotation package
 
-```{r Install libraries, eval=FALSE}
+```{r Install libraries}
 # Install the Zebrafish package
-source("https://bioconductor.org/biocLite.R")
-biocLite("org.Dr.eg.db", suppressUpdates = TRUE)
+if (!("org.Dr.eg.db" %in% installed.packages())) {
+  # Install org.Dr.eg.db
+  BiocManager::install("org.Dr.eg.db", update = FALSE)
+}
 ```
 
 Attach the `org.Dr.eg.db` library:
@@ -42,6 +44,15 @@ Attach the `org.Dr.eg.db` library:
 ```{r}
 # Attach the annotation library 
 library(org.Dr.eg.db)
+```
+
+Make an output directory if it doesn't exist.
+
+```{r}
+# Make a results directory if it isn't created yet
+if (!dir.exists("results")) {
+  dir.create("results")
+}
 ```
 
 ## 2) Import refine.bio data that has Ensembl identifiers
