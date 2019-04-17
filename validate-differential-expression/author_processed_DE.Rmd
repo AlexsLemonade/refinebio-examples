@@ -118,9 +118,6 @@ des.mat <- model.matrix( ~ 0 + group)
 
 # Change names of columns in design matrix to match
 colnames(des.mat) <- levels(group)
-
-# Initial fit
-fit <- limma::lmFit(author.df, des.mat)
 ```
 
 ## 5) Apply linear model
@@ -128,6 +125,9 @@ After applying our data to linear model, in this example we apply empirical Baye
 smoothing and Benjamini-Hochberg multiple testing correction. 
 
 ```{r Apply linear model}
+# Initial fit
+fit <- limma::lmFit(author.df, des.mat)
+
 # Make contrasts
 cont.matrix <- makeContrasts(
   SHHvsGroup3 = SHH-Group3,
@@ -157,7 +157,11 @@ stats
 ## 6) Write statistics to output results file
 
 ```{r  Write results}
+# Save summary statistics to a tsv file
 readr::write_tsv(stats, file.path("results", "GSE37382_limma_results.tsv"))
+
+# Save the limma fit object to an RDS for later use
+saveRDS(fit2, file.path("results", "GSE37382_limma_fit_obj.RDS"))
 ```
 
 Print session info:
