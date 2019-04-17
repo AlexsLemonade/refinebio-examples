@@ -105,11 +105,30 @@ gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf
 
 ```{r  Explore model, warning=FALSE}
 # Create Q-Q plot
-qqt(fit$t, pch = 16, cex = 0.2);
-abline(0,1)
+qq.plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
 
+# Save plot to png
+png(file.path("plots", "qqplot_GSE71270.png"))
+qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
+dev.off()
+
+# Print out plot here
+qq.plot
+```
+
+Make a volcano plot and save to png
+
+```{r}
 # Create volcano plot 
-volcanoplot(fit, main = "Volcano Plot")
+voc.plot <- volcanoplot(fit, main = "Volcano Plot")
+
+# Save plot to png
+png(file.path("plots", "volcano_plot_GSE71270.png"))
+voc.plot
+dev.off()
+
+# Print out the plot here
+voc.plot
 ```
 
 ## 5) Write statistics to output results file
