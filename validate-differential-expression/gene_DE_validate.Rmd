@@ -17,10 +17,6 @@ if (!("limma" %in% installed.packages())) {
   # Install limma
   BiocManager::install("limma", update = FALSE)
 }
-if (!("R.utils" %in% installed.packages())) {
-  # Install R.utils
-  install.packages("R.utils", suppressUpdates = FALSE)
-}
 ```
 
 Attach the `limma` library:
@@ -54,7 +50,7 @@ Import the `limma` results output we created in `author_processed_DE.Rmd`.
 author.results <- readr::read_tsv(file.path("results", "GSE37382_limma_results.tsv")) 
 ```
 
-## 3) Convert these affymetrix ids into Ensembl gene IDs (what refine.bio datasets have)
+## 3) Convert these Affymetrix ids into Ensembl gene IDs (what refine.bio datasets have)
 Here we need to convert our Affymetrix transcript cluster ids into Ensembl gene
 ids. 
 If you are using this notebook for your own data, and need more information on 
@@ -256,7 +252,7 @@ up.venn.plot
 Save up-regulated Venn diagram to png
 
 ```{r}
-png("up-regulated_venn_northcott_vs_robinson.png")
+png(file.path("plots", "up-regulated_venn_northcott_vs_robinson.png"))
 up.venn.plot
 dev.off()
 ```
@@ -277,7 +273,7 @@ down.venn.plot
 Save down-regulated Venn diagram to png
 
 ```{r}
-png("down-regulated_venn_northcott_vs_robinson.png")
+png(file.path("plots", "down-regulated_venn_northcott_vs_robinson.png"))
 up.venn.plot
 dev.off()
 ```
