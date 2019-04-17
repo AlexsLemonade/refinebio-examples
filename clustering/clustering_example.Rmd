@@ -16,10 +16,11 @@ creating a heatmap.
 <br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
 reveal patterns and correlations in multidimensional genomic data.” Bioinformatics.
 
-```{r Install and attach the ComplexHeatmap library, eval=FALSE}
-# Install the ComplexHeatmap package from bioconductor
-source("https://bioconductor.org/biocLite.R")
-biocLite("ComplexHeatmap", suppressUpdates = TRUE)
+```{r Install and attach the ComplexHeatmap library}
+if (!("ComplexHeatmap" %in% installed.packages())) {
+  # Install ComplexHeatmap
+  BiocManager::install("ComplexHeatmap", update = FALSE)
+}
 ```
 
 Attach the `ComplexHeatmap` library:
@@ -32,6 +33,15 @@ library(ComplexHeatmap)
 set.seed(12345)
 ```
 
+Create output folder.
+
+```{r}
+# Create the plots folder if it doesn't exist
+if (!dir.exists("plots")) {
+  dir.create("plots")
+}
+```
+
 ## 2) Import and set up data
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
@@ -39,11 +49,11 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim("../data/metadata_GSE12955.tsv", header=TRUE, 
+metadata <- read.delim(file.path("data", "metadata_GSE12955.tsv"), header=TRUE, 
                        stringsAsFactors = FALSE)
 
 # Read in data tsv file
-df <- read.delim("../data/GSE12955.tsv", header=TRUE, row.names= 1, 
+df <- read.delim(file.path("data", "GSE12955.tsv"), header=TRUE, row.names= 1, 
                  stringsAsFactors = FALSE)
 ```
 
@@ -96,7 +106,7 @@ and filename within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png("HeatmapGSE12955.png")
+png(file.path("plots", "HeatmapGSE12955.png"))
 
 # Print your heatmap
 heatmap
