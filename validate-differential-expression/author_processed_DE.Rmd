@@ -148,9 +148,6 @@ stats
 ```{r  Write results}
 # Save summary statistics to a tsv file
 readr::write_tsv(stats, file.path("results", "GSE37382_limma_results.tsv"))
-
-# Save the limma fit object to an RDS for later use
-saveRDS(fit, file.path("results", "GSE37382_limma_fit_obj.RDS"))
 ```
 
 Print session info:
