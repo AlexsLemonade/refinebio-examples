@@ -213,6 +213,10 @@ readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_result
 
 ## 6) Set up exploration of overlap of the datasets differential expression
 Combine `limma` results into one dataset.
+Here we will set up the data for making two Venn diagrams: one for overlap 
+between the datasets for up-regulated genes, the other for down-regulated genes.
+In order to determine direction, we will calculate fold change here and make 
+those as new variables. 
 
 ```{r}
 # First combine the two datasets summaries
@@ -225,6 +229,9 @@ combined.results <- refine.bio.results %>%
 ```
 
 Determine overlap in up-regulated genes between datasets.
+Here we are defining significantly changed genes as those with adjusted p values
+less than 0.05. 
+We determine direction based on the fold change calculated above. 
 
 ```{r}
 # Create significance list for refinebio
@@ -267,6 +274,7 @@ down.overlap <- VennDiagram::calculate.overlap(down.genes)
 ```
 
 ## 7) Make Venn diagrams
+### Overlap between up-regulated genes
 Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
@@ -301,6 +309,7 @@ grid::grid.draw(up.venn.plot);
 dev.off()
 ```
 
+### Overlap between down-regulated genes
 Do the same thing but for down-regulation results.
 
 ```{r}
@@ -313,6 +322,7 @@ down.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(down.genes[[1]]),
   area2 = length(down.genes[[2]]),
   cross.area = length(down.overlap[[3]]),
+  title = "Down-regulated Genes",
   category = c("RefineBio", "Author"),
   fill = c("blue", "yellow"),
   cex = 2,
