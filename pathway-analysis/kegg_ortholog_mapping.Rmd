@@ -173,8 +173,8 @@ we need a new gene set that is comprised of mouse gene symbols.
 ```{r}
 kegg_mouse_list <- 
   lapply(kegg_human_list, 
-         function(x) {
-           dplyr::filter(most_support_df, human_entrez %in% x) %>%
+         function(pathway) {
+           dplyr::filter(most_support_df, human_entrez %in% pathway) %>%
              dplyr::pull(mouse_symbol)
          })
 ```
