@@ -19,7 +19,7 @@ of the linear model.
 
 For this [Gene Pattern notebook](https://notebook.genepattern.org/services/sharing/notebooks/22/preview/)
 you will need to have a gct and CLS file, so follow
-[these instructions](https://github.com/AlexsLemonade/refinebio-examples/blob/master)
+[these instructions](https://github.com/AlexsLemonade/refinebio-examples/blob/master/README.md)
 if you haven't created those files from your data yet.  
 
 A general introduction to GenePattern notebooks is available [here](http://genepattern-notebook.org/public-notebooks/).

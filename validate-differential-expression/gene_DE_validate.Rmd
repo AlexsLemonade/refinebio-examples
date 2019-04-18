@@ -17,6 +17,10 @@ if (!("limma" %in% installed.packages())) {
   # Install limma
   BiocManager::install("limma", update = FALSE)
 }
+if (!("VennDiagram" %in% installed.packages())) {
+  # Install VennDiagram
+  BiocManager::install("VennDiagram", update = FALSE)
+}
 ```
 
 Attach the `limma` library:
@@ -211,58 +215,125 @@ Combine limma results into one dataset.
 
 ```{r}
 # First combine the two datasets summaries
-combined.stats <- refine.bio.results %>%
+combined.results <- refine.bio.results %>%
   # Match by the Ensembl gene ids
-  dplyr::inner_join(author.results, by = 'ENSEMBL', suffix = c(".refinebio", ".author")) %>%
-  # Convert the dataset into significant and direction summaries
-  dplyr::mutate("sig_refinebio" = adj.P.Val.refinebio < 0.05, 
-                "sig_author" = adj.P.Val.author < 0.05,
-                "direction_refinebio" = SHH.refinebio/Non_SHH.refinebio > 1,
-                "direction_author" = SHH.author/Non_SHH.author > 1) 
+  dplyr::inner_join(author.results, by = 'ENSEMBL', 
+                    suffix = c(".refinebio", ".author")) %>%
+  dplyr::mutate('fold.change.refinebio' =SHH.refinebio/Non_SHH.refinebio,
+                'fold.change.author' =SHH.author/Non_SHH.author)
 ```
 
-Create a logical matrix that has summarizes whether each dataset was significantly
-upregulated or downregulated.
+Determine overlap in up-regulated genes between datasets.
 
 ```{r}
-logical.mat <- combined.stats %>%
-  dplyr::transmute("refinebio_up" = sig_refinebio & direction_refinebio,
-                   "author_up" = sig_author & direction_author,
-                   "refinebio_down" = sig_refinebio & !direction_refinebio,
-                   "author_down" = sig_author & !direction_author)
+# Create significance list for refinebio
+refine.bio.up.genes <- combined.results %>%
+  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio > 1 ) %>%
+  dplyr::pull(ENSEMBL) 
+
+# Create significance list for author
+author.up.genes <- combined.results %>%
+  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author > 1 ) %>%
+  dplyr::pull(ENSEMBL) 
+
+# Make into named list
+up.genes <- list('refine.bio' = refine.bio.up.genes, 
+                  'author' = author.up.genes)
+
+# Calculate overlap of these gene lists:
+up.overlap <- VennDiagram::calculate.overlap(up.genes)
+```
+
+Determine overlap in down-regulated genes between datasets.
+
+```{r}
+# Create significance list for refinebio
+refine.bio.down.genes <- combined.results %>%
+  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio < 1 ) %>%
+  dplyr::pull(ENSEMBL) 
+
+# Create significance list for author
+author.down.genes <- combined.results %>%
+  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author < 1 ) %>%
+  dplyr::pull(ENSEMBL) 
+
+# Make into named list
+down.genes <- list('refine.bio' = refine.bio.down.genes, 
+                   'author' = author.down.genes)
+
+# Calculate overlap of these gene lists:
+down.overlap <- VennDiagram::calculate.overlap(down.genes)
 ```
 
 ## 7) Make Venn diagrams
 Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
-# Make png to save plot to
-png(file.path("plots", "up-regulated_venn_northcott_vs_robinson.png"))
-# Make a Venn diagram of up-regulated genes
-up.venn.plot <- logical.mat %>% 
-  dplyr::select(dplyr::contains("up")) %>%
-  limma::vennDiagram(cex = c(1, 1, 1),
-                     circle.col = c("#000000", "#FFC125", "#00BFFF"))
-dev.off()
+# Make filename to save plot as
+up.plot.file <- file.path("plots", "up-regulated_venn_northcott_vs_robinson.png")
 
-# Print plot here
-up.venn.plot
+# Make the Venn diagram
+grid::grid.newpage();
+grid::grid.layout(widths = c(5, 0.2, 5), heights = c(5, 0.2, 5));
+up.venn.plot <- VennDiagram::draw.pairwise.venn(
+  area1 = length(up.genes[[1]]),
+  area2 = length(up.genes[[2]]),
+  cross.area = length(up.overlap[[3]]),
+  category = c("RefineBio", "Author"),
+	fill = c("blue", "yellow"),
+	cex = 2,
+	cat.cex = 1.5,
+	cat.dist = c(-0.04, -0.05),
+  cat.pos = c(270, 70),
+	ext.pos = 0,
+	ext.dist = -0.01,
+	ext.length = .8,
+	ext.line.lwd = 2,
+	ext.line.lty = "dashed");
+grid::grid.draw(up.venn.plot)
+```
+
+Save upregulated genes Venn to a png
+
+```{r}
+png(up.plot.file);
+grid::grid.draw(up.venn.plot);
+dev.off()
 ```
 
 Do the same thing but for down-regulation results.
 
 ```{r}
-# Make png to save plot to
-png(file.path("plots", "down-regulated_venn_northcott_vs_robinson.png"))
-# Make a Venn diagram of down-regulated genes
-down.venn.plot <- logical.mat %>% 
-  dplyr::select(dplyr::contains("down")) %>%
-  limma::vennDiagram(cex = c(1, 1, 1),
-                     circle.col = c("#000000", "#FFC125", "#00BFFF"))
-dev.off()
+# Make filename to save plot as
+down.plot.file <- file.path("plots", "down-regulated_venn_northcott_vs_robinson.png")
 
-# Print plot here
-down.venn.plot 
+# Make the Venn diagram
+grid::grid.newpage();
+grid::grid.layout(widths = c(5, 0.2, 5), heights = c(5, 0.2, 5));
+down.venn.plot <- VennDiagram::draw.pairwise.venn(
+  area1 = length(down.genes[[1]]),
+  area2 = length(down.genes[[2]]),
+  cross.area = length(down.overlap[[3]]),
+  category = c("RefineBio", "Author"),
+	fill = c("blue", "yellow"),
+	cex = 2,
+	cat.cex = 1.5,
+	cat.dist = c(-0.04, -0.035),
+  cat.pos = c(270, 90),
+	ext.pos = 0,
+	ext.dist = -0.01,
+	ext.length = .8,
+	ext.line.lwd = 2,
+	ext.line.lty = "dashed");
+grid::grid.draw(down.venn.plot)
+```
+
+Save down-regulated genes Venn to a png
+
+```{r}
+png(down.plot.file);
+grid::grid.draw(down.venn.plot);
+dev.off()
 ```
 
 Print session info:
