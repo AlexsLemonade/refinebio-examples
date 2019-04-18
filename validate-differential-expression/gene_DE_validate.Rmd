@@ -164,7 +164,7 @@ refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code,
 all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
-## 4) Do differential expression for refine.bio
+## 5) Do differential expression for refine.bio
 `limma` needs a numeric design matrix to signify which are treatment and control
 samples. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
@@ -182,7 +182,7 @@ des.mat <- model.matrix( ~ 0 + metadata$subgroup)
 colnames(des.mat) <- levels(metadata$subgroup)
 ```
 
-## 5) Apply linear model
+## 6) Apply linear model
 After applying our data to linear model, in this example we apply empirical Bayes
 smoothing and Benjamini-Hochberg multiple testing correction. 
 
@@ -211,7 +211,7 @@ Write these results to an output file.
 readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_results.tsv"))
 ```
 
-## 6) Set up exploration of overlap of the datasets differential expression
+## 7) Set up exploration of overlap of the datasets differential expression
 Combine `limma` results into one dataset.
 Here we will set up the data for making two Venn diagrams: one for overlap 
 between the datasets for up-regulated genes, the other for down-regulated genes.
@@ -273,7 +273,7 @@ down.genes <- list('refine.bio' = refine.bio.down.genes,
 down.overlap <- VennDiagram::calculate.overlap(down.genes)
 ```
 
-## 7) Make Venn diagrams
+## 8) Make Venn diagrams
 ### Overlap between up-regulated genes
 Make Venn diagram of up-regulation results and save to png.
 
