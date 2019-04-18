@@ -164,11 +164,7 @@ limma needs a numeric design matrix to signify which are treatment and control
 samples. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
 This is the same type of variable we used for our imported author processed 
-dataset
-
-## 4) Set up design matrix
-limma needs a numeric design matrix to signify which are treatment and control
-samples. 
+dataset (See `author_processed_DE.Rmd`).
 
 ```{r Set up design matrix}
 # Make subgroup a factor
@@ -204,7 +200,8 @@ refine.bio.results <- topTableF(refine.bio.fit, number = nrow(refine.bio.df)) %>
 refine.bio.results
 ```
 
-Write these results to an output file
+Write these results to an output file.
+
 ```{r  Write results}
 readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_results.tsv"))
 ```
@@ -261,7 +258,7 @@ Do the same thing but for down-regulation results.
 
 ```{r}
 # Make a Venn diagram of down-regulated genes
-down.venn.plot <-logical.mat %>% 
+down.venn.plot <- logical.mat %>% 
   dplyr::select(dplyr::contains("down")) %>%
   limma::vennDiagram(cex = c(1, 1, 1),
                      circle.col = c("#000000", "#FFC125", "#00BFFF"))
