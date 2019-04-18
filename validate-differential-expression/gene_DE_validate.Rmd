@@ -211,7 +211,7 @@ readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_result
 ```
 
 ## 6) Set up exploration of overlap of the datasets differential expression
-Combine limma results into one dataset.
+Combine `limma` results into one dataset.
 
 ```{r}
 # First combine the two datasets summaries
@@ -219,8 +219,8 @@ combined.results <- refine.bio.results %>%
   # Match by the Ensembl gene ids
   dplyr::inner_join(author.results, by = 'ENSEMBL', 
                     suffix = c(".refinebio", ".author")) %>%
-  dplyr::mutate('fold.change.refinebio' =SHH.refinebio/Non_SHH.refinebio,
-                'fold.change.author' =SHH.author/Non_SHH.author)
+  dplyr::mutate('fold.change.refinebio' = SHH.refinebio/Non_SHH.refinebio,
+                'fold.change.author' = SHH.author/Non_SHH.author)
 ```
 
 Determine overlap in up-regulated genes between datasets.
@@ -228,12 +228,12 @@ Determine overlap in up-regulated genes between datasets.
 ```{r}
 # Create significance list for refinebio
 refine.bio.up.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio > 1 ) %>%
+  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio > 1) %>%
   dplyr::pull(ENSEMBL) 
 
 # Create significance list for author
 author.up.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author > 1 ) %>%
+  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author > 1) %>%
   dplyr::pull(ENSEMBL) 
 
 # Make into named list
@@ -249,12 +249,12 @@ Determine overlap in down-regulated genes between datasets.
 ```{r}
 # Create significance list for refinebio
 refine.bio.down.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio < 1 ) %>%
+  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio < 1) %>%
   dplyr::pull(ENSEMBL) 
 
 # Create significance list for author
 author.down.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author < 1 ) %>%
+  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author < 1) %>%
   dplyr::pull(ENSEMBL) 
 
 # Make into named list
