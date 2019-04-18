@@ -274,23 +274,22 @@ up.plot.file <- file.path("plots", "up-regulated_venn_northcott_vs_robinson.png"
 
 # Make the Venn diagram
 grid::grid.newpage();
-grid::grid.layout(widths = c(5, 0.2, 5), heights = c(5, 0.2, 5));
 up.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(up.genes[[1]]),
   area2 = length(up.genes[[2]]),
   cross.area = length(up.overlap[[3]]),
   category = c("RefineBio", "Author"),
-	fill = c("blue", "yellow"),
-	cex = 2,
-	cat.cex = 1.5,
-	cat.dist = c(-0.04, -0.05),
+  fill = c("blue", "yellow"),
+  cex = 2,
+  cat.cex = 1.5,
+  cat.dist = c(-0.04, -0.05),
   cat.pos = c(270, 70),
-	ext.pos = 0,
-	ext.dist = -0.01,
-	ext.length = .8,
-	ext.line.lwd = 2,
-	ext.line.lty = "dashed");
-grid::grid.draw(up.venn.plot)
+  ext.pos = 0,
+  ext.dist = -0.01,
+  ext.length = .8,
+  ext.line.lwd = 2,
+  ext.line.lty = "dashed");
+grid::grid.draw(up.venn.plot) # Draw plot
 ```
 
 Save upregulated genes Venn to a png
@@ -309,23 +308,22 @@ down.plot.file <- file.path("plots", "down-regulated_venn_northcott_vs_robinson.
 
 # Make the Venn diagram
 grid::grid.newpage();
-grid::grid.layout(widths = c(5, 0.2, 5), heights = c(5, 0.2, 5));
 down.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(down.genes[[1]]),
   area2 = length(down.genes[[2]]),
   cross.area = length(down.overlap[[3]]),
   category = c("RefineBio", "Author"),
-	fill = c("blue", "yellow"),
-	cex = 2,
-	cat.cex = 1.5,
-	cat.dist = c(-0.04, -0.035),
+  fill = c("blue", "yellow"),
+  cex = 2,
+  cat.cex = 1.5,
+  cat.dist = c(-0.04, -0.035),
   cat.pos = c(270, 90),
-	ext.pos = 0,
-	ext.dist = -0.01,
-	ext.length = .8,
-	ext.line.lwd = 2,
-	ext.line.lty = "dashed");
-grid::grid.draw(down.venn.plot)
+  ext.pos = 0,
+  ext.dist = -0.01,
+  ext.length = .8,
+  ext.line.lwd = 2,
+  ext.line.lty = "dashed");
+grid::grid.draw(down.venn.plot) # Draw plot
 ```
 
 Save down-regulated genes Venn to a png
