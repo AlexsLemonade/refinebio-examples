@@ -233,51 +233,40 @@ logical.mat <- combined.stats %>%
 ```
 
 ## 7) Make Venn diagrams
-Make Venn diagram of up-regulation results
+Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
+# Make png to save plot to
+png(file.path("plots", "up-regulated_venn_northcott_vs_robinson.png"))
 # Make a Venn diagram of up-regulated genes
 up.venn.plot <- logical.mat %>% 
   dplyr::select(dplyr::contains("up")) %>%
   limma::vennDiagram(cex = c(1, 1, 1),
                      circle.col = c("#000000", "#FFC125", "#00BFFF"))
+dev.off()
 
 # Print plot here
 up.venn.plot
-```
-
-Save up-regulated Venn diagram to png
-
-```{r}
-png(file.path("plots", "up-regulated_venn_northcott_vs_robinson.png"))
-up.venn.plot
-dev.off()
 ```
 
 Do the same thing but for down-regulation results.
 
 ```{r}
+# Make png to save plot to
+png(file.path("plots", "down-regulated_venn_northcott_vs_robinson.png"))
 # Make a Venn diagram of down-regulated genes
 down.venn.plot <- logical.mat %>% 
   dplyr::select(dplyr::contains("down")) %>%
   limma::vennDiagram(cex = c(1, 1, 1),
                      circle.col = c("#000000", "#FFC125", "#00BFFF"))
+dev.off()
 
 # Print plot here
 down.venn.plot 
 ```
 
-Save down-regulated Venn diagram to png
-
-```{r}
-png(file.path("plots", "down-regulated_venn_northcott_vs_robinson.png"))
-up.venn.plot
-dev.off()
-```
-
 Print session info:
 
 ```{r}
-# Print session info 
 sessionInfo()
 ```
