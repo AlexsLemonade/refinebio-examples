@@ -70,7 +70,8 @@ if (file.exists("hugene11st.tsv.zip")) {
 }
 
 # Read in the probe conversion info - this step may take some time
-probe.conversion <- readr::read_tsv(file.path("data", "hugene11st.tsv")) %>% 
+probe.conversion <- readr::read_tsv(file.path("data", "hugene11st.tsv"), 
+                                    progress = FALSE) %>% 
   dplyr::select("PROBEID", "ENSEMBL", "SYMBOL")
 
 # Add annotation to imported author limma results 
@@ -164,7 +165,7 @@ all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
 ## 4) Do differential expression for refine.bio
-limma needs a numeric design matrix to signify which are treatment and control
+`limma` needs a numeric design matrix to signify which are treatment and control
 samples. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
 This is the same type of variable we used for our imported author processed 
@@ -292,7 +293,7 @@ up.venn.plot <- VennDiagram::draw.pairwise.venn(
 grid::grid.draw(up.venn.plot) # Draw plot
 ```
 
-Save upregulated genes Venn to a png
+Save up-regulated genes Venn to a png.
 
 ```{r}
 png(up.plot.file);
@@ -326,7 +327,7 @@ down.venn.plot <- VennDiagram::draw.pairwise.venn(
 grid::grid.draw(down.venn.plot) # Draw plot
 ```
 
-Save down-regulated genes Venn to a png
+Save down-regulated genes Venn to a png.
 
 ```{r}
 png(down.plot.file);
