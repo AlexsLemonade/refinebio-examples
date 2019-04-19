@@ -47,11 +47,14 @@ if (!dir.exists("plots")) {
 ```
 
 ## 2) Import differential expression results from Northcott dataset
-Import the `limma` results output we created in `author_processed_DE.Rmd`.
+Import the `limma` results. 
+If you'd like to see how we generated these results with `limma`, see
+`author_processed_DE.Rmd` in this folder.
 
 ```{r}
 # Load in the summary statistics from limma run
-author.results <- readr::read_tsv(file.path("results", "GSE37382_limma_results.tsv")) 
+author.results <- readr::read_tsv(file.path("results", 
+                                            "GSE37382_limma_results.tsv")) 
 ```
 
 ## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
@@ -66,20 +69,23 @@ The pre-made id conversion key files themselves for refine.bio supported
 microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
 
 ```{r}
-if (file.exists("hugene11st.tsv.zip")) {
-  # Unzip hugene11st id conversion file obtained from identifier refinery
-  unzip(file.path("data", "hugene11st.tsv.zip"))
-}
+# Unzip hugene11st id conversion file obtained from identifier refinery
+id.conversion.file <- file.path("data", "hugene11st.tsv") 
+if (!file.exists(id.conversion.file)) {
+  unzip(paste0(id.conversion.file, ".zip"), exdir = "data")
+} 
 
 # Read in the probe conversion info - this step may take some time
-probe.conversion <- readr::read_tsv(file.path("data", "hugene11st.tsv"), 
+probe.conversion <- readr::read_tsv(id.conversion.file, 
                                     progress = FALSE) %>% 
   dplyr::select("PROBEID", "ENSEMBL", "SYMBOL")
 
 # Add annotation to imported author limma results 
 author.full.results <- author.results %>%
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
-  dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL))
+  dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
+  # Calculate fold change
+  dplyr::mutate('fold.change' = SHH/Non_SHH) 
 ```
 
 Summarize probe sets that all correspond to the same gene. 
@@ -167,8 +173,8 @@ all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
 ## 5) Do differential expression for refine.bio
-`limma` needs a numeric design matrix to signify which are treatment and control
-samples. 
+`limma` needs a numeric design matrix to signify which samples belong to which 
+groups you are testing. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
 This is the same type of variable we used for our imported author processed 
 dataset (See `author_processed_DE.Rmd`).
@@ -201,8 +207,9 @@ Obtain summary statistics:
 ```{r}
 # Apply multiple testing correction and obtain stats
 refine.bio.results <- topTableF(refine.bio.fit, number = nrow(refine.bio.df)) %>%
-  tibble::rownames_to_column("ENSEMBL")
-
+  tibble::rownames_to_column("ENSEMBL") %>% 
+  dplyr::mutate('fold.change' = SHH/Non_SHH)
+  
 # Print out stats
 refine.bio.results
 ```
@@ -210,7 +217,8 @@ refine.bio.results
 Write these results to an output file.
 
 ```{r  Write results}
-readr::write_tsv(refine.bio.results, file.path("results", "GSE37418_limma_results.tsv"))
+readr::write_tsv(refine.bio.results, file.path("results",
+                                               "GSE37418_limma_results.tsv"))
 ```
 
 ## 7) Set up exploration of overlap of the datasets differential expression
@@ -225,9 +233,7 @@ those as new variables.
 combined.results <- refine.bio.results %>%
   # Match by the Ensembl gene IDs
   dplyr::inner_join(author.results, by = 'ENSEMBL', 
-                    suffix = c(".refinebio", ".author")) %>%
-  dplyr::mutate('fold.change.refinebio' = SHH.refinebio/Non_SHH.refinebio,
-                'fold.change.author' = SHH.author/Non_SHH.author)
+                    suffix = c(".refinebio", ".author"))
 ```
 
 Determine overlap in up-regulated genes between datasets.
@@ -281,7 +287,8 @@ Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
 # Make filename to save plot as
-up.plot.file <- file.path("plots", "up-regulated_venn_northcott_vs_robinson.png")
+up.plot.file <- file.path("plots", 
+                          "up-regulated_venn_northcott_vs_robinson.png")
 
 # Make the Venn diagram
 grid::grid.newpage();
@@ -289,7 +296,7 @@ up.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(up.genes[[1]]),
   area2 = length(up.genes[[2]]),
   cross.area = length(up.overlap[[3]]),
-  category = c("RefineBio", "Author"),
+  category = c("refine.bio", "author"),
   fill = c("blue", "yellow"),
   cex = 2,
   cat.cex = 1.5,
@@ -316,7 +323,8 @@ Do the same thing but for down-regulation results.
 
 ```{r}
 # Make filename to save plot as
-down.plot.file <- file.path("plots", "down-regulated_venn_northcott_vs_robinson.png")
+down.plot.file <- file.path("plots", 
+                            "down-regulated_venn_northcott_vs_robinson.png")
 
 # Make the Venn diagram
 grid::grid.newpage();
@@ -325,7 +333,7 @@ down.venn.plot <- VennDiagram::draw.pairwise.venn(
   area2 = length(down.genes[[2]]),
   cross.area = length(down.overlap[[3]]),
   title = "Down-regulated Genes",
-  category = c("RefineBio", "Author"),
+  category = c("refine.nio", "author"),
   fill = c("blue", "yellow"),
   cex = 2,
   cat.cex = 1.5,
@@ -345,6 +353,21 @@ Save down-regulated genes Venn to a png.
 png(down.plot.file);
 grid::grid.draw(down.venn.plot);
 dev.off()
+```
+
+## 8) Write overlapped gene list to tsv
+Using `calculate.overlap`, we obtained a list of genes that were changed in both
+datasets. 
+If we want to extract the list of genes that are in both dataset, that is the 
+third vector in the output object so we use `[[3]]`
+```{r}
+# Write the up-regulated gene overlap lists to tsv file
+data.frame(up.overlap[[3]]) %>% 
+  readr::write_tsv(file.path("results", "up-regulated_overlap_gene_list.tsv"))
+
+# Do the same but for the down-regulated gene overlap list
+data.frame(down.overlap[[3]]) %>% 
+  readr::write_tsv(file.path("results", "down-regulated_overlap_gene_list.tsv"))
 ```
 
 Print session info:
