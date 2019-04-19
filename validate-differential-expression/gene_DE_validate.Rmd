@@ -53,17 +53,18 @@ If you'd like to see how we generated these results with `limma`, see
 
 ```{r}
 # Load in the summary statistics from limma run
-author.results <- readr::read_tsv(file.path("results", 
-                                            "GSE37382_limma_results.tsv")) 
+author.full.results <- readr::read_tsv(file.path("results", 
+                                                 "GSE37382_limma_results.tsv")) 
 ```
 
 ## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
 In refine.bio all IDs are converted to Ensembl gene IDs in the harmonization 
 pipeline.
 Here we need to convert our Affymetrix transcript cluster IDs into Ensembl gene
-IDs. 
+IDs so we can compare our datasets. 
 If you are using this notebook for your own data, and need more information on
-how to id conversion, you can look at `ensembl_id_convert.Rmd` in this repository for more information. 
+how to id conversion, you can look at `ensembl_id_convert.Rmd` in this repository
+for more information. 
 You can also use the [id conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
 The pre-made id conversion key files themselves for refine.bio supported 
 microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
@@ -78,32 +79,54 @@ if (!file.exists(id.conversion.file)) {
 # Read in the probe conversion info - this step may take some time
 probe.conversion <- readr::read_tsv(id.conversion.file, 
                                     progress = FALSE) %>% 
-  dplyr::select("PROBEID", "ENSEMBL", "SYMBOL")
+  dplyr::select("PROBEID", "ENSEMBL")
 
 # Add annotation to imported author limma results 
-author.full.results <- author.results %>%
+author.full.results <- author.full.results %>%
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
   dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
   # Calculate fold change
-  dplyr::mutate('fold.change' = SHH/Non_SHH) 
+  dplyr::mutate('fold.change' = SHH/Non_SHH) %>%
+  # Determine direction of fold change
+  dplyr::mutate('direction' = (fold.change > 1))
 ```
 
-Summarize probe sets that all correspond to the same gene. 
-In this case, for each gene, we will keep the probeset data that has the lowest 
-adjusted p-value.
+Most of the genes have many probes that align to them. 
+So in order to make these data comparable to to refine.bio data, we
+need to summarize at the gene level. 
+In order to do this, we will figure out what the direction of the significant
+probes are. 
 
 ```{r}
-# Summarize each gene by the minimum p value probeset
-author.results <- author.full.results %>%
-  # Group by Ensembl gene id
-  dplyr::group_by(ENSEMBL) %>%
-  # Choose the probe with the smallest p value
-  dplyr::slice(which.min(adj.P.Val))
+# Summarize the direction of significant probes for each gene
+direction.summary <- author.full.results %>% 
+  dplyr::filter(adj.P.Val < 0.05) %>% 
+  dplyr::group_by(ENSEMBL) %>% 
+  dplyr::summarize('up' = sum(direction), 
+                   'down' = sum(!direction))
+
+# Print out this dataset
+direction.summary
+```
+
+Make up-regulation and down-regulation gene lists.
+
+```{r}
+# Create an up-regulated genes list
+author.up.genes <- direction.summary %>%
+  dplyr::filter(up > down) %>%
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
+
+author.down.genes <- direction.summary %>%
+  dplyr::filter(up < down) %>%
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
 ```
 
 ## 4) Import and set up refine.bio processed data.
 Data downloaded from refine.bio are in tab separated values (TSV) files and 
-include a metadata in a separate tsv file. 
+include a metadata in a separate TSV file. 
 This data set was obtained from [refine.bio](https://www.refine.bio/). 
 
 ```{r}
@@ -158,7 +181,8 @@ on other special characters in R (known as regex - 'Regular Expressions')
 
 ```{r}
 # Only keep samples that are SHH or Non-SHH (which is now both Group3 and Group4)
-metadata %>% dplyr::filter(subgroup %in% c("SHH", "Non_SHH"))
+metadata <- metadata %>% 
+  dplyr::filter(subgroup %in% c("SHH", "Non_SHH"))
 ```
 
 Make refine.bio metadata and data are same samples, in the same order.
@@ -166,7 +190,7 @@ Make refine.bio metadata and data are same samples, in the same order.
 ```{r}
 # Reorder/filter data to match metadata
 refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code, 
-                           colnames(refine.bio.df))]
+                                       colnames(refine.bio.df))]
 
 # Check if they are the same:
 all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
@@ -184,7 +208,7 @@ dataset (See `author_processed_DE.Rmd`).
 metadata$subgroup <- as.factor(metadata$subgroup)
 
 # Create the design matrix
-des.mat <- model.matrix( ~ 0 + metadata$subgroup)
+des.mat <- model.matrix(~metadata$subgroup)
 
 # Change names of columns in design matrix to match
 colnames(des.mat) <- levels(metadata$subgroup)
@@ -196,7 +220,7 @@ smoothing and Benjamini-Hochberg multiple testing correction.
 
 ```{r Apply linear model}
 # Initial fit
-fit <- limma::lmFit(refine.bio.df, des.mat)
+fit <- lmFit(refine.bio.df, des.mat)
 
 # eBayes for smoothing
 refine.bio.fit <- eBayes(fit)
@@ -206,12 +230,26 @@ Obtain summary statistics:
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-refine.bio.results <- topTableF(refine.bio.fit, number = nrow(refine.bio.df)) %>%
+refine.bio.results <- topTable(refine.bio.fit, number = nrow(refine.bio.df)) %>%
   tibble::rownames_to_column("ENSEMBL") %>% 
-  dplyr::mutate('fold.change' = SHH/Non_SHH)
+  dplyr::mutate('fold.change' = SHH/Non_SHH) 
   
 # Print out stats
 refine.bio.results
+```
+
+```{r}
+# Create up-regulated gene list for refinebio
+refine.bio.up.genes <- refine.bio.results %>%
+  dplyr::filter(adj.P.Val < 0.05, fold.change > 1) %>%
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
+
+# Create down-regulated gene list for refinebio
+refine.bio.down.genes <- refine.bio.results %>%
+  dplyr::filter(adj.P.Val < 0.05, fold.change < 1) %>%
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
 ```
 
 Write these results to an output file.
@@ -227,55 +265,26 @@ Here we will set up the data for making two Venn diagrams: one for overlap
 between the datasets for up-regulated genes, the other for down-regulated genes.
 In order to determine direction, we will calculate fold change here and make 
 those as new variables. 
-
-```{r}
-# First combine the two datasets summaries
-combined.results <- refine.bio.results %>%
-  # Match by the Ensembl gene IDs
-  dplyr::inner_join(author.results, by = 'ENSEMBL', 
-                    suffix = c(".refinebio", ".author"))
-```
-
 Determine overlap in up-regulated genes between datasets.
 Here we are defining significantly changed genes as those with adjusted p values
 less than 0.05. 
 We determine direction based on the fold change calculated above. 
 
 ```{r}
-# Create significance list for refinebio
-refine.bio.up.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio > 1) %>%
-  dplyr::pull(ENSEMBL) 
-
-# Create significance list for author
-author.up.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author > 1) %>%
-  dplyr::pull(ENSEMBL) 
-
 # Make into named list
 up.genes <- list('refine.bio' = refine.bio.up.genes, 
-                  'author' = author.up.genes)
+                 'author' = author.up.genes)
 
-# Calculate overlap of these gene lists:
-up.overlap <- VennDiagram::calculate.overlap(up.genes)
+# Make into named list
+down.genes <- list('refine.bio' = refine.bio.down.genes, 
+                   'author' = author.down.genes)
 ```
 
 Determine overlap in down-regulated genes between datasets.
 
 ```{r}
-# Create significance list for refinebio
-refine.bio.down.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.refinebio < 0.05, fold.change.refinebio < 1) %>%
-  dplyr::pull(ENSEMBL) 
-
-# Create significance list for author
-author.down.genes <- combined.results %>%
-  dplyr::filter(adj.P.Val.author < 0.05, fold.change.author < 1) %>%
-  dplyr::pull(ENSEMBL) 
-
-# Make into named list
-down.genes <- list('refine.bio' = refine.bio.down.genes, 
-                   'author' = author.down.genes)
+# Calculate overlap of these gene lists:
+up.overlap <- VennDiagram::calculate.overlap(up.genes)
 
 # Calculate overlap of these gene lists:
 down.overlap <- VennDiagram::calculate.overlap(down.genes)

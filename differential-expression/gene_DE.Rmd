@@ -31,6 +31,9 @@ if (!("limma" %in% installed.packages())) {
 Attach the `limma` library:
 
 ```{r}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
 # Attach library
 library(limma)
 ```
