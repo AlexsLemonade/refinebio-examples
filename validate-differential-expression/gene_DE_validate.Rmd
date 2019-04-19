@@ -46,7 +46,7 @@ if (!dir.exists("plots")) {
 }
 ```
 
-## 2) Import our separate differential expression results
+## 2) Import differential expression results from Northcott dataset
 Import the `limma` results output we created in `author_processed_DE.Rmd`.
 
 ```{r}
@@ -54,11 +54,13 @@ Import the `limma` results output we created in `author_processed_DE.Rmd`.
 author.results <- readr::read_tsv(file.path("results", "GSE37382_limma_results.tsv")) 
 ```
 
-## 3) Convert these Affymetrix ids into Ensembl gene IDs (what refine.bio datasets have)
-Here we need to convert our Affymetrix transcript cluster ids into Ensembl gene
-ids. 
-If you are using this notebook for your own data, and need more information on 
-`ensembl_id_convert.Rmd` in this repository. 
+## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
+In refine.bio all IDs are converted to Ensembl gene IDs in the harmonization 
+pipeline.
+Here we need to convert our Affymetrix transcript cluster IDs into Ensembl gene
+IDs. 
+If you are using this notebook for your own data, and need more information on
+how to id conversion, you can look at `ensembl_id_convert.Rmd` in this repository for more information. 
 You can also use the [id conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
 The pre-made id conversion key files themselves for refine.bio supported 
 microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
@@ -94,7 +96,7 @@ author.results <- author.full.results %>%
 ```
 
 ## 4) Import and set up refine.bio processed data.
-Data downloaded from refine.bio are in tab separated values ("tsv") files and 
+Data downloaded from refine.bio are in tab separated values (TSV) files and 
 include a metadata in a separate tsv file. 
 This data set was obtained from [refine.bio](https://www.refine.bio/). 
 
@@ -149,8 +151,8 @@ Here's a [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCh
 on other special characters in R (known as regex - 'Regular Expressions')
 
 ```{r}
-# Only keep samples that are Group3, Group 4 or SHH
-metadata <- metadata[grep("SHH$", metadata$subgroup), ]
+# Only keep samples that are SHH or Non-SHH (which is now both Group3 and Group4)
+metadata %>% dplyr::filter(subgroup %in% c("SHH", "Non_SHH"))
 ```
 
 Make refine.bio metadata and data are same samples, in the same order.
@@ -221,7 +223,7 @@ those as new variables.
 ```{r}
 # First combine the two datasets summaries
 combined.results <- refine.bio.results %>%
-  # Match by the Ensembl gene ids
+  # Match by the Ensembl gene IDs
   dplyr::inner_join(author.results, by = 'ENSEMBL', 
                     suffix = c(".refinebio", ".author")) %>%
   dplyr::mutate('fold.change.refinebio' = SHH.refinebio/Non_SHH.refinebio,
