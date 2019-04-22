@@ -34,6 +34,9 @@ We will use two medulloblastoma datasets—
 perform meta-analysis with `qusage`.
 Specifically, we'll identify pathways that are differentially active between
 the SHH subgroup vs. the Group 3 and 4 subgroups in both datasets.
+These datasets are 
+[`GSE37382`](https://www.refine.bio/experiments/GSE37382/subgroup-specific-somatic-copy-number-aberrations-in-the-medulloblastoma-genome-mrna) and 
+[`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma), respectively.
 
 ## Set up
 
