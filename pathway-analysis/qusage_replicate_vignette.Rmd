@@ -46,7 +46,7 @@ library(org.Hs.eg.db)
 library(qusage)
 ```
 
-Make directories to hold the plots and results,
+Make directories to hold the plots and results.
 
 ```{r}
 if (!dir.exists("plots")) {
@@ -379,7 +379,7 @@ are different.
 plotGeneSetDistributions(sx_results, asx_results, path.index = 125)
 ```
 
-A few genes appeare to be driving the elevation of the cytosolic DNA sensing
+A few genes appear to be driving the elevation of the cytosolic DNA sensing
 patients in symptomatic patients after exposure (`t1`).
 We can take a closer look with `plotCIsGenes`.
 
