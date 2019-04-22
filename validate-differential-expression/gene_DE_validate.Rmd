@@ -220,18 +220,19 @@ smoothing and Benjamini-Hochberg multiple testing correction.
 
 ```{r Apply linear model}
 # Initial fit
-fit <- lmFit(refine.bio.df, des.mat)
+fit <- lmFit(refine.bio.df, design = des.mat)
 
 # eBayes for smoothing
-refine.bio.fit <- eBayes(fit)
+fit <- eBayes(fit)
 ```
 
 Obtain summary statistics:
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-refine.bio.results <- topTable(refine.bio.fit, number = nrow(refine.bio.df)) %>%
-  tibble::rownames_to_column("ENSEMBL") %>% 
+refine.bio.results <- topTable(fit, number = nrow(refine.bio.df)) %>%
+  tibble::rownames_to_column("ENSEMBL") 
+%>% 
   dplyr::mutate('fold.change' = SHH/Non_SHH) 
   
 # Print out stats
