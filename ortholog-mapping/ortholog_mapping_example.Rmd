@@ -48,6 +48,15 @@ devtools::install_github("stephenturner/hcop",
                          ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
 ```
 
+Create output folder.
+
+```{r}
+# Create the results folder if it doesn't exist
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+```
+
 ## 2) Mapping zebrafish Ensembl gene IDs to human symbols
 `hcop` supports mapping between zebrafish and human identifiers. 
 Here, we'll use zebrafish data from refine.bio and annotate it with human gene
@@ -67,7 +76,7 @@ Because of the formatting of the output of refine.bio, the first column name
 will be filled in with `'X1'`.
 
 ```{r Read in zebrafish gene expression data}
-exprs.df <- readr::read_tsv("../data/GSE12955.tsv")
+exprs.df <- readr::read_tsv(file.path("data", "GSE12955.tsv"))
 ```
 
 refine.bio data uses Ensembl gene identifiers, which will be in the first 
@@ -114,7 +123,8 @@ head(human.symbol.df, 25)
 ## 3) Write newly annotated data to a tsv file
 
 ```{r Write to file}
-readr::write_tsv(human.symbol.df, "GSE12955_mapped_to_human_gene_symbol.tsv")
+readr::write_tsv(human.symbol.df, file.path("results", 
+                                            "GSE12955_mapped_to_human_gene_symbol.tsv"))
 ```
 
 *There are some things to note:*

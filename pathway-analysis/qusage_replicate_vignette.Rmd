@@ -20,18 +20,6 @@ We will briefly cover how to obtain gene sets for pathway analysis from the
 [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb)
 as well.
 
-## Gene sets
-
-`qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
-[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers genesets in this format.
-
-**This notebook assumes that you have downloaded the MSigDB v6.2 KEGG gene sets
-that use Entrez gene IDs and placed them at the following relative path:**
-
-```
-gene-sets/c2.cp.kegg.v6.2.entrez.gmt
-```
-
 ## Pathway analysis
 
 ### Set up
@@ -58,19 +46,7 @@ library(org.Hs.eg.db)
 library(qusage)
 ```
 
-We need to make sure that the KEGG gene sets file exists where we expect it.
-
-```{r}
-# the kegg gmt file should be located in the spot we mention above
-kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
-# since we do not track this file in our repository, let's check to make sure
-# it exists where we expect it
-if (!file.exists(kegg_file)) {
-  stop(paste("KEGG GMT file is not found at", kegg_file))
-}
-```
-
-Make directories to hold the plots and results
+Make directories to hold the plots and results,
 
 ```{r}
 if (!dir.exists("plots")) {
@@ -79,6 +55,36 @@ if (!dir.exists("plots")) {
 
 if (!dir.exists("results")) {
   dir.create("results")
+}
+```
+
+### Gene sets
+
+`qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers genesets in this format.
+
+We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs and placed them at the following relative path:
+
+```
+gene-sets/c2.cp.kegg.v6.2.entrez.gmt
+```
+
+We can download the file if we don't find it where we expect!
+
+```{r}
+# the kegg gmt file should be located in the spot we mention above
+kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
+# since we do not track this file in our repository, let's check to make sure
+# it exists where we expect it and download it if we don't find it
+if (!file.exists(kegg_file)) {
+  message(paste("KEGG GMT file is not found at", kegg_file, 
+                ", downloading now..."))
+  # need gene-sets directory
+  if (!dir.exists("gene-sets")) {
+    dir.create("gene-sets")
+  }
+  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt", 
+                destfile = kegg_file)
 }
 ```
 
@@ -129,8 +135,8 @@ metadata_df <- readr::read_tsv(metadata_file) %>%
   dplyr::select(-which(apply(is.na(.), 2, all)))
 ```
 
-In the `qusage` vignette, the authors compared Hour 0 samples and sample 77 
-hours after exposure to influenza.
+In the `qusage` vignette, the authors compared samples 0 hours after exposure to
+influenza and sample 77 hours after exposure to influenza.
 We'll subset to just these samples.
 
 ```{r}
@@ -162,7 +168,7 @@ Are there duplicated identifiers?
 anyDuplicated(time_filtered_exprs$ENTREZID)
 ```
 
-Collapse to mean values
+Collapse to duplicated gene identifiers to their mean values.
 
 ```{r}
 collapsed_exprs <- time_filtered_exprs %>%
@@ -205,6 +211,7 @@ timepoint_qusage_results <- qusage(eset = exprs_mat,
 
 We can look at the results with the `qsTable` function.
 This will give us the top 20 pathways by default.
+(This can be changed via the `number` argument to `qsTable`.)
 
 ```{r}
 qsTable(timepoint_qusage_results)
@@ -236,7 +243,7 @@ readr::write_rds(timepoint_qusage_results,
 We can look at the overall results with the `plotCIs` function.
 
 ```{r}
-plotCIs(timepoint_qusage_results)
+plotCIs(timepoint_qusage_results, cex.xaxis = 0.25)
 ```
 
 It's a bit difficult to see in this notebook, but we'll save the plot as a PDF.
@@ -244,8 +251,8 @@ It's a bit difficult to see in this notebook, but we'll save the plot as a PDF.
 ```{r}
 pdf(file.path("plots", "qusage_t1-t0_plotCIs.pdf"), width = 14, height = 8)
 # adjusting the figure margins to better fit pathway names
-par(mar = c(13, 4, 1, 2))
-plotCIs(timepoint_qusage_results)
+par(mar = c(8, 4, 1, 2))
+plotCIs(timepoint_qusage_results, cex.xaxis = 0.5)
 dev.off()
 ```
 
@@ -273,7 +280,8 @@ Now, plot the mean and confidence intervals for each gene in the pathway.
 This gives us insight into _which_ genes changed the most.
 
 ```{r}
-plotCIsGenes(timepoint_qusage_results, path.index = pathway_index)
+plotCIsGenes(timepoint_qusage_results, path.index = pathway_index,
+             cex.xaxis = 0.75)
 ```
 
 We can easily check to see if the directionality is as we expect by making
@@ -284,7 +292,7 @@ the graph.
 graphics::boxplot(exprs_mat["387", ] ~ filtered_metadata_df$timepoint)
 ```
 
-### Two way comparison
+### Two-way comparison
 
 Patients in this influenza data set were either _symptomatic_ or _asymptomatic_.
 We can check if there are differences in pathway _responses_ to influenza virus
@@ -299,24 +307,24 @@ of the metadata.
 head(filtered_metadata_df$clinic_pheno)
 ```
 
-Generate labels for the two way comparison.
+Generate labels for the two-way comparison.
 
 ```{r}
-twoway_labels <- paste(filtered_metadata_df$clinic_pheno, 
+two_way_labels <- paste(filtered_metadata_df$clinic_pheno, 
                        filtered_metadata_df$timepoint,
                        sep = ".")
-twoway_labels
+two_way_labels
 ```
 
 Symptomatic comparison
 
 ```{r}
 sx_results <- qusage(eset = exprs_mat,
-                     labels = twoway_labels,
+                     labels = two_way_labels,
                      contrast = "Symptomatic.t1-Symptomatic.t0",
+                     geneSets = kegg_genesets,
                      # timepoints are paired samples, so we can specify that
                      # information here
-                     geneSets = kegg_genesets,
                      pairVector = filtered_metadata_df$subject)
 ```
 
@@ -324,10 +332,8 @@ Asymptomatic comparison
 
 ```{r}
 asx_results <- qusage(eset = exprs_mat,
-                      labels = twoway_labels,
+                      labels = two_way_labels,
                       contrast = "Asymptomatic.t1-Asymptomatic.t0",
-                      # timepoints are paired samples, so we can specify that
-                      # information here
                       geneSets = kegg_genesets,
                       pairVector = filtered_metadata_df$subject)
 ```
@@ -335,8 +341,8 @@ asx_results <- qusage(eset = exprs_mat,
 Calculate the difference between the two comparisons
 
 ```{r}
-asx_vs_sx <- qusage(eset = exprs_mat, 
-                    labels = twoway_labels, 
+sx_vs_asx <- qusage(eset = exprs_mat, 
+                    labels = two_way_labels, 
                     contrast = "(Symptomatic.t1-Symptomatic.t0) - (Asymptomatic.t1-Asymptomatic.t0)", 
                     geneSets = kegg_genesets, 
                     pairVector = filtered_metadata_df$subject)
@@ -353,10 +359,10 @@ names(kegg_genesets)[125]
 plotDensityCurves(asx_results, 
                   path.index = 125, 
                   col = "#D55E00",
-                  main="CYTOSOLIC DNA SENSING",
+                  main = "CYTOSOLIC DNA SENSING",
                   xlim = c(-1.0, 2.5))
 plotDensityCurves(sx_results, path.index = 125, col = "#56B4E9", add = TRUE)
-plotDensityCurves(asx_vs_sx, path.index = 125, col = "#000000", add = TRUE, 
+plotDensityCurves(sx_vs_asx, path.index = 125, col = "#000000", add = TRUE, 
                   lwd = 3)
 legend("topleft", 
        legend =  c("Asymptomatic", "Symptomatic", "Symptomatic-Asymptomatic"),

@@ -14,7 +14,7 @@ Recommended articles on PCA:
 - [Overall Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c)  
 - [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/)  
   
-## 1) Set up libraries
+## 1) Set up
 
 ```{r}
 # Magrittr pipe
@@ -22,10 +22,18 @@ Recommended articles on PCA:
 
 # Load ggplot2 for graphing
 library(ggplot2)
+```
 
+Set up output directories
+
+```{r}
 # Make a results directory if it isn't created yet
 if (!dir.exists("results")) {
   dir.create("results")
+}
+# Make a plots directory if it isn't created yet
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -36,7 +44,10 @@ These data set was obtained from [refine.bio](https://www.refine.bio/).
 
 ```{r}
 # Put name of data file
-data.filename <- file.path("data", "GSE71270.tsv")
+data.filename <- file.path("data", "GSE37382.tsv")
+
+# Unzip the file and direct it to the data folder
+unzip(paste0(data.filename, ".zip"), exdir = "data")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>% 
@@ -48,7 +59,7 @@ Import the metadata for this dataset
 
 ```{r}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_GSE71270.tsv")
+metadata.filename <- file.path("data", "metadata_GSE37382.tsv")
 
 # Read in metadata tsv file
 metadata <- readr::read_tsv(metadata.filename) %>% 
@@ -71,7 +82,7 @@ pca.df <- data.frame(pca$x[, 1:2]) %>%
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring the metadata into this df; match by sample ids
   dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, 
-                                  source_name_ch1, `genotype/variation`), 
+                                  histology, subgroup), 
                     by = 'refinebio_accession_code')
 ```
 
@@ -80,16 +91,26 @@ Label the data points based on their genotype group.
 
 ```{r}
 # Make a scatterplot with ggplot2
-ggplot(pca.df, aes(x = PC1, y = PC2, color = `genotype/variation`)) +
+pca.plot <- ggplot(pca.df, aes(x = PC1, y = PC2, color = subgroup)) +
   geom_point() + 
   theme_classic()
+
+# Print out plot here
+pca.plot
+```
+
+## 4) Save plot to png.
+
+```{r}
+# Save as a png
+ggsave(file.path("plots", "pca_scatterplot.png"))
 ```
 
 ## 5) Save PC scores to tsv file.
 
 ```{r}
 pca.df %>% as.data.frame() %>% 
-  readr::write_tsv(file.path("results", "PCA_scores.tsv"))
+  readr::write_tsv(file.path("results", "pca_scores.tsv"))
 ```
 
 Session info: 
