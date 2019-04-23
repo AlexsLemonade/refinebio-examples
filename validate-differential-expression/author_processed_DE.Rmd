@@ -113,7 +113,7 @@ samples.
 subgroup <- as.factor(gsub("Group 3|Group 4", "NonSHH", metadata$subgroup.ch1))
 
 # Create the design matrix
-des.mat <- model.matrix(~subgroup)
+des.mat <- model.matrix(~ subgroup)
 
 # Make the column name more informative
 colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")

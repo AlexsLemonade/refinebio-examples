@@ -22,9 +22,9 @@ other datasets.
 To represent differential expression results you may have obtained, we are using
 [Northcott et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22832581)
 using [author-processed data from Gene Expression Omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37382). 
-In another notebook in this module, `author_processed_DE.Rmd`, we used `limma` 
-to compare medulloblastoma gene expression data from `SHH` subgroups versus the 
-other subgroups and now. 
+In another notebook in this module, [`author_processed_DE`](./author_processed_DE.nb.html), 
+we used `limma` to compare medulloblastoma gene expression data from `SHH` 
+subgroups versus the other subgroups and now. 
 From this we obtained a table of output results (see `data/GSE37382_limma_results.tsv`)
 that includes probe IDs, and their associated summary statistics from our 
 differential expression testing. 
@@ -32,18 +32,17 @@ differential expression testing.
 In this notebook, we are looking for whether the results we found in the Northcott
 data are generalizable to [refine.bio dataset that also measures medulloblastoma subgroups](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma).
 These data are originally from [Robinson et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22722829) 
-but were downloaded from refine.bio
+but were downloaded from refine.bio.
 
 The output from this notebook are two Venn diagrams showing the gene list overlap
 between these two datasets' (one for up-regulated gene list, and the other for 
 down-regulated). 
 
-There are more than a few different possible approaches toward comparing two 
-differential expression results, but this notebook's example takes the simplest
-approach of looking at overlap of gene lists. 
+There are a number of ways to compare differential expression results, but this 
+notebook's example takes the simplest approach of looking at overlap of gene lists. 
 This is partially so that this notebook's approach can be applied to any 
-differential expression output, assuming that a gene list is the bare minimum
-amount of result's information that one might obtain (regardless of source).
+differential expression output, provided that the output meets certain criteria
+listed below.
 
 ### What you will need to apply this dataset to your own results: 
 At the bare minimum, you will need two gene lists, one for up-regulated and 
@@ -51,9 +50,9 @@ another for down-regulated genes.
 
 Ideally you will have table of differential expression results that will have:  
 
-1) an indicator of gene association (eg. probe IDs, Ensembl gene IDs)  
+1) A gene or probe identifier
 2) an indicator of regulation direction (eg. fold change)  
-3) an associated significance level (multiple testing corrected p-values)  
+3) p-values that are corrected for multiple testing (e.g., FDR)  
 
 This example shows one method of summarizing and converting Affymetrix probe IDs
 to Ensembl gene IDs, but depending on what type of gene identifiers and results
@@ -99,7 +98,7 @@ if (!dir.exists("plots")) {
 Import the `limma` results obtained for the author-processed data for 
 Northcott et al, 2012. 
 If you'd like to see how we generated these results with `limma`, see
-`author_processed_DE.Rmd` in this folder.
+[`author_processed_DE`](./author_processed_DE.nb.html) in this folder.
 Note that these differential expression results come with Affymetrix probe IDs
 (our source of gene identifier), `logFC`(our source of direction), and `adj.P.Val`
 (our source of significance level).
@@ -116,10 +115,10 @@ pipeline.
 Here we need to convert our Affymetrix transcript cluster IDs into Ensembl gene
 IDs so we can compare our datasets. 
 If you are using this notebook for your own data, and need more information on
-how to id conversion, you can look at `ensembl_id_convert.Rmd` in this repository
-for more information. 
+how to perform ID conversion, you can look at [`ensembl_id_convert`](./ensembl_id_convert.html) 
+in this repository for more information. 
 You can also use the [id conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
-The pre-made id conversion key files themselves for refine.bio supported 
+The pre-made ID conversion key files themselves for refine.bio supported 
 microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
 
 ```{r}
@@ -140,23 +139,25 @@ author.full.results <- author.full.results %>%
   dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
   # Determine direction of fold change. 
   # Note up-directed genes will be TRUE, down-genes will be FALSE
-  dplyr::mutate('direction' = logFC > 0)
+  dplyr::mutate('direction' = logFC > 0) %>% 
+  # This is to make sure we don't get repeat probes
+  dplyr::distinct()
 
 # Take a look at the preview of this results table
 author.full.results
 ```
 
 ### Summarize probe-level data into gene-level data
-Because gene-level information is generally more biologically meaningful and
-robust we will convert our Affymetrix probe IDs to Ensembl gene IDs (and also 
-because this will match our refine.bio dataset).
-We will find however, that most Ensembl gene IDs have many probes that align to 
+Because our refine.bio dataset has Ensembl gene IDs, and gene-level information
+is generally more biologically meaningful and robust than probe-level information, 
+we will convert our Affymetrix probe IDs to Ensembl gene IDs.
+We will find, however, that most Ensembl gene IDs have many probes that align to 
 them. 
 In order to do this, we will figure out what the direction of the significant
 probes are. 
-Here we are only keeping adjusted p-values that are `< 0.05` this is a typical 
-cutoff, but depending on your results and how long of gene lists you would like
-to look at, you may need to adjust this. 
+Here we are only keeping adjusted p-values that are `< 0.05`.
+This is a typical cutoff, but depending on your results and how long of gene 
+lists you would like to look at, you may need to adjust this. 
 Next, we will group the probes by their associated Ensembl gene IDs and count
 how many probesets are `up` and how many are `down` based on the `logical`
 variable `direction` we made in the previous section. 
@@ -244,9 +245,9 @@ metadata$subgroup <- gsub("G3|G4", "NonSHH", metadata$subgroup)
 summary(as.factor(metadata$subgroup))
 ```
 
-To make the comparisons more reasonably similar to our imported dataset (which
-only has SHH, Group3, or Group4), we will get rid of samples that *aren't* in 
-one of these classifications.
+To make this dataset more comparable to our imported dataset (which only has SHH,
+Group3, or Group4), we will get rid of samples that *aren't* in one of these 
+classifications.
 Note that the `$` is a special character after `SHH` is just to signify that we 
 only want samples that have `SHH` and end with those characters (So we are also 
 excluding the `SHH OUTLIER` sample). 
@@ -270,21 +271,21 @@ refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code,
 all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
-## 5) Do differential expression for refine.bio processed data
+## 5) Perform differential expression analysis on refine.bio data
 Here we are using the same model and set up as we used for the Northcott data
-in `author_processed_DE.Rmd`. 
+in [`author_processed_DE`](./author_processed_DE.nb.html). 
 `limma` needs a numeric design matrix to signify which samples belong to which 
 groups you are testing. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
 This is the same type of variable we used for our imported author processed 
-dataset (See `author_processed_DE.Rmd`).
+dataset (See [`author_processed_DE`](./author_processed_DE.nb.html)).
 
 ```{r Set up design matrix}
 # Make subgroup a factor
 metadata$subgroup <- as.factor(metadata$subgroup)
 
 # Create the design matrix
-des.mat <- model.matrix(~metadata$subgroup)
+des.mat <- model.matrix(~ metadata$subgroup)
 
 # Make the column name more informative
 colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
@@ -293,7 +294,7 @@ colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
 ## 6) Apply linear model
 After applying our data to linear model, in this example we apply empirical Bayes
 smoothing and Benjamini-Hochberg multiple testing correction (this was also the 
-same methods applied to the Northcott data in `author_processed_DE.Rmd`).
+same methods applied to the Northcott data in [`author_processed_DE`](./author_processed_DE.nb.html)).
 
 ```{r Apply linear model}
 # Initial fit
