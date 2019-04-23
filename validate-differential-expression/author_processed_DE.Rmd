@@ -110,13 +110,10 @@ samples.
 
 ```{r Set up design matrix}
 # Set up group names 
-group <- as.factor(gsub("Group 3|Group 4", "Non_SHH", metadata$subgroup.ch1))
+subgroup <- as.factor(gsub("Group 3|Group 4", "NonSHH", metadata$subgroup.ch1))
 
 # Create the design matrix
-des.mat <- model.matrix( ~ 0 + group)
-
-# Change names of columns in design matrix to match
-colnames(des.mat) <- levels(group)
+des.mat <- model.matrix(~subgroup)
 ```
 
 ## 5) Apply linear model
@@ -125,7 +122,7 @@ smoothing and Benjamini-Hochberg multiple testing correction.
 
 ```{r Apply linear model}
 # Initial fit
-fit <- limma::lmFit(author.df, des.mat)
+fit <- lmFit(author.df, design = des.mat)
 
 # Make contrasts
 fit <- eBayes(fit)

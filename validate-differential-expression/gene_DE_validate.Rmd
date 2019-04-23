@@ -10,6 +10,55 @@ output:
 *Purpose*: This notebook takes data processed by refine.bio and compares the 
 differential expression results to the author-submitted versions of the data.
 
+In this particular example, we are comparing two different medulloblastoma gene
+expression datasets, and testing how much overlap we see in the gene lists obtained
+from differential expression analyses.
+The idea is that you may obtain differential expression results from your own 
+data or a collaborator's data and want to compare it to a refine.bio dataset 
+that measures a similar tissue and/or has a similar experimental set up.
+This can be a quick way to see if your gene list results are generalizable to 
+other datasets.
+
+To represent differential expression results you may have obtained, we are using
+[Northcott et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22832581)
+using [author-processed data from Gene Expression Omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37382). 
+In another notebook in this module, `author_processed_DE.Rmd`, we used `limma` 
+to compare medulloblastoma gene expression data from `SHH` subgroups versus the 
+other subgroups and now. 
+From this we obtained a table of output results (see `data/GSE37382_limma_results.tsv`)
+that includes probe IDs, and their associated summary statistics from our 
+differential expression testing. 
+
+In this notebook, we are looking for whether the results we found in the Northcott
+data are generalizable to [refine.bio dataset that also measures medulloblastoma subgroups](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma).
+These data are originally from [Robinson et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22722829) 
+but were downloaded from refine.bio
+
+The output from this notebook are two Venn diagrams showing the gene list overlap
+between these two datasets' (one for up-regulated gene list, and the other for 
+down-regulated). 
+
+There are more than a few different possible approaches toward comparing two 
+differential expression results, but this notebook's example takes the simplest
+approach of looking at overlap of gene lists. 
+This is partially so that this notebook's approach can be applied to any 
+differential expression output, assuming that a gene list is the bare minimum
+amount of result's information that one might obtain (regardless of source).
+
+### What you will need to apply this dataset to your own results: 
+At the bare minimum, you will need two gene lists, one for up-regulated and 
+another for down-regulated genes. 
+
+Ideally you will have table of differential expression results that will have:  
+
+1) an indicator of gene association (eg. probe IDs, Ensembl gene IDs)  
+2) an indicator of regulation direction (eg. fold change)  
+3) an associated significance level (multiple testing corrected p-values)  
+
+This example shows one method of summarizing and converting Affymetrix probe IDs
+to Ensembl gene IDs, but depending on what type of gene identifiers and results
+you have, you may need to do a few conversion steps. 
+
 ## 1) Set up
 
 ```{r}
@@ -33,7 +82,7 @@ Attach the `limma` library:
 library(limma)
 ```
 
-Set up output directories.
+Set up output directories if they haven't been set up yet.
 
 ```{r}
 # Make a results directory if it isn't created yet
@@ -47,9 +96,13 @@ if (!dir.exists("plots")) {
 ```
 
 ## 2) Import differential expression results from Northcott dataset
-Import the `limma` results. 
+Import the `limma` results obtained for the author-processed data for 
+Northcott et al, 2012. 
 If you'd like to see how we generated these results with `limma`, see
 `author_processed_DE.Rmd` in this folder.
+Note that these differential expression results come with Affymetrix probe IDs
+(our source of gene identifier), `logFC`(our source of direction), and `adj.P.Val`
+(our source of significance level).
 
 ```{r}
 # Load in the summary statistics from limma run
@@ -85,22 +138,35 @@ probe.conversion <- readr::read_tsv(id.conversion.file,
 author.full.results <- author.full.results %>%
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
   dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
-  # Calculate fold change
-  dplyr::mutate('fold.change' = SHH/Non_SHH) %>%
-  # Determine direction of fold change
-  dplyr::mutate('direction' = (fold.change > 1))
+  # Determine direction of fold change. 
+  # Note up-directed genes will be TRUE, down-genes will be FALSE
+  dplyr::mutate('direction' = logFC > 0)
+
+# Take a look at the preview of this results table
+author.full.results
 ```
 
-Most of the genes have many probes that align to them. 
-So in order to make these data comparable to to refine.bio data, we
-need to summarize at the gene level. 
+### Summarize probe-level data into gene-level data
+Because gene-level information is generally more biologically meaningful and
+robust we will convert our Affymetrix probe IDs to Ensembl gene IDs (and also 
+because this will match our refine.bio dataset).
+We will find however, that most Ensembl gene IDs have many probes that align to 
+them. 
 In order to do this, we will figure out what the direction of the significant
 probes are. 
+Here we are only keeping adjusted p-values that are `< 0.05` this is a typical 
+cutoff, but depending on your results and how long of gene lists you would like
+to look at, you may need to adjust this. 
+Next, we will group the probes by their associated Ensembl gene IDs and count
+how many probesets are `up` and how many are `down` based on the `logical`
+variable `direction` we made in the previous section. 
 
 ```{r}
 # Summarize the direction of significant probes for each gene
 direction.summary <- author.full.results %>% 
+  # Keep only significant at 0.05 probes
   dplyr::filter(adj.P.Val < 0.05) %>% 
+  # Group probes by their associated 
   dplyr::group_by(ENSEMBL) %>% 
   dplyr::summarize('up' = sum(direction), 
                    'down' = sum(!direction))
@@ -109,17 +175,25 @@ direction.summary <- author.full.results %>%
 direction.summary
 ```
 
-Make up-regulation and down-regulation gene lists.
+Now we have a count of how many probes are significant in each direction.
+We will summarize these gene level probe summaries into two gene lists. 
+Some genes may have probesets that are both up and down.
+For this analysis, we will only keep genes in the significance lists if all the
+probesets are in the same direction.
 
 ```{r}
 # Create an up-regulated genes list
 author.up.genes <- direction.summary %>%
-  dplyr::filter(up > down) %>%
+  # Upregulated genes are only those that have no significant downregulated 
+  # probesets
+  dplyr::filter(down == 0) %>%
   dplyr::pull(ENSEMBL) %>%
   as.character()
 
 author.down.genes <- direction.summary %>%
-  dplyr::filter(up < down) %>%
+  # Downregulated genes are only those that have no significant upregulated 
+  # probesets
+  dplyr::filter(up == 0) %>%
   dplyr::pull(ENSEMBL) %>%
   as.character()
 ```
@@ -163,8 +237,8 @@ To make the comparisons more reasonably similar, we will get rid of samples
 that *aren't* SHH, Group3, or Group4.
 
 ```{r}
-# Reformat subgroup names to make Group 3 and 4 into "Non_SHH"
-metadata$subgroup <- gsub("G3|G4", "Non_SHH", metadata$subgroup)
+# Reformat subgroup names to make Group 3 and 4 into "NonSHH"
+metadata$subgroup <- gsub("G3|G4", "NonSHH", metadata$subgroup)
 
 # Check out subgroup summary
 summary(as.factor(metadata$subgroup))
@@ -182,7 +256,7 @@ on other special characters in R (known as regex - 'Regular Expressions')
 ```{r}
 # Only keep samples that are SHH or Non-SHH (which is now both Group3 and Group4)
 metadata <- metadata %>% 
-  dplyr::filter(subgroup %in% c("SHH", "Non_SHH"))
+  dplyr::filter(subgroup %in% c("SHH", "NonSHH"))
 ```
 
 Make refine.bio metadata and data are same samples, in the same order.
@@ -196,7 +270,9 @@ refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code,
 all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
-## 5) Do differential expression for refine.bio
+## 5) Do differential expression for refine.bio processed data
+Here we are using the same model and set up as we used for the Northcott data
+in `author_processed_DE.Rmd`. 
 `limma` needs a numeric design matrix to signify which samples belong to which 
 groups you are testing. 
 Note that we are using the medulloblastoma subgroups as our variable for testing.
@@ -209,14 +285,12 @@ metadata$subgroup <- as.factor(metadata$subgroup)
 
 # Create the design matrix
 des.mat <- model.matrix(~metadata$subgroup)
-
-# Change names of columns in design matrix to match
-colnames(des.mat) <- levels(metadata$subgroup)
 ```
 
 ## 6) Apply linear model
 After applying our data to linear model, in this example we apply empirical Bayes
-smoothing and Benjamini-Hochberg multiple testing correction. 
+smoothing and Benjamini-Hochberg multiple testing correction (this was also the 
+same methods applied to the Northcott data in `author_processed_DE.Rmd`).
 
 ```{r Apply linear model}
 # Initial fit
@@ -232,25 +306,9 @@ Obtain summary statistics:
 # Apply multiple testing correction and obtain stats
 refine.bio.results <- topTable(fit, number = nrow(refine.bio.df)) %>%
   tibble::rownames_to_column("ENSEMBL") 
-%>% 
-  dplyr::mutate('fold.change' = SHH/Non_SHH) 
   
 # Print out stats
 refine.bio.results
-```
-
-```{r}
-# Create up-regulated gene list for refinebio
-refine.bio.up.genes <- refine.bio.results %>%
-  dplyr::filter(adj.P.Val < 0.05, fold.change > 1) %>%
-  dplyr::pull(ENSEMBL) %>%
-  as.character()
-
-# Create down-regulated gene list for refinebio
-refine.bio.down.genes <- refine.bio.results %>%
-  dplyr::filter(adj.P.Val < 0.05, fold.change < 1) %>%
-  dplyr::pull(ENSEMBL) %>%
-  as.character()
 ```
 
 Write these results to an output file.
@@ -260,16 +318,32 @@ readr::write_tsv(refine.bio.results, file.path("results",
                                                "GSE37418_limma_results.tsv"))
 ```
 
+### Create up/down-regulated gene lists for refine.bio results
+Here we are using an adjusted p-value cutoff of `0.05`. 
+We are not applying a magnitude cutoff for `logFC` but using logFC just to 
+summarize direction of regulation. 
+Depending on your own data, you may want to adjust these. 
+
+```{r}
+# Create up-regulated gene list for refinebio
+refine.bio.up.genes <- refine.bio.results %>%
+  # Apply cutoffs for p values and fold change direction to be up
+  dplyr::filter(adj.P.Val < 0.05, logFC > 0) %>%
+  # Reduce this to a gene ID vector list
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
+
+# Create down-regulated gene list for refinebio
+refine.bio.down.genes <- refine.bio.results %>%
+  dplyr::filter(adj.P.Val < 0.05, logFC < 0) %>%
+  dplyr::pull(ENSEMBL) %>%
+  as.character()
+```
+
 ## 7) Set up exploration of overlap of the datasets differential expression
-Combine `limma` results into one dataset.
 Here we will set up the data for making two Venn diagrams: one for overlap 
 between the datasets for up-regulated genes, the other for down-regulated genes.
-In order to determine direction, we will calculate fold change here and make 
-those as new variables. 
 Determine overlap in up-regulated genes between datasets.
-Here we are defining significantly changed genes as those with adjusted p values
-less than 0.05. 
-We determine direction based on the fold change calculated above. 
 
 ```{r}
 # Make into named list
@@ -281,7 +355,7 @@ down.genes <- list('refine.bio' = refine.bio.down.genes,
                    'author' = author.down.genes)
 ```
 
-Determine overlap in down-regulated genes between datasets.
+Determine overlap in gene sets between datasets.
 
 ```{r}
 # Calculate overlap of these gene lists:
@@ -310,8 +384,8 @@ up.venn.plot <- VennDiagram::draw.pairwise.venn(
   fill = c("blue", "yellow"),
   cex = 2,
   cat.cex = 1.5,
-  cat.dist = c(-0.04, -0.05),
-  cat.pos = c(270, 70),
+  cat.dist = c(-0.12, -0.13),
+  cat.pos = c(170, 65),
   ext.pos = 0,
   ext.dist = -0.01,
   ext.length = .8,
@@ -343,12 +417,12 @@ down.venn.plot <- VennDiagram::draw.pairwise.venn(
   area2 = length(down.genes[[2]]),
   cross.area = length(down.overlap[[3]]),
   title = "Down-regulated Genes",
-  category = c("refine.nio", "author"),
+  category = c("refine.bio", "author"),
   fill = c("blue", "yellow"),
   cex = 2,
   cat.cex = 1.5,
-  cat.dist = c(-0.04, -0.035),
-  cat.pos = c(270, 90),
+  cat.dist = c(-0.11, -0.035),
+  cat.pos = c(240, 120),
   ext.pos = 0,
   ext.dist = -0.01,
   ext.length = .8,
@@ -365,11 +439,12 @@ grid::grid.draw(down.venn.plot);
 dev.off()
 ```
 
-## 8) Write overlapped gene list to tsv
+## 9) Write overlapped gene list to tsv
 Using `calculate.overlap`, we obtained a list of genes that were changed in both
 datasets. 
 If we want to extract the list of genes that are in both dataset, that is the 
 third vector in the output object so we use `[[3]]`
+
 ```{r}
 # Write the up-regulated gene overlap lists to tsv file
 data.frame(up.overlap[[3]]) %>% 
