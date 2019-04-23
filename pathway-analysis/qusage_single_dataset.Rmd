@@ -26,11 +26,11 @@ the R package documentation to learn more.
 
 ## Gene sets
 
-Here we'll work with a mouse dataset.
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
 [Curated gene sets from MSigDB](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2) 
 like [KEGG](https://www.genome.jp/kegg/) are popular for pathway analysis, but
 MSigDB only distributes human pathway data.
+Here, we'll work with a mouse dataset.
 
 In the [`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook in 
 this module, we mapped human Entrez IDs to mouse symbols using the 
@@ -113,8 +113,8 @@ exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
 colnames(exprs_df)[1] <- "ENSEMBL"
 ```
 
-Because our gene sets use gene symbols and our expression data uses Ensembl 
-IDs, we need to do a conversion.
+Because our gene sets use gene symbols and expression data from refine.bio uses 
+Ensembl IDs, we need to do a conversion.
 We're using the default behavior for 1:many mappings here, where only the first 
 one is selected 
 ([docs](https://www.rdocumentation.org/packages/AnnotationDbi/versions/1.30.1/topics/AnnotationDb-objects)).
@@ -187,9 +187,9 @@ metadata_df <- metadata_df %>%
                 refinebio_specimen_part, refinebio_sex, strain)
 ```
 
-This particular accession (`GSE75574`) is a SuperSeries comprised of experiments
+This particular accession ([`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction)) is a SuperSeries comprised of experiments
 in multiple tissues from multiple mouse strains. 
-We're interested in white adipose tissue for all strains.
+We'll use white adipose tissue for all strains in this example.
 
 ```{r}
 metadata_df <- metadata_df %>%
@@ -253,7 +253,7 @@ readr::write_rds(qusage_results,
                            "GSE75574_adipose_calorierest-ctrl_QSarray.RDS"))
 ```
 
-### Overall
+### Overall results
 
 We can get a look at the general trend of the results with the `plotCIs` 
 function. 
@@ -263,7 +263,8 @@ plot.
 These are gene sets that are elevated in calorie restricted mice. 
 Error bars are colored by the directionality and corrected p-value (FDR by
 default).
-Unfortunately the p-value color scheme is red-green.
+Unfortunately the p-value color scheme is red-green, which does not work well
+for people with green or red color-vision deficiency.
 
 ```{r}
 plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
