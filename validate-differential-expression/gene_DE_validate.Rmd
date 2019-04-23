@@ -285,6 +285,9 @@ metadata$subgroup <- as.factor(metadata$subgroup)
 
 # Create the design matrix
 des.mat <- model.matrix(~metadata$subgroup)
+
+# Make the column name more informative
+colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
 ```
 
 ## 6) Apply linear model
