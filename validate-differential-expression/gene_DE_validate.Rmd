@@ -8,23 +8,29 @@ output:
 ---
 
 *Purpose*: This notebook takes data processed by refine.bio and compares the 
-differential expression results to the author-submitted versions of the data.
+differential expression results to a list of differential expressed genes.
 
 In this particular example, we are comparing two different medulloblastoma gene
 expression datasets, and testing how much overlap we see in the gene lists obtained
 from differential expression analyses.
-The idea is that you may obtain differential expression results from your own 
-data or a collaborator's data and want to compare it to a refine.bio dataset 
-that measures a similar tissue and/or has a similar experimental set up.
-This can be a quick way to see if your gene list results are generalizable to 
-other datasets.
+You may obtain differential expression results from your own data or a 
+collaborator's data. 
+It is good practice to validate your findings in another dataset that measures a 
+similar tissue with a similar experimental design.
+You can use refine.bio datasets and the steps in this example to quickly check 
+for agreement with your results.
+Ideally when comparing datasets' differential expression results, both results 
+have been obtained using the same exact pipeline.
+
+Here we will compare differential expression results we've previously obtained for <INSERT INFO ABOUT COMPARISON> to results from a refine.bio dataset.
+We generated this in <link to notebook>. These data are originally from <CITATION, etc.>.
 
 To represent differential expression results you may have obtained, we are using
 [Northcott et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22832581)
 using [author-processed data from Gene Expression Omnibus](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37382). 
 In another notebook in this module, [`author_processed_DE`](./author_processed_DE.nb.html), 
 we used `limma` to compare medulloblastoma gene expression data from `SHH` 
-subgroups versus the other subgroups and now. 
+subgroups versus the other subgroups. 
 From this we obtained a table of output results (see `data/GSE37382_limma_results.tsv`)
 that includes probe IDs, and their associated summary statistics from our 
 differential expression testing. 
@@ -33,10 +39,15 @@ In this notebook, we are looking for whether the results we found in the Northco
 data are generalizable to [refine.bio dataset that also measures medulloblastoma subgroups](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma).
 These data are originally from [Robinson et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22722829) 
 but were downloaded from refine.bio.
+This dataset was chosen because, like Northcott et al data, it also has subgroup 
+medulloblastoma information that we will use in this notebook for differential 
+expression testing. 
 
 The output from this notebook are two Venn diagrams showing the gene list overlap
-between these two datasets' (one for up-regulated gene list, and the other for 
-down-regulated). 
+between these two datasets (one for up-regulated gene list, and the other for 
+down-regulated).
+In both these datasets, we consider genes that are significantly higher in `SHH` 
+subgroup samples than in `NonSHH` samples to be `up-regulated`.
 
 There are a number of ways to compare differential expression results, but this 
 notebook's example takes the simplest approach of looking at overlap of gene lists. 
@@ -117,12 +128,12 @@ IDs so we can compare our datasets.
 If you are using this notebook for your own data, and need more information on
 how to perform ID conversion, you can look at [`ensembl_id_convert`](./ensembl_id_convert.html) 
 in this repository for more information. 
-You can also use the [id conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
+You can also use the [ID conversion repository prepared by the CCDL.](https://github.com/AlexsLemonade/identifier-refinery) 
 The pre-made ID conversion key files themselves for refine.bio supported 
 microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1322711#.XLdJb-tKiXE). 
 
 ```{r}
-# Unzip hugene11st id conversion file obtained from identifier refinery
+# Unzip hugene11st ID conversion file obtained from identifier refinery
 id.conversion.file <- file.path("data", "hugene11st.tsv") 
 if (!file.exists(id.conversion.file)) {
   unzip(paste0(id.conversion.file, ".zip"), exdir = "data")
@@ -153,8 +164,8 @@ is generally more biologically meaningful and robust than probe-level informatio
 we will convert our Affymetrix probe IDs to Ensembl gene IDs.
 We will find, however, that most Ensembl gene IDs have many probes that align to 
 them. 
-In order to do this, we will figure out what the direction of the significant
-probes are. 
+In order summarize probe-level into gene-level data, we will figure out for each
+gene what the directions of the significant probes are. 
 Here we are only keeping adjusted p-values that are `< 0.05`.
 This is a typical cutoff, but depending on your results and how long of gene 
 lists you would like to look at, you may need to adjust this. 
@@ -248,11 +259,6 @@ summary(as.factor(metadata$subgroup))
 To make this dataset more comparable to our imported dataset (which only has SHH,
 Group3, or Group4), we will get rid of samples that *aren't* in one of these 
 classifications.
-Note that the `$` is a special character after `SHH` is just to signify that we 
-only want samples that have `SHH` and end with those characters (So we are also 
-excluding the `SHH OUTLIER` sample). 
-Here's a [cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
-on other special characters in R (known as regex - 'Regular Expressions')
 
 ```{r}
 # Only keep samples that are SHH or Non-SHH (which is now both Group3 and Group4)
@@ -292,9 +298,9 @@ colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
 ```
 
 ## 6) Apply linear model
-After applying our data to linear model, in this example we apply empirical Bayes
-smoothing and Benjamini-Hochberg multiple testing correction (this was also the 
-same methods applied to the Northcott data in [`author_processed_DE`](./author_processed_DE.nb.html)).
+Here we will fit our data to a model using our design matrix and then apply 
+empirical Bayes for smoothing. 
+This same kind of model was applied to the Northcott data in [`author_processed_DE`](./author_processed_DE.nb.html)).
 
 ```{r Apply linear model}
 # Initial fit
@@ -304,7 +310,8 @@ fit <- lmFit(refine.bio.df, design = des.mat)
 fit <- eBayes(fit)
 ```
 
-Obtain summary statistics:
+Obtain summary statistics and apply Benjamini-Hochberg multiple testing
+correction to the p-values.
 
 ```{r}
 # Apply multiple testing correction and obtain stats
@@ -327,6 +334,7 @@ Here we are using an adjusted p-value cutoff of `0.05`.
 We are not applying a magnitude cutoff for `logFC` but using logFC just to 
 summarize direction of regulation. 
 Depending on your own data, you may want to adjust these. 
+For instance, you may only be interested in genes with high fold change.
 
 ```{r}
 # Create up-regulated gene list for refinebio
@@ -407,7 +415,7 @@ dev.off()
 ```
 
 ### Overlap between down-regulated genes
-Do the same thing but for down-regulation results.
+Repeat the process for down-regulation results.
 
 ```{r}
 # Make filename to save plot as
@@ -447,7 +455,7 @@ dev.off()
 Using `calculate.overlap`, we obtained a list of genes that were changed in both
 datasets. 
 If we want to extract the list of genes that are in both dataset, that is the 
-third vector in the output object so we use `[[3]]`
+third vector in the output object so we use `[[3]]`.
 
 ```{r}
 # Write the up-regulated gene overlap lists to tsv file
