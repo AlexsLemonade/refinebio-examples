@@ -349,7 +349,7 @@ refine.bio.down.genes <- refine.bio.results %>%
   as.character()
 ```
 
-### 7) Double check results directions with a boxplot
+## 7) Double check results directions with a boxplot
 Let's pick a couple genes from the Robinson and Northcott results to double check
 our output.
 We previously did this same test for the Northcott data in the in [`author_processed_DE`](./author_processed_DE.nb.html).
@@ -363,7 +363,7 @@ test.gene <- refine.bio.df %>%
   t()
 
 # Make a dataframe with the group information
-plot.df <- data.frame(test.gene, subgroup = metadata$subgroup) %>%
+box.plot <- data.frame(test.gene, subgroup = metadata$subgroup) %>%
 
 # Use ggplot2 to make a boxplot from this info
 ggplot2::ggplot(., ggplot2::aes(x = subgroup, y = test.gene)) + 
@@ -372,7 +372,7 @@ ggplot2::ggplot(., ggplot2::aes(x = subgroup, y = test.gene)) +
   ggplot2::ggtitle(paste("refine.bio up gene test:", refine.bio.up.genes[12]))
 
 # Print the plot here
-plot.df
+box.plot
 ```
 
 ## 8) Set up exploration of overlap of the datasets differential expression
