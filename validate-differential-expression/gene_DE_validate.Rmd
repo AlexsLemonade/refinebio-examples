@@ -10,9 +10,6 @@ output:
 *Purpose*: This notebook takes data processed by refine.bio and compares the 
 differential expression results to a list of differential expressed genes.
 
-In this particular example, we are comparing two different medulloblastoma gene
-expression datasets, and testing how much overlap we see in the gene lists obtained
-from differential expression analyses.
 You may obtain differential expression results from your own data or a 
 collaborator's data. 
 It is good practice to validate your findings in another dataset that measures a 
@@ -22,8 +19,8 @@ for agreement with your results.
 Ideally when comparing datasets' differential expression results, both results 
 have been obtained using the same exact pipeline.
 
-Here we will compare differential expression results we've previously obtained for <INSERT INFO ABOUT COMPARISON> to results from a refine.bio dataset.
-We generated this in <link to notebook>. These data are originally from <CITATION, etc.>.
+Here we will compare differential expression results we've previously obtained
+to results from a refine.bio dataset with similar data.
 
 To represent differential expression results you may have obtained, we are using
 [Northcott et al, 2012. Nature.](https://www.ncbi.nlm.nih.gov/pubmed/22832581)
