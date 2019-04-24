@@ -1,0 +1,450 @@
+---
+title: "Pathway analysis with QuSAGE: Meta-analysis of medulloblastoma"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: J. Taroni for ALSF CCDL
+date: 2019
+---
+
+## Background
+
+The Quantitative Set Analysis of Gene Expression (QuSAGE) 
+([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)) framework
+has advantages that we outline in 
+[`qusage_single_dataset`](./qusage_single_dataset.nb.html), including the 
+fact that it returns more than just a p-value.
+Specifically, QuSAGE quantifies gene set activity with a full probability 
+density function (PDF). 
+If we're interested in pathway analysis of multiple datasets, QuSAGE allows
+us to perform a _meta-analysis_ by combining distributions from the QuSAGE 
+results from each dataset.
+Meta-analysis with QuSAGE is described in 
+[Meng et al. _PLoS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)
+and implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html). 
+The [`qusage` vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf)
+contains a section on meta-analysis.
+
+## Datasets
+
+We will use two medulloblastoma datasets—
+[Northcott et al.](https://doi.org/10.1038/nature11327) and 
+[Robinson et al.](https://doi.org/10.1038/nature11213)—to demonstrate how to 
+perform meta-analysis with `qusage`.
+Specifically, we'll identify pathways that are differentially active between
+the SHH subgroup vs. the Group 3 and 4 subgroups in both datasets.
+These datasets are 
+[`GSE37382`](https://www.refine.bio/experiments/GSE37382/subgroup-specific-somatic-copy-number-aberrations-in-the-medulloblastoma-genome-mrna) and 
+[`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma), respectively.
+
+## Set up
+
+### Package installation and loading
+
+```{r}
+if (!("qusage" %in% installed.packages())) {
+  BiocManager::install("qusage", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+```
+
+```{r}
+`%>%` <- dplyr::`%>%`
+```
+
+```{r}
+library(org.Hs.eg.db)
+library(qusage)
+```
+
+### Directories
+
+Make directories to hold the plots and results if they do not yet exist.
+
+```{r}
+if (!dir.exists("plots")) {
+  dir.create("plots")
+}
+
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+```
+
+### Function
+
+Function to perform gene identifier conversion -- we'll do this once for 
+each dataset.
+We 'functionalize' it to keep from repeating ourselves. 
+For an example where we do the conversion without using a custom function, see
+[`qusage_single_dataset`](./qusage_single_dataset.nb.html) or 
+[`qusage_replicate_vignette`](./qusage_replicate_vignette.nb.html).
+
+```{r}
+convert_ensembl_to_entrez_mat <- function(exprs_df) {
+  # Given a data.frame that contains human gene expression values and a column 
+  # (named ENSEMBL) that contains Ensembl gene IDs, return an expression matrix
+  # where the rownames are Entrez IDs. In the case of duplicate Entrez 
+  # identifiers, we summarize to the mean value for an Entrez ID. Mapping
+  # is performed with AnnotationDbi::mapIDs.
+  # 
+  # Args:
+  #   exprs_df: A data.frame of gene expression data. The first column should be
+  #             named ENSEMBL and contain Ensembl gene IDs. Rows are genes; 
+  #             columns are samples.
+  # Returns:
+  #   An expression matrix where the rownames are Entrez gene IDs
+  
+  `%>%` <- dplyr::`%>%`
+  require(org.Hs.eg.db)
+  
+  # error-handling: we need an ENSEMBL column
+  if (!("ENSEMBL" %in% colnames(exprs_df))) {
+    stop("'ENSEMBL' column expected in exprs_df")
+  }
+  
+  # using the default behavior for 1:many mappings, where only the first one is 
+  # selected
+  entrez_mappings <- mapIds(org.Hs.eg.db, keys = exprs_df$ENSEMBL, 
+                            column = "ENTREZID", keytype = "ENSEMBL")
+  
+  # if this is not returned in the same order as the keys for some reason, stop
+  if (!all.equal(names(entrez_mappings), exprs_df$ENSEMBL)) {
+    stop("Something happened to the gene order!")
+  }
+  
+  # annotation with Entrez IDs
+  entrez_exprs_df <- exprs_df %>%
+    # add a new column that contains the Entrez IDs
+    # this gets added as the last column
+    dplyr::mutate(ENTREZID = entrez_mappings) %>%
+    # drop the Ensembl gene IDs
+    dplyr::select(-ENSEMBL) %>%
+    # reorder such that the Entrez IDs are in the first column
+    dplyr::select(ENTREZID, dplyr::everything()) %>%
+    # drop any genes without an Entrez ID
+    dplyr::filter(!is.na(ENTREZID))
+  
+  # if there are any duplicate Entrez gene IDs, collapse to the mean value
+  if (any(duplicated(entrez_exprs_df$ENTREZID))) {
+    message("Collapsing to mean value...")
+    entrez_exprs_df <- entrez_exprs_df %>%
+      dplyr::group_by(ENTREZID) %>%
+      dplyr::summarise_all(mean)
+  }
+  
+  # expression matrix where the rownames are the gene identifiers
+  exprs_mat <- entrez_exprs_df %>%
+    tibble::column_to_rownames("ENTREZID") %>%
+    as.matrix()
+
+}
+```
+
+### Gene sets
+
+`qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
+
+For more information or recommendations about gene sets, [see the **Gene Sets**
+section of the module README](https://github.com/AlexsLemonade/refinebio-examples/tree/master/pathway-analysis#gene-sets).
+
+We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs 
+and place them at the following relative path:
+
+```
+gene-sets/c2.cp.kegg.v6.2.entrez.gmt
+```
+
+We can download the file if it's not available locally yet.
+
+```{r}
+# the kegg gmt file should be located in the spot we mention above
+kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
+# since we do not track this file in our repository, let's check to make sure
+# it exists where we expect it and download it if we don't find it
+if (!file.exists(kegg_file)) {
+  message(paste("KEGG GMT file is not found at", kegg_file, 
+                ", downloading now..."))
+  # need gene-sets directory
+  if (!dir.exists("gene-sets")) {
+    dir.create("gene-sets")
+  }
+  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt", 
+                destfile = kegg_file)
+}
+```
+
+## Read in and prep refine.bio data
+
+### Northcott et al.
+
+This dataset is too large to be tracked with git without compression.
+We need to unzip it here if we have not already.
+
+```{r}
+# if the unzipped folder does not exist
+if (!dir.exists(file.path("data", "GSE37382"))) {
+  compressed_file <- file.path("data", "GSE37382.zip")
+  unzip(compressed_file, exdir = "data")
+}
+```
+
+#### Expression data
+
+```{r}
+northcott_expression_file <- file.path("data", "GSE37382", "GSE37382.tsv")
+northcott_exprs_df <- readr::read_tsv(northcott_expression_file, 
+                                      progress = FALSE)
+# readr will fill in the first column, which contains the Ensembl gene IDs, as
+# 'X1'
+colnames(northcott_exprs_df)[1] <- "ENSEMBL"
+```
+
+Convert to expression matrix that uses Entrez IDs as rownames using a 
+[custom function](#function).
+
+```{r}
+northcott_mat <- convert_ensembl_to_entrez_mat(northcott_exprs_df)
+```
+
+We no longer need the `data.frame` that contains the expression values.
+
+```{r}
+rm(northcott_exprs_df)
+```
+
+#### Metadata
+
+```{r}
+northcott_metadata_file <- file.path("data", "GSE37382", 
+                                     "metadata_GSE37382.tsv")
+northcott_metadata_df <- readr::read_tsv(northcott_metadata_file) %>%
+  # drop columns that are all NA
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+```
+
+We're going to compare the SHH subgroup to all others, so we need to encode
+this information in a new column (`shh_v_other`).
+
+```{r}
+northcott_metadata_df <- northcott_metadata_df %>%
+  # retain only pertinent columns
+  dplyr::select(refinebio_accession_code, refinebio_title, refinebio_age, 
+                refinebio_sex, subgroup) %>%
+  # new column that sets up pathway analysis
+  dplyr::mutate(shh_v_other = dplyr::case_when(
+    subgroup != "SHH" ~ "Other",
+    TRUE ~ "SHH"
+  ))
+```
+
+Reorder expression matrix to match the metadata.
+
+```{r}
+northcott_mat <- northcott_mat[, northcott_metadata_df$refinebio_accession_code]
+```
+
+### Robinson et al.
+
+#### Expression data
+
+```{r}
+robinson_expression_file <- file.path("data", "GSE37418", "GSE37418.tsv")
+robinson_exprs_df <- readr::read_tsv(robinson_expression_file,
+                                     progress = FALSE)
+colnames(robinson_exprs_df)[1] <- "ENSEMBL"
+```
+
+Convert to expression matrix that uses Entrez IDs as rownames using a 
+[custom function](#function).
+
+```{r}
+robinson_mat <- convert_ensembl_to_entrez_mat(robinson_exprs_df)
+```
+
+```{r}
+rm(robinson_exprs_df)
+```
+
+#### Metadata
+
+```{r}
+robinson_metadata_file <- file.path("data", "GSE37418", 
+                                    "metadata_GSE37418.tsv")
+robinson_metadata_df <- readr::read_tsv(robinson_metadata_file) %>%
+  # drop columns that are all NA
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+```
+
+To make this more comparable to the Northcott et al. dataset, we're going to
+remove the WNT subgroup and outliers such that we are comparing the SHH group
+to Group 3 and Group 4.
+
+```{r}
+robinson_metadata_df <- robinson_metadata_df %>%
+  # retain only pertinent columns
+  dplyr::select(refinebio_accession_code, refinebio_title, age, `m stage`,
+                subgroup) %>%
+  # make more comparable to Northcott dataset
+  dplyr::filter(!(subgroup %in% c("WNT", "SHH OUTLIER", "U"))) %>%
+  # we'll use SHH vs. Other for our pathway analysis
+  dplyr::mutate(shh_v_other = dplyr::case_when(
+    subgroup != "SHH" ~ "Other",
+    TRUE ~ "SHH"
+  ))
+```
+
+Reorder expression data to match metadata.
+
+```{r}
+robinson_mat <- robinson_mat[, robinson_metadata_df$refinebio_accession_code]
+```
+
+## Pathway analysis
+
+### Read in KEGG pathways
+
+```{r}
+kegg_pathways <- read.gmt(kegg_file)
+```
+
+### Northcott et al.
+
+```{r}
+northcott_results <- qusage(eset = northcott_mat,
+                            labels = northcott_metadata_df$shh_v_other,
+                            contrast = "SHH-Other",
+                            geneSets = kegg_pathways)
+```
+
+Save the Northcott et al. results to file.
+
+```{r}
+northcott_results_file <- file.path("results", 
+                                    "Northcott_SHH-Other_QSarray.RDS")
+readr::write_rds(northcott_results, northcott_results_file)
+```
+
+### Robinson et al.
+
+```{r}
+robinson_results <- qusage(eset = robinson_mat,
+                           labels = robinson_metadata_df$shh_v_other,
+                           contrast = "SHH-Other",
+                           geneSets = kegg_pathways)
+```
+
+Save the Robinson et al. results to file.
+
+```{r}
+robinson_results_file <- file.path("results", 
+                                   "Robinson_SHH-Other_QSarray.RDS")
+readr::write_rds(robinson_results, robinson_results_file)
+```
+
+## Meta-analysis
+
+### Combine probability density function
+
+`combinePDFs` is a `qusage` function we can use for meta-analysis.
+This function accepts a list of `QSArray` results.
+
+```{r}
+results_list <- list(
+  Northcott = northcott_results,
+  Robinson = robinson_results
+)
+```
+
+Because there are more samples in the Northcott et al. dataset, it will be 
+weighted more highly when combining the distribution.
+
+```{r}
+combined_results <- combinePDFs(results_list)
+```
+
+Just as in a single dataset, we can extract relevant information from 
+the combined `QSArray` with built-in `qusage` functions.
+
+Let's look at the top 20 pathways with `qsTable`.
+The row numbers in the output of `qsTable` can serve as input to the 
+`path.index` argument of other `qusage` functions as we'll see below.
+
+```{r}
+qsTable(combined_results)
+```
+
+### Plotting
+
+We can plot the distributions with `plotCombinedPDF`.
+First let's plot KEGG Pathways in Cancer, which has elevated expression in
+the SHH group as it has a _positive_ fold change.
+In a two group comparison in QuSAGE, **pathway activity** is the mean difference
+of the log expression of all genes in a pathway.
+
+```{r}
+plotCombinedPDF(combined_results, path.index = 162)
+legend("topleft", legend = c("Northcott", "Robinson", "Meta-analysis"),
+       lty = 1, col = c("#E41A1C", "#377EB8", "black"))
+```
+
+The positive pathway activity curves indicate that the genes in this 
+pathway have higher expression values in the SHH group for both datasets.
+The pathway activity (mean difference) in the Northcott dataset which has
+a larger sample size.
+
+Let's plot KEGG Dorsoventral Axis Formation, which has higher expression in
+Group 3 and 4 samples.
+
+```{r}
+plotCombinedPDF(combined_results, path.index = 107)
+legend("topleft", legend = c("Northcott", "Robinson", "Meta-analysis"),
+       lty = 1, col = c("#E41A1C", "#377EB8", "black"))
+```
+
+#### Plot individual gene mean and 95% confidence intervals (CI)
+
+We know that the directionality of the KEGG Dorsoventral Axis Formation pathway
+agrees between datasets.
+We can look into what genes are driving the pathway activity with the 
+`plotCIsGenes` function.
+Gene activity, which will be plotted on the y-axis, is difference between the 
+two groups.
+The _pathway_ CI will also be displayed on the plot as a grey band by default.
+
+```{r}
+plotCIsGenes(northcott_results, path.index = 107, addGrid = FALSE,
+             cex.xaxis = 1.25)
+```
+
+We can see that, in the Northcott dataset, there are about 5 genes really
+driving the negative pathway activity.
+Let's take a look at the same pathway in Robinson.
+
+```{r}
+plotCIsGenes(robinson_results, path.index = 107, addGrid = FALSE,
+             cex.xaxis = 1.25)
+```
+
+Looks like some of the top genes are the same between datasets: `56907`, `56776`
+Because Entrez IDs are not particularly human-readable, we can use the same
+annotation package to convert these to gene symbols and gene names.
+
+```{r}
+AnnotationDbi::select(org.Hs.eg.db, keys = c("56907", "56776"), 
+                      keytype = "ENTREZID", columns = c("SYMBOL", "GENENAME"))
+```
+
+It looks like these two genes promote the polymerization of actin filaments.
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
+
