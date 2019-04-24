@@ -78,9 +78,7 @@ We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
 
 ```{r}
-# TODO: possibly updated commit hash once 
-# https://github.com/AlexsLemonade/refinebio-examples/pull/46 lands
-dge_df <- readr::read_tsv("https://github.com/AlexsLemonade/refinebio-examples/raw/55ccd5819d3cfabaeb9c64378253ba235c8e2d18/validate-differential-expression/results/GSE37418_limma_results.tsv")
+dge_df <- readr::read_tsv("https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv")
 ```
 
 Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
