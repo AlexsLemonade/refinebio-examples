@@ -142,6 +142,39 @@ stats <- topTable(fit, number = nrow(author.df)) %>%
 stats
 ```
 
+### 7) Double check results directions with a boxplot
+Let's pick a probe from the results to double check our output.
+
+```{r}
+stats[32, ]
+```
+
+According to the data above, we should see that affy probe id `8154846` should 
+be higher in `SHH` group data than in `NonSHH` group data.
+Let's extract this data and make a bopxplot to check if that is what we see.
+
+```{r}
+# Extract a gene's data from the original refine.bio data.frame
+test.probe <- author.df %>% 
+  tibble::rownames_to_column("probe_ids") %>%
+  dplyr::filter(probe_ids == stats$affy_probe_ids[32]) %>%
+  dplyr::select(-probe_ids) %>%
+  t()
+
+# Make a dataframe with the group information
+plot.df <- data.frame(test.probe, subgroup) %>%
+# Use ggplot2 to make a boxplot from this info
+ggplot2::ggplot(., ggplot2::aes(x = subgroup, y = test.probe)) + 
+  ggplot2::geom_boxplot() + 
+  ggplot2::theme_classic() +
+  ggplot2::ggtitle(paste("Probe ID:", stats$affy_probe_ids[32]))
+
+# Print the plot here
+plot.df
+```
+
+Looks like what we would expect to see.
+
 ## 6) Write statistics to output results file
 
 ```{r  Write results}

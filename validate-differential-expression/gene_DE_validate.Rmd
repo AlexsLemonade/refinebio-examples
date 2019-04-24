@@ -59,7 +59,7 @@ another for down-regulated genes.
 Ideally you will have table of differential expression results that will have:  
 
 1) A gene or probe identifier
-2) an indicator of regulation direction (eg. fold change)  
+2) The direction of the expression differences (often indicated by fold-change) 
 3) p-values that are corrected for multiple testing (e.g., FDR)  
 
 This example shows one method of summarizing and converting Affymetrix probe IDs
@@ -291,7 +291,7 @@ metadata$subgroup <- as.factor(metadata$subgroup)
 des.mat <- model.matrix(~ metadata$subgroup)
 
 # Make the column name more informative
-colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
+colnames(des.mat)[2] <- paste0(levels(metadata$subgroup), collapse = "vs")
 ```
 
 ## 6) Apply linear model
@@ -349,7 +349,33 @@ refine.bio.down.genes <- refine.bio.results %>%
   as.character()
 ```
 
-## 7) Set up exploration of overlap of the datasets differential expression
+### 7) Double check results directions with a boxplot
+Let's pick a couple genes from the Robinson and Northcott results to double check
+our output.
+We previously did this same test for the Northcott data in the in [`author_processed_DE`](./author_processed_DE.nb.html).
+
+```{r}
+# Extract a gene's data from the original refine.bio data.frame
+test.gene <- refine.bio.df %>% 
+  tibble::rownames_to_column("genes") %>%
+  dplyr::filter(genes == refine.bio.up.genes[12]) %>%
+  dplyr::select(-genes) %>%
+  t()
+
+# Make a dataframe with the group information
+plot.df <- data.frame(test.gene, subgroup = metadata$subgroup) %>%
+
+# Use ggplot2 to make a boxplot from this info
+ggplot2::ggplot(., ggplot2::aes(x = subgroup, y = test.gene)) + 
+  ggplot2::geom_boxplot() + 
+  ggplot2::theme_classic() +
+  ggplot2::ggtitle(paste("refine.bio up gene test:", refine.bio.up.genes[12]))
+
+# Print the plot here
+plot.df
+```
+
+## 8) Set up exploration of overlap of the datasets differential expression
 Here we will set up the data for making two Venn diagrams: one for overlap 
 between the datasets for up-regulated genes, the other for down-regulated genes.
 Determine overlap in up-regulated genes between datasets.
@@ -374,7 +400,7 @@ up.overlap <- VennDiagram::calculate.overlap(up.genes)
 down.overlap <- VennDiagram::calculate.overlap(down.genes)
 ```
 
-## 8) Make Venn diagrams
+## 9) Make Venn diagrams
 ### Overlap between up-regulated genes
 Make Venn diagram of up-regulation results and save to png.
 
@@ -448,7 +474,7 @@ grid::grid.draw(down.venn.plot);
 dev.off()
 ```
 
-## 9) Write overlapped gene list to tsv
+## 10) Write overlapped gene list to tsv
 Using `calculate.overlap`, we obtained a list of genes that were changed in both
 datasets. 
 If we want to extract the list of genes that are in both dataset, that is the 
