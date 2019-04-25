@@ -28,7 +28,7 @@ CRAN mirror near you with the `Change` button.
 You can open an R Notebook by opening the `.Rmd` file in RStudio.
 Note that working with R Notebooks requires certain R packages, but RStudio should prompt you to download them the first time you open one.
 This will allow you to modify and run the R code chunks.
-Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter**.
+Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for information about inserting and executing code chunks.
 
 ## What is pathway analysis?
