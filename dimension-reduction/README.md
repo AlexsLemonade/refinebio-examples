@@ -4,7 +4,8 @@ In this module, we'll demonstrate how to use dimension reduction techniques with
 gene expression data obtained from [refine.bio](https://www.refine.bio/).
 Dimension reduction is useful for examining overall patterns in your data.
 Reducing your data to two dimensions allows you to more easily plot your samples
-so you can observe global and local patterns in your dataset.
+so you can observe how they relate as a whole or which samples may group
+together.
 
 ## Principal Components Analysis (PCA)
 
