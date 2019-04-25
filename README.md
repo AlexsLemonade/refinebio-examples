@@ -100,7 +100,7 @@ In order to create a gct formatted file from a tsv refine.bio data file,
 reference the
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name
 of the file in your current directory that you would like to convert.
-Note: This script requires optparse library. If optparse library is not
+Note: This script requires `optparse` library. If `optparse` library is not
 installed, this script will install it for you.
 
 ##### Example of usage in command line:  
