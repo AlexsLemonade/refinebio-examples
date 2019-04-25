@@ -10,8 +10,8 @@ together.
 ## Principal Components Analysis (PCA)
 
 [This PCA example notebook](./pca_example.nb.html) illustrates how to perform PCA and plot the scores using ggplot2.
-PCA is a commonly used, more straight-forward dimension reduction technique that
-uses orthogonal transformation.  
+PCA is a commonly used dimension reduction technique that uses orthogonal
+transformation.  
 
 Recommended articles on PCA:   
 - [Overall explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c)  
