@@ -151,7 +151,7 @@ convert_ensembl_to_entrez_mat <- function(exprs_df) {
 [MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
 
 For more information or recommendations about gene sets, [see the **Gene Sets**
-section of the module README](https://github.com/AlexsLemonade/refinebio-examples/tree/master/pathway-analysis#gene-sets).
+section of the module README](https://github.com/AlexsLemonade/refinebio-examples/tree/master/pathway-analysis#choosing-gene-sets).
 
 We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs 
 and place them at the following relative path:
