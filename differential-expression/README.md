@@ -3,7 +3,7 @@ This directory contains example workflows of how to use identify differentially
 expressed genes in data from [refine.bio](https://www.refine.bio).
 
 ***
-### Differential Expression Analyses in R
+### Method 1: Differential Expression Analyses in this Repository
 
 [This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/gene_DE.Rmd)
 illustrates how to identify genes that are differentially expressed in a dataset
@@ -15,13 +15,11 @@ of the linear model.
 *Output:* Q-Q plot, volcano plot, GSE111111limmaResults.tsv  
 
 ***
-### Differential Expression Analyses in GenePattern
+#### Method 2: Creating Necessary Files for Differential Expression in GenePattern
 
 If you would like to complete your differential expression analysis using
 GenePattern, you will need to have a gct and CLS file, so follow these
 instructions below if you haven't created those files from your data yet.  
-
-#### Creating Files for Differential Expression in GenePattern
 
 #### gct format conversion
 Convert a gene expression tab separated values (tsv) file provided
@@ -30,12 +28,12 @@ In order to create a gct formatted file from a tsv refine.bio data file,
 reference the
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name
 of the file in your current directory that you would like to convert.
-Note: This script requires optparse library. If optparse library is not
+Note: This script requires `optparse` library. If `optparse` library is not
 installed, this script will install it for you.
 
 ##### Example of usage in command line:  
  ```bash
- $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
+ $ Rscript scripts/create_gct_file.R -f GSE111111.tsv -o outputfilename -r
  ```
  Options:   
 `-f` :name of the file in your current directory that you would like to convert.    
@@ -47,7 +45,7 @@ argument.
 The "gct" suffix will be added if you do not add it yourself.
 Be sure to either have the script and input file in your current working
 directory, or put type out the full directory path for the script and/or input
-file. eg `/users/Bob/Desktop/create_gct_file.R`
+file. eg. `/users/Bob/Desktop/create_gct_file.R`
 
 #### CLS format file creation
 CLS formatted files tell information regarding the groups or phenotype of the

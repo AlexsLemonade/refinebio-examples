@@ -116,7 +116,7 @@ argument.
 The "gct" suffix will be added if you do not add it yourself.
 Be sure to either have the script and input file in your current working
 directory, or put type out the full directory path for the script and/or input
-file. eg `/users/Bob/Desktop/create_gct_file.R`
+file. eg. `/users/Bob/Desktop/create_gct_file.R`
 
 #### CLS format file creation
 CLS formatted files tell information regarding the groups or phenotype of the
