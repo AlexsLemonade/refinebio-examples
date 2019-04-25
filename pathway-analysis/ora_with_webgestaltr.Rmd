@@ -12,12 +12,13 @@ date: 2019
 
 Over-representation analysis (ORA) is a method of pathway or gene set analysis
 where one can ask if a set of genes (e.g., those differentially expressed
-using some cutoff) has shares more or less genes with gene sets/pathways than
+using some cutoff) shares more or less genes with gene sets/pathways than
 we would expect at random.
 The other methodologies introduced throughout this module such as QuSAGE and
 GSEA can require more samples than a different expression analysis. 
 For instance, the sample label permutation step of GSEA is reported to
-perform poorly with 7 samples or less in each group (Yaari et al. _NAR_. 2013.).
+perform poorly with 7 samples or less in each group 
+([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
 It is not uncommon to have n ~ 3 for each group in a treatment-control 
 transcriptomic study, at which point identifying differentially expressed genes
 is possible.
@@ -38,6 +39,7 @@ Genes were tested for differential expression between the SHH and Groups 3 and
 4 subgroups of medulloblastoma in refine.bio-processed data from
 [Robinson et al. _Nature_. 2012.](https://doi.org/10.1038/nature11213)
 ([`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma)).
+We will read in these results from GitHub.
 
 ## Set up
 
@@ -94,7 +96,7 @@ Because we are testing if there is more overlap between a set of genes of
 interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene 
 Ontology (GO)) than we would expect at random, we need to identify an 
 appropriate background set. 
-Put another way, if a gene is not _measured_, it can not possibly be in
+Put another way, if a gene is _not measured_, it can not possibly be in
 our gene set of interest.
 We can provide our analysis method of choice with a reference list, which
 we will generate by selecting all the genes in the table of differential
@@ -126,7 +128,13 @@ note that WebGestalt has a new 2019 version).
 
 WebGestalt can perform multiple _types_ of pathway analysis. 
 Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological
-processes as our knowledgebase / source of gene sets.
+processes as our source of gene sets.
+We can see all supported gene sets for humans with `listGeneSet`.
+
+```{r}
+listGeneSet("hsapiens")
+```
+
 
 `WebGestaltR` will generate an HTML file with a report (path specified
 by the `outputDirectory` and `projectName` arguments) _and_ return a 
