@@ -140,7 +140,7 @@ if (file.exists(symbol_file)) {
   
   # using the default behavior for 1:many mappings here -- select the first one
   symbol_mappings <- mapIds(org.Mm.eg.db, keys = exprs_df$ENSEMBL, 
-                          column = "SYMBOL", keytype = "ENSEMBL")
+                            column = "SYMBOL", keytype = "ENSEMBL")
   
   # mapIds should give us back IDs in the same order as the keys, but we can
   # check to be sure
@@ -188,7 +188,7 @@ metadata_df <- metadata_df %>%
                 refinebio_specimen_part, refinebio_sex, strain)
 ```
 
-We're interested in the are calorie restricted vs.controls information, which
+We're interested in the are calorie-restricted vs. controls information, which
 is in the sample title.
 We can extract this and put it in its own column called `condition` as is good
 practice.
@@ -243,11 +243,7 @@ This returns a matrix of ssGSEA enrichment scores where the columns are samples
 and the rows are the input gene sets.
 
 ```{r}
-dim(ssgsea_results)
-```
-
-```{r}
-head(rownames(ssgsea_results))
+str(ssgsea_results)
 ```
 
 #### Identifying "interesting" features
@@ -300,20 +296,24 @@ comp_coag_df <- metadata_df %>%
                     by = c("refinebio_accession_code" = "sample_accession"))
 ```
 
-```{r}
+```{r fig.height=11, fig.width=8.5}
 comp_coag_df %>% 
   ggplot2::ggplot(ggplot2::aes(x = condition, 
                                y = ssgsea_score)) +
   ggplot2::geom_boxplot() +
   ggplot2::facet_grid(strain ~ refinebio_specimen_part) +
-  ggplot2::labs(y = "KEGG COMPLEMENT AND COAGULATION CASCADES") +
+  ggplot2::labs(y = "KEGG Complement and Coagulation Cascades") +
+  ggplot2::theme_bw() +
   # x-axis text at a 45 degree angle to increase readability
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                 text = ggplot2::element_text(size = 15))
 ```
 
 ```{r}
 # saving to file
-ggplot2::ggsave(file.path("plots", "GSE75574_ssgsea_comp_coag_facet.pdf"))
+ggplot2::ggsave(file.path("plots", "GSE75574_ssgsea_comp_coag_facet.pdf"),
+                plot = ggplot2::last_plot() + 
+                  ggplot2::theme( text = ggplot2::element_text(size = 10)))
 ```
 
 Looks like there may be some differences between tissues in this pathway, with
@@ -322,7 +322,7 @@ calorie-restricted vs. control comparison.
 We should always follow up with more formal analysis (e.g., QuSAGE), but 
 this series of steps is a good way to explore one's data.
 
-#### Aside: Gene set _size_ influences ssGSEA score values
+#### Aside: Gene set size influences ssGSEA score values
 
 ssGSEA score values are not necessarily comparable between gene sets of 
 different sizes (number of genes).
@@ -375,12 +375,13 @@ random_long_df <- as.data.frame(random_ssgsea_results) %>%
 
 # violin plot comparing no. genes / gene set size
 random_long_df %>%
-  ggplot2::ggplot(ggplot2::aes(y = ssgsea_score, x = gene_set_size)) +
+  ggplot2::ggplot(ggplot2::aes(x = gene_set_size, y = ssgsea_score)) +
   ggplot2::geom_violin() +
   ggplot2::coord_flip() +
   ggplot2::labs(title = "Random gene set scores",
                 x = "gene set size",
-                y = "ssGSEA score")
+                y = "ssGSEA score") +
+  ggplot2::theme_bw()
 ```
 
 Note how a smaller gene set results in a larger range of scores.
