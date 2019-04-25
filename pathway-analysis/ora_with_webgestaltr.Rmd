@@ -135,7 +135,6 @@ We can see all supported gene sets for humans with `listGeneSet`.
 listGeneSet("hsapiens")
 ```
 
-
 `WebGestaltR` will generate an HTML file with a report (path specified
 by the `outputDirectory` and `projectName` arguments) _and_ return a 
 `data.frame`.
