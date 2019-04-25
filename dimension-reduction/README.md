@@ -20,8 +20,6 @@ Recommended articles on PCA:
 
 This notebook illustrates how to perform Uniform Manifold Approximation and
 Projection and plot the coordinates using ggplot2.
-UMAP is a newer dimension reduction technique that can seemingly yield more
-biologically intuitive scatterplots than PCA.
 UMAP does require more dimensions than PCA, though, so if you have a smaller
 dataset (less than 20) and you obtain errors, you may not be able to run UMAP
 for your dataset.
