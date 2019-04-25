@@ -2,42 +2,91 @@
 This repository contains example workflows of how to use data downloaded from
 [refine.bio](https://www.refine.bio).
 
-## How to use:
+## Getting started
 
-If you are comfortable with GitHub, we recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
+### How to use this repository
+We recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
 this repository and following the examples.
 You can also use the green button that says "Clone or download" to "Download
 ZIP" and then use these notebooks as you please on your own computer, if you
 prefer.
 
-In each directory, there is a `README` that explains how to complete the
-analyses with the R or GenePattern notebooks.
-If you are following the instructions for completing the analyses in R, open the
-R markdown (`Rmd`) and follow the instructions.
-You will also see the example output files which are generally TSV or PNG files.
-All the data used in these examples are deposited into the `data/`
-directory and are referenced as such in the R Notebooks.
+Each directory in this repository is a training module with example analyses to
+follow. See the [list of training modules](#Training modules in this repository )
+below for list of the analysis topics.
 
-*For most of the example workflows, two general methods of completing the analyses are discussed:*  
+*Each training module/directory has the following:*
 
-### [R markdown](https://rmarkdown.rstudio.com/articles_intro.html)  
-Workflows using R markdown have example analyses that could be applied to other
-refine.bio formatted data.
-The advantage of using these examples is that they were specifically for use
-with refine.bio formatted data and associated metadata.
+- A`README` that introduces you to the concepts and example analyses in that module.
+- Example dataset(s) in the `data/` folder
+- An R markdown (`Rmd`) file that you can use in RStudio to run the analysis
+- An R notebook (`nb.html`) file that is the resulting output of the Rmd file
+but in a prettier format.
+- A `results` and/or `plots` folder(s) that contains the output of the analyses.
 
-### [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
+As you are more comfortable with the examples, we encourage you to apply these
+example workflows to your own refine.bio data.
+After downloading a refine.bio dataset, you can analyze them in these examples
+by copying and pasting your data and metadata TSV files from your refine.bio
+download file into the respective `data/` folder for that module.
+You'll need to change any directory paths in the notebook to have the name of
+your own dataset.
+You will likely have to alter other steps of the examples, particularly those
+having to deal with the metadata.
+
+### Requirements for using these workflows:
+
+#### RStudio
+In order to use the R notebooks, you will need to have [RStudio](https://www.rstudio.com/products/RStudio/)
+set up on your computer.
+If you are new to RStudio, we recommend going through
+[this quick tutorial to RStudio](https://github.com/AlexsLemonade/training-modules/blob/master/intro_to_R_tidyverse/00-rstudio_guide.md)
+before getting started.
+After you have RStudio set up, you will be able to open the R markdowns (`Rmd`)
+and run the analyses.
+
+#### Tidyverse R Packages
+The [Tidyverse packages](https://www.tidyverse.org/) are used in every notebook,
+so you will need to install this group of packages beforehand (if you haven't
+installed them previously.)
+To install these packages, enter this command in the R console:
+```
+install.packages("tidyverse")
+```
+Any other R packages you need for the example analyses will be installed within
+the example as a step.
+
+## Training modules in this repository  
+
+1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
+
+2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
+
+3. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
+
+4. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
+
+5. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
+
+6. [Validate differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
+
+7. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
+
+
+## Examples besides outside this repository: GenePattern notebooks
+Lastly, for users who are more comfortable with Python, or are not comfortable
+with using scripts, the [GenePattern notebooks](https://cloud.genepattern.org/)
+are written in Python but can be run using a graphics user interface (GUI).
 Workflows using GenePattern notebooks contain
 [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
-For users who are more comfortable with Python, or are not comfortable with
-using scripts, the GenePattern notebooks are written in Python but can be
-run using a graphics user interface (GUI).
+You will need to create a GenePattern login to use these.
 For use with GenePattern notebooks, data from refine.bio needs to be converted
 to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 This repository includes
 [scripts](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/)
-for easy conversion of refine.bio data into these formats from command line.
+for easy conversion of refine.bio data into these formats from command line to
+get you started.
 
 #### Converting files to GenePattern compatible formats
 Example [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
@@ -56,7 +105,7 @@ installed, this script will install it for you.
 
 ##### Example of usage in command line:  
  ```bash
- $ Rscript create_gct_file.R -f GSE111111.tsv -o outputfilename -r
+ $ Rscript scripts/create_gct_file.R -f GSE111111.tsv -o outputfilename -r
  ```
  Options:   
 `-f` :name of the file in your current directory that you would like to convert.    
@@ -76,17 +125,3 @@ different samples and are necessary for doing gene expression differential
 analysis using GenePattern's notebooks. If you've already created a gct format
 file from your data, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
-
-# Table of Contents  
-
-1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
-
-2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
-
-3. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
-
-4. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
-
-5. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
-
-6. [Validate differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
