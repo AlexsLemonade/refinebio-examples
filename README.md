@@ -6,13 +6,13 @@ This repository contains example workflows of how to use data downloaded from
 
 ### How to use this repository
 We recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
-this repository and following the examples.
+this repository and following the example analyses.
 You can also use the green button that says "Clone or download" to "Download
-ZIP" and then use these notebooks as you please on your own computer, if you
+ZIP" and then use this repository as you please on your own computer, if you
 prefer.
 
 Each directory in this repository is a training module with example analyses to
-follow. See the [list of training modules](#Training modules in this repository )
+follow. See the [list of training modules](#Training modules in this repository)
 below for list of the analysis topics.
 
 *Each training module/directory has the following:*
@@ -73,7 +73,7 @@ the example as a step.
 7. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
 
 
-## Examples besides outside this repository: GenePattern notebooks
+## Examples outside this repository: GenePattern notebooks
 Lastly, for users who are more comfortable with Python, or are not comfortable
 with using scripts, the [GenePattern notebooks](https://cloud.genepattern.org/)
 are written in Python but can be run using a graphics user interface (GUI).
