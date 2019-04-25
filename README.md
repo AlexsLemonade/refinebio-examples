@@ -12,8 +12,7 @@ ZIP" and then use this repository as you please on your own computer, if you
 prefer.
 
 Each directory in this repository is a training module with example analyses to
-follow. See the [list of training modules](#Training modules in this repository)
-below for list of the analysis topics.
+follow. See the list of `Training modules` below for list of the analysis topics.
 
 *Each training module/directory has the following:*
 
