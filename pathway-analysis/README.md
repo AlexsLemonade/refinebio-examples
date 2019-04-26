@@ -68,7 +68,7 @@ Below, we briefly introduce some commonly used gene set sources.
 
 QuSAGE, GSEA, and other pathway analysis methods allow you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), a common format for storing gene sets.
 
-The [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb) offers genesets in GMT format ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102), [Liberzon et al. _Bioinformatics_. 2011.](https://doi.org/10.1093/bioinformatics/btr260)).
+The [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in GMT format ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102), [Liberzon et al. _Bioinformatics_. 2011.](https://doi.org/10.1093/bioinformatics/btr260)).
 [Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2) 
 such as [KEGG](https://www.genome.jp/kegg/) ([Kanehisa et al. _NAR_. 2000.](https://doi.org/10.1093/nar/28.1.27), [Kanehisa et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkw1092), [Kanehisa et al. _NAR_. 2019.](https://doi.org/10.1093/nar/gky962)) are a good starting point for any pathway analysis. 
 From the [MSigDB documentation](http://software.broadinstitute.org/gsea/msigdb/collection_details.jsp#C2), curated gene sets are:
