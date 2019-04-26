@@ -143,6 +143,20 @@ However, you may find that our example workflows will help you prepare data for 
 ### ssGSEA
 
 Single-sample GSEA (ssGSEA) is a method for calculating enrichment scores for individual samples ([Barbie et al. _Nature_. 2009.](https://dx.doi.org/10.1038/nature08460)).
-This can be useful if you are not sure what phenotypic groups you'd like to compare.
+This can be useful if you are not sure what phenotypic groups you'd like to compare and are interested in exploring what pathways have the highest variance in your data or produce enrichment scores that are correlated with some phenotypic measurement.
+
+We demonstrate how to [**perform exploratory data analysis with ssGSEA using the `GSVA` package**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ssgsea_example.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/ssgsea_example.Rmd)).
+Note that there is also an ssGSEA GenePattern module ([docs](https://gsea-msigdb.github.io/ssGSEAProjection-gpmodule/v9/index.html)).
 
 ### Over-representation analysis with WebGestalt
+
+Over-representation analysis (ORA) is a method of pathway or gene set analysis where one can ask if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
+The other methodologies introduced throughout this module such as QuSAGE and GSEA can require more samples than a different expression analysis. 
+For instance, the sample label permutation step of GSEA is reported to perform poorly with 7 samples or less in each group ([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
+It is not uncommon to have n = 3 for each group in a treatment-control transcriptomic study, at which point identifying differentially expressed genes is possible.
+If you are performing pathway or gene set analysis on a study of this size, you may be best served by ORA.
+There are some limitations to ORA methods to be aware such as ignoring gene-gene correlation.
+See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) to learn more about the different types of pathway analysis and their limitations.
+
+We provide an example workflow for [**performing over-representation analysis with `WebGestaltR`**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ora_with_webgestaltr.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/ora_with_webgestaltr.Rmd)).
+WebGestalt also has a [web interface](http://www.webgestalt.org/) and is not limited to ORA.
