@@ -1,4 +1,4 @@
-# Pathway analysis
+# refine.bio Examples: Pathway analysis
 
 **Table of Contents**
 
