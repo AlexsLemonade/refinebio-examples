@@ -10,7 +10,7 @@ This module requires you to install the following software to run examples yours
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
 * [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
-* [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing from CRAN.
+* [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
 These requirements can be installed by following the instructions at the links above. 
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
@@ -29,7 +29,7 @@ You can open an R Notebook by opening the `.Rmd` file in RStudio.
 Note that working with R Notebooks requires certain R packages, but RStudio should prompt you to download them the first time you open one.
 This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
-See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for information about inserting and executing code chunks.
+See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
 
 ## What is pathway analysis?
 
