@@ -11,4 +11,7 @@ If you are interested in comparing your own data to data you have downloaded fro
 
 You can read more about the reference distribution and how it is generated in the [quantile normalization section](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization) of our [documentation](http://docs.refine.bio/en/latest/).
 
-In this [example notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data/quantile_normalize_own_data.Rmd), we demonstrate how to obtain the reference distribution from the refine.bio API and apply it to your own data in R.
+In this [example notebook](https://alexslemonade.github.io/refinebio-examples/normalize-own-data/quantile_normalize_own_data.nb.html), we demonstrate how to obtain the reference distribution from the refine.bio API and apply it to your own data in R.
+The R package we use for quantile normalization ([`preprocessCore`](https://bioconductor.org/packages/release/bioc/html/preprocessCore.html)) expects a matrix where samples are columns and genes are rows.
+Any tabular format that can be read into R and follows this format (or can be easily transposed) is appropriate.
+In our example, we use a TSV file where samples are columns and genes are rows.
