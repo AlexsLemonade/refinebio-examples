@@ -52,7 +52,8 @@ See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/noteb
 
 For all the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
-We'd also recommend maintaining the project structure that is in place by placing any new GMT files in a `gene-sets/` directory and saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
+We'd also recommend maintaining the project structure that is in place by placing any new GMT files in a `gene-sets/` directory.
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
 Note that if your GMT files use different identifiers than the GMT files used in the notebooks, you will need to make additional changes to the code.
 
 ## What is pathway analysis?
