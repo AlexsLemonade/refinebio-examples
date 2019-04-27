@@ -11,7 +11,7 @@ This module requires you to install the following software to run the example yo
 * [**tidyverse**](https://www.tidyverse.org/)
 * [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
-* **wget** - [installation instructions for Mac with Homebrew](https://www.maketecheasier.com/install-wget-mac/), [installation instructions for Windows 10]() (under _Install WGET in Windows 10_), [installation instructions for Debian or Ubuntu Linux](https://www.cyberciti.biz/faq/how-to-install-wget-togetrid-of-error-bash-wget-command-not-found/)
+* **wget** - [installation instructions for Mac with Homebrew](https://www.maketecheasier.com/install-wget-mac/), [installation instructions for Windows 10](https://builtvisible.com/download-your-website-with-wget/) (under _Install WGET in Windows 10_), [installation instructions for Debian or Ubuntu Linux](https://www.cyberciti.biz/faq/how-to-install-wget-togetrid-of-error-bash-wget-command-not-found/)
 
 These requirements can be installed by following the instructions at the links above. 
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
