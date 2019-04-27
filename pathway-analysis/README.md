@@ -38,8 +38,7 @@ The example R Notebooks are designed to check if additional required packages ar
 We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/training-modules/blob/master/intro_to_R_tidyverse/00-rstudio_guide.md) as part of our training content that you may find helpful if you're getting started with RStudio for the first time.
 
 Note that the first time you open RStudio, you should select a CRAN mirror. 
-You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a
-CRAN mirror near you with the `Change` button.
+You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
 
 #### Interacting with R Notebooks
 
@@ -48,6 +47,13 @@ Note that working with R Notebooks requires certain R packages, but RStudio shou
 This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
+
+#### Using your own data
+
+For all the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
+If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
+We'd also recommend maintaining the project structure that is in place by placing any new GMT files in a `gene-sets/` directory and saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
+Note that if your GMT files use different identifiers than the GMT files used in the notebooks, you will need to make additional changes to the code.
 
 ## What is pathway analysis?
 
