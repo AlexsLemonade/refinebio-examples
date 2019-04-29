@@ -23,6 +23,10 @@ We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/tra
 Note that the first time you open RStudio, you should select a CRAN mirror. 
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
 
+#### Obtaining the R Notebooks
+
+To run the examples yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
+
 #### Interacting with R Notebooks
 
 You can open an R Notebook by opening the `.Rmd` file in RStudio.
