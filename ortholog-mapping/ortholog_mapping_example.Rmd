@@ -15,6 +15,7 @@ You can read more about the package
 [here](https://stephenturner.github.io/hcop).
 
 ## 1) Install `hcop`
+
 We'll need to use the 
 [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) 
 package to install `hcop` from Github.
@@ -58,6 +59,7 @@ if (!dir.exists("results")) {
 ```
 
 ## 2) Mapping zebrafish Ensembl gene IDs to human symbols
+
 `hcop` supports mapping between zebrafish and human identifiers. 
 Here, we'll use zebrafish data from refine.bio and annotate it with human gene
 symbols.
@@ -128,6 +130,7 @@ readr::write_tsv(human.symbol.df, file.path("results",
 ```
 
 *There are some things to note:*
+
 * Multiple zebrafish Ensembl gene IDs map to the same human symbol which results
 in duplicated human gene symbols. Some downstream tools may need this to be
 resolved.
