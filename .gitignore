@@ -22,3 +22,6 @@ pathway-analysis/data/GSE37382
 
 # large experiment
 pathway-analysis/data/GSE75574
+
+# markdown spellcheck
+.spelling
