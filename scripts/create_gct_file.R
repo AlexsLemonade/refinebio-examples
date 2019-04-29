@@ -5,7 +5,7 @@
 #
 # Options:
 # "-f" name of the file in your current directory that you would like to convert.
-# "-r" file of the same name as the oiutput will be rewritten
+# "-r" file of the same name as the output will be rewritten
 # "-o" name for the output file (optional)
 
 # Example of usage in command line:
@@ -16,7 +16,7 @@
 
 if (!("optparse" %in% installed.packages())) {
   message("Installing optparse library...")
-  install.packages("optparse")
+  install.packages("optparse", repos='http://cran.us.r-project.org')
 }
 
 # Require optparse
@@ -88,6 +88,7 @@ write(header, file = opt$output)
 # to recognize it so we suppress that warning
 suppressWarnings(write.table(df, row.names = FALSE, opt$output, append = TRUE,
                              quote = FALSE, sep="\t"))
+
 
 # Print out message so the user knows the file is made
 message(paste("Your .gct file has been made and is called:", opt$output))
