@@ -11,8 +11,8 @@ You can also use the green button that says "Clone or download" to "Download
 ZIP" and then use this repository as you please on your own computer, if you
 prefer.
 
-Each directory in this repository is a training module with example analyses to
-follow. See the list of `Training modules` below for list of the analysis topics.
+Each directory in this repository is a set of example workflows to follow.
+See the list of `Example Workflows` below for list of the analysis topics.
 
 *Each training module/directory has the following:*
 
@@ -23,7 +23,7 @@ follow. See the list of `Training modules` below for list of the analysis topics
 but in a prettier format.
 - A `results` and/or `plots` folder(s) that contains the output of the analyses.
 
-As you are more comfortable with the examples, we encourage you to apply these
+As you get more comfortable with the examples, we encourage you to apply these
 example workflows to your own refine.bio data.
 After downloading a refine.bio dataset, you can analyze them in these examples
 by copying and pasting your data and metadata TSV files from your refine.bio
@@ -55,7 +55,7 @@ install.packages("tidyverse")
 Any other R packages you need for the example analyses will be installed within
 the example as a step.
 
-## Training modules in this repository  
+## Example workflows in this repository  
 
 1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
 
@@ -78,7 +78,7 @@ with using scripts, the [GenePattern notebooks](https://cloud.genepattern.org/)
 are written in Python but can be run using a graphics user interface (GUI).
 Workflows using GenePattern notebooks contain
 [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
-You will need to create a GenePattern login to use these.
+You will need to create a GenePattern account to use these.
 For use with GenePattern notebooks, data from refine.bio needs to be converted
 to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).

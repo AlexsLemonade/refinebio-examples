@@ -90,4 +90,4 @@ suppressWarnings(write.table(df, row.names = FALSE, opt$output, append = TRUE,
                              quote = FALSE, sep="\t"))
 
 # Print out message so the user knows the file is made
-message(paste("Congrats. Your .gct file has been made and is called:", opt$output))
+message(paste("Your .gct file has been made and is called:", opt$output))
