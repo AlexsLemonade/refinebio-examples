@@ -1,6 +1,7 @@
 # Refine.bio Example Workflow: Differential expression
 
-[This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/gene_DE.nb.html)
+[This notebook](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)
+
 takes data and metadata from refine.bio and identifies differentially expressed genes.
 This script is very generally applicable to pre-processed RNA-Seq or microarray data.
 
@@ -55,7 +56,7 @@ If you would like to do differential expression but would prefer using GenePatte
 ### Preparing your refine.bio data for GenePattern
 
 In order to complete your differential expression analysis using [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), you will need to have:  
- 1) a gct file    
+ 1) a GCT file    
  2) a CLS file  
 You can follow the steps below to create these files from your refine.bio data.
 
