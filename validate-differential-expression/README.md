@@ -53,5 +53,5 @@ This is partially so that this notebook’s approach can be applied to any diffe
 2) The direction of the expression differences (often indicated by fold-change)
 3) p-values that are corrected for multiple testing (e.g., FDR)
 
-Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate.Rmd`](./gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
+Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](./gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
 We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this example](./gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
