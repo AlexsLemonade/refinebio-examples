@@ -27,7 +27,7 @@ You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting 
 
 #### Obtaining the R Notebooks
 
-To run the examples yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
+To run the example yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
 
 #### Interacting with R Notebooks
 
