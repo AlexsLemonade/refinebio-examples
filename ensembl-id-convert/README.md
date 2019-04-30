@@ -10,7 +10,6 @@ This module requires you to install the following software to run examples yours
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
 * [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
-* [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
 These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
