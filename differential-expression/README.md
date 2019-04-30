@@ -46,7 +46,7 @@ set up and hypotheses.
 [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
 contain [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
 For users who are more comfortable with Python, or are not comfortable with
-using scripts, the GenePattern notebooks are written in Python but can be run using a graphics user interface (GUI).
+using R Notebooks, the GenePattern notebooks are written in Python but can be run using a graphics user interface (GUI).
 To use GenePattern, you have to create an account.
 For use with GenePattern notebooks, data from refine.bio needs to be converted to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
@@ -55,8 +55,8 @@ If you would like to do differential expression but would prefer using GenePatte
 ### Preparing your refine.bio data for GenePattern
 
 In order to complete your differential expression analysis using [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), you will need to have:  
- 1) gct file    
- 2) CLS file  
+ 1) a gct file    
+ 2) a CLS file  
 You can follow the steps below to create these files from your refine.bio data.
 
 #### Create a gct file
@@ -85,4 +85,4 @@ CLS formatted files tell information regarding the groups or phenotype of the di
 If you've already created a gct format file from your data, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
-*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a Differential Expression module, and follow the instructions to upload and analyze your newly created gct and CLS files*
+*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` module, and follow the instructions to upload and analyze your newly created gct and CLS files*
