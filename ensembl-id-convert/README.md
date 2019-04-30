@@ -28,7 +28,7 @@ To run the examples yourself, you will need to [clone](https://help.github.com/a
 
 #### Interacting with R Notebooks
 
-You can open an R Notebook by opening the `.Rmd` file in RStudio.
+You can open the R Notebook by opening the `.Rmd` file in RStudio.
 Note that working with R Notebooks requires certain R packages, but RStudio should prompt you to download them the first time you open one.
 This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
@@ -36,7 +36,7 @@ See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/noteb
 
 #### Using your own data
 
-For the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
-If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
-We suggest saving the results to the `results/` directories as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
-[The notebook](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) also mentions on how you can change the workflow for different species or different identifier types.
+For the example in this module, the gene expression data and sample metadata are stored in a `data/` directory.
+If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebook to match these files.
+The output of the notebook is a TSV file that contains annotation with gene symbols; this filename should be updated as well.
+We suggest saving the output in the `results/` directory, as this is automatically created by the notebook if moved outside of the GitHub repository structure.
