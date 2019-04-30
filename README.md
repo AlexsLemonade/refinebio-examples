@@ -7,31 +7,25 @@ This repository contains example workflows of how to use data downloaded from
 ### How to use this repository
 We recommend [cloning](https://help.github.com/articles/cloning-a-repository/)
 this repository and following the example analyses.
-You can also use the green button that says "Clone or download" to "Download
-ZIP" and then use this repository as you please on your own computer, if you
-prefer.
+You can also use the green button that says "Clone or download" to "Download ZIP" and then use this repository as you please on your own computer, if you prefer.
 
 Each directory in this repository is a set of example workflows to follow.
-See the list of `Example Workflows` below for list of the analysis topics.
+See the list of [**Example Workflows**](#example-workflows-in-this-repository)
+below for list of the analysis topics.
 
 *Each directory is its own set of example workflows and contains:*
 
-- A`README` that introduces you to the concepts and example analyses in that module.
+- A `README` that introduces you to the concepts, requirements, and workflows for that module.
 - Example dataset(s) in the `data/` folder
 - An R markdown (`Rmd`) file that you can use in RStudio to run the analysis
 - An R notebook (`nb.html`) file that is the resulting output of the Rmd file
-but in a prettier format.
+rendered as an HTML file.
 - A `results` and/or `plots` folder(s) that contains the output of the analyses.
 
-As you get more comfortable with the examples, we encourage you to apply these
-example workflows to your own refine.bio data.
-After downloading a refine.bio dataset, you can analyze them in these examples
-by copying and pasting your data and metadata TSV files from your refine.bio
-download file into the respective `data/` folder for that module.
-You'll need to change any directory paths in the notebook to have the name of
-your own dataset.
-You will likely have to alter other steps of the examples, particularly those
-having to deal with the metadata.
+As you get more comfortable with the examples, we encourage you to apply these example workflows to your own refine.bio data.
+After downloading a refine.bio dataset, you can analyze them in these examples by placing the gene expression and metadata TSV files from your refine.bio download file into the respective `data/` folder for that module.
+You'll need to change any file names in the notebook to correspond to your own dataset.
+You will likely have to alter other steps of the examples, particularly those cleaning or filtering based on metadata.
 
 ## General requirements for the example workflows
 
@@ -44,25 +38,24 @@ This module requires you to install the following software to run examples yours
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html)
 will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
-These requirements can be installed by following the instructions at the links
-above.
-The example R Notebooks are designed to check if additional required packages
-are installed and will install them if they are not.
-Each example workflow directory will include further instructions for how to
-follow along with the examples.
+These requirements can be installed by following the instructions at the links above.
+The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
+Each example workflow directory will include further instructions for how to follow along with the examples.
 
 ## Example workflows in this repository  
 
 1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
 
-2. [Annotation using Ensembl IDs](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
+2. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
 
-3. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
+3. [Validating differential expression results using refine.bio data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
 
-4. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
+4. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
 
-5. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
+5. [Dimension Reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction)
 
-6. [Validate differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
+6. [Converting from Ensembl gene IDs to another identifier](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
 
-7. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
+7. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
+
+8. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
