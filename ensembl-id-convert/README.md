@@ -38,5 +38,5 @@ See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/noteb
 
 For the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
+We suggest saving the results to the `results/` directories as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
 [The notebook](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) also mentions on how you can change the workflow for different species or different identifier types.
