@@ -1,4 +1,4 @@
-# Dimension Reduction
+# refine.bio Examples: Dimension Reduction
 
 In this module, we'll demonstrate how to use dimension reduction techniques with
 gene expression data obtained from [refine.bio](https://www.refine.bio/).
