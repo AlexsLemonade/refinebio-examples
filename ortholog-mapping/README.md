@@ -15,7 +15,7 @@ This module requires you to install the following software to run the example yo
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
 These requirements can be installed by following the instructions at the links above. 
-The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
+The R Notebook is designed to check if additional required packages are installed and will install them if they are not.
 Note that this notebook does check if `devtools` is installed, but we have encountered some trouble with missing system requirements and recommend installing the package prior to running the notebook.
 
 #### RStudio
