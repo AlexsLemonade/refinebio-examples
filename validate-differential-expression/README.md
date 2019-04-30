@@ -1,13 +1,15 @@
 # refine.bio Examples: Validate Differential Expression
 
-These notebooks compare the differential expression results from a refine.bio dataset to an non-refine.bio dataset with a similar experimental set up.
-You may obtain differential expression results from your own data or a collaborator’s data. It is good practice to validate your findings in another dataset that measures a similar tissue with a similar experimental design.
+These notebooks compare the differential expression results from a refine.bio dataset to an non-refine.bio dataset that both have a similar experimental set up.
+
+You may obtain differential expression results from your own data or a collaborator’s data.
+It is good practice to validate your findings in another dataset that measures a similar tissue with a similar experimental design.
 You can use refine.bio datasets and the steps in this example to quickly check for agreement with your results.
 
 **Example Workflow R Notebooks**
 
-* [Performing differential expression on a non-refine.bio dataset](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html)
-* [Analyzing overlap of differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)
+* [Performing differential expression on a non-refine.bio dataset](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html) - this notebook is showing how we obtained differential expression results for our non-refine.bio dataset
+* [Analyzing overlap of differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) - this notebook compares the differential expression results of the two datasets
 
 ## Requirements and usage
 
