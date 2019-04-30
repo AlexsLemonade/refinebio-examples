@@ -41,41 +41,48 @@ to help you set up your model in a way that takes into account your experimental
 set up and hypotheses.
 
 ***
-### Alternative differential expression method with GenePattern
+## Alternative differential expression analysis with GenePattern
 
-If you would like to complete your differential expression analysis using
-GenePattern, you will need to have a gct and CLS file, so follow these
-instructions below if you haven't created those files from your data yet.  
+[GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
+contain [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
+For users who are more comfortable with Python, or are not comfortable with
+using scripts, the GenePattern notebooks are written in Python but can be run using a graphics user interface (GUI).
+To use GenePattern, you have to create an account.
+For use with GenePattern notebooks, data from refine.bio needs to be converted to GenePattern
+[formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
+If you would like to do differential expression but would prefer using GenePattern, follow the instructions below.
 
-#### gct format conversion
-Convert a gene expression tab separated values (tsv) file provided
-into a gene cluster text (gct) file for use in GenePattern notebooks.
-In order to create a gct formatted file from a tsv refine.bio data file,
-reference the
-[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name
-of the file in your current directory that you would like to convert.
-Note: This script requires `optparse` library. If `optparse` library is not
-installed, this script will install it for you.
+### Preparing your refine.bio data for GenePattern
+
+In order to complete your differential expression analysis using [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), you will need to have:  
+ 1) gct file    
+ 2) CLS file  
+You can follow the steps below to create these files from your refine.bio data.
+
+#### Create a gct file
+
+Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (gct) file for use in GenePattern notebooks.
+In order to create a gct formatted file from a TSV refine.bio data file, reference the
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
+Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 
 ##### Example of usage in command line:  
  ```bash
  $ Rscript scripts/create_gct_file.R -f GSE111111.tsv -o outputfilename -r
  ```
- Options:   
+Options:     
 `-f` :name of the file in your current directory that you would like to convert.    
 `-r` :file of the same name as the output will be rewritten (*optional*)       
 `-o` :name for the output file (*optional*)       
 
-Optionally you can designate the name of the output file by adding an `-o`
-argument.
+Optionally you can designate the name of the output file by adding an `-o` argument.
 The "gct" suffix will be added if you do not add it yourself.
-Be sure to either have the script and input file in your current working
-directory, or put type out the full directory path for the script and/or input
-file. eg. `/users/Bob/Desktop/create_gct_file.R`
+Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/differential-expression-create_gct_file.R`
 
-#### CLS format file creation
-CLS formatted files tell information regarding the groups or phenotype of the
-different samples and are necessary for doing gene expression differential
-analysis using GenePattern's notebooks. If you've already created a gct format
-file from your data, you can create a a CLS format using GenePattern's online
+#### Create a CLS format file
+
+CLS formatted files tell information regarding the groups or phenotype of the different samples and are necessary for doing gene expression differential analysis using GenePattern's notebooks.
+If you've already created a gct format file from your data, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
+
+*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a Differential Expression module, and follow the instructions to upload and analyze your newly created gct and CLS files*
