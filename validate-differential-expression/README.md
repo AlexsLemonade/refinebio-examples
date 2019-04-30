@@ -47,7 +47,7 @@ We suggest saving plots and results to `plots/` and `results/` directories, resp
 There are a number of ways to compare differential expression results, but this notebook’s example takes the simplest approach of looking at overlap of gene lists.
 This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output meets certain criteria listed below. *At the bare minimum, you will need two gene lists, one for up-regulated and another for down-regulated genes.*
 
-*Ideally* you will have table of differential expression results that will have:
+**Ideally you will have table of differential expression results that will have:**
 
 1) A gene or probe identifier
 2) The direction of the expression differences (often indicated by fold-change)
