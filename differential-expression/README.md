@@ -67,6 +67,7 @@ In order to create a GCT formatted file from a TSV refine.bio data file, downloa
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
+  
 If you need more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
 
 Options:     
@@ -80,9 +81,9 @@ Options:
   --file <PATH TO REFINE.BIO EXPRESSION TSV> \
   --output <PATH TO NEW GCT FILE>
  ```
-Replace the <PATH TO REFINE.BIO EXPRESSION TSV> with your file name eg.
+Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name eg.
 `differential-expression/data/HOMO_SAPIENS.tsv`
-Here's an example of the above, where we put the dataset we want to convert in `differential-expression/data/` and are naming the output file `gct_HOMO_SAPIENS` but saving it to the same directory.
+Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `gct_HOMO_SAPIENS` but saving it to the same directory.
 
 ```bash
 $ Rscript scripts/create_gct_file.R \
