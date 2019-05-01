@@ -1,7 +1,7 @@
 # Refine.bio Example Workflow: Differential expression
 
 [This notebook](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)
-takes data and metadata from refine.bio and identifies differentially expressed genes.
+takes data and metadata from refine.bio and identifies genes that are differentially expressed between two groups.
 
 ## Requirements and usage
 
@@ -67,13 +67,13 @@ In order to create a GCT formatted file from a TSV refine.bio data file, downloa
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
-  
+
 If you need more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
 
-Options:     
-`--file` :name of the file in your current directory that you would like to convert.    
-`--rewrite` :file of the same name as the output will be rewritten (*optional*)       
-`--output` :name for the output file, the ".gct" suffix will be added if you do not add it yourself  (*optional*)
+Arguments:     
+`--file`: name of the file in your current directory that you would like to convert.      
+`--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself  (*optional*)
+`--rewrite`: file of the same name as the output will be rewritten (*optional*)     
 
 ##### Examples of usage in command line:  
  ```bash
@@ -81,19 +81,32 @@ Options:
   --file <PATH TO REFINE.BIO EXPRESSION TSV> \
   --output <PATH TO NEW GCT FILE>
  ```
-Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name eg.
+
+ Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name, e.g.,
 `differential-expression/data/HOMO_SAPIENS.tsv`
-Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `gct_HOMO_SAPIENS` but saving it to the same directory.
+Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `HOMO_SAPIENS.gct` but saving it to the same directory.
 
 ```bash
 $ Rscript scripts/create_gct_file.R \
  --file differential-expression/data/HOMO_SAPIENS.tsv \
- --output differential-expression/data/gct_HOMO_SAPIENS
+ --output differential-expression/data/HOMO_SAPIENS.gct
 ```
+
+Let's say you run the above again but want the output of `HOMO_SAPIENS.gct` to be overwritten, by default, this script will overwrite your file, but will give you a warning message that tells you there is already a file of that name.
+If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite`.
+
+```bash
+$ Rscript scripts/create_gct_file.R \
+ --file differential-expression/data/HOMO_SAPIENS.tsv \
+ --output differential-expression/data/HOMO_SAPIENS.gct \
+ --rewrite
+```
+
+Also note that for bash commands, a `\` indicates that the command continues on the next line.
 
 #### Create a CLS format file
 
-CLS formatted files tell information regarding the groups or phenotype of the different samples and are necessary for doing gene expression differential analysis using GenePattern's notebooks.
+CLS formatted files provide the sample groups or phenotype information and are necessary for performing gene expression differential analysis using GenePattern.
 If you've already created a GCT format file from your data, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
