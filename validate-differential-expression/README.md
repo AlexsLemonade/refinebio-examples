@@ -14,7 +14,8 @@ This notebook compares the differential expression results of the two datasets:
 1) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html).  
 2) A refine.bio-processed dataset's differential expression results - which are carried out within [the notebook](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).  
 
-For this example workflow the gene expression datasets and sample metadata are stored in a `data/` directory.
+The comparison in this example results in a Venn diagram that illustrates the overlap of the two datasets' differentially-regulated genes.
+For this example workflow, the gene expression datasets and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
 
 ### Validating your own differential expression results with refine.bio data
