@@ -9,7 +9,7 @@ It is good practice to validate your findings in another dataset that measures a
 You can use refine.bio datasets and the steps in this example to quickly check for agreement with your results.
 In order to use this example workflow with your own results, you will need the following fields in your table.
 
-####**Required fields for differential expression results:**
+#### **Required fields for differential expression results:**
 1) A gene or probe identifier
 2) The direction of the expression differences (often indicated by fold-change)
 3) p-values that are corrected for multiple testing (e.g., FDR)
@@ -81,4 +81,4 @@ There are a number of ways to compare differential expression results, but [this
 This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output meets [certain criteria listed above](#required-fields-for-differential-expression-results).
 
 Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
-We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this example](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
+We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this main example](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
