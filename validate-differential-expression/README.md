@@ -6,10 +6,46 @@ You may obtain differential expression results from your own data or a collabora
 It is good practice to validate your findings in another dataset that measures a similar tissue with a similar experimental design.
 You can use refine.bio datasets and the steps in this example to quickly check for agreement with your results.
 
-**Example Workflow R Notebooks**
+**About the Example Workflow**
 
-* [Performing differential expression on a non-refine.bio dataset](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html) - this notebook is showing how we obtained differential expression results for our non-refine.bio dataset
-* [Analyzing overlap of differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) - this notebook compares the differential expression results of the two datasets
+The main notebook for this example is [gene_DE_validate](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).
+This notebook compares the differential expression results of the two datasets:  
+
+1) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html)  
+2) A refine.bio-processed dataset's differential expression results - which are carried out within [the notebook]((https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)  
+
+For this example workflow the gene expression datasets and sample metadata are stored in a `data/` directory.
+If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
+
+### Validating your own differential expression results with refine.bio data
+
+After going through the example workflow here, if you'd like to use this to validate your own differential expression results we recommend taking the following steps:
+
+#### Step 1) Find a refine.bio dataset
+
+Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up or metadata to your question.
+Use the search bar to look for datasets with key terms.
+Filters can help you find datasets with similar platforms.
+
+#### Step 2) Set up your data
+
+Place the dataset, it's metadata, and your own differential expression results you'd like to compare to in the `data/` directory (if you need further instruction on obtaining differential expression results in the first place, we recommend our [other example workflow](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html).  
+You will need to change all the `file.path` references to the name of your own datasets and files.
+We also suggest saving plots and results to `plots/` and `results/` directories, but changing the names to reflect your new comparison analysis.
+
+#### Step 3) Follow the example steps in [gene_DE_validate](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)
+
+There are a number of ways to compare differential expression results, but this notebook’s example takes the simplest approach of looking at overlap of gene lists.
+This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output meets certain criteria listed below. *At the bare minimum, you will need two gene lists, one for up-regulated and another for down-regulated genes.*
+
+**Ideally you will have table of differential expression results that will have:**
+
+1) A gene or probe identifier
+2) The direction of the expression differences (often indicated by fold-change)
+3) p-values that are corrected for multiple testing (e.g., FDR)
+
+Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](./gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
+We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this example](./gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
 
 ## Requirements and usage
 
@@ -37,21 +73,3 @@ Note that working with R Notebooks requires certain R packages, but RStudio shou
 This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
-
-#### Using your own data
-
-For all the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
-If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
-
-There are a number of ways to compare differential expression results, but this notebook’s example takes the simplest approach of looking at overlap of gene lists.
-This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output meets certain criteria listed below. *At the bare minimum, you will need two gene lists, one for up-regulated and another for down-regulated genes.*
-
-**Ideally you will have table of differential expression results that will have:**
-
-1) A gene or probe identifier
-2) The direction of the expression differences (often indicated by fold-change)
-3) p-values that are corrected for multiple testing (e.g., FDR)
-
-Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](./gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
-We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this example](./gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
