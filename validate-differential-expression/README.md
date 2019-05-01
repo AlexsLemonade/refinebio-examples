@@ -54,6 +54,10 @@ This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
 
+#### Obtaining the R Notebooks
+
+To run the example yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
+
 ## Apply this workflow to your own differential expression results
 
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's differential expression results, we recommend following these steps below.
