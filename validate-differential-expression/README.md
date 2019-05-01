@@ -19,20 +19,21 @@ For this example workflow, the gene expression datasets and sample metadata are 
 
 ### Validating your own differential expression results with refine.bio data
 
-If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
+If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's differential expression results, we recommend following these steps below.
 
 #### Step 1) Find a refine.bio dataset
 
-Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up and metadata to your question.
+Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up and metadata to your own differential expression analysis.
 Use the search bar to look for datasets with key terms.
 Filters can help you find datasets with similar platforms.
 
 #### Step 2) Set up your data
 
 Place the refine.bio data and metadata TSV files, along with your own differential expression results you'd like to compare them to in the `data/` directory (if you need further instruction on obtaining differential expression results in the first place, we recommend following our [other example workflow](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)).
-Within the R notebook will need to change all the `file.path` references to the file names of your new datasets and results files.
-Note that wherever `refine.bio` is specified should be changed to correspond to the new refine.bio dataset you identified in `Step 1` and wherever `author` is specified should correspond to your differential expression results you would like to compare to.
-We also suggest changing the names of the output plots and results to reflect your new comparison analysis.
+Within the R notebook, you will need to change all the `file.path` references to the file names of your new refine.bio datasets and your own results files.
+Note that wherever `refine.bio` is specified in the code, it should be changed to correspond to the new refine.bio dataset you identified in `Step 1`.
+Furthermore, wherever `author` is specified should correspond to your differential expression results you would like to compare to.
+We also suggest changing the names of the output `plots` and `results` to reflect your new comparison analysis.
 
 Note: If your differential expression results do not have Ensembl ID's associated with them, you try to change the steps here accordingly, but we also recommend referencing the [ID conversion example workflow](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) for more information on this step.
 
