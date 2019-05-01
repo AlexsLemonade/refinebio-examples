@@ -57,6 +57,7 @@ If you would like to do differential expression but would prefer using GenePatte
 In order to complete your differential expression analysis using [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), you will need to have:  
  1) a GCT file    
  2) a CLS file  
+
 You can follow the steps below to create these files from your refine.bio data.
 
 #### Create a GCT file
@@ -83,7 +84,6 @@ Replace the <PATH TO REFINE.BIO EXPRESSION TSV> with your file name eg.
 `differential-expression/data/HOMO_SAPIENS.tsv`
 Here's an example of the above, where we put the dataset we want to convert in `differential-expression/data/` and are naming the output file `gct_HOMO_SAPIENS` but saving it to the same directory.
 
-*Example:*
 ```bash
 $ Rscript scripts/create_gct_file.R \
  --file differential-expression/data/HOMO_SAPIENS.tsv \
