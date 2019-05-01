@@ -87,5 +87,3 @@ If you've already created a GCT format file from your data, you can create a a C
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
 *Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` module, and follow the instructions to upload and analyze your newly created GCT and CLS files*
-
-Trying a thing!!!: <a href = "https://raw.githack.com/AlexsLemonade/refinebio-examples/master/scripts/create_gct_file.R" download = "create_gct_file.R">link</a>
