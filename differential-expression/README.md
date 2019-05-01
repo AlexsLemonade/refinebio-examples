@@ -63,8 +63,8 @@ You can follow the steps below to create these files from your refine.bio data.
 #### Create a GCT file
 
 Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern notebooks.
-In order to create a GCT formatted file from a TSV refine.bio data file, reference the
-[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
+In order to create a GCT formatted file from a TSV refine.bio data file, download and reference the
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 
 ##### Example of usage in command line:  
@@ -78,7 +78,7 @@ Options:
 
 Optionally you can designate the name of the output file by adding an `-o` argument.
 The "GCT" suffix will be added if you do not add it yourself.
-Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/differential-expression/create_gct_file.R`
+Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
 
 #### Create a CLS format file
 
