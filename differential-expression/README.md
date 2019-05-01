@@ -1,9 +1,7 @@
 # Refine.bio Example Workflow: Differential expression
 
 [This notebook](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)
-
 takes data and metadata from refine.bio and identifies differentially expressed genes.
-This script is very generally applicable to pre-processed RNA-Seq or microarray data.
 
 ## Requirements and usage
 
@@ -42,13 +40,14 @@ to help you set up your model in a way that takes into account your experimental
 set up and hypotheses.
 
 ***
-## Alternative differential expression analysis with GenePattern
+## Differential expression analysis with GenePattern
 
 [GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
 contain [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
 For users who are more comfortable with Python, or are not comfortable with
 using R Notebooks, the GenePattern notebooks are written in Python but can be run using a graphics user interface (GUI).
 To use GenePattern, you have to create an account.
+Here is [their guide](http://software.broadinstitute.org/cancer/software/genepattern/quick-start) we recommend you follow to get started.
 For use with GenePattern notebooks, data from refine.bio needs to be converted to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 If you would like to do differential expression but would prefer using GenePattern, follow the instructions below.
@@ -64,21 +63,32 @@ You can follow the steps below to create these files from your refine.bio data.
 
 Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern notebooks.
 In order to create a GCT formatted file from a TSV refine.bio data file, download and reference the
-[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
-
-##### Example of usage in command line:  
- ```bash
- $ Rscript scripts/create_gct_file.R -f GSE111111.tsv -o outputfilename -r
- ```
-Options:     
-`-f` :name of the file in your current directory that you would like to convert.    
-`-r` :file of the same name as the output will be rewritten (*optional*)       
-`-o` :name for the output file (*optional*)       
-
-Optionally you can designate the name of the output file by adding an `-o` argument.
-The "GCT" suffix will be added if you do not add it yourself.
 Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
+If you need more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
+
+Options:     
+`--file` :name of the file in your current directory that you would like to convert.    
+`--rewrite` :file of the same name as the output will be rewritten (*optional*)       
+`--output` :name for the output file, the ".gct" suffix will be added if you do not add it yourself  (*optional*)
+
+##### Examples of usage in command line:  
+ ```bash
+ $ Rscript scripts/create_gct_file.R \
+  --file <PATH TO REFINE.BIO EXPRESSION TSV> \
+  --output <PATH TO NEW GCT FILE>
+ ```
+Replace the <PATH TO REFINE.BIO EXPRESSION TSV> with your file name eg.
+`differential-expression/data/HOMO_SAPIENS.tsv`
+Here's an example of the above, where we put the dataset we want to convert in `differential-expression/data/` and are naming the output file `gct_HOMO_SAPIENS` but saving it to the same directory.
+
+*Example:*
+```bash
+$ Rscript scripts/create_gct_file.R \
+ --file differential-expression/data/HOMO_SAPIENS.tsv \
+ --output differential-expression/data/gct_HOMO_SAPIENS
+```
 
 #### Create a CLS format file
 
@@ -86,4 +96,4 @@ CLS formatted files tell information regarding the groups or phenotype of the di
 If you've already created a GCT format file from your data, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
-*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` module, and follow the instructions to upload and analyze your newly created GCT and CLS files*
+*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` notebook, and follow the instructions to upload and analyze your newly created GCT and CLS files*
