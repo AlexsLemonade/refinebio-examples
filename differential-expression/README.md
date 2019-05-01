@@ -92,7 +92,8 @@ $ Rscript scripts/create_gct_file.R \
  --output differential-expression/data/HOMO_SAPIENS.gct
 ```
 
-Let's say you run the above again but want the output of `HOMO_SAPIENS.gct` to be overwritten, by default, this script will overwrite your file, but will give you a warning message that tells you there is already a file of that name.
+Let's say you want to run the above again but want the output of `HOMO_SAPIENS.gct` to be overwritten.
+By default, this script will not overwrite your file, but will give you a warning message that tells you there is already a file of that name.
 If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite`.
 
 ```bash
