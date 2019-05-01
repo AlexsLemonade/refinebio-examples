@@ -20,7 +20,7 @@ This notebook compares the differential expression results of the two datasets:
 
 1) A refine.bio-processed dataset's differential expression results - which are carried out within [the main notebook](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).   
 
-2) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html) - but for using this workflow with your own dataset's results, any methodology that gives you the [required input mentioned above](#required-fields-for-differential-expression-results) is fine.
+2) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html) - but for using this workflow with your own dataset's results, any methodology that gives you the [required fields mentioned above](#required-fields-for-differential-expression-results) is fine.
 Ideally you'd use the same pipeline for initial results and validation.    
 
 The comparison in this example results in a Venn diagram that illustrates the overlap of the two datasets' differentially-regulated genes.
@@ -77,7 +77,7 @@ Note: If your differential expression results do not have Ensembl ID's associate
 #### Step 3) Follow the example steps in [gene_DE_validate](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)
 
 There are a number of ways to compare differential expression results, but [this workflow](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) takes the simplest approach of looking at overlap of gene lists.
-This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output meets [certain criteria listed above](#required-fields-for-differential-expression-results).
+This is partially so that this notebook’s approach can be applied to any differential expression output, provided that the output has the [required fields listed above](#required-fields-for-differential-expression-results).
 
 Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
 We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this main example](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) in order to help you determine the how to clean your data for use with this analysis.
