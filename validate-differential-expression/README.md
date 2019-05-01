@@ -6,9 +6,10 @@ These notebooks compare the differential expression results from a [refine.bio](
 
 If you have differential expression results from your own data or a collaborator’s data, it is good practice to validate your findings in another dataset that measures a similar tissue with a similar experimental design.
 You can use refine.bio datasets and the steps in this example to quickly check for agreement with your results.
-To use this example workflow with your own results, you will need the following fields in your table:
 
 #### Required fields for differential expression results:
+To use this example workflow with your own results, you will need the following fields in your table:
+
 1) A gene or probe identifier
 2) The direction of the expression differences (often indicated by fold-change)
 3) p-values that are corrected for multiple testing (e.g., FDR)
