@@ -16,11 +16,10 @@ This notebook compares the differential expression results of the two datasets:
 
 The comparison in this example results in a Venn diagram that illustrates the overlap of the two datasets' differentially-regulated genes.
 For this example workflow, the gene expression datasets and sample metadata are stored in a `data/` directory.
-If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
 
 ### Validating your own differential expression results with refine.bio data
 
-After going through the example workflow here, if you'd like to use this to validate your own differential expression results we recommend taking the following steps:
+If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
 
 #### Step 1) Find a refine.bio dataset
 
