@@ -30,8 +30,13 @@ This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
 
+#### Obtaining the R Notebooks
+
+To run the example yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
+
 #### Using your own data
 
+To run the examples yourself, you will need to clone or download this repository https://github.com/AlexsLemonade/refinebio-examples
 For all the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
