@@ -1,6 +1,6 @@
 # refine.bio Examples: Validate Differential Expression
 
-These notebooks compare the differential expression results from a refine.bio dataset to an independent dataset that has a similar experimental design.
+These notebooks compare the differential expression results from a [refine.bio](https://www.refine.bio/) dataset to an independent dataset that has a similar experimental design.
 
 ## Background and input requirements
 
