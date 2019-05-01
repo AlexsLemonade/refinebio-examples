@@ -11,8 +11,8 @@ You can use refine.bio datasets and the steps in this example to quickly check f
 The main notebook for this example is [gene_DE_validate](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).
 This notebook compares the differential expression results of the two datasets:  
 
-1) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html)  
-2) A refine.bio-processed dataset's differential expression results - which are carried out within [the notebook]((https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)  
+1) An author-processed dataset's [differential expression results](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/author_processed_DE.nb.html).  
+2) A refine.bio-processed dataset's differential expression results - which are carried out within [the notebook](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).  
 
 For this example workflow the gene expression datasets and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's results, we recommend following these steps below.
@@ -23,15 +23,18 @@ After going through the example workflow here, if you'd like to use this to vali
 
 #### Step 1) Find a refine.bio dataset
 
-Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up or metadata to your question.
+Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up and metadata to your question.
 Use the search bar to look for datasets with key terms.
 Filters can help you find datasets with similar platforms.
 
 #### Step 2) Set up your data
 
-Place the dataset, it's metadata, and your own differential expression results you'd like to compare to in the `data/` directory (if you need further instruction on obtaining differential expression results in the first place, we recommend our [other example workflow](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html).  
-You will need to change all the `file.path` references to the name of your own datasets and files.
-We also suggest saving plots and results to `plots/` and `results/` directories, but changing the names to reflect your new comparison analysis.
+Place the refine.bio data and metadata TSV files, along with your own differential expression results you'd like to compare them to in the `data/` directory (if you need further instruction on obtaining differential expression results in the first place, we recommend following our [other example workflow](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)).
+Within the R notebook will need to change all the `file.path` references to the file names of your new datasets and results files.
+Note that wherever `refine.bio` is specified should be changed to correspond to the new refine.bio dataset you identified in `Step 1` and wherever `author` is specified should correspond to your differential expression results you would like to compare to.
+We also suggest changing the names of the output plots and results to reflect your new comparison analysis.
+
+Note: If your differential expression results do not have Ensembl ID's associated with them, you try to change the steps here accordingly, but we also recommend referencing the [ID conversion example workflow](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) for more information on this step.
 
 #### Step 3) Follow the example steps in [gene_DE_validate](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html)
 
