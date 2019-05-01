@@ -63,8 +63,10 @@ You can follow the steps below to create these files from your refine.bio data.
 #### Create a GCT file
 
 Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern notebooks.
-In order to create a GCT formatted file from a TSV refine.bio data file, download and reference the
-[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
+In order to create a GCT formatted file from a TSV refine.bio data file, download the
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R).
+To use this script you will need to open [`Terminal`](https://macpaw.com/how-to/use-terminal-on-mac)(for Mac) or [`Command Prompt`](https://www.lifewire.com/command-prompt-2625840)(for Windows).
+You will need to reference the script like the examples below, followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
 
@@ -94,7 +96,7 @@ $ Rscript scripts/create_gct_file.R \
 
 Let's say you want to run the above again but want the output of `HOMO_SAPIENS.gct` to be overwritten.
 By default, this script will not overwrite your file, but will give you a warning message that tells you there is already a file of that name.
-If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite`.
+If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite` like is done below.
 
 ```bash
 $ Rscript scripts/create_gct_file.R \
