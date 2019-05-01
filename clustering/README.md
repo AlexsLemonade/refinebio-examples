@@ -60,8 +60,8 @@ If you would like to do clustering but would prefer using GenePattern, follow th
 #### Create a gct file
 
 In order to perform cluster analysis on your gene expression data, you must first create a 'gene cluster text' (gct) file from your refine.bio file.
-In order to create a gct formatted file from a TSV refine.bio data file, reference the
-[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
+In order to create a gct formatted file from a TSV refine.bio data file, download and reference the
+[`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R), followed by `-f` argument with the name of the file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 
 #### Example of usage in command line:  
@@ -75,6 +75,6 @@ Options:
 
 Optionally you can designate the name of the output file by adding an `-o` argument.
 The "gct" suffix will be added if you do not add it yourself.
-Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/clustering/create_gct_file.R`
+Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/create_gct_file.R`
 
 *Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Clustering` module, and follow the instructions to upload and analyze your newly created gct file*
