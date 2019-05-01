@@ -36,7 +36,6 @@ To run the example yourself, you will need to [clone](https://help.github.com/ar
 
 #### Using your own data
 
-To run the examples yourself, you will need to clone or download this repository https://github.com/AlexsLemonade/refinebio-examples
 For all the examples in this module, the gene expression data and sample metadata are stored in a `data/` directory.
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebooks to match these files.
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
