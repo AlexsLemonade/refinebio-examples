@@ -29,6 +29,9 @@ Attach the `ComplexHeatmap` library:
 # Attach the library
 library(ComplexHeatmap)
 
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
 # Set the seed so our results are reproducible:
 set.seed(12345)
 ```
@@ -49,12 +52,21 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim(file.path("data", "metadata_GSE12955.tsv"), header=TRUE, 
-                       stringsAsFactors = FALSE)
+metadata <- readr::read_tsv(file.path("data", "metadata_GSE12955.tsv"))
 
 # Read in data tsv file
-df <- read.delim(file.path("data", "GSE12955.tsv"), header=TRUE, row.names= 1, 
-                 stringsAsFactors = FALSE)
+df <- readr::read_tsv(file.path("data", "GSE12955.tsv")) %>%
+  tibble::column_to_rownames('Gene')
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>% dplyr::select(metadata$geo_accession)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$geo_accession)
 ```
 
 ## 3) Choose genes of interest
