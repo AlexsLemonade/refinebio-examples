@@ -16,7 +16,7 @@ below for list of the analysis topics.
 *Each directory is a module of example workflow(s) and contains:*
 
 - A `README` that introduces you to the concepts, requirements, and workflows for that module.
-- Example dataset(s) in the `data/` folder
+- Example dataset(s) in the `data` folder
 - A `results` and/or `plots` folder(s) that contains the output of the analyses.
 - An [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) which consists of:
   - An R markdown (`Rmd`) file(s) that you can use in RStudio to run the analysis
