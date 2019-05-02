@@ -60,7 +60,6 @@ Each example workflow directory will include further instructions for how to fol
 
 8. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
 
-
 ## GenePattern modules with refine.bio data
 
 [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf) has many ready-made analyses you could use with your refine.bio data.
