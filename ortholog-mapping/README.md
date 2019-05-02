@@ -15,7 +15,7 @@ This module requires you to install the following software to run the example yo
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
 These requirements can be installed by following the instructions at the links above. 
-The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
+The R Notebook is designed to check if additional required packages are installed and will install them if they are not.
 Note that this notebook does check if `devtools` is installed, but we have encountered some trouble with missing system requirements and recommend installing the package prior to running the notebook.
 
 #### RStudio
@@ -27,7 +27,7 @@ You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting 
 
 #### Obtaining the R Notebooks
 
-To run the examples yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
+To run the example yourself, you will need to [clone](https://help.github.com/articles/cloning-a-repository/) or [download](https://stackoverflow.com/a/6466993) this repository: https://github.com/AlexsLemonade/refinebio-examples
 
 #### Interacting with R Notebooks
 
