@@ -114,7 +114,7 @@ heatmap
 
 ## 5) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
-and filename within the function to the respective file suffix.
+and file name within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
