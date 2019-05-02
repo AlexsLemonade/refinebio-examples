@@ -88,17 +88,9 @@ column.
 head(exprs.df[[1]])
 ```
 
-We can see that this also includes Affymetrix control probes in this case.
-These will get dropped using `inner_join` below, because they will not
-map to a human gene symbol.
-
 In zebrafish, Ensembl gene identifiers begin with `ENSDARG`.
 
-```{r Examine ENSDARG}
-head(exprs.df[[1]][grepl("ENSDARG", exprs.df[[1]])])
-```
-
-Let's do the conversion itself!
+Let's do the conversion!
 We'll use the `zebrafish` data from `hcop`; this is what `zebrafish` looks like.
 
 ```{r zebrafish}
@@ -113,7 +105,7 @@ human.symbol.df <- zebrafish %>%
   # we'll want to subset zebrafish to only the columns we're interested in
   select(zebrafish_ensembl, human_symbol) %>%
   # only retain the genes from the expression matrix that are in zebrafish data
-  inner_join(exprs.df, by = c("zebrafish_ensembl" = "X1"))
+  inner_join(exprs.df, by = c("zebrafish_ensembl" = "Gene"))
 ```
 
 Here's what the new data.frame looks like:
