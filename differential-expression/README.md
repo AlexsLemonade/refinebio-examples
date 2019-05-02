@@ -81,6 +81,8 @@ If you need more guidance on how to navigate directories, we recommend [this tut
 `--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself (*optional*).  
 `--rewrite`: file of the same name as the output will be rewritten (*optional*).     
 
+Note that if you don't specify an `--output` name, the script will use the original name of your file, but replace `.tsv` with `.gct`.
+
 ##### Examples of usage in command line:  
  ```bash
 Rscript scripts/create_gct_file.R \
@@ -91,7 +93,6 @@ Rscript scripts/create_gct_file.R \
 Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name, e.g.,
 `differential-expression/data/HOMO_SAPIENS.tsv`
 Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `HOMO_SAPIENS.gct` but saving it to the same directory.
-Note that if you don't specify an `--output` name, the script will use the original name of your file, but replace `.tsv` with `.gct`.
 
 ```bash
 Rscript scripts/create_gct_file.R \
