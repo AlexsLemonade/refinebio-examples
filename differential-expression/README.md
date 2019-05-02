@@ -46,13 +46,12 @@ set up and hypotheses.
 ***
 ## Differential expression analysis with GenePattern
 
-[GenePattern notebooks](http://genepattern-notebook.org/example-notebooks/)
-contain [ready-made analyses](http://genepattern-notebook.org/example-notebooks/).
-For users who are more comfortable with Python, or are not comfortable with
-using R Notebooks, the GenePattern notebooks are written in Python but can be run using a graphics user interface (GUI).
+[GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf)
+contain ready-made analyses.
+For users who are not comfortable with using R Notebooks, the GenePattern modules can be run using a graphics user interface (GUI).
 To use GenePattern, you have to create an account.
 Here is [their guide](http://software.broadinstitute.org/cancer/software/genepattern/quick-start) we recommend you follow to get started.
-For use with GenePattern notebooks, data from refine.bio needs to be converted to GenePattern
+For use with GenePattern, data from refine.bio needs to be converted to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
 If you would like to do differential expression but would prefer using GenePattern, follow the instructions below.
 
@@ -66,7 +65,7 @@ You can follow the steps below to create these files from your refine.bio data.
 
 #### Create a GCT file
 
-Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern notebooks.
+Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern.
 In order to create a GCT formatted file from a TSV refine.bio data file, download the
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R).
 To use this script you will need to open [`Terminal`](https://macpaw.com/how-to/use-terminal-on-mac)(for Mac) or [`Command Prompt`](https://www.lifewire.com/command-prompt-2625840)(for Windows).
