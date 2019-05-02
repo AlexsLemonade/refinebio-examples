@@ -63,5 +63,5 @@ Each example workflow directory will include further instructions for how to fol
 ## GenePattern modules with refine.bio data
 
 [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf) has many ready-made analyses you could use with your refine.bio data.
-Some example workflows (such as [dimension reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction) and [clustering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)) also include instructions for prepping your refine.bio data files for use in GenePattern.
+Some example workflows (such as [differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression) and [clustering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)) also include instructions for prepping your refine.bio data files for use in GenePattern.
 For users who are not comfortable with using R Notebooks, the GenePattern modules can be run using a graphics user interface (GUI), so this may be more intuitive for you.
