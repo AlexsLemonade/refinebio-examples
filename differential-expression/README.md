@@ -52,13 +52,13 @@ To use GenePattern, you have to create an account.
 Here is [their guide](http://software.broadinstitute.org/cancer/software/genepattern/quick-start) we recommend you follow to get started.
 For use with GenePattern, data from refine.bio needs to be converted to GenePattern
 [formats](http://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide).
-If you would like to do differential expression but would prefer using GenePattern, follow the instructions below.
+If you would like to perform differential expression analysis with refine.bio data but would prefer using GenePattern, follow the instructions below.
 
 ### Preparing your refine.bio data for GenePattern
 
 In order to complete your differential expression analysis using [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), you will need to have:  
  1) a GCT file    
- 2) a CLS file  
+ 2) a [CLS](https://software.broadinstitute.org/cancer/software/genepattern/file-formats-guide#CLS) file  
 
 You can follow the steps below to create these files from your refine.bio data.
 
@@ -67,7 +67,7 @@ You can follow the steps below to create these files from your refine.bio data.
 Convert a gene expression tab separated values (TSV) file provided into a 'gene cluster text' (GCT) file for use in GenePattern.
 In order to create a GCT formatted file from a TSV refine.bio data file, download the
 [`create_gct_file.R` script](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R).
-To use this script you will need to open [`Terminal`](https://macpaw.com/how-to/use-terminal-on-mac)(for Mac) or [`Command Prompt`](https://www.lifewire.com/command-prompt-2625840)(for Windows).
+To use this script you will need to open [`Terminal`](https://macpaw.com/how-to/use-terminal-on-mac) (for Mac) or [`Command Prompt`](https://www.lifewire.com/command-prompt-2625840) (for Windows).
 You will need to reference the script like the examples below, followed by `--file` argument with the name of the refine.bio dataset TSV file in your current directory that you would like to convert.
 Note: This script requires `optparse` library. If `optparse` library is not installed, this script will install it for you.
 
@@ -87,16 +87,10 @@ Rscript scripts/create_gct_file.R \
 ```
 To get an idea of how this script and its arguments work, you can run the following examples in order.
 
-**Go the correct directory**  
+**Navigate to the correct directory**  
 Depending on where you have put the `refinebio-examples` directory on your computer, you will have to change this path in the code chunk below.
-Be sure to either have the script and input file in your current working directory, or put type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
+Be sure to either have the script and input file in your current working directory, or type out the full directory path for the script and/or input file. eg. `/users/Bob/Desktop/scripts/create_gct_file.R`
 For more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
-
-```bash
-pwd # This will tell you what your current directory is  
-cd /Desktop/refinebio-examples  
-ls # This will tell you what files exist in the current directory  
-```
 
 **Example 1**  
 Here we will convert the file `GSE71270.tsv`, which was in our `refinebio-examples/differential-expression/data` directory into a GCT file.
@@ -150,7 +144,7 @@ Rscript scripts/create_gct_file.R \
  --output differential-expression/GSE71270_special_name.gct
 ```
 
-Now if you should see a file called `differential-expression/GSE71270_special_name.gct`.
+Now you should see a file called `differential-expression/GSE71270_special_name.gct`.
 
 #### Create a CLS format file
 
@@ -158,4 +152,4 @@ CLS formatted files provide the sample groups or phenotype information and are n
 If you've already created a GCT format file from your data, like is described above, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
-*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` notebook, and follow the instructions to upload and analyze your newly created GCT and CLS files*
+*Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` module, and follow the instructions to upload and analyze your newly created GCT and CLS files*
