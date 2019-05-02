@@ -76,24 +76,25 @@ Be sure to either have the script and input file in your current working directo
 
 If you need more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
 
-Arguments:     
+**Arguments:**     
 `--file`: name of the file in your current directory that you would like to convert.      
-`--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself  (*optional*)
-`--rewrite`: file of the same name as the output will be rewritten (*optional*)     
+`--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself (*optional*).  
+`--rewrite`: file of the same name as the output will be rewritten (*optional*).     
 
 ##### Examples of usage in command line:  
  ```bash
- $ Rscript scripts/create_gct_file.R \
+Rscript scripts/create_gct_file.R \
   --file <PATH TO REFINE.BIO EXPRESSION TSV> \
   --output <PATH TO NEW GCT FILE>
  ```
 
- Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name, e.g.,
+Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name, e.g.,
 `differential-expression/data/HOMO_SAPIENS.tsv`
 Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `HOMO_SAPIENS.gct` but saving it to the same directory.
+Note that if you don't specify an `--output` name, the script will use the original name of your file, but replace `.tsv` with `.gct`.
 
 ```bash
-$ Rscript scripts/create_gct_file.R \
+Rscript scripts/create_gct_file.R \
  --file differential-expression/data/HOMO_SAPIENS.tsv \
  --output differential-expression/data/HOMO_SAPIENS.gct
 ```
@@ -103,7 +104,7 @@ By default, this script will not overwrite your file, but will give you a warnin
 If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite` like is done below.
 
 ```bash
-$ Rscript scripts/create_gct_file.R \
+Rscript scripts/create_gct_file.R \
  --file differential-expression/data/HOMO_SAPIENS.tsv \
  --output differential-expression/data/HOMO_SAPIENS.gct \
  --rewrite
