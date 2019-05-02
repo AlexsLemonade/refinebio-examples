@@ -103,6 +103,7 @@ if (!dir.exists("plots")) {
 ```
 
 ## 2) Import differential expression results from Northcott dataset
+
 Import the `limma` results obtained for the author-processed data for 
 Northcott et al, 2012. 
 If you'd like to see how we generated these results with `limma`, see
@@ -118,6 +119,7 @@ author.full.results <- readr::read_tsv(file.path("results",
 ```
 
 ## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
+
 In refine.bio all IDs are converted to Ensembl gene IDs in the harmonization 
 pipeline.
 Here we need to convert our Affymetrix transcript cluster IDs into Ensembl gene
@@ -156,6 +158,7 @@ author.full.results
 ```
 
 ### Summarize probe-level data into gene-level data
+
 Because our refine.bio dataset has Ensembl gene IDs, and gene-level information
 is generally more biologically meaningful and robust than probe-level information, 
 we will convert our Affymetrix probe IDs to Ensembl gene IDs.
@@ -208,6 +211,7 @@ author.down.genes <- direction.summary %>%
 ```
 
 ## 4) Import and set up refine.bio processed data.
+
 Data downloaded from refine.bio are in tab separated values (TSV) files and 
 include a metadata in a separate TSV file. 
 This data set was obtained from [refine.bio](https://www.refine.bio/). 
@@ -221,9 +225,8 @@ unzip(paste0(refine.bio.data.filename, ".zip"), exdir = "data")
 
 # Read in data tsv file
 refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
-  as.data.frame() %>%
   # Make the gene column the rownames so the gene names are out of the way for calculations
-  tibble::column_to_rownames('X1') 
+  tibble::column_to_rownames('Gene') 
 ```
 
 Set up the metadata for this set.
@@ -275,6 +278,7 @@ all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
 ```
 
 ## 5) Perform differential expression analysis on refine.bio data
+
 Here we are using the same model and set up as we used for the Northcott data
 in [`author_processed_DE`](./author_processed_DE.nb.html). 
 `limma` needs a numeric design matrix to signify which samples belong to which 
@@ -295,6 +299,7 @@ colnames(des.mat)[2] <- paste0(levels(metadata$subgroup), collapse = "vs")
 ```
 
 ## 6) Apply linear model
+
 Here we will fit our data to a model using our design matrix and then apply 
 empirical Bayes for smoothing. 
 This same kind of model was applied to the Northcott data in [`author_processed_DE`](./author_processed_DE.nb.html)).
@@ -327,6 +332,7 @@ readr::write_tsv(refine.bio.results, file.path("results",
 ```
 
 ### Create up/down-regulated gene lists for refine.bio results
+
 Here we are using an adjusted p-value cutoff of `0.05`. 
 We are not applying a magnitude cutoff for `logFC` but using logFC just to 
 summarize direction of regulation. 
@@ -350,6 +356,7 @@ refine.bio.down.genes <- refine.bio.results %>%
 ```
 
 ## 7) Double check results directions with a boxplot
+
 Let's pick a couple genes from the Robinson and Northcott results to double check
 our output.
 We previously did this same test for the Northcott data in the in [`author_processed_DE`](./author_processed_DE.nb.html).
@@ -376,6 +383,7 @@ box.plot
 ```
 
 ## 8) Set up exploration of overlap of the datasets differential expression
+
 Here we will set up the data for making two Venn diagrams: one for overlap 
 between the datasets for up-regulated genes, the other for down-regulated genes.
 Determine overlap in up-regulated genes between datasets.
@@ -401,7 +409,9 @@ down.overlap <- VennDiagram::calculate.overlap(down.genes)
 ```
 
 ## 9) Make Venn diagrams
+
 ### Overlap between up-regulated genes
+
 Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
@@ -438,6 +448,7 @@ dev.off()
 ```
 
 ### Overlap between down-regulated genes
+
 Repeat the process for down-regulation results.
 
 ```{r}
@@ -475,6 +486,7 @@ dev.off()
 ```
 
 ## 10) Write overlapped gene list to tsv
+
 Using `calculate.overlap`, we obtained a list of genes that were changed in both
 datasets. 
 If we want to extract the list of genes that are in both dataset, that is the 
