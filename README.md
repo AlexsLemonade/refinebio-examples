@@ -29,7 +29,7 @@ You will likely have to alter other steps of the examples, particularly those cl
 
 ## General requirements for the example workflows
 
-This module requires you to install the following software to run examples yourself:
+This module requires you to install the following software to run examples yourself.
 
 * [**R**](https://cran.r-project.org/)
 * [**Bioconductor**](https://bioconductor.org/install/)
