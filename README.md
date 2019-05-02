@@ -19,8 +19,8 @@ below for list of the analysis topics.
 - Example dataset(s) in the `data/` folder
 - A `results` and/or `plots` folder(s) that contains the output of the analyses.
 - An [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) which consists of:
-  - An `nb.html` file that is the resulting output of the Rmd file rendered as an HTML file.
   - An R markdown (`Rmd`) file(s) that you can use in RStudio to run the analysis
+  - An `nb.html` file that is the resulting output of the Rmd file rendered as an HTML file.
 
 As you get more comfortable with the examples, we encourage you to apply these example workflows to your own refine.bio data.
 After downloading a refine.bio dataset, you can analyze them in these examples by placing the gene expression and metadata TSV files from your refine.bio download file into the respective `data/` folder for that module.
@@ -29,7 +29,7 @@ You will likely have to alter other steps of the examples, particularly those cl
 
 ## General requirements for the example workflows
 
-This module requires you to install the following software to run examples yourself.
+Each module requires you to install the following software to run examples yourself.
 
 * [**R**](https://cran.r-project.org/)
 * [**Bioconductor**](https://bioconductor.org/install/)
