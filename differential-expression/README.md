@@ -80,7 +80,7 @@ Note: This script requires `optparse` library. If `optparse` library is not inst
 
 #### Examples of usage in command line:
 
-Below is the basic template for usage of this script.  
+Below is the basic template for usage of this script.
 The following examples will give you an idea of how it works.
 
 ```
@@ -129,7 +129,7 @@ differential-expression/data/GSE71270.tsv already exists. Use '--rewrite' option
 This is telling us that `create_gct_file.R` will not write over an already existing file unless we explicitly tell it to.
 
 **Example 3**  
-If we want to save over an already existing file, we need to use the `rewrite` option, just like the error message says.
+If we want to save over an already existing file, we need to use the `rewrite` option, just like the error message says.  
 Let's try that:
 
 ```bash
