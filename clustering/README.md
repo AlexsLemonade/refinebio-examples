@@ -92,29 +92,29 @@ Be sure to either have the script and input file in your current working directo
 For more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
 
 **Example 1**  
-Here we will convert the file `GSE71270.tsv`, which was in our `refinebio-examples/differential-expression/data` directory into a GCT file.
-Following the template above, we will replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with our file name, `differential-expression/data/GSE71270.tsv`
+Here we will convert the file `GSE12955.tsv`, which was in our `refinebio-examples/clustering/data` directory into a GCT file.
+Following the template above, we will replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with our file name, `clustering/data/GSE12955.tsv`
 
  ```bash
 Rscript scripts/create_gct_file.R \
-  --file differential-expression/data/GSE71270.tsv
+  --file clustering/data/GSE12955.tsv
  ```
 
 Note that we have not specified an `--output` name so in this case, the script will use the original name of our file, but replace `.tsv` with `.gct`.
-What you should find is that in the same folder `differential-expression/data/`, you now have a file named `GSE71270.gct`
+What you should find is that in the same folder `clustering/data/`, you now have a file named `GSE12955.gct`
 
 **Example 2**  
 After running the code chunk we showed above, let's try running the same thing a second time:
 
 ```bash
 Rscript scripts/create_gct_file.R \
- --file differential-expression/data/GSE71270.tsv
+ --file clustering/data/GSE12955.tsv
 ```
 
 What you should see is an error message that says this:
 
 ```
-differential-expression/data/GSE71270.gct already exists. Use '--rewrite' option if you want this file to be overwritten.
+clustering/data/GSE12955.gct already exists. Use '--rewrite' option if you want this file to be overwritten.
 ```
 
 This is telling us that `create_gct_file.R` will not write over an already existing file unless we explicitly tell it to.
@@ -125,22 +125,24 @@ Let's try that:
 
 ```bash
 Rscript scripts/create_gct_file.R \
- --file differential-expression/data/GSE71270.tsv \
+ --file clustering/data/GSE12955.tsv \
  --rewrite
 ```
 
-This will rewrite over the file we made in *Example 1* but should give you a message to tell you it is doing so: `Overwriting file named differential-expression/data/GSE71270.gct`
+This will rewrite over the file we made in *Example 1* but should give you a message to tell you it is doing so: `Overwriting file named clustering/data/GSE12955.gct`
 Also note that for bash commands, a `\` indicates that the command continues on the next line.
 Since we put `--rewrite` on the next line, we needed to add a `\` so that it knows that the command continues on the next line.
 
 **Example 4**  
 Lastly, if we would like to name the file something besides its original name, we can use the `--output` argument.
-Here let's save it directly to the `differential-expression` folder and call it something different.
+Here let's save it directly to the `clustering` folder and call it something different.
 
 ```bash
 Rscript scripts/create_gct_file.R \
- --file differential-expression/data/GSE71270.tsv \
- --output differential-expression/GSE71270_special_name.gct
+ --file clustering/data/GSE12955.tsv \
+ --output clustering/GSE12955_special_name.gct
 ```
 
-Now you should see a file called `differential-expression/GSE71270_special_name.gct`.
+Now you should see a file called `clustering/GSE12955_special_name.gct`.
+
+*After you successfully convert your TSV file into a GCT format, you are ready to login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Clustering` module, and follow the instructions to upload and analyze your newly created GCT file*
