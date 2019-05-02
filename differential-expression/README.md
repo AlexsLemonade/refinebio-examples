@@ -95,7 +95,9 @@ Be sure to either have the script and input file in your current working directo
 For more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
 
 ```bash
-cd /Desktop/refinebio-examples
+pwd # This will tell you what your current directory is  
+ls # This will tell you what files exist in the current directory  
+cd /Desktop/refinebio-examples  
 ```
 
 **Example 1**  
