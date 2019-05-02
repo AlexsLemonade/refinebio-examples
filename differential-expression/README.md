@@ -81,42 +81,69 @@ If you need more guidance on how to navigate directories, we recommend [this tut
 `--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself (*optional*).  
 `--rewrite`: file of the same name as the output will be rewritten (*optional*).     
 
-Note that if you don't specify an `--output` name, the script will use the original name of your file, but replace `.tsv` with `.gct`.
+##### Examples of usage in command line:
 
-##### Examples of usage in command line:  
+Below is the basic template for usage of this script.  
+```
+Rscript scripts/create_gct_file.R \
+  --file <PATH TO REFINE.BIO EXPRESSION TSV>
+```
+To get an idea of how this script and its arguments work, you can run the following examples in order.
+
+**Go the correct directory**
+Depending on where you have put the `refinebio-examples` directory on your computer, you will have to change this path in the code chunk below.
+For more guidance on how to navigate directories, we recommend [this tutorial](https://swcarpentry.github.io/shell-novice/02-filedir/index.html).
+```bash
+cd /Desktop/refinebio-examples
+```
+**Example 1:**
+Here we will convert the file `GSE71270.tsv`, which was in our `refinebio-examples/differential-expression/data` directory into a GCT file.
+Following the template above, we will replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with our file name, `differential-expression/data/GSE71270.tsv`
  ```bash
 Rscript scripts/create_gct_file.R \
-  --file <PATH TO REFINE.BIO EXPRESSION TSV> \
-  --output <PATH TO NEW GCT FILE>
+  --file differential-expression/data/GSE71270.tsv
  ```
+Note that we have not specified an `--output` name so in this case, the script will use the original name of our file, but replace `.tsv` with `.gct`.
+What you should find is that in the same folder `differential-expression/data/`, you now have a file named `GSE71270.gct`
 
-Replace the `<PATH TO REFINE.BIO EXPRESSION TSV>` with your file name, e.g.,
-`differential-expression/data/HOMO_SAPIENS.tsv`
-Here's an example of the above, where we put the dataset we want to convert in the directory: `differential-expression/data/` and are naming the output file `HOMO_SAPIENS.gct` but saving it to the same directory.
-
+**Example 2**
+After running the code chunk we showed above, let's try running the same thing a second time:
 ```bash
 Rscript scripts/create_gct_file.R \
- --file differential-expression/data/HOMO_SAPIENS.tsv \
- --output differential-expression/data/HOMO_SAPIENS.gct
+ --file differential-expression/data/GSE71270.tsv
 ```
+What you should see is an error message that says this:
+```
+differential-expression/data/GSE71270.tsv already exists. Use '--rewrite' option if you want this file to be overwritten.
+```
+This is telling us that `create_gct_file.R` will not write over an already existing file unless we explicitly tell it to.
 
-Let's say you want to run the above again but want the output of `HOMO_SAPIENS.gct` to be overwritten.
-By default, this script will not overwrite your file, but will give you a warning message that tells you there is already a file of that name.
-If we want to save over the file `HOMO_SAPIENS.gct`, we have to use the argument `--rewrite` like is done below.
-
+**Example 3**
+If we want to save over an already existing file, we need to use the `rewrite` option, just like the error message says.
+Let's try that:
 ```bash
 Rscript scripts/create_gct_file.R \
- --file differential-expression/data/HOMO_SAPIENS.tsv \
- --output differential-expression/data/HOMO_SAPIENS.gct \
+ --file differential-expression/data/GSE71270.tsv \
  --rewrite
 ```
-
+This will rewrite over the file we made in *Example 1* but should give you a message to tell you it is doing so: `Overwriting file named differential-expression/data/GSE71270.gct`
 Also note that for bash commands, a `\` indicates that the command continues on the next line.
+Since we put `--rewrite` on the next line, we needed to add a `\` so that it knows that the command continues on the next line.
+
+**Example 4**
+Lastly, if we would like to name the file something besides its original name, we can use the `--output` argument.
+Here let's save it directly to the `differential-expression` folder and call it something different.
+```bash
+Rscript scripts/create_gct_file.R \
+ --file differential-expression/data/GSE71270.tsv \
+ --output differential-expression/GSE71270_special_name.gct
+```
+Now if you should see a file called `differential-expression/GSE71270_special_name.gct`.
 
 #### Create a CLS format file
 
 CLS formatted files provide the sample groups or phenotype information and are necessary for performing gene expression differential analysis using GenePattern.
-If you've already created a GCT format file from your data, you can create a a CLS format using GenePattern's online
+If you've already created a GCT format file from your data, like is described above, you can create a a CLS format using GenePattern's online
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
 *Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` notebook, and follow the instructions to upload and analyze your newly created GCT and CLS files*
