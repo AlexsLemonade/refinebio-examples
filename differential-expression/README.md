@@ -46,8 +46,7 @@ set up and hypotheses.
 ***
 ## Differential expression analysis with GenePattern
 
-[GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf)
-contain ready-made analyses.
+[GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf) contains ready-made analyses.
 For users who are not comfortable with using R Notebooks, the GenePattern modules can be run using a graphics user interface (GUI).
 To use GenePattern, you have to create an account.
 Here is [their guide](http://software.broadinstitute.org/cancer/software/genepattern/quick-start) we recommend you follow to get started.
@@ -122,7 +121,7 @@ Rscript scripts/create_gct_file.R \
 What you should see is an error message that says this:
 
 ```
-differential-expression/data/GSE71270.tsv already exists. Use '--rewrite' option if you want this file to be overwritten.
+differential-expression/data/GSE71270.gct already exists. Use '--rewrite' option if you want this file to be overwritten.
 ```
 
 This is telling us that `create_gct_file.R` will not write over an already existing file unless we explicitly tell it to.
