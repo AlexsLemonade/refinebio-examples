@@ -220,9 +220,6 @@ This data set was obtained from [refine.bio](https://www.refine.bio/).
 # Put name of data file
 refine.bio.data.filename <- file.path("data", "GSE37418.tsv")
 
-# Unzip the file and direct it to the data folder
-unzip(paste0(refine.bio.data.filename, ".zip"), exdir = "data")
-
 # Read in data tsv file
 refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
   # Make the gene column the rownames so the gene names are out of the way for calculations
