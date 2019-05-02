@@ -52,7 +52,7 @@ unzip(paste0(data.filename, ".zip"), exdir = "data")
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>% 
   # Make the gene column the rownames so the gene names are out of the way for calculations
-  tibble::column_to_rownames('X1') 
+  tibble::column_to_rownames('Gene') 
 ```
 
 Import the metadata for this dataset
