@@ -32,9 +32,9 @@ You will likely have to alter other steps of the examples, particularly those cl
 Each module requires you to install the following software to run examples yourself.
 
 * [**R**](https://cran.r-project.org/)
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html)
 will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
