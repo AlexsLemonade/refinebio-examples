@@ -68,10 +68,10 @@ df <- readr::read_tsv(file.path("data", "GSE71270.tsv")) %>%
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
-# Check if the samples are in the same order in the metadata and data files
+# Make the data in the order of the metadata
 df <- df %>% dplyr::select(metadata$geo_accession)
 
-# Check if the samples are in the same order in the metadata and data files
+# Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
