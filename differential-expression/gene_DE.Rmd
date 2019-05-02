@@ -58,12 +58,21 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- read.delim(file.path("data", "metadata_GSE71270.tsv"),
-                       header = TRUE)
+metadata <- readr::read_tsv(file.path("data", "metadata_GSE71270.tsv"))
 
 # Read in data tsv file
-df <- read.delim(file.path("data", "GSE71270.tsv"), header = TRUE,
-                 row.names = 1, stringsAsFactors = FALSE)
+df <- readr::read_tsv(file.path("data", "GSE71270.tsv")) %>%
+  tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Check if the samples are in the same order in the metadata and data files
+df <- df %>% dplyr::select(metadata$geo_accession)
+
+# Check if the samples are in the same order in the metadata and data files
+all.equal(colnames(df), metadata$geo_accession)
 ```
 
 ## 3) Set up design matrix
@@ -77,15 +86,8 @@ different in across datasets and might not always be underneath the "treatment"
 category.
 
 ```{r Set up design matrix}
-# Check if the samples are in the same order in the metadata and data files
-# Have to use gsub to get rid of problematic punctuation and space so they are 
-# matching
-tmp <- match(gsub("X|\\.", "", colnames(df)), metadata$geo_accession)
-
-# Use the indices identified in the line above to rearrange the design matrix to
-# be in the same order as the data
-# Create the design matrix
-des.mat <- model.matrix(~metadata$genotype.variation[tmp])
+# Create the design matrix from the genotype information
+des.mat <- model.matrix(~metadata$`genotype/variation`)
 ```
 
 ## 3) Apply linear model
@@ -103,7 +105,7 @@ fit <- eBayes(fit)
 
 # Apply multiple testing correction and obtain stats
 stats <- topTable(fit, number = nrow(df)) %>% 
-  tibble::rownames_to_column("Genes")
+  tibble::rownames_to_column("Gene")
 ```
 
 ## 4) Explore fitness of model
