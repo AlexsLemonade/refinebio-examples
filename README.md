@@ -52,7 +52,7 @@ Each example workflow directory will include further instructions for how to fol
 
 4. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
 
-5. [Dimension Reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction)
+5. [Dimension reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction)
 
 6. [Converting from Ensembl gene IDs to another identifier](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
 
