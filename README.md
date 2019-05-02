@@ -59,3 +59,9 @@ Each example workflow directory will include further instructions for how to fol
 7. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
 
 8. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
+
+
+## GenePattern modules with refine.bio data
+
+Some example workflows' repositories (such as [dimension-reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction) and [clustering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)) also include instructions for running analyses on your refine.bio data in [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), which contains ready-made analyses.
+For users who are not comfortable with using R Notebooks, the GenePattern modules can be run using a graphics user interface (GUI).
