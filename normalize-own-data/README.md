@@ -7,10 +7,9 @@ This directory contains an example workflow of how to quantile normalize your ow
 This module requires you to install the following software to run the example yourself:
 
 * [**R**](https://cran.r-project.org/)
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
-* [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 * **wget** - [installation instructions for Mac with Homebrew](https://www.maketecheasier.com/install-wget-mac/), [installation instructions for Windows 10](https://builtvisible.com/download-your-website-with-wget/) (under _Install WGET in Windows 10_), [installation instructions for Debian or Ubuntu Linux](https://www.cyberciti.biz/faq/how-to-install-wget-togetrid-of-error-bash-wget-command-not-found/)
 
 These requirements can be installed by following the instructions at the links above. 
@@ -22,6 +21,8 @@ We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/tra
 
 Note that the first time you open RStudio, you should select a CRAN mirror. 
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
+
+You can install the additional R package requirements (e.g., tidyverse) through RStudio.
 
 #### Obtaining the R Notebooks
 

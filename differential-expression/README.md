@@ -8,9 +8,9 @@ takes data and metadata from refine.bio and identifies genes that are differenti
 This module requires you to install the following software to run examples yourself:
 
 * [**R**](https://cran.r-project.org/)
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 
 These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
@@ -21,6 +21,8 @@ We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/tra
 
 Note that the first time you open RStudio, you should select a CRAN mirror.
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
+
+You can install the additional requirements (e.g., tidyverse) through RStudio.
 
 #### Interacting with R Notebooks
 

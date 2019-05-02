@@ -1,4 +1,4 @@
-# refine.bio Examples: Ensemble ID conversion
+# refine.bio Examples: Ensembl ID conversion
 
 [This notebook](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) contains example workflows of how to convert from Ensembl gene IDs, which is the gene identifier used by [refine.bio](https://www.refine.bio), to other types of gene identifiers that
 may be required for downstream analyses.
@@ -8,9 +8,9 @@ may be required for downstream analyses.
 This module requires you to install the following software to run examples yourself:
 
 * [**R**](https://cran.r-project.org/)
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 * [**Bioconductor**](https://bioconductor.org/install/)
 * [**tidyverse**](https://www.tidyverse.org/)
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
 
 These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
@@ -21,6 +21,8 @@ We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/tra
 
 Note that the first time you open RStudio, you should select a CRAN mirror.
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
+
+You can install the additional requirements (e.g., tidyverse) through RStudio.
 
 #### Obtaining the R Notebooks
 
