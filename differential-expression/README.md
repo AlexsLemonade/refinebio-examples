@@ -96,8 +96,8 @@ For more guidance on how to navigate directories, we recommend [this tutorial](h
 
 ```bash
 pwd # This will tell you what your current directory is  
-ls # This will tell you what files exist in the current directory  
 cd /Desktop/refinebio-examples  
+ls # This will tell you what files exist in the current directory  
 ```
 
 **Example 1**  
