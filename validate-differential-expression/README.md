@@ -63,7 +63,7 @@ To run the example yourself, you will need to [clone](https://help.github.com/ar
 
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), and your own dataset's differential expression results, we recommend following these steps below.
 
-#### Step 1) Find a refine.bio dataset
+#### Step 1) Download a refine.bio dataset
 
 Find and download a [refine.bio](https://www.refine.bio/) dataset that has a similar set up and metadata to your own differential expression analysis.
 Use the search bar to look for datasets with key terms.
