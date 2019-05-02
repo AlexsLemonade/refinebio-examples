@@ -10,17 +10,17 @@ this repository and following the example analyses.
 You can also use the green button that says "Clone or download" to "Download ZIP" and then use this repository as you please on your own computer, if you prefer.
 
 Each directory in this repository is a set of example workflows to follow.
-See the list of [**Example Workflows**](#example-workflows-in-this-repository)
+See the list of [**Example Modules**](#example-workflows-in-this-repository)
 below for list of the analysis topics.
 
-*Each directory is its own set of example workflows and contains:*
+*Each directory is a module of example workflow(s) and contains:*
 
 - A `README` that introduces you to the concepts, requirements, and workflows for that module.
 - Example dataset(s) in the `data/` folder
-- An R markdown (`Rmd`) file that you can use in RStudio to run the analysis
-- An R notebook (`nb.html`) file that is the resulting output of the Rmd file
-rendered as an HTML file.
 - A `results` and/or `plots` folder(s) that contains the output of the analyses.
+- An [R Notebook](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) which consists of:
+  - An `nb.html` file that is the resulting output of the Rmd file rendered as an HTML file.
+  - An R markdown (`Rmd`) file(s) that you can use in RStudio to run the analysis
 
 As you get more comfortable with the examples, we encourage you to apply these example workflows to your own refine.bio data.
 After downloading a refine.bio dataset, you can analyze them in these examples by placing the gene expression and metadata TSV files from your refine.bio download file into the respective `data/` folder for that module.
@@ -40,9 +40,9 @@ will be required for installing some packages from GitHub. We recommend installi
 
 These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
-Each example workflow directory will include further instructions for how to follow along with the examples.
+Each example module directory will include further instructions for how to follow along with the examples.
 
-## Example workflows in this repository  
+## Example modules in this repository  
 
 1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
 
