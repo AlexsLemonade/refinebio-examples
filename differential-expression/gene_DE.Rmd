@@ -90,8 +90,8 @@ category.
 des.mat <- model.matrix(~metadata$`genotype/variation`)
 ```
 
-## 3) Apply linear model
-After applying our data to linear model, in this example we apply empircal Bayes
+## 4) Apply linear model
+After applying our data to linear model, in this example we apply empirical Bayes
 smoothing and Benjamini-Hochberg multiple testing correction. 
 The `topTable` function default is to use Benjamini Hochberg but this can be
 changed to a different method using the `adjust.method` argument.
@@ -108,7 +108,7 @@ stats <- topTable(fit, number = nrow(df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-## 4) Explore fitness of model
+## 5) Explore fitness of model
 Here we will use two different plots that can be used to assess the quality of
 your model. A guide to the interpretation of these plots and other statistics for 
 gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf).
@@ -141,7 +141,7 @@ dev.off()
 voc.plot
 ```
 
-## 5) Write statistics to output results file
+## 6) Write statistics to output results file
 
 ```{r  Write results}
 readr::write_tsv(stats, file.path("results", "GSE71270_limma_results.tsv"))
