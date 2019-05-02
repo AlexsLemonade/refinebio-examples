@@ -78,7 +78,7 @@ Note: This script requires `optparse` library. If `optparse` library is not inst
 `--output`: name for the output file, the ".gct" suffix will be added if you do not add it yourself (*optional*).  
 `--rewrite`: file of the same name as the output will be rewritten (*optional*).     
 
-##### Examples of usage in command line:
+#### Examples of usage in command line:
 
 Below is the basic template for usage of this script.  
 The following examples will give you an idea of how it works.
