@@ -1,10 +1,8 @@
 # refine.bio Examples: Clustering
 
-[This notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/clustering_example.Rmd)
-uses the Bioconductor R package `ComplexHeatmap` for clustering and creating a
-heatmap from data downloaded from [refine.bio](https://www.refine.bio).
+[This notebook](https://alexslemonade.github.io/refinebio-examples/clustering/clustering_example.nb.html) uses the Bioconductor R package `ComplexHeatmap` for clustering and creating a heatmap.
 In this example, the gene expression matrix is subset to only include genes with high variance.
-The high variances set of genes is then used to create a heatmap.
+This set of genes is then used to create a heatmap.
 
 ## Requirements and usage
 
@@ -43,7 +41,7 @@ For the example in this module, the gene expression data and sample metadata are
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebook to match these files.
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook if you move notebooks outside of the GitHub repository structure.
 
-[The clustering R Notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering/clustering_example.nb.html) could be manipulated to sort by another summary statistic to create a heatmap, depending on your dataset and your research questions.
+[The clustering R Notebook](https://alexslemonade.github.io/refinebio-examples/clustering/clustering_example.nb.html) could be manipulated to sort by another summary statistic to create a heatmap, depending on your dataset and your research questions.
 
 ***
 ## Clustering data in GenePattern
