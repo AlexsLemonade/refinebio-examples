@@ -1,0 +1,141 @@
+---
+title: "Batch Correction"
+author: "ALSF CCDL - Candace Savonen"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+*Purpose*: This notebook illustrates how to assess batch effects and how to use
+ComBat to correct for them. 
+
+This method is based on:
+Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray 
+expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
+
+## 1) Set up libraries
+Install `sva` if you haven't done so before. 
+[This tutorial](https://bioconductor.org/packages/release/bioc/vignettes/sva/inst/doc/sva.pdf)
+takes you through strategies for tackling batch effects with `sva`.
+
+```{r eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("sva", suppressUpdates = TRUE)
+```
+
+```{r Upload ComBat functions}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Load ggplot2 for graphing
+library(ggplot2)
+```
+
+## 2) Import and set up data
+Data downloaded from refine.bio include a metadata tab separated values ("tsv")
+file and a data tsv file. 
+These files were obtained from [refine.bio](https://www.refine.bio/) by entering
+the search term "HEK 293" and then aggregating by `species`.
+
+```{r Import refine.bio data}
+# Put name of data file
+data.filename <- file.path( "data", "Liver_HOMO_SAPIENS.tsv")
+
+# Unzip the file and direct it to the data folder
+unzip(paste0(data.filename, ".zip"), exdir = "data")
+
+# Read in data tsv file
+df <- readr::read_tsv(data.filename, progress = FALSE) %>% 
+  tibble::column_to_rownames('X1') 
+# Make the gene column the rownames so the gene names are out of the way for calculations
+```
+
+Prep metadata to be in proper format for batch info to be used by ComBat
+
+```{r Prep metadata}
+# Metadata file name
+metadata.filename <- file.path("data", "Liver_metadata_HOMO_SAPIENS.tsv")
+
+# Read in data tsv file
+metadata <- readr::read_tsv(metadata.filename, progress = FALSE)
+
+# Fill in Array Express dataset labels
+metadata$series_id[is.na(metadata$series_id)] <- "E-TABM-292"
+
+# Put samples in the same order in the dataframe
+df <- df[, metadata$refinebio_accession_code]
+
+# Check if the samples are in the same order
+all.equal(metadata$refinebio_accession_code, colnames(df))
+```
+
+## 3) Perform Principal Components Analysis
+
+```{r}
+# Calculate PCA
+pca <- prcomp(t(df))
+
+# Make into dataframe for plotting with ggplot2
+pca.df <- data.frame(pca$x[, 1:2])
+```
+
+Plot these PC scores.
+We will likely see a difference between the datasets.
+
+```{r}
+ggplot(pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
+       color = metadata$series_id)) +
+  geom_point() + 
+  ggtitle("Non-batch corrected")
+```
+
+## 4) Peform ComBat correction
+To run ComBat, we need batch information, in this case we will use the dataset
+ids.
+
+```{r ComBat correction}
+# modcombat <- model.matrix(~1, data = as.factor(metadata$series_id))
+
+# corrected.df <- sva::ComBat(dat = as.matrix(df), 
+                            # batch = as.factor(metadata$refinebio_platform), 
+                            # par.prior = FALSE)
+
+corrected.df <- sva::ComBat(as.matrix(df), metadata$series_id)
+```
+
+## 5) Re-evaluate PCA after batch correction
+Let's see if ComBat helped with making PC scores less divided by batches. 
+
+```{r}
+# Calculate PCA
+corrected.pca <- prcomp(t(corrected.df))
+
+# Make into dataframe for plotting with ggplot2
+corrected.pca.df <- data.frame(corrected.pca$x[, 1:2], 
+                               dataset = metadata$series_id)
+```
+
+Plot these batch corrected data PC scores.
+
+```{r}
+ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
+       color = metadata$series_id)) +
+  geom_point() + 
+  ggtitle("Batch corrected")
+```
+
+## 6) Save batch corrected data to tsv file
+
+```{r}
+corrected.df %>% as.data.frame() %>% 
+  tibble::rownames_to_column("gene") %>%
+  readr::write_tsv(file.path("results", "Liver_batch_corrected_exprs.tsv"))
+```
+
+Session info: 
+
+```{r Print session info}
+# Print session info 
+sessionInfo()
+```
