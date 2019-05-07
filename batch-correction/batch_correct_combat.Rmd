@@ -8,16 +8,10 @@ output:
 ---
 
 *Purpose*: This notebook illustrates how to assess batch effects and how to use
-ComBat to correct for them. 
+`limma` to batch correct. 
 
-This method is based on:
-Johnson, WE, Rabinovic, A, and Li, C (2007). Adjusting batch effects in microarray 
-expression data using Empirical Bayes methods. Biostatistics 8(1):118-127.
-
-## 1) Set up libraries
-Install `sva` if you haven't done so before. 
-[This tutorial](https://bioconductor.org/packages/release/bioc/vignettes/sva/inst/doc/sva.pdf)
-takes you through strategies for tackling batch effects with `sva`.
+## 1) Set up
+This will install `limma` for you if you haven't installed it before. 
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
@@ -73,6 +67,9 @@ metadata.filename <- file.path("data", "metadata_HOMO_SAPIENS.tsv")
 # Read in data tsv file
 metadata <- readr::read_tsv(metadata.filename, progress = FALSE)
 
+# Get rid of spaces to streamline things 
+metadata$refinebio_platform <- gsub(" ", "", metadata$refinebio_platform)
+
 # Put samples in the same order in the dataframe
 df <- df[, metadata$refinebio_accession_code]
 
@@ -94,11 +91,20 @@ Plot these PC scores.
 We will likely see a difference between the datasets.
 
 ```{r}
-ggplot(pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
-       color = metadata$series_id)) +
+pc.plot <- ggplot(pca.df, aes(x = PC1, y = PC2, 
+                              color = metadata$refinebio_platform)) +
   geom_point() + 
-  # theme(legend.position = "none") +
   ggtitle("Non-batch corrected")
+
+# Print out the plot here
+pc.plot
+```
+
+Save plot to a png.
+
+```{r}
+# Save the plot to a png
+ggsave(file.path("plots", "uncorrected_pc_plot.png"))
 ```
 
 ## 4) Peform ComBat correction
@@ -107,8 +113,7 @@ ids.
 
 ```{r}
 corrected.df <- limma::removeBatchEffect(df, 
-                                    batch =  as.factor(metadata$refinebio_platform), 
-                                    batch2 = as.factor(metadata$series_id))
+                                         batch =  as.factor(metadata$refinebio_platform))
 ```
 
 ## 5) Re-evaluate PCA after batch correction
@@ -120,16 +125,25 @@ corrected.pca <- prcomp(t(corrected.df))
 
 # Make into dataframe for plotting with ggplot2
 corrected.pca.df <- data.frame(corrected.pca$x[, 1:2], 
-                               dataset = metadata$series_id)
+                               dataset = metadata$refinebio_platform)
 ```
 
 Plot these batch corrected data PC scores.
 
 ```{r}
-ggplot(corrected.pca.df, aes(x = PC1, y = PC2, shape = metadata$refinebio_platform, 
-       color = metadata$series_id)) +
+pc.plot <- ggplot(corrected.pca.df, aes(x = PC1, y = PC2, 
+                                        color = metadata$refinebio_platform)) +
   geom_point() + 
   ggtitle("Batch corrected")
+
+# Print out the plot here
+pc.plot
+```
+
+Save plot with batch corrected PCA plot to a png.
+
+```{r}
+ggsave(file.path("plots", "batch_corrected_pca_plot.png"))
 ```
 
 ## 6) Save batch corrected data to tsv file
