@@ -44,7 +44,7 @@ library(ggplot2)
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. 
 These files were obtained from [refine.bio](https://www.refine.bio/) by entering
-the search term "TODO" and then aggregating by `species`.
+the search term "AML" and then aggregating by `species`.
 
 ```{r Import refine.bio data}
 # Put name of data file
@@ -72,7 +72,7 @@ metadata <- readr::read_tsv(metadata.filename, progress = FALSE)
 metadata$refinebio_platform <- gsub(" ", "", metadata$refinebio_platform)
 
 # Put samples in the same order in the dataframe
-df <- df[, metadata$refinebio_accession_code]
+df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 
 # Check if the samples are in the same order
 all.equal(metadata$refinebio_accession_code, colnames(df))
@@ -141,6 +141,8 @@ pc.plot <- ggplot(corrected.pca.df, aes(x = PC1, y = PC2,
 pc.plot
 ```
 
+Although the correction doesn't completely get rid of the batch effects on PC2, It clearly reduces the effect of the batch effect on PC1. 
+This an example of how batch correction can help, but will probably not get rid of the problem entirely.  
 Save plot with batch corrected PCA plot to a png.
 
 ```{r}
