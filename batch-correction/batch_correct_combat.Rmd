@@ -12,6 +12,7 @@ output:
 
 ## 1) Set up
 This will install `limma` for you if you haven't installed it before. 
+We recommend using [`limma`'s guide on](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
