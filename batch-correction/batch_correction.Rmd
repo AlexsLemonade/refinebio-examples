@@ -7,14 +7,14 @@ output:
     toc_float: true
 ---
 
-*Purpose*: This notebook illustrates how to assess batch effects and how to use
-`limma` to batch correct. 
+*Purpose*: This notebook illustrates how to assess batch effects and correct for
+them with `limma`. 
 
 The [refine.bio normalization pipeline]( http://docs.refine.bio/en/latest/main_text.html)
 completed prior to your download, may be sufficient for removing batch effects
 for many datasets. 
-It is good practice to assess for batch effects, especially if your dataset 
-consists of more than one type of platform. 
+However, it is good practice to assess for batch effects, especially if your 
+dataset consists of more than one type of platform. 
 
 In this example, we will use expression data collected from Acute Myeloid 
 Leukemia patients. 
@@ -80,8 +80,8 @@ if (!dir.exists("plots")) {
 ```
 
 ## 2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. 
+Data downloaded from refine.bio include a metadata tab separated values ("TSV")
+file and a data TSV file. 
 These files were obtained from [refine.bio](https://www.refine.bio/) by entering
 the search term "AML" and then aggregating by `species`.
 
@@ -176,7 +176,7 @@ The group of samples on either the left or right clusters are from multiple
 different datasets, but on the left is RNA-seq data while on the right is all 
 hgu133plus2 microarray data.
 
-Save plot to a png.
+Save plot to a PNG.
 
 ```{r}
 # Save the plot to a png
@@ -184,11 +184,13 @@ ggsave(file.path("plots", "uncorrected_pca_plot.png"))
 ```
 
 ## 5) Peform batch correction using limma
-Here we will use the platforms and datasets as our variables to correct by. 
+Here we will use the `platform` variable to correct by. 
+Because we didn't see much separation in datasets of the same platform, we won't
+use our `dataset` variable to correct.
 
 ```{r}
 # Use removeBatchEffect function from limma
-corrected.df <- limma::removeBatchEffect(df, batch =  platform, batch2 = dataset)
+corrected.df <- limma::removeBatchEffect(df, batch =  platform)
 ```
 
 ## 6) Re-evaluate PCA after batch correction
@@ -224,14 +226,14 @@ Depending on what analyses these data were being used for, we may need to consid
 analyzing these datasets separately, or moving forward with only samples of one 
 platform type. 
 
-Save plot with batch corrected PCA plot to a png.
+Save plot with batch corrected PCA plot to a PNG.
 
 ```{r}
 ggsave(file.path("plots", "batch_corrected_pca_plot.png"))
 ```
 
-## 7) Save batch corrected data to tsv file
-We will save the batch corrected dataframe to a tsv file for hypothetical future
+## 7) Save batch corrected data to TSV file
+We will save the batch corrected dataframe to a TSV file for hypothetical future
 use. 
 
 ```{r}
