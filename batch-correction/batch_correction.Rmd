@@ -18,17 +18,31 @@ dataset consists of more than one type of platform.
 
 In this example, we will use expression data collected from Acute Myeloid 
 Leukemia patients. 
-
 This aggregated dataset consists of four original datasets we aggregated by 
 species on refine.bio.
 
-GSE6891
-GSE14468
-SRP048759
-SRP033266
+Two of these datasets are RNA-seq data ([SRP048759](https://www.refine.bio/experiments/SRP048759/leucegene-aml-sequencing-part-3) and [SRP033266](https://www.refine.bio/experiments/SRP033266/leucegene-aml-sequencing-part-2)) 
+and the other two are measured on a hgu133plus2 microarray ([GSE6891](https://www.refine.bio/experiments/GSE6891/acute-myeloid-leukemia-samples-of-samples-60yrs-on-hg-u133-plus-2) 
+and [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)). 
 
-Two of these datasets are RNA-seq data and the other two are measured on a
-hgu133plus2 microarray. 
+## General requirements for batch correction: 
+
+### 1) Adequate sample sizes per batch
+For batch correction to work you need adequate sample size (> 10 at least) for 
+each batch.
+For this example, the smallest dataset included has 143 samples, and the largest 
+dataset having 525 samples. 
+
+### 2) No variable confounds between batches
+If batches also have other differences such as tissue type, treatments, or any
+other biologically meaningful variable, batch correction cannot be completed 
+without severely compromising the integrity and meaning of the data. 
+
+### 3) Pre and post evaluations of the batch correction should be done
+Batch correction isn't always necessary, nor is it able to completely get rid of
+batch effects. 
+Because of this, careful evaluation of your data before and after correction is 
+needed. 
 
 ## 1) Set up
 This will install `limma` for you if you haven't installed it before. 
@@ -72,11 +86,11 @@ the search term "AML" and then aggregating by `species`.
 data.filename <- file.path( "data", "HOMO_SAPIENS.tsv")
 
 # Unzip the file and direct it to the data folder
-unzip(paste0(data.filename, ".zip"), exdir = "data")
+#unzip(paste0(data.filename, ".zip"), exdir = "data")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>%
-  tibble::column_to_rownames('Gene')
+  tibble::column_to_rownames('X1')
 # Make the gene column the rownames so the gene names are out of the way for calculations
 ```
 
@@ -116,11 +130,15 @@ Set up the dataset of origin information.
 # Make a dataset vector
 dataset <- metadata$series_id
 
-# Fill in the NA's for the dataset that isn't included in this variable
-dataset[is.na(dataset)] <- "SRP048759"
+# This is hacky and will be removed after we have a 'dataset' metadata column deployed
+dataset[grep("SRR16", metadata$refinebio_accession_code)] <- "SRP048759"
+dataset[grep("SRR10", metadata$refinebio_accession_code)] <- "SRP033266"
 
 # Make this a factor
 dataset <- as.factor(dataset)
+
+# Look at the summary of how many samples we have per dataset
+summary(dataset)
 ```
 
 ## 4) Perform Principal Components Analysis
@@ -150,20 +168,19 @@ pc.plot
 
 In this example dataset, we notice this "batch effect" is actually mostly a 
 difference in platform. 
-The group of samples on the left come from different datasets but are all 
+The group of samples on either the left or right clusters are from multiple 
+different datasets, but on the left is RNA-seq data while on the right is all 
 hgu133plus2 microarray data. 
-The group of the samples on the 
 
 Save plot to a png.
 
 ```{r}
 # Save the plot to a png
-ggsave(file.path("plots", "uncorrected_pc_plot.png"))
+ggsave(file.path("plots", "uncorrected_pca_plot.png"))
 ```
 
-## 5) Peform ComBat correction
-To run ComBat, we need batch information, in this case we will use the dataset
-ids.
+## 5) Peform batch correction using limma
+Here we will use the platforms and datasets as our variables to correct by. 
 
 ```{r}
 # Use removeBatchEffect function from limma
@@ -171,7 +188,7 @@ corrected.df <- limma::removeBatchEffect(df, batch =  platform, batch2 = dataset
 ```
 
 ## 6) Re-evaluate PCA after batch correction
-Let's see if batch correction helped with making PC scores less divided by batches. 
+Let's see if batch correction helped with making PC scores less divided by platform. 
 
 ```{r}
 # Calculate PCA
@@ -195,9 +212,11 @@ pc.plot <- ggplot(corrected.pca.df,
 pc.plot
 ```
 
-Although the correction doesn't completely get rid of the batch effects on PC2, It clearly reduces the effect of the batch effect on PC1. 
-This an example of how batch correction can help, but will probably not get rid of the problem entirely. 
-Depending on what analyses these data were being used for, we would consider 
+Although the correction doesn't completely get rid of the batch effects on PC2,
+it clearly reduces the effect of the batch effect on PC1. 
+This an example of how batch correction can help, but will probably not get rid 
+of the problem entirely. 
+Depending on what analyses these data were being used for, we may need to consider 
 analyzing these datasets separately, or moving forward with only samples of one 
 platform type. 
 
