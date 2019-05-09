@@ -13,36 +13,40 @@ output:
 The [refine.bio normalization pipeline]( http://docs.refine.bio/en/latest/main_text.html)
 completed prior to your download, may be sufficient for removing batch effects
 for many datasets. 
-It is good practice to assess for batch effects regardless, especially if your 
-dataset consists of more than one type of platform. 
+It is good practice to assess for batch effects, especially if your dataset 
+consists of more than one type of platform. 
 
 In this example, we will use expression data collected from Acute Myeloid 
 Leukemia patients. 
 This aggregated dataset consists of four original datasets we aggregated by 
 species on refine.bio.
 
-Two of these datasets are RNA-seq data ([SRP048759](https://www.refine.bio/experiments/SRP048759/leucegene-aml-sequencing-part-3) and [SRP033266](https://www.refine.bio/experiments/SRP033266/leucegene-aml-sequencing-part-2)) 
-and the other two are measured on a hgu133plus2 microarray ([GSE6891](https://www.refine.bio/experiments/GSE6891/acute-myeloid-leukemia-samples-of-samples-60yrs-on-hg-u133-plus-2) 
-and [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)). 
+Two of these datasets are RNA-seq data:  
+- [SRP048759](https://www.refine.bio/experiments/SRP048759/leucegene-aml-sequencing-part-3)  
+- [SRP033266](https://www.refine.bio/experiments/SRP033266/leucegene-aml-sequencing-part-2)  
 
-## General requirements for batch correction: 
+The other two are measured on a hgu133plus2 microarray:  
+- [GSE6891](https://www.refine.bio/experiments/GSE6891/acute-myeloid-leukemia-samples-of-samples-60yrs-on-hg-u133-plus-2)  
+- [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)).  
 
-### 1) Adequate sample sizes per batch
+### General requirements for performing batch correction:   
+
+#### 1) Have adequate sample sizes per batch  
 For batch correction to work you need adequate sample size (> 10 at least) for 
 each batch.
 For this example, the smallest dataset included has 143 samples, and the largest 
-dataset having 525 samples. 
+dataset having 525 samples.   
 
-### 2) No variable confounds between batches
+#### 2) Cannot have confounds between batch and other biological variables 
 If batches also have other differences such as tissue type, treatments, or any
 other biologically meaningful variable, batch correction cannot be completed 
-without severely compromising the integrity and meaning of the data. 
+without severely compromising the integrity and meaning of the data.   
 
-### 3) Pre and post evaluations of the batch correction should be done
+#### 3) Perform pre and post evaluations of any batch correction  
 Batch correction isn't always necessary, nor is it able to completely get rid of
 batch effects. 
 Because of this, careful evaluation of your data before and after correction is 
-needed. 
+recommended.  
 
 ## 1) Set up
 This will install `limma` for you if you haven't installed it before. 
@@ -86,15 +90,15 @@ the search term "AML" and then aggregating by `species`.
 data.filename <- file.path( "data", "HOMO_SAPIENS.tsv")
 
 # Unzip the file and direct it to the data folder
-#unzip(paste0(data.filename, ".zip"), exdir = "data")
+unzip(paste0(data.filename, ".zip"), exdir = "data")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>%
-  tibble::column_to_rownames('X1')
+  tibble::column_to_rownames("X1")
 # Make the gene column the rownames so the gene names are out of the way for calculations
 ```
 
-Prep metadata to be in proper format for batch info to be used by ComBat
+Prep metadata and make sure it matches the order of the samples in `df`.
 
 ```{r Prep metadata}
 # Metadata file name
@@ -167,10 +171,10 @@ pc.plot
 ```
 
 In this example dataset, we notice this "batch effect" is actually mostly a 
-difference in platform. 
+difference in platform.
 The group of samples on either the left or right clusters are from multiple 
 different datasets, but on the left is RNA-seq data while on the right is all 
-hgu133plus2 microarray data. 
+hgu133plus2 microarray data.
 
 Save plot to a png.
 
@@ -227,7 +231,6 @@ ggsave(file.path("plots", "batch_corrected_pca_plot.png"))
 ```
 
 ## 7) Save batch corrected data to tsv file
-
 We will save the batch corrected dataframe to a tsv file for hypothetical future
 use. 
 
@@ -239,7 +242,7 @@ corrected.df %>% as.data.frame() %>%
 
 Session info: 
 
-```{r Print session info}
+```{r}
 # Print session info 
 sessionInfo()
 ```

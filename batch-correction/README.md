@@ -1,7 +1,7 @@
 # refine.bio Examples: Batch Correction
 This [notebook](https://alexslemonade.github.io/refinebio-examples/batch-correction/batch_correct.nb.html)
-illustrates how to evaluate potential batch effects in a dataset and then how to
-use `limma` to correct for batches.
+illustrates how to evaluate potential batch effects in a [refine.bio](https://www.refine.bio/)
+dataset and then how to use `limma` to correct for batches.
 
 ## Requirements and usage
 
