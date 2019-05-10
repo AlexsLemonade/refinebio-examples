@@ -7,19 +7,25 @@ output:
     toc_float: true
 ---
 
-*Purpose*: This notebook illustrates how to assess batch effects and correct for
-them with `limma`. 
+*Purpose*: This notebook illustrates how to assess and correct for batch effects
+with `limma`. 
 
-The [refine.bio normalization pipeline]( http://docs.refine.bio/en/latest/main_text.html)
-completed prior to your download, may be sufficient for removing batch effects
-for many datasets. 
-However, it is good practice to assess for batch effects, especially if your 
-dataset consists of more than one type of platform. 
+It is good practice to assess potential batch effects in all datasets.
+For most datasets, the [refine.bio normalization pipeline](http://docs.refine.bio/en/latest/main_text.html)
+completed prior to your download, may have sufficiently minimized batch effects.
 
-In this example, we will use expression data collected from Acute Myeloid 
-Leukemia patients. 
-This aggregated dataset consists of four original datasets we aggregated by 
-species on refine.bio.
+Traditionally, batch correction is thought of in terms of technical batches, 
+or in other words, what samples were processed when and in what groups. 
+However, most publicly available data does not include this information. 
+Another application of batch correction is to use it to smooth over differences 
+among datasets aggregated together.
+
+For datasets with similar set ups, we can aggregate data using the
+'by species' option on refine.bio.
+In this example, we will use expression datasets collected from acute myeloid 
+leukemia patients. 
+This aggregated dataset consists of four original datasets we aggregated using 
+the 'by species' option on refine.bio.
 
 Two of these datasets are RNA-seq data:  
 - [SRP048759](https://www.refine.bio/experiments/SRP048759/leucegene-aml-sequencing-part-3)  
@@ -27,15 +33,20 @@ Two of these datasets are RNA-seq data:
 
 The other two are measured on a hgu133plus2 microarray:  
 - [GSE6891](https://www.refine.bio/experiments/GSE6891/acute-myeloid-leukemia-samples-of-samples-60yrs-on-hg-u133-plus-2)  
-- [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)).  
+- [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)  
+
+Although the normalization processing for these data makes the data more 
+comparable, we still will expect data from different platforms to show 
+differences. 
+This is something we can try to use batch correction to deal with. 
 
 ### General requirements for performing batch correction:   
 
 #### 1) Have adequate sample sizes per batch  
 For batch correction to work you need adequate sample size (> 10 at least) for 
-each batch.
-For this example, the smallest dataset included has 143 samples, and the largest 
-dataset having 525 samples.   
+each batch group.
+In this example, we will consider the original datasets and platforms as 
+possible batch variables to consider correcting by. 
 
 #### 2) Cannot have confounds between batch and other biological variables 
 If batches also have other differences such as tissue type, treatments, or any
@@ -88,9 +99,6 @@ the search term "AML" and then aggregating by `species`.
 ```{r Import refine.bio data}
 # Put name of data file
 data.filename <- file.path( "data", "HOMO_SAPIENS.tsv")
-
-# Unzip the file and direct it to the data folder
-unzip(paste0(data.filename, ".zip"), exdir = "data")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>%
@@ -145,7 +153,12 @@ dataset <- as.factor(dataset)
 summary(dataset)
 ```
 
-## 4) Perform Principal Components Analysis
+## 4) Perform Principal Components Analysis (PCA)
+In order to observe how samples group together, we will use PCA for dimension 
+reduction so that we can plot the PC scores of the samples. 
+For more information on PCA and other dimension reduction techniques, we 
+recommend our [dimension reduction examples](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction) 
+in this repository.
 
 ```{r}
 # Calculate PCA
@@ -170,8 +183,8 @@ pc.plot <- ggplot(pca.df,
 pc.plot
 ```
 
-In this example dataset, we notice this "batch effect" is actually mostly a 
-difference in platform.
+In this example dataset, we notice this batch effect appears to be due to 
+differences in platforms.
 The group of samples on either the left or right clusters are from multiple 
 different datasets, but on the left is RNA-seq data while on the right is all 
 hgu133plus2 microarray data.
