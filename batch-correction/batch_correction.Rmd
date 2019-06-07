@@ -98,7 +98,7 @@ the search term "AML" and then aggregating by `species`.
 
 ```{r Import refine.bio data}
 # Put name of data file
-data.filename <- file.path( "data", "HOMO_SAPIENS.tsv")
+data.filename <- file.path("data", "HOMO_SAPIENS.tsv")
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>%
@@ -129,7 +129,7 @@ well as platform information.
 Set up the platform information. 
 
 ```{r}
-# Get rid of spaces to streamline things 
+# Get rid of spaces to streamline things
 metadata$refinebio_platform <- gsub(" ", "", metadata$refinebio_platform)
 
 # Make into a factor
@@ -173,9 +173,11 @@ datasets cluster.
 
 ```{r}
 # Create a scatterplot
-pc.plot <- ggplot(pca.df, 
-                  aes(x = PC1, y = PC2, color = dataset, shape = platform)) +
-  geom_point() + 
+pc.plot <- ggplot(
+  pca.df,
+  aes(x = PC1, y = PC2, color = dataset, shape = platform)
+) +
+  geom_point() +
   ggtitle("Uncorrected") +
   theme_classic()
 
@@ -203,7 +205,7 @@ use our `dataset` variable to correct.
 
 ```{r}
 # Use removeBatchEffect function from limma
-corrected.df <- limma::removeBatchEffect(df, batch =  platform)
+corrected.df <- limma::removeBatchEffect(df, batch = platform)
 ```
 
 ## 6) Re-evaluate PCA after batch correction
@@ -221,9 +223,11 @@ Plot these batch corrected data PC scores.
 
 ```{r}
 # Create a scatterplot, same as before, but with the corrected data
-pc.plot <- ggplot(corrected.pca.df, 
-                  aes(x = PC1, y = PC2, color = dataset, shape = platform)) +
-  geom_point() + 
+pc.plot <- ggplot(
+  corrected.pca.df,
+  aes(x = PC1, y = PC2, color = dataset, shape = platform)
+) +
+  geom_point() +
   ggtitle("Batch corrected") +
   theme_classic()
 
@@ -250,7 +254,8 @@ We will save the batch corrected dataframe to a TSV file for hypothetical future
 use. 
 
 ```{r}
-corrected.df %>% as.data.frame() %>% 
+corrected.df %>%
+  as.data.frame() %>%
   tibble::rownames_to_column("Gene") %>%
   readr::write_tsv(file.path("results", "batch_corrected_exprs.tsv"))
 ```
@@ -258,6 +263,6 @@ corrected.df %>% as.data.frame() %>%
 Session info: 
 
 ```{r}
-# Print session info 
+# Print session info
 sessionInfo()
 ```
