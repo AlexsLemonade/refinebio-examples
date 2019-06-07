@@ -50,7 +50,7 @@ each batch group.
 In this example, we will consider the original datasets and platforms as 
 possible batch variables to consider correcting by. 
 
-#### 2) Cannot have confounds between batch and other biological variables 
+#### 2) Cannot have batches confounded with and other biological variables 
 If batches also have other differences such as tissue type, treatments, or any
 other biologically meaningful variable, batch correction cannot be completed 
 without severely compromising the integrity and meaning of the data.   
