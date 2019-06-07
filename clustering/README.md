@@ -147,4 +147,4 @@ Now you should see a file called `clustering/GSE12955_special_name.gct`.
 
 *After you successfully convert your TSV file into a GCT format, you are ready to login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Clustering` module, and follow the instructions to upload and analyze your newly created GCT file*
 
-*In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)*
+* *In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)*
