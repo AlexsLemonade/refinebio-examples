@@ -1,6 +1,6 @@
 Copyright (c) 2019 Alex's Lemonade Stand Foundation
 
-* The code blocks contained within any computational notebooks are available for re-use under the BSD 3-Clause License ([see section below](#bsd-3-clause-license)).
+* The code blocks contained within any computational notebooks are available for re-use under the BSD 3-Clause License ([see section](#bsd-3-clause-license) below).
 
 * All other content is available for re-use under the CC-BY 4.0 license ([see section](#creative-commons-attribution-40-international) below).
 
