@@ -155,3 +155,5 @@ If you've already created a GCT format file from your data, like is described ab
 [CLSFileCreator](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/ClsFileCreator/4)
 
 *Now login into [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf), select a `Differential Expression` module, and follow the instructions to upload and analyze your newly created GCT and CLS files*
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

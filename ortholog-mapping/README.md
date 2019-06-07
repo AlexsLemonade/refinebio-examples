@@ -1,6 +1,6 @@
 # refine.bio Examples: Ortholog Mapping
 
-[This notebook](https://alexslemonade.github.io/refinebio-examples/ortholog-mapping/ortholog_mapping_example.nb.html) demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for data obtained from refine.bio. 
+[This notebook](https://alexslemonade.github.io/refinebio-examples/ortholog-mapping/ortholog_mapping_example.nb.html) demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for data obtained from refine.bio.
 HCOP stands for HGNC Comparison of Orthology Predictions.
 You can read more about the package [here](https://stephenturner.github.io/hcop).
 
@@ -14,7 +14,7 @@ This module requires you to install the following software to run the example yo
 * [**tidyverse**](https://www.tidyverse.org/)
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
-These requirements can be installed by following the instructions at the links above. 
+These requirements can be installed by following the instructions at the links above.
 The R Notebook is designed to check if additional required packages are installed and will install them if they are not.
 Note that this notebook does check if `devtools` is installed, but we have encountered some trouble with missing system requirements and recommend installing the package prior to running the notebook.
 
@@ -22,7 +22,7 @@ Note that this notebook does check if `devtools` is installed, but we have encou
 
 We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/training-modules/blob/master/intro_to_R_tidyverse/00-rstudio_guide.md) as part of our training content that you may find helpful if you're getting started with RStudio for the first time.
 
-Note that the first time you open RStudio, you should select a CRAN mirror. 
+Note that the first time you open RStudio, you should select a CRAN mirror.
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
 
 You can install the additional requirements (e.g., tidyverse) through RStudio.
@@ -45,3 +45,5 @@ For the example in this module, the gene expression data and sample metadata are
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebook to match these files.
 The output of the notebook is a TSV file that contains annotation with orthologs; this filename should be updated as well.
 We suggest saving the output in the `results/` directory, as this is automatically created by the notebook if moved outside of the GitHub repository structure.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)
