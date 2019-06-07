@@ -42,3 +42,5 @@ For the example in this module, the gene expression data and sample metadata are
 If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebook to match these files.
 The output of the notebook is a TSV file that contains annotation with gene symbols; this filename should be updated as well.
 We suggest saving the output in the `results/` directory, as this is automatically created by the notebook if moved outside of the GitHub repository structure.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

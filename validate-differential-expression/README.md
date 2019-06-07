@@ -88,3 +88,5 @@ This is partially so that this notebook’s approach can be applied to any diffe
 
 Depending on the form of your differential expression results, you will need to alter the steps in [`gene_DE_validate`](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html) to obtain the two aforementioned gene lists.
 We advise familiarizing yourself with [`tidyverse`](https://www.tidyverse.org/) functions, particularly the ones used in [this main example](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html), to help you determine the how to clean your data for use with this analysis.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

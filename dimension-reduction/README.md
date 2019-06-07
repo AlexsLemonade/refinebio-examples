@@ -73,3 +73,5 @@ for your dataset.
 Recommended articles on UMAP:   
 - [How UMAP works with visuals](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)  
 - [Original paper on UMAP](https://arxiv.org/abs/1802.03426) by McGinnes, Healy & Melville.  
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

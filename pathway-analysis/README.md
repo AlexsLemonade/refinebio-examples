@@ -30,14 +30,14 @@ This module requires you to install the following software to run examples yours
 * [**tidyverse**](https://www.tidyverse.org/)
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html) will be required for installing some packages from GitHub. We recommend installing `devtools` from CRAN.
 
-These requirements can be installed by following the instructions at the links above. 
+These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
 
 #### RStudio
 
 We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/training-modules/blob/master/intro_to_R_tidyverse/00-rstudio_guide.md) as part of our training content that you may find helpful if you're getting started with RStudio for the first time.
 
-Note that the first time you open RStudio, you should select a CRAN mirror. 
+Note that the first time you open RStudio, you should select a CRAN mirror.
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
 
 You can install the additional requirements (e.g., tidyverse) through RStudio.
@@ -82,13 +82,13 @@ Below, we briefly introduce some commonly used gene set sources.
 QuSAGE, GSEA, and other pathway analysis methods allow you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), a common format for storing gene sets.
 
 The [Molecular Signatures Database (MSigDB)](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in GMT format ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102), [Liberzon et al. _Bioinformatics_. 2011.](https://doi.org/10.1093/bioinformatics/btr260)).
-[Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2) 
-such as [KEGG](https://www.genome.jp/kegg/) ([Kanehisa et al. _NAR_. 2000.](https://doi.org/10.1093/nar/28.1.27), [Kanehisa et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkw1092), [Kanehisa et al. _NAR_. 2019.](https://doi.org/10.1093/nar/gky962)) are a good starting point for any pathway analysis. 
+[Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2)
+such as [KEGG](https://www.genome.jp/kegg/) ([Kanehisa et al. _NAR_. 2000.](https://doi.org/10.1093/nar/28.1.27), [Kanehisa et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkw1092), [Kanehisa et al. _NAR_. 2019.](https://doi.org/10.1093/nar/gky962)) are a good starting point for any pathway analysis.
 From the [MSigDB documentation](http://software.broadinstitute.org/gsea/msigdb/collection_details.jsp#C2), curated gene sets are:
 > Gene sets curated from various sources such as online pathway databases, the biomedical literature, and contributions from domain experts.
 
-If you're interested in a smaller set of pathways/gene sets that condense down 
-some of the overlap between gene sets, you might check out the 
+If you're interested in a smaller set of pathways/gene sets that condense down
+some of the overlap between gene sets, you might check out the
 [Hallmark gene set collection](http://software.broadinstitute.org/gsea/msigdb/collection_details.jsp#H) ([Liberzon et al. _Cell Systems_. 2015.](https://doi.org/10.1016/j.cels.2015.12.004)).
 
 Note that the gene sets from MSigDB are for human only.
@@ -120,7 +120,7 @@ In this module, we use Quantitative Set Analysis of Gene Expression (QuSAGE) ([Y
 QuSAGE, implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html), has some nice features:
 
 * It takes into account inter-gene correlation (a source of type I error).
-* It returns more information than just a p-value. 
+* It returns more information than just a p-value.
 That's useful for analyses you might want to perform downstream.
 * Built-in visualization functionality.
 
@@ -139,7 +139,7 @@ QuSAGE has been extended to include support for meta-analysis and possesses the 
 
 We have prepared a [**meta-analysis example workflow**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_meta_analysis.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/qusage_meta_analysis.Rmd)) in medulloblastoma.
 
-### GSEA 
+### GSEA
 
 [Gene Set Enrichment Analysis (GSEA)](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Main_Page) is a popular method to determine if gene sets show significant differences between two groups ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102)) and any discussion of pathway analysis would be incomplete without it.
 
@@ -164,7 +164,7 @@ Note that there is also an ssGSEA GenePattern module ([docs](https://gsea-msigdb
 ### Over-representation analysis with WebGestalt
 
 Over-representation analysis (ORA) is a method of pathway or gene set analysis where one can ask if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
-The other methodologies introduced throughout this module such as QuSAGE and GSEA can require more samples than a different expression analysis. 
+The other methodologies introduced throughout this module such as QuSAGE and GSEA can require more samples than a different expression analysis.
 For instance, the sample label permutation step of GSEA is reported to perform poorly with 7 samples or less in each group ([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
 It is not uncommon to have n = 3 for each group in a treatment-control transcriptomic study, at which point identifying differentially expressed genes is possible.
 If you are performing pathway or gene set analysis on a study of this size, you may be best served by ORA.
@@ -173,3 +173,5 @@ See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.
 
 We provide an example workflow for [**performing over-representation analysis with `WebGestaltR`**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ora_with_webgestaltr.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/ora_with_webgestaltr.Rmd)).
 WebGestalt also has a [web interface](http://www.webgestalt.org/) and is not limited to ORA.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

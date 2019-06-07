@@ -2,12 +2,12 @@
 
 ## Background and objective
 
-The [refine.bio project](https://github.com/AlexsLemonade/refinebio) is a continuously growing compendium of genome-scale gene expression data from multiple species. 
+The [refine.bio project](https://github.com/AlexsLemonade/refinebio) is a continuously growing compendium of genome-scale gene expression data from multiple species.
 Because it is comprised of many different individual studies and new samples are added to our source repositories all the time, we've selected approaches for data processing/normalization that can be applied to individual samples, rather than whole experiments, where possible.
 We'll perform additional downstream processing steps (e.g., quantile normalization; more on that below) to make samples from different experiments more comparable.
 
 In refine.bio, we prefer to process the _raw data_ using our selected pipelines.
-This is not always possible; sometimes the raw data is unavailable at a source repository or the raw data is in a format that we can not process. 
+This is not always possible; sometimes the raw data is unavailable at a source repository or the raw data is in a format that we can not process.
 In these cases, we use submitter-supplied _processed data_ from the source repositories, but we often need to convert the gene identifiers to the Ensembl gene ids that we use in the rest of our system.
 
 In this small project, we'll explore the same data set ([`GSE39842`](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE39842)) processed three ways:
@@ -16,7 +16,7 @@ In this small project, we'll explore the same data set ([`GSE39842`](https://www
 * **SCANfast-processed data from refine.bio**. We use the `SCANfast` function from the [SCAN.UPC](https://bioconductor.org/packages/release/bioc/html/SCAN.UPC.html) to process Affymetrix array data from raw because it allows us to process individual samples.
 * **Quantile normalized SCANfast-processed data from refine.bio**. We generate a target/reference distribution for each organism using the Affymetrix platform with the largest number of samples for that organism (using the [`preprocessCore`](https://bioconductor.org/packages/release/bioc/html/preprocessCore.html) package) and use that as the target distribution for each sample when delivering the samples a user selects for download.
 
-Ideally, all three processing methods would show similar overall data structures and trends. 
+Ideally, all three processing methods would show similar overall data structures and trends.
 We'll specifically evaluate the following:
 
 * Overall data structure -- what does hierarchical clustering look like?
@@ -70,12 +70,12 @@ To take a high level look at _data structure_, we calculate variance for each ge
 
 We can see that the overall structure looks very similar, with samples grouping first by genotype and then by timepoint in each case.
 
-This, however, does not guarantee that the same genes will be in the clustered matrix in each case. 
+This, however, does not guarantee that the same genes will be in the clustered matrix in each case.
 To explore this, we plotted the overlap between the different processing methods' high variance genes.
 
 ![variance-venn](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/plots/high_variance_genes_venn.png)
 
-We can see that the majority of high variance genes are shared between all three methods. 
+We can see that the majority of high variance genes are shared between all three methods.
 The QN list seems to be "more similar" to both the SCANfast and RMA lists than they are to each other.
 
 ### Differential expression analysis
@@ -99,7 +99,7 @@ A number of the genes identified in the original publication (e.g., _jak2a_, _th
 
 We used the differentially expressed genes described above as an "interesting" gene list input into [`WebGestaltR`](https://cran.r-project.org/package=WebGestaltR) for overrepresentation analysis.
 
-The WEB-based GEne SeT AnaLysis Toolkit (WebGestalt) results for each of the processing pipelines, including gene identifier conversions (`User ID Mapping Table` tab) and the enriched gene sets (`Enrichment Results` tab), can be viewed by opening the following HTML files in a web browser: 
+The WEB-based GEne SeT AnaLysis Toolkit (WebGestalt) results for each of the processing pipelines, including gene identifier conversions (`User ID Mapping Table` tab) and the enriched gene sets (`Enrichment Results` tab), can be viewed by opening the following HTML files in a web browser:
 * [`results/pathway_analysis/Project_RMA/Report_RMA.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_RMA/Report_RMA.html)
 * [`results/pathway_analysis/Project_SCANfast/Report_SCANfast.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_SCANfast/Report_SCANfast.html)
 * [`results/pathway_analysis/Project_QN/Report_QN.html`](https://github.com/AlexsLemonade/refinebio-examples/blob/master/compare-processing/results/pathway_analysis/Project_QN/Report_QN.html)
@@ -114,7 +114,9 @@ There are many more pathways identified as significant in the SCANfast-processed
 
 ## Summary
 
-Based on these analyses, our prior experience with these methods, and the [publication that introduced the SCAN methodology](http://doi.org/10.1016/j.ygeno.2012.08.003), SCANfast likely has increased sensitivity over RMA. 
+Based on these analyses, our prior experience with these methods, and the [publication that introduced the SCAN methodology](http://doi.org/10.1016/j.ygeno.2012.08.003), SCANfast likely has increased sensitivity over RMA.
 Because the quantile normalized data is first processed with SCANfast, we would expect these two to show similar patterns and that quantile normalization would "dampen" the biological signal somewhat.
 (In using quantile normalization, we assume that the only differences between samples are of a technical nature and that is certainly not always the case!)
 These analyses are consistent with our expectations.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

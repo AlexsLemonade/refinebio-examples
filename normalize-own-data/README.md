@@ -12,14 +12,14 @@ This module requires you to install the following software to run the example yo
 * [**tidyverse**](https://www.tidyverse.org/)
 * **wget** - [installation instructions for Mac with Homebrew](https://www.maketecheasier.com/install-wget-mac/), [installation instructions for Windows 10](https://builtvisible.com/download-your-website-with-wget/) (under _Install WGET in Windows 10_), [installation instructions for Debian or Ubuntu Linux](https://www.cyberciti.biz/faq/how-to-install-wget-togetrid-of-error-bash-wget-command-not-found/)
 
-These requirements can be installed by following the instructions at the links above. 
+These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
 
 #### RStudio
 
 We have prepared [a quick guide to RStudio](https://github.com/AlexsLemonade/training-modules/blob/master/intro_to_R_tidyverse/00-rstudio_guide.md) as part of our training content that you may find helpful if you're getting started with RStudio for the first time.
 
-Note that the first time you open RStudio, you should select a CRAN mirror. 
+Note that the first time you open RStudio, you should select a CRAN mirror.
 You can do so by clicking `Tools` > `Global Options` > `Packages` and selecting a CRAN mirror near you with the `Change` button.
 
 You can install the additional R package requirements (e.g., tidyverse) through RStudio.
@@ -52,3 +52,5 @@ In this [example notebook](https://alexslemonade.github.io/refinebio-examples/no
 The R package we use for quantile normalization ([`preprocessCore`](https://bioconductor.org/packages/release/bioc/html/preprocessCore.html)) expects a matrix where samples are columns and genes are rows.
 Any tabular format that can be read into R and follows this format (or can be easily transposed) is appropriate.
 In our example, we use a TSV file where samples are columns and genes are rows.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)
