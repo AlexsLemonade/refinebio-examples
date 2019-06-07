@@ -7,21 +7,24 @@ output:
     toc_float: true
 ---
 
-*Purpose*: This notebook illustrates how to assess and correct for batch effects
-with `limma`. 
+*Purpose*: This notebook illustrates how to assess batch effects with principal
+components analysis and then attempt to correct batch effects with `limma`. 
 
-It is good practice to assess potential batch effects in all datasets.
-For most datasets, the [refine.bio normalization pipeline](http://docs.refine.bio/en/latest/main_text.html)
+It's good practice to assess the structure of any dataset you receive from 
+refine.bio. The refine.bio [refine.bio normalization pipeline](http://docs.refine.bio/en/latest/main_text.html#processing-information), 
 completed prior to your download, may have sufficiently minimized batch effects.
 
-Traditionally, batch correction is thought of in terms of technical batches, 
-or in other words, what samples were processed when and in what groups. 
-However, most publicly available data does not include this information. 
-Another application of batch correction is to use it to smooth over differences 
-among datasets aggregated together.
+Traditionally, batch effects are framed in terms of technical batches, 
+or in other words, what samples were processed when and in what groups in an 
+individual experiment.
+However, most publicly available data does not include this information and 
+differences may exists between samples from different platforms or datasets 
+once they are integrated.
 
-For datasets with similar set ups, we can aggregate data using the
+For datasets with similar set ups, on refine.bio, we can aggregate data using the
 'by species' option on refine.bio.
+But, another source of batch effects can be differences among datasets 
+aggregated together.
 In this example, we will use expression datasets collected from acute myeloid 
 leukemia patients. 
 This aggregated dataset consists of four original datasets we aggregated using 
@@ -36,9 +39,8 @@ The other two are measured on a hgu133plus2 microarray:
 - [GSE14468](https://www.refine.bio/experiments/GSE14468/gene-expression-profiling-of-cebpa-double-and-single-mutant-and-cebpa-wild-type-aml)  
 
 Although the normalization processing for these data makes the data more 
-comparable, we still will expect data from different platforms to show 
-differences. 
-This is something we can try to use batch correction to deal with. 
+comparable, data from different platforms may show differences. 
+This is something we can try to address with batch correction. 
 
 ### General requirements for performing batch correction:   
 
@@ -53,11 +55,15 @@ If batches also have other differences such as tissue type, treatments, or any
 other biologically meaningful variable, batch correction cannot be completed 
 without severely compromising the integrity and meaning of the data.   
 
-#### 3) Perform pre and post evaluations of any batch correction  
+#### 3) Evaluate data structure pre- and post-batch correction  
 Batch correction isn't always necessary, nor is it able to completely get rid of
 batch effects. 
-Because of this, careful evaluation of your data before and after correction is 
-recommended.  
+We recommend careful evaluation of your data before and after correction.
+In this notebook, we will use principal componments analysis to observe how 
+samples group together. 
+As a dimension reduction technique, PCA allows us to plot the first two 
+components scores of our samples so we can see how they might cluster by 
+variables that are potential sources of batch effects. 
 
 ## 1) Set up
 This will install `limma` for you if you haven't installed it before. 
@@ -250,8 +256,7 @@ ggsave(file.path("plots", "batch_corrected_pca_plot.png"))
 ```
 
 ## 7) Save batch corrected data to TSV file
-We will save the batch corrected dataframe to a TSV file for hypothetical future
-use. 
+We will save the batch-corrected dataframe to a TSV file.
 
 ```{r}
 corrected.df %>%
