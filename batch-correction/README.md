@@ -43,3 +43,5 @@ If you'd like to adapt an example to include data you've obtained from [refine.b
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebooks if you move notebooks outside of the GitHub repository structure.
 We recommend using the [`limma` user guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf)
 to help you use `limma`.
+
+\* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)
