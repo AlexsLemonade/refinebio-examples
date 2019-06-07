@@ -1,7 +1,25 @@
 # refine.bio Examples: Batch Correction
 This [notebook](https://alexslemonade.github.io/refinebio-examples/batch-correction/batch_correct.nb.html)
 illustrates how to evaluate potential batch effects in a [refine.bio](https://www.refine.bio/)
-dataset and then how to use `limma` to correct for batches.
+dataset using principal components analysis.
+We then attempt to correct for batch effects with `limma`, followed by a
+re-evaluation using PCA.
+
+### About batch effects
+Traditionally, batch effects are framed in terms of technical batches,
+or in other words, what samples were processed when and in what groups in an
+individual experiment.
+For datasets with similar set-ups, on refine.bio, we can aggregate data using the
+'by species' option on refine.bio.
+So, another source of batch effects can be differences among datasets
+aggregated together.
+
+Batch correction *isn't always necessary*, nor is it able to *completely* get
+rid of batch effects.
+We recommend *careful evaluation* of your data before and after correction.
+Refine.bio normalization processing for these data generally makes them more
+comparable, but data from different platforms may show differences.
+This is something we try to address with batch correction in this example.
 
 ## Requirements and usage
 

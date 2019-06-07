@@ -59,7 +59,7 @@ without severely compromising the integrity and meaning of the data.
 Batch correction isn't always necessary, nor is it able to completely get rid of
 batch effects. 
 We recommend careful evaluation of your data before and after correction.
-In this notebook, we will use principal componments analysis to observe how 
+In this notebook, we will use principal components analysis to observe how 
 samples group together. 
 As a dimension reduction technique, PCA allows us to plot the first two 
 components scores of our samples so we can see how they might cluster by 
