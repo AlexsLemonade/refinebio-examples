@@ -23,33 +23,33 @@ Subject to the terms and conditions of these Terms, we hereby grant you a limite
 ### b. Use Restrictions.
 In connection with any access to or use of the CCDL (or any Content), you may not:
 
-        i. publish, present or otherwise disclose Data, or results from analysis of Data, obtained through the CCDL without properly attributing (i) the Data source using the language provided by the Data contributor of that Data set (as applicable), and (ii) us using the language posted on the CCDL or otherwise provided by us;
+i. publish, present or otherwise disclose Data, or results from analysis of Data, obtained through the CCDL without properly attributing (i) the Data source using the language provided by the Data contributor of that Data set (as applicable), and (ii) us using the language posted on the CCDL or otherwise provided by us;
 
-        ii. use or attempt to use Content to harm, marginalize, or discriminate against individuals or populations;
+ii. use or attempt to use Content to harm, marginalize, or discriminate against individuals or populations;
 
-        iii. identify, or make any attempt to identify, any individual to which any Data pertains;
+iii. identify, or make any attempt to identify, any individual to which any Data pertains;
 
-        iv. create a false identity, impersonate another individual or entity in any way, or falsely imply that any third-party service is associated with the CCDL;
+iv. create a false identity, impersonate another individual or entity in any way, or falsely imply that any third-party service is associated with the CCDL;
 
-        v. upload or otherwise transmit to or through the CCDL any Content that infringes, misappropriates, or violates any third-party right; that violates, or causes us or our affiliates to violate, any applicable law or regulation; that is unlawful, harmful, harassing, defamatory, threatening, hateful or otherwise objectionable or inappropriate; or that can cause harm or delay to the CCDL (or any connected or related systems) or can expose us or other Users to risk of harm, damage, liability or loss;
+v. upload or otherwise transmit to or through the CCDL any Content that infringes, misappropriates, or violates any third-party right; that violates, or causes us or our affiliates to violate, any applicable law or regulation; that is unlawful, harmful, harassing, defamatory, threatening, hateful or otherwise objectionable or inappropriate; or that can cause harm or delay to the CCDL (or any connected or related systems) or can expose us or other Users to risk of harm, damage, liability or loss;
 
-        vi. upload or otherwise transmit to or through the CCDL any trade secrets or information for which you have any obligation of confidentiality or professional secrecy;
+vi. upload or otherwise transmit to or through the CCDL any trade secrets or information for which you have any obligation of confidentiality or professional secrecy;
 
-        vii. upload or otherwise transmit to or through the CCDL any unsolicited or unauthorized advertising, promotional materials, junk mail, spam, or any other form of solicitation (commercial or otherwise);
+vii. upload or otherwise transmit to or through the CCDL any unsolicited or unauthorized advertising, promotional materials, junk mail, spam, or any other form of solicitation (commercial or otherwise);
 
-        viii. distribute, disclose, market, rent, lease or otherwise transfer the CCDL to any other individual or entity;
+viii. distribute, disclose, market, rent, lease or otherwise transfer the CCDL to any other individual or entity;
 
-        ix. gain unauthorized access to the CCDL (or any associated Content), to any other User’s account, or to any related or connected systems;
+ix. gain unauthorized access to the CCDL (or any associated Content), to any other User’s account, or to any related or connected systems;
 
-        x. post, transmit or otherwise make available any virus, worm, spyware or any other computer code, file or program that may or is intended to damage or hijack the operation of any hardware, software, equipment or systems;
+x. post, transmit or otherwise make available any virus, worm, spyware or any other computer code, file or program that may or is intended to damage or hijack the operation of any hardware, software, equipment or systems;
 
-        xi. remove, disable, damage, bypass, circumvent or otherwise interfere with any security-related features of the CCDL, except that you may use passwords and other credentials we provide solely as expressly authorized and intended;
+xi. remove, disable, damage, bypass, circumvent or otherwise interfere with any security-related features of the CCDL, except that you may use passwords and other credentials we provide solely as expressly authorized and intended;
 
-        xii. interfere with or disrupt the CCDL (or any related or connected systems) or violate the regulations, policies or procedures of any CCDL-related systems;
+xii. interfere with or disrupt the CCDL (or any related or connected systems) or violate the regulations, policies or procedures of any CCDL-related systems;
 
-        xiii. violate these Terms or any applicable laws, regulations, standards, principles or guidelines; or
+xiii. violate these Terms or any applicable laws, regulations, standards, principles or guidelines; or
 
-        xiv. assist or permit any persons in engaging in any of the activities described above.
+xiv. assist or permit any persons in engaging in any of the activities described above.
 
 You must, immediately upon discovery, report to us any unauthorized access, use, alteration or disclosure of any Content, or other violation of these Terms, including as much detailed information as practicable. We (or our designee) may use any reasonable, lawful tools or methods to monitor use of the CCDL and compliance with these Terms.
 
