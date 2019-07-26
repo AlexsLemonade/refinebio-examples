@@ -164,7 +164,7 @@ Note that there is also an ssGSEA GenePattern module ([docs](https://gsea-msigdb
 ### Over-representation analysis with WebGestalt
 
 Over-representation analysis (ORA) is a method of pathway or gene set analysis where one can ask if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
-The other methodologies introduced throughout this module such as QuSAGE and GSEA can require more samples than a different expression analysis.
+The other methodologies introduced throughout this module such as QuSAGE and GSEA can require more samples than a differential expression analysis.
 For instance, the sample label permutation step of GSEA is reported to perform poorly with 7 samples or less in each group ([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
 It is not uncommon to have n = 3 for each group in a treatment-control transcriptomic study, at which point identifying differentially expressed genes is possible.
 If you are performing pathway or gene set analysis on a study of this size, you may be best served by ORA.
