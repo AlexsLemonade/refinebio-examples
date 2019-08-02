@@ -1,0 +1,40 @@
+---
+title: "Differential Expression Analysis: RNA-seq with `limma-voom`"
+author: "ALSF CCDL - Jaclyn Taroni"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+### Background
+
+This notebook takes RNA-seq data and metadata from refine.bio and 
+identifies differentially expressed genes. 
+We recommend skipping quantile normalization for RNA-seq data if you want to
+perform differential expression analysis.
+(You can read more about that [here]((http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments)) 
+in our documentation.)
+Here we're using the the [_"bias corrected without an offset"_ approach](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#use-with-downstream-bioconductor-dge-packages) described 
+in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html) with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
+The voom methodology was introduced in [Law et al. _Genome Biology._ 2014.](https://doi.org/10.1186/gb-2014-15-2-r29)
+
+You may also find [this limma-voom tutorial](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html) 
+from the 
+[UC Davis Bioinformatics Core 2018 RNA-Seq Workshop](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/)
+helpful.
+
+Note that we perform a simple two group comparison here. 
+Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
+for more information about additional experimental designs.
+
+#### Dataset
+
+We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples)
+in this notebook from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429)
+
+The authors performed RNA-seq on primary peripheral blood and bone marrow
+samples from patients with acute myeloid leukemia.
+We will compare samples from patients without ASXL1/2 mutations to samples
+from patients with ASXL1/2.
+
