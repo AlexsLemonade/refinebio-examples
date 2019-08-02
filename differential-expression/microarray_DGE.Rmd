@@ -22,7 +22,7 @@ studies.” Nucleic Acids Research, 43(7), e47.
 
 ```{r Install limma}
 if (!("limma" %in% installed.packages())) {
-  # Install ComplexHeatmap
+  # Install limma
   BiocManager::install("limma", update = FALSE)
 }
 ```
