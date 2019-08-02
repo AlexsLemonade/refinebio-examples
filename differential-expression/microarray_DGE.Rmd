@@ -133,7 +133,7 @@ voc.plot <- volcanoplot(fit, main = "Volcano Plot")
 
 # Save plot to png
 png(file.path("plots", "volcano_plot_GSE71270.png"))
-voc.plot
+volcanoplot(fit, main = "Volcano Plot")
 dev.off()
 
 # Print out the plot here
