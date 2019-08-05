@@ -30,13 +30,14 @@ for more information about additional experimental designs.
 
 ### Dataset
 
-We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples)
-in this notebook from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429)
+We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) 
+from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429) 
+in this notebook.
 
 The authors performed RNA-seq on primary peripheral blood and bone marrow
 samples from patients with acute myeloid leukemia.
-We will compare samples from patients without ASXL1/2 mutations to samples
-from patients with ASXL1/2.
+We will compare samples from patients without _ASXL1/2_ mutations to samples
+from patients with _ASXL1/2_ without taking tissue of origin into account.
 
 ## Set up
 
@@ -153,14 +154,26 @@ all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
 
 ### limma-voom
 
+Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
+of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
+
 ```{r}
+# construct a DGEList object from the refine.bio output
 y <- DGEList(as.matrix(expression.df))
+
 # filtering
 keep <- filterByExpr(y)
 y <- y[keep, ]
+
+# edgeR calculation of normalization factors to scale raw library sizes
 y <- calcNormFactors(y)
+
+# design matrix that captures the mutated vs. wild type comparison
 design <- model.matrix(~ metadata.df$mutation_status)
-v <- voom(y, design)
+
+# this is the step that transforms data to log2CPM, estimates the mean-variance
+# relationship and computes observation-level weights
+v <- voom(y, design)  # ready for lmFit
 ```
 
 ```{r Apply linear model}
