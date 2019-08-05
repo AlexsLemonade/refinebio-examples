@@ -2,7 +2,7 @@
 
 refine.bio includes both microarray and RNA-seq experiments. 
 The methods for performing differential gene expression (DGE) analysis for each technology differ.
-In this module, we include simple two group comparison examples for each.
+In this module, we include simple two-group comparison examples for each.
 
 #### Contents
 
