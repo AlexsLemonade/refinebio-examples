@@ -24,7 +24,7 @@ from the
 [UC Davis Bioinformatics Core 2018 RNA-Seq Workshop](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/)
 helpful.
 
-Note that we perform a simple two group comparison here. 
+Note that we perform a simple two-group comparison here. 
 Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
 for more information about additional experimental designs.
 
@@ -100,7 +100,7 @@ column of the metadata data.frame.
 head(metadata.df$refinebio_title)
 ```
 
-We'll use some tidyverse functionality to extract this information into it's
+We'll use some tidyverse functionality to extract this information into its
 own column to make it easier to use.
 
 ```{r}
@@ -157,28 +157,70 @@ all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
 Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
 of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
 
+To use `edgeR` functionality such as filtering and calculating normalization
+factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
+using the refine.bio data as the `counts`.
+
 ```{r}
-# construct a DGEList object from the refine.bio output
-y <- DGEList(as.matrix(expression.df))
+dge.list <- DGEList(as.matrix(expression.df))
+```
 
-# filtering
-keep <- filterByExpr(y)
-y <- y[keep, ]
+`DGEList` is a particular type of S4 class.
 
-# edgeR calculation of normalization factors to scale raw library sizes
-y <- calcNormFactors(y)
+```{r}
+str(dge.list)
+```
 
-# design matrix that captures the mutated vs. wild type comparison
+Filter to only retain genes with enough counts for statistical analysis.
+
+```{r}
+keep <- filterByExpr(dge.list)
+dge.list <- dge.list[keep, ]
+```
+
+If we check the structure again, we can see many fewer genes are retained.
+
+```{r}
+str(dge.list)
+```
+
+The next step is to calculate normalization factors for scaling the raw 
+library sizes.
+
+```{r}
+dge.list <- calcNormFactors(dge.list)
+```
+
+If we take another look at the structure of `dge.list`, we can see that the
+`norm.factors` element has changed as a result of running `calcNormFactors`.å
+
+```{r}
+str(dge.list)
+```
+
+`limma` requires us to specify a design matrix that captures the mutated vs.
+wildtype comparsion.
+
+```{r}
 design <- model.matrix(~ metadata.df$mutation_status)
+```
 
-# this is the step that transforms data to log2CPM, estimates the mean-variance
-# relationship and computes observation-level weights
-v <- voom(y, design)  # ready for lmFit
+This is the voom step that transforms data to log2CPM, estimates the 
+mean-variance relationship and computes observation-level weights.
+
+```{r}
+voom.elist <- voom(dge.list, design)  # ready for lmFit
+```
+
+`voom()` returns an `EList`.
+
+```{r}
+str(voom.elist)
 ```
 
 ```{r Apply linear model}
 # Apply linear model to data
-fit <- lmFit(v, design = design)
+fit <- lmFit(voom.elist, design = design)
 
 # Apply empirical Bayes to smooth standard errors
 fit <- eBayes(fit)
@@ -204,9 +246,6 @@ voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441")
 png(file.path("plots", "volcano_plot_SRP078441.png"))
 volcanoplot(fit, main = "Volcano Plot SRP078441")
 dev.off()
-
-# Print out the plot here
-voc.plot
 ```
 
 ## Session Info
