@@ -129,14 +129,14 @@ head(dplyr::select(metadata.df, refinebio_title, mutation_status))
 Now that we've prepped our data, we're ready to test for differentially 
 expressed genes.
 
-Let's make sure samples are in the same order.
+Let's check if samples are in the same order.
 
 ```{r}
 all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
 ```
 
 ```{r}
-# put samples in ascending orderaccording to their accession code in the 
+# put samples in ascending order according to their accession code in the 
 # metadata
 metadata.df <- metadata.df %>%
   dplyr::arrange(refinebio_accession_code)
@@ -217,6 +217,9 @@ voom.elist <- voom(dge.list, design)  # ready for lmFit
 ```{r}
 str(voom.elist)
 ```
+
+Now we're ready to fit a linear model, apply smoothing, and extract the results
+in tabular format.
 
 ```{r Apply linear model}
 # Apply linear model to data
