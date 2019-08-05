@@ -120,9 +120,6 @@ qq.plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
 png(file.path("plots", "qqplot_GSE71270.png"))
 qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
 dev.off()
-
-# Print out plot here
-qq.plot
 ```
 
 Make a volcano plot and save to png
@@ -135,9 +132,6 @@ voc.plot <- volcanoplot(fit, main = "Volcano Plot")
 png(file.path("plots", "volcano_plot_GSE71270.png"))
 volcanoplot(fit, main = "Volcano Plot")
 dev.off()
-
-# Print out the plot here
-voc.plot
 ```
 
 ## 6) Write statistics to output results file
