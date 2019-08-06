@@ -165,7 +165,7 @@ using the refine.bio data as the `counts`.
 dge.list <- DGEList(as.matrix(expression.df))
 ```
 
-`DGEList` is a particular type of S4 class.
+`DGEList` is a particular type of [S4 class](http://adv-r.had.co.nz/S4.html).
 
 ```{r}
 str(dge.list)
