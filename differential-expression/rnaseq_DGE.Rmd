@@ -192,7 +192,7 @@ dge.list <- calcNormFactors(dge.list)
 ```
 
 If we take another look at the structure of `dge.list`, we can see that the
-`norm.factors` element has changed as a result of running `calcNormFactors`.å
+`norm.factors` element has changed as a result of running `calcNormFactors`.
 
 ```{r}
 str(dge.list)
