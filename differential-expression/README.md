@@ -1,7 +1,15 @@
-# Refine.bio Example Workflow: Differential expression
+# refine.bio Example Workflow: Differential expression
 
-[This notebook](https://alexslemonade.github.io/refinebio-examples/differential-expression/gene_DE.nb.html)
-takes data and metadata from refine.bio and identifies genes that are differentially expressed between two groups.
+refine.bio includes both microarray and RNA-seq experiments. 
+The methods for performing differential gene expression (DGE) analysis for each technology differ.
+In this module, we include simple two-group comparison examples for each.
+
+#### Contents
+
+* [**Microarray notebook**](https://alexslemonade.github.io/refinebio-examples/differential-expression/microarray_DGE.nb.html): takes microarray data and metadata from refine.bio and identifies genes that are differentially expressed between two groups.
+* [**RNA-seq notebook**](https://alexslemonade.github.io/refinebio-examples/differential-expression/rnaseq_DGE.nb.html): takes RNA-seq data without quantile normalization from refine.bio and identifies genes that are differentially expressed between two groups. Read more about skipping quantile normalization [here](http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments) in our documentation.
+* [**GenePattern differential expression analysis**](#differential-expression-analysis-with-genepattern): [GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf) modules can be run via a GUI.
+To use refine.bio data with GenePattern, you will need to change the format as described in this section.
 
 ## Requirements and usage
 

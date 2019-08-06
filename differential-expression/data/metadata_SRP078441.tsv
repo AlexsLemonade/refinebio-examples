@@ -1,0 +1,17 @@
+refinebio_accession_code	experiment_accession	refinebio_age	refinebio_cell_line	refinebio_compound	refinebio_disease	refinebio_disease_stage	refinebio_genetic_information	refinebio_organism	refinebio_platform	refinebio_race	refinebio_sex	refinebio_source_archive_url	refinebio_source_database	refinebio_specimen_part	refinebio_subject	refinebio_time	refinebio_title	refinebio_treatment
+SRR3895749	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	peripheral blood	peripheral blood		CBF77-Blood-ASXL2	
+SRR3895742	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		CBF124-BM-ASXLwt	
+SRR3895743	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		CBF234-BM-ASXLwt	
+SRR3895746	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		CBF370-BM-ASXL2	
+SRR3895745	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	peripheral blood	peripheral blood		CBF369-Blood-ASXL2	
+SRR3895748	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		CBF54-BM-ASXLwt	
+SRR3895738	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		41267-BM-ASXL2	
+SRR3895744	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		CBF337-BM-ASXLwt	
+SRR3895741	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		49060-2010-BM-ASXLwt	
+SRR3895739	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		45565-BM-ASXL1	
+SRR3895736	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		37582-BM-ASXLwt	
+SRR3895740	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	peripheral blood	peripheral blood		48549-Blood-ASXL2	
+SRR3895735	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		35450-BM-ASXL2	
+SRR3895747	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	peripheral blood	peripheral blood		CBF376-Blood ASXL2	
+SRR3895734	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		08462-BM-ASXL1	
+SRR3895737	SRP078441							HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)				SRA	bone marrow	bone marrow		40810-BM-ASXLwt	

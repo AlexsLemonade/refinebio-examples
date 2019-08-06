@@ -1,0 +1,258 @@
+---
+title: "Differential Expression Analysis: RNA-seq with `limma-voom`"
+author: "ALSF CCDL - Jaclyn Taroni"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+## Background
+
+This notebook takes RNA-seq data and metadata from refine.bio and 
+identifies differentially expressed genes. 
+We recommend skipping quantile normalization for RNA-seq data if you want to
+perform differential expression analysis.
+(You can read more about that [here]((http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments)) 
+in our documentation.)
+Here we're using the the [_"bias corrected without an offset"_ approach](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#use-with-downstream-bioconductor-dge-packages) described 
+in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html) with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
+The voom methodology was introduced in [Law et al. _Genome Biology._ 2014.](https://doi.org/10.1186/gb-2014-15-2-r29)
+
+You may also find [this limma-voom tutorial](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html) 
+from the 
+[UC Davis Bioinformatics Core 2018 RNA-Seq Workshop](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/)
+helpful.
+
+Note that we perform a simple two-group comparison here. 
+Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
+for more information about additional experimental designs.
+
+### Dataset
+
+We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) 
+from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429) 
+in this notebook.
+
+The authors performed RNA-seq on primary peripheral blood and bone marrow
+samples from patients with acute myeloid leukemia.
+We will compare samples from patients without _ASXL1/2_ mutations to samples
+from patients with _ASXL1/2_ without taking tissue of origin into account.
+
+## Set up
+
+Install `limma` and `edgeR` if not yet installed.
+
+```{r Install limma}
+if (!("limma" %in% installed.packages())) {
+  # Install limma
+  BiocManager::install("limma", update = FALSE)
+}
+
+if (!("edgeR" %in% installed.packages())) {
+  # Install limma
+  BiocManager::install("edgeR", update = FALSE)
+}
+```
+
+Load libraries.
+
+```{r}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Attach libraries
+library(limma)
+library(edgeR)
+```
+
+Create output folders.
+
+```{r}
+# Create the results folder if it doesn't exist
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists("plots")) {
+  dir.create("plots")
+}
+```
+
+### Read in refine.bio data
+
+```{r Import data from .tsv files}
+# Read in metadata tsv file
+metadata.df <- readr::read_tsv(file.path("data", "metadata_SRP078441.tsv")) %>%
+  # Get rid of columns that have only NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+
+# Read in data tsv file
+expression.df <- readr::read_tsv(file.path("data", "SRP078441.tsv")) %>%
+  tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
+```
+
+The information we need to make the comparison is in the `refinebio_title` 
+column of the metadata data.frame.
+
+```{r}
+head(metadata.df$refinebio_title)
+```
+
+We'll use some tidyverse functionality to extract this information into its
+own column to make it easier to use.
+
+```{r}
+metadata.df <- metadata.df %>%
+  # the last bit of the title, separated by "-" contains the mutation 
+  # information that we want to extract
+  dplyr::mutate(mutation_status = stringr::word(refinebio_title,
+                                                -1, sep = "-")) %>%
+  # now let's make this simpler
+  dplyr::mutate(mutation_status = dplyr::case_when(
+    grepl("ASXL1|ASXL2", mutation_status) ~ "mutation",
+    grepl("ASXLwt", mutation_status) ~ "wildtype"
+  )) 
+```
+
+Let's take a look at `metadata.df` to see if this worked.
+
+```{r}
+# looking at the first 6 rows of the metadata_df and only at the columns that
+# contain the title and the mutation status we extracted from the title
+head(dplyr::select(metadata.df, refinebio_title, mutation_status))
+```
+
+## Differential expression analysis
+
+Now that we've prepped our data, we're ready to test for differentially 
+expressed genes.
+
+Let's check if samples are in the same order.
+
+```{r}
+all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
+```
+
+```{r}
+# put samples in ascending order according to their accession code in the 
+# metadata
+metadata.df <- metadata.df %>%
+  dplyr::arrange(refinebio_accession_code)
+
+# use the metadata.df information to reorder the columns of the expression
+# data frame
+expression.df <- expression.df[, metadata.df$refinebio_accession_code]
+```
+
+Check again.
+
+```{r}
+all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
+```
+
+### limma-voom
+
+Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
+of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
+
+To use `edgeR` functionality such as filtering and calculating normalization
+factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
+using the refine.bio data as the `counts`.
+
+```{r}
+dge.list <- DGEList(as.matrix(expression.df))
+```
+
+`DGEList` is a particular type of [S4 class](http://adv-r.had.co.nz/S4.html).
+
+```{r}
+str(dge.list)
+```
+
+Filter to only retain genes with enough counts for statistical analysis.
+
+```{r}
+keep <- filterByExpr(dge.list)
+dge.list <- dge.list[keep, ]
+```
+
+If we check the structure again, we can see many fewer genes are retained.
+
+```{r}
+str(dge.list)
+```
+
+The next step is to calculate normalization factors for scaling the raw 
+library sizes.
+
+```{r}
+dge.list <- calcNormFactors(dge.list)
+```
+
+If we take another look at the structure of `dge.list`, we can see that the
+`norm.factors` element has changed as a result of running `calcNormFactors`.
+
+```{r}
+str(dge.list)
+```
+
+`limma` requires us to specify a design matrix that captures the mutated vs.
+wildtype comparsion.
+
+```{r}
+design <- model.matrix(~ metadata.df$mutation_status)
+```
+
+This is the voom step that transforms data to log2CPM, estimates the 
+mean-variance relationship and computes observation-level weights.
+
+```{r}
+voom.elist <- voom(dge.list, design)  # ready for lmFit
+```
+
+`voom()` returns an `EList`.
+
+```{r}
+str(voom.elist)
+```
+
+Now we're ready to fit a linear model, apply smoothing, and extract the results
+in tabular format.
+
+```{r Apply linear model}
+# Apply linear model to data
+fit <- lmFit(voom.elist, design = design)
+
+# Apply empirical Bayes to smooth standard errors
+fit <- eBayes(fit)
+
+# Apply multiple testing correction and obtain stats
+stats <- topTable(fit, number = nrow(expression.df)) %>% 
+  tibble::rownames_to_column("Gene")
+```
+
+Write the `topTable` output to file.
+
+```{r  Write results}
+readr::write_tsv(stats, file.path("results", "SRP078441_limma_results.tsv"))
+```
+
+### Volcano plot
+
+```{r}
+# Create volcano plot 
+voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441")
+
+# Save plot to png
+png(file.path("plots", "volcano_plot_SRP078441.png"))
+volcanoplot(fit, main = "Volcano Plot SRP078441")
+dev.off()
+```
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
