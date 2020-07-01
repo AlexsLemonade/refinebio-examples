@@ -70,13 +70,13 @@ Create output folders.
 
 ```{r}
 # Create the results folder if it doesn't exist
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists("results")) { # Replace with path to desired output results directory
+  dir.create("results") # Replace with path to desired output results directory
 }
 
 # Create the plots folder if it doesn't exist
-if (!dir.exists("plots")) {
-  dir.create("plots")
+if (!dir.exists("plots")) { # Replace with path to desired output plots directory
+  dir.create("plots") # Replace with path to desired output plots directory
 }
 ```
 
@@ -84,12 +84,16 @@ if (!dir.exists("plots")) {
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata.df <- readr::read_tsv(file.path("data", "metadata_SRP078441.tsv")) %>%
+metadata.df <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
+                                         "metadata_SRP078441.tsv" # Replace with the name of your metadata file
+                                         )) %>%
   # Get rid of columns that have only NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
 
 # Read in data tsv file
-expression.df <- readr::read_tsv(file.path("data", "SRP078441.tsv")) %>%
+expression.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
+                                           "SRP078441.tsv" # Replace with the name of your data file
+                                           )) %>%
   tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
 ```
 
@@ -236,18 +240,22 @@ stats <- topTable(fit, number = nrow(expression.df)) %>%
 Write the `topTable` output to file.
 
 ```{r  Write results}
-readr::write_tsv(stats, file.path("results", "SRP078441_limma_results.tsv"))
+readr::write_tsv(stats, file.path("results", # Replace with path to your results directory
+                                  "SRP078441_limma_results.tsv" # Replace with a relevant output file name
+                                  ))
 ```
 
 ### Volcano plot
 
 ```{r}
 # Create volcano plot 
-voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441")
+voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
 
 # Save plot to png
-png(file.path("plots", "volcano_plot_SRP078441.png"))
-volcanoplot(fit, main = "Volcano Plot SRP078441")
+png(file.path("plots", # Replace with path to your output plots directory
+              "volcano_plot_SRP078441.png" # Replace with a plot name relevant to your data
+              ))
+volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
 dev.off()
 ```
 

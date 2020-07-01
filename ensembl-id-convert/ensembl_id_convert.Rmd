@@ -50,8 +50,8 @@ Make an output directory if it doesn't exist.
 
 ```{r}
 # Make a results directory if it isn't created yet
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists("results")) { # Replace with path to desired results directory
+  dir.create("results") # Replace with path to desired results directory
 }
 ```
 
@@ -60,7 +60,9 @@ if (!dir.exists("results")) {
 ```{r Import data}
 # Ensembl IDs are in the first column and will be read in as the rownames for 
 # this data frame
-df <- readr::read_tsv(file.path("data", "SRP056136.tsv"))
+df <- readr::read_tsv(file.path("data", # Replace with path to your data directory
+                                "SRP056136.tsv" # Replace with the name of your data file
+                                ))
 ```
 
 ## 3) Map Ensembl IDs to gene symbols
@@ -79,7 +81,9 @@ annot.df <- data.frame("Symbols" = mapIds(org.Dr.eg.db, keys = df$Gene,
 
 ```{r Write to file}
 # Write annotated data frame to output file
-readr::write_tsv(annot.df, file.path("results", "SRP056136wGeneSymbols.tsv"))
+readr::write_tsv(annot.df, file.path("results", # Replace with path to your results directory
+                                     "SRP056136wGeneSymbols.tsv" # Replace with a relevant output file name
+                                     ))
 ```
 
 Print session info:
