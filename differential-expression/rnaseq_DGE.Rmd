@@ -203,7 +203,7 @@ str(dge.list)
 ```
 
 `limma` requires us to specify a design matrix that captures the mutated vs.
-wildtype comparsion.
+wildtype comparison.
 
 ```{r}
 design <- model.matrix(~ metadata.df$mutation_status)
