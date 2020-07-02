@@ -49,9 +49,12 @@ library(org.Dr.eg.db)
 Make an output directory if it doesn't exist.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results" # Replace with path to desired output results directory
+
 # Make a results directory if it isn't created yet
-if (!dir.exists("results")) { # Replace with path to desired results directory
-  dir.create("results") # Replace with path to desired results directory
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
 ```
 
@@ -81,7 +84,7 @@ annot.df <- data.frame("Symbols" = mapIds(org.Dr.eg.db, keys = df$Gene,
 
 ```{r Write to file}
 # Write annotated data frame to output file
-readr::write_tsv(annot.df, file.path("results", # Replace with path to your results directory
+readr::write_tsv(annot.df, file.path(results_dir,
                                      "SRP056136wGeneSymbols.tsv" # Replace with a relevant output file name
                                      ))
 ```

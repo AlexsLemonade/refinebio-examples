@@ -39,9 +39,12 @@ set.seed(12345)
 Create output folder.
 
 ```{r}
+# Define the file path to the plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
-if (!dir.exists("plots")) { # Replace with path to desired output plots directory
-  dir.create("plots") # Replace with path to desired output plots directory 
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 ```
 
@@ -103,7 +106,7 @@ browseVignettes("ComplexHeatmap")
 annot <-
   HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
                                                  each = 2)),
-                    col = list(Groups = c("SP" = "green", "MP" = "orange"))) # Be sure to change the group names here as well
+                    col = list(Groups = c("SP" = "green", "MP" = "orange"))) # Be sure to change the group names here as well -- a list of possible colors that can be used to replace the colors used here can be found at the following link: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 
 # Create the heatmap object
 heatmap <- Heatmap(df.by.var, 
@@ -124,7 +127,7 @@ and file name within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png(file.path("plots", # Replace with path to your output plots directory
+png(file.path(plots_dir, 
               "HeatmapGSE12955.png" # Replace file name with a relevant output plot name
               ))
 
