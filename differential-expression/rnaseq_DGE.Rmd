@@ -69,20 +69,14 @@ library(edgeR)
 Create output folders.
 
 ```{r}
-# Define the file path to the results directory
-results_dir <- "results" # Replace with path to desired output results directory
-
 # Create the results folder if it doesn't exist
-if (!dir.exists(results_dir)) {
-  dir.create(results_dir)
+if (!dir.exists("results")) {
+  dir.create("results")
 }
 
-# Define the file path to the results directory
-plots_dir <- "plots" # Replace with path to desired output plots directory
-
 # Create the plots folder if it doesn't exist
-if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir)
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -90,16 +84,12 @@ if (!dir.exists(plots_dir)) {
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata.df <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
-                                         "metadata_SRP078441.tsv" # Replace with the name of your metadata file
-                                         )) %>%
+metadata.df <- readr::read_tsv(file.path("data", "metadata_SRP078441.tsv")) %>%
   # Get rid of columns that have only NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
 
 # Read in data tsv file
-expression.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                           "SRP078441.tsv" # Replace with the name of your data file
-                                           )) %>%
+expression.df <- readr::read_tsv(file.path("data", "SRP078441.tsv")) %>%
   tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
 ```
 
@@ -209,7 +199,7 @@ str(dge.list)
 ```
 
 `limma` requires us to specify a design matrix that captures the mutated vs.
-wildtype comparison.
+wildtype comparsion.
 
 ```{r}
 design <- model.matrix(~ metadata.df$mutation_status)
@@ -246,22 +236,18 @@ stats <- topTable(fit, number = nrow(expression.df)) %>%
 Write the `topTable` output to file.
 
 ```{r  Write results}
-readr::write_tsv(stats, file.path(results_dir,
-                                  "SRP078441_limma_results.tsv" # Replace with a relevant output file name
-                                  ))
+readr::write_tsv(stats, file.path("results", "SRP078441_limma_results.tsv"))
 ```
 
 ### Volcano plot
 
 ```{r}
 # Create volcano plot 
-voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
+voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441")
 
 # Save plot to png
-png(file.path(plots_dir,
-              "volcano_plot_SRP078441.png" # Replace with a plot name relevant to your data
-              ))
-volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
+png(file.path("plots", "volcano_plot_SRP078441.png"))
+volcanoplot(fit, main = "Volcano Plot SRP078441")
 dev.off()
 ```
 

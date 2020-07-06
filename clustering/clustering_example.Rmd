@@ -39,12 +39,9 @@ set.seed(12345)
 Create output folder.
 
 ```{r}
-# Define the file path to the plots directory
-plots_dir <- "plots" # Replace with path to desired output plots directory
-
 # Create the plots folder if it doesn't exist
-if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir)
+if (!dir.exists("plots")) {
+  dir.create("plots")
 }
 ```
 
@@ -55,14 +52,10 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
-                                      "metadata_GSE12955.tsv" # Replace with the name of your metadata file
-                                      ))
+metadata <- readr::read_tsv(file.path("data", "metadata_GSE12955.tsv"))
 
 # Read in data tsv file
-df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                "GSE12955.tsv" # Replace with the name of your data file
-                                )) %>%
+df <- readr::read_tsv(file.path("data", "GSE12955.tsv")) %>%
   tibble::column_to_rownames('Gene')
 ```
 
@@ -103,10 +96,8 @@ at this [link](https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHea
 browseVignettes("ComplexHeatmap")
 
 # Create an annotation that labels samples' groups by color
-annot <-
-  HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
-                                                 each = 2)),
-                    col = list(Groups = c("SP" = "green", "MP" = "orange"))) # Be sure to change the group names here as well -- a list of possible colors that can be used to replace the colors used here can be found at the following link: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+annot <- HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), each = 2)),
+    col = list(Groups = c("SP" = "green", "MP" = "orange")))
 
 # Create the heatmap object
 heatmap <- Heatmap(df.by.var, 
@@ -127,9 +118,7 @@ and file name within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png(file.path(plots_dir, 
-              "HeatmapGSE12955.png" # Replace file name with a relevant output plot name
-              ))
+png(file.path("plots", "HeatmapGSE12955.png"))
 
 # Print your heatmap
 heatmap
