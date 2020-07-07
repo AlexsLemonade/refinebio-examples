@@ -66,13 +66,24 @@ library(qusage)
 Make directories to hold the plots and results if they do not yet exist.
 
 ```{r}
-if (!dir.exists("plots")) {
-  dir.create("plots")
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
+# Make a plots directory if it isn't created yet
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 
-if (!dir.exists("results")) {
-  dir.create("results")
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"
 ```
 
 ### Function
@@ -188,16 +199,23 @@ We need to unzip it here if we have not already.
 
 ```{r}
 # if the unzipped folder does not exist
-if (!dir.exists(file.path("data", "GSE37382"))) {
-  compressed_file <- file.path("data", "GSE37382.zip")
-  unzip(compressed_file, exdir = "data")
+if (!dir.exists(file.path(data_dir,
+                          "GSE37382" # Replace with the name of your file without the .zip extension
+                          ))) {
+  compressed_file <- file.path(data_dir,
+                               "GSE37382.zip" # Replace with the name of zipped your file
+                               )
+  unzip(compressed_file, exdir = data_dir)
 }
 ```
 
 #### Expression data
 
 ```{r}
-northcott_expression_file <- file.path("data", "GSE37382", "GSE37382.tsv")
+northcott_expression_file <- file.path(data_dir, 
+                                       "GSE37382", # Replace with name of your unzipped folder
+                                       "GSE37382.tsv" # Replace with name of your expression file
+                                       )
 northcott_exprs_df <- readr::read_tsv(northcott_expression_file, 
                                       progress = FALSE)
 # first column is currently named 'Gene' and contains Ensembl gene IDs
@@ -220,8 +238,10 @@ rm(northcott_exprs_df)
 #### Metadata
 
 ```{r}
-northcott_metadata_file <- file.path("data", "GSE37382", 
-                                     "metadata_GSE37382.tsv")
+northcott_metadata_file <- file.path(data_dir,
+                                     "GSE37382", # Replace with name of your unzipped folder
+                                     "metadata_GSE37382.tsv" # Replace with name of your metadata file
+                                     )
 northcott_metadata_df <- readr::read_tsv(northcott_metadata_file) %>%
   # drop columns that are all NA
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -253,7 +273,10 @@ northcott_mat <- northcott_mat[, northcott_metadata_df$refinebio_accession_code]
 #### Expression data
 
 ```{r}
-robinson_expression_file <- file.path("data", "GSE37418", "GSE37418.tsv")
+robinson_expression_file <- file.path(data_dir,
+                                      "GSE37418", # Replace with name of unzipped folder containing the second expression file
+                                      "GSE37418.tsv" # Replace with name of your second expression file
+                                      )
 robinson_exprs_df <- readr::read_tsv(robinson_expression_file,
                                      progress = FALSE)
 colnames(robinson_exprs_df)[1] <- "ENSEMBL"
@@ -273,8 +296,10 @@ rm(robinson_exprs_df)
 #### Metadata
 
 ```{r}
-robinson_metadata_file <- file.path("data", "GSE37418", 
-                                    "metadata_GSE37418.tsv")
+robinson_metadata_file <- file.path(data_dir,
+                                    "GSE37418", # Replace with name of unzipped folder containing the second expression file data
+                                    "metadata_GSE37418.tsv" # Replace with name of the metadata file relevant to your second expression file
+                                    )
 robinson_metadata_df <- readr::read_tsv(robinson_metadata_file) %>%
   # drop columns that are all NA
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -324,8 +349,9 @@ northcott_results <- qusage(eset = northcott_mat,
 Save the Northcott et al. results to file.
 
 ```{r}
-northcott_results_file <- file.path("results", 
-                                    "Northcott_SHH-Other_QSarray.RDS")
+northcott_results_file <- file.path(results_dir,
+                                    "Northcott_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the first results RDS file
+                                    )
 readr::write_rds(northcott_results, northcott_results_file)
 ```
 
@@ -341,8 +367,9 @@ robinson_results <- qusage(eset = robinson_mat,
 Save the Robinson et al. results to file.
 
 ```{r}
-robinson_results_file <- file.path("results", 
-                                   "Robinson_SHH-Other_QSarray.RDS")
+robinson_results_file <- file.path(results_dir, 
+                                   "Robinson_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the second results RDS file
+                                   )
 readr::write_rds(robinson_results, robinson_results_file)
 ```
 

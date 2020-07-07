@@ -86,13 +86,24 @@ library(GSVA)
 Create directories to hold plots and results if they do not yet exist.
 
 ```{r}
-if (!dir.exists("plots")) {
-  dir.create("plots")
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
+# Make a plots directory if it isn't created yet
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 
-if (!dir.exists("results")) {
-  dir.create("results")
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"
 ```
 
 ## Read in refine.bio data
@@ -104,9 +115,13 @@ This compressed folder contains both the expression matrix and the metadata.
 
 ```{r}
 # if the unzipped folder does not exist
-if (!dir.exists(file.path("data", "GSE75574"))) {
-  compressed_file <- file.path("data", "GSE75574.zip")
-  unzip(compressed_file, exdir = "data")
+if (!dir.exists(file.path(data_dir,
+                          "GSE75574" # Replace with the name of your file without the .zip extension
+                          ))) {
+  compressed_file <- file.path(data_dir,
+                               "GSE75574.zip" # Replace with the name of your zipped file
+                               )
+  unzip(compressed_file, exdir = data_dir)
 }
 ```
 
@@ -126,13 +141,19 @@ gene symbol.
 ```{r}
 # check for the existence of the file that would have been generated in the
 # other notebook
-symbol_file <- file.path("data", "GSE75574", "GSE75574_symbols.tsv")
+symbol_file <- file.path(data_dir,
+                         "GSE75574", # Replace with name of your unzipped folder
+                         "GSE75574_symbols.tsv" # Replace with relevant output name
+                         )
 if (file.exists(symbol_file)) {
   symbol_exprs_df <- readr::read_tsv(symbol_file, progress = FALSE)
 } else {
   
   # read in the refine.bio expression data
-  expression_file <- file.path("data", "GSE75574", "GSE75574.tsv")
+  expression_file <- file.path(data_dir,
+                               "GSE75574", # Replace with name of your unzipped folder
+                               "GSE75574.tsv" # Replace with name of your expression file
+                               )
   exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
   # first column is currently named 'Gene' and contains Ensembl gene IDs
   colnames(exprs_df)[1] <- "ENSEMBL"
@@ -173,7 +194,10 @@ if (file.exists(symbol_file)) {
 ### Metadata 
 
 ```{r}
-metadata_file <- file.path("data", "GSE75574", "metadata_GSE75574.tsv")
+metadata_file <- file.path(data_dir,
+                           "GSE75574", # Replace with name of your unzipped folder
+                           "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
+                           )
 metadata_df <- readr::read_tsv(metadata_file) %>%
   # drop any metadata columns that are all NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -282,7 +306,7 @@ We'll be using `ggplot2` for plotting, so we'll want our ssGSEA values as a
 ```{r}
 comp_coag_df <- data.frame(
   sample_accession = colnames(ssgsea_results),
-  ssgsea_score = ssgsea_results["KEGG_COMPLEMENT_AND_COAGULATION_CASCADES", ]
+  ssgsea_score = ssgsea_results["KEGG_COMPLEMENT_AND_COAGULATION_CASCADES", ] # Replace <KEGG_COMPLEMENT_AND_COAGULATION_CASCADES> with desired pathway
 )
 ```
 
@@ -310,7 +334,9 @@ comp_coag_df %>%
 
 ```{r}
 # saving to file
-ggplot2::ggsave(file.path("plots", "GSE75574_ssgsea_comp_coag_facet.pdf"),
+ggplot2::ggsave(file.path(plots_dir,
+                          "GSE75574_ssgsea_comp_coag_facet.pdf" # Replace with relevant output plot name
+                          ),
                 plot = ggplot2::last_plot() + 
                   ggplot2::theme( text = ggplot2::element_text(size = 10)))
 ```
