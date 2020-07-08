@@ -17,6 +17,9 @@ Recommended articles on PCA:
 ## 1) Set up
 
 ```{r}
+# Set seed
+set.seed(12345)
+
 # Magrittr pipe
 `%>%` <- dplyr::`%>%`
 
