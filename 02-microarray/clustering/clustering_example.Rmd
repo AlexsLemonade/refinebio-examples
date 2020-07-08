@@ -6,29 +6,6 @@ output:
     toc: true
     toc_float: true
 ---
-# Title: "Clustering Heatmap - Microarray"
-## Purpose of the analysis: 
-Clustering can help you investigate which samples (or genes) are more related to each other.
-
-### What this analysis is good for:
-
-### What this analysis is NOT good for:
-
-## Further resources for learning
- - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)
- - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)
- - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)
- - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)
-
-## About dataset we are using for this example
-For this example analysis, we will use this [zebrafish microarray dataset](
-https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells)
-
-## How to obtain the example dataset from refinebio
-
-## How to use this example with a different dataset
-
-
 
 *Purpose*: This notebook illustrates one way that you can use harmonized data 
 from refine.bio in downstream analyses.
