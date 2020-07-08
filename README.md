@@ -40,27 +40,3 @@ will be required for installing some packages from GitHub. We recommend installi
 These requirements can be installed by following the instructions at the links above.
 The example R Notebooks are designed to check if additional required packages are installed and will install them if they are not.
 Each example module directory will include further instructions for how to follow along with the examples.
-
-## Example modules in this repository  
-
-1. [Clustering data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)  
-
-2. [Differential expression analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression)  
-
-3. [Validating differential expression results using refine.bio data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/validate-differential-expression)
-
-4. [Pathway analyses](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis)
-
-5. [Dimension reduction](https://github.com/AlexsLemonade/refinebio-examples/blob/master/dimension-reduction)
-
-6. [Converting from Ensembl gene IDs to another identifier](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ensembl-id-convert)  
-
-7. [Ortholog mapping](https://github.com/AlexsLemonade/refinebio-examples/blob/master/ortholog-mapping)  
-
-8. [Quantile normalizing your own data](https://github.com/AlexsLemonade/refinebio-examples/blob/master/normalize-own-data)
-
-## GenePattern modules with refine.bio data
-
-[GenePattern](https://cloud.genepattern.org/gp/pages/login.jsf) has many ready-made analyses you could use with your refine.bio data.
-Some example workflows (such as [differential expression](https://github.com/AlexsLemonade/refinebio-examples/blob/master/differential-expression) and [clustering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/clustering)) also include instructions for prepping your refine.bio data files for use in GenePattern.
-For users who are not comfortable with using R Notebooks, the GenePattern modules can be run using a graphics user interface (GUI), so this may be more intuitive for you.

@@ -1,6 +1,6 @@
 # refine.bio Examples: Ortholog Mapping
 
-[This notebook](https://alexslemonade.github.io/refinebio-examples/ortholog-mapping/ortholog_mapping_example.nb.html) demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for data obtained from refine.bio.
+[This notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/ortholog-mapping/ortholog_mapping_example.nb.html) demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for data obtained from refine.bio.
 HCOP stands for HGNC Comparison of Orthology Predictions.
 You can read more about the package [here](https://stephenturner.github.io/hcop).
 

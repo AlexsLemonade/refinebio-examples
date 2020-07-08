@@ -16,7 +16,7 @@ To use this example workflow with your own results, you will need the following 
 
 *At the bare minimum, you will need two gene lists, one for up-regulated and another for down-regulated genes.*
 
-The main notebook for this example is [`gene_DE_validate`](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).
+The main notebook for this example is [`gene_DE_validate`](https://alexslemonade.github.io/refinebio-examples/02-microarray/validate-differential-expression/gene_DE_validate.nb.html).
 This notebook compares the differential expression results of the two datasets:  
 
 1) A refine.bio-processed dataset's differential expression results - which are carried out within [the main notebook](https://alexslemonade.github.io/refinebio-examples/validate-differential-expression/gene_DE_validate.nb.html).   

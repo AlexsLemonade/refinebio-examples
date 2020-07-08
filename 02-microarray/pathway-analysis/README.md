@@ -15,10 +15,10 @@
 
 **Example Workflow R Notebooks**
 
-* [Analyzing a single dataset with `qusage`](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_single_dataset.nb.html)
-* [Performing meta-analysis with `qusage`](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_meta_analysis.nb.html)
-* [Exploratory data analysis with ssGSEA](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ssgsea_example.nb.html)
-* [Over-representation analysis with `WebGestaltR`](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ora_with_webgestaltr.nb.html)
+* [Analyzing a single dataset with `qusage`](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/qusage_single_dataset.nb.html)
+* [Performing meta-analysis with `qusage`](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/qusage_meta_analysis.nb.html)
+* [Exploratory data analysis with ssGSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/ssgsea_example.nb.html)
+* [Over-representation analysis with `WebGestaltR`](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/ora_with_webgestaltr.nb.html)
 
 ## Requirements and usage
 
@@ -93,7 +93,7 @@ some of the overlap between gene sets, you might check out the
 
 Note that the gene sets from MSigDB are for human only.
 If you are working with data from another organism, you will either need to perform ortholog mapping or select a different source.
-We provide an example [ortholog mapping notebook for KEGG pathways](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/kegg_ortholog_mapping.nb.html).
+We provide an example [ortholog mapping notebook for KEGG pathways](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/kegg_ortholog_mapping.nb.html).
 Be aware that making choices for ortholog mapping (e.g., selecting source knowledgebase(s), dealing with 1:many mappings) is non-trivial and may influence your downstream results.
 
 ### Gene Ontology (GO)
@@ -126,8 +126,8 @@ That's useful for analyses you might want to perform downstream.
 
 We recommend taking a look at the original publication ([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)) and the R package [vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf) and [manual](https://bioconductor.org/packages/release/bioc/manuals/qusage/man/qusage.pdf) to learn more.
 
-We provide an example workflow for [**analyzing a single dataset with `qusage`**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_single_dataset.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/qusage_single_dataset.Rmd)).
-In addition, we've replicated the analysis in the `qusage` package vignette using refine.bio-processed data [[notebook](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_replicate_vignette.nb.html), [Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/qusage_replicate_vignette.Rmd)]; this includes a two-way comparison.
+We provide an example workflow for [**analyzing a single dataset with `qusage`**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/qusage_single_dataset.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/qusage_single_dataset.Rmd)).
+In addition, we've replicated the analysis in the `qusage` package vignette using refine.bio-processed data [[notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/qusage_replicate_vignette.nb.html), [Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/qusage_replicate_vignette.Rmd)]; this includes a two-way comparison.
 
 #### Meta-analysis
 
@@ -137,14 +137,14 @@ One way to approach the issue of multiple datasets would be to analyze each data
 This approach limits the kinds of comparisons one can perform.
 QuSAGE has been extended to include support for meta-analysis and possesses the same advantages as the QuSAGE framework for single dataset analysis ([Meng et al. _PLoS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)), such as the ability to perform more complex _post hoc_ analyses.
 
-We have prepared a [**meta-analysis example workflow**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/qusage_meta_analysis.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/qusage_meta_analysis.Rmd)) in medulloblastoma.
+We have prepared a [**meta-analysis example workflow**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/qusage_meta_analysis.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/qusage_meta_analysis.Rmd)) in medulloblastoma.
 
 ### GSEA
 
 [Gene Set Enrichment Analysis (GSEA)](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Main_Page) is a popular method to determine if gene sets show significant differences between two groups ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102)) and any discussion of pathway analysis would be incomplete without it.
 
 We do not provide an example in this repository, as the folks that maintain GSEA provide a number of well-documented ways to run your analysis.
-However, you may find that our example workflows will help you prepare data for use with GSEA (e.g., [gene ID conversion](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html), [KEGG ortholog mapping](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/kegg_ortholog_mapping.nb.html), [script for converting a refine.bio gene expression matrix to GCT format](https://github.com/AlexsLemonade/refinebio-examples/blob/master/scripts/create_gct_file.R)).
+However, you may find that our example workflows will help you prepare data for use with GSEA (e.g., [gene ID conversion](https://alexslemonade.github.io/refinebio-examples/02-microarray/ensembl-id-convert/ensembl_id_convert.nb.html), [KEGG ortholog mapping](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/kegg_ortholog_mapping.nb.html).
 
 **Helpful links** (most require registration)
 
@@ -158,8 +158,7 @@ However, you may find that our example workflows will help you prepare data for 
 Single-sample GSEA (ssGSEA) is a method for calculating enrichment scores for individual samples ([Barbie et al. _Nature_. 2009.](https://dx.doi.org/10.1038/nature08460)).
 This can be useful if you are not sure what phenotypic groups you'd like to compare and are interested in exploring what pathways have the highest variance in your data or produce enrichment scores that are correlated with some phenotypic measurement.
 
-We demonstrate how to [**perform exploratory data analysis with ssGSEA using the `GSVA` package**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ssgsea_example.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/ssgsea_example.Rmd)).
-Note that there is also an ssGSEA GenePattern module ([docs](https://gsea-msigdb.github.io/ssGSEAProjection-gpmodule/v9/index.html)).
+We demonstrate how to [**perform exploratory data analysis with ssGSEA using the `GSVA` package**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/ssgsea_example.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/ssgsea_example.Rmd)).
 
 ### Over-representation analysis with WebGestalt
 
@@ -171,7 +170,7 @@ If you are performing pathway or gene set analysis on a study of this size, you 
 There are some limitations to ORA methods to be aware such as ignoring gene-gene correlation.
 See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) to learn more about the different types of pathway analysis and their limitations.
 
-We provide an example workflow for [**performing over-representation analysis with `WebGestaltR`**](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/ora_with_webgestaltr.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/pathway-analysis/ora_with_webgestaltr.Rmd)).
+We provide an example workflow for [**performing over-representation analysis with `WebGestaltR`**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/ora_with_webgestaltr.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/ora_with_webgestaltr.Rmd)).
 WebGestalt also has a [web interface](http://www.webgestalt.org/) and is not limited to ORA.
 
 \* In using these data, you agree to our [terms and conditions](https://www.refine.bio/terms)

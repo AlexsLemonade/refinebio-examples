@@ -1,6 +1,6 @@
 # refine.bio Examples: Ensembl ID conversion
 
-[This notebook](https://alexslemonade.github.io/refinebio-examples/ensembl-id-convert/ensembl_id_convert.nb.html) contains example workflows of how to convert from Ensembl gene IDs, which is the gene identifier used by [refine.bio](https://www.refine.bio), to other types of gene identifiers that
+[This notebook](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/ensembl-id-convert/ensembl_id_convert.nb.html) contains example workflows of how to convert from Ensembl gene IDs, which is the gene identifier used by [refine.bio](https://www.refine.bio), to other types of gene identifiers that
 may be required for downstream analyses.
 
 ## Requirements and usage

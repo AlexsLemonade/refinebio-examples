@@ -10,8 +10,8 @@ together.
 
 **Example Workflow R Notebooks**
 
-* [Dimension Reduction with PCA](https://alexslemonade.github.io/refinebio-examples/dimension-reduction/pca_example.nb.html)
-* [Dimension Reduction with UMAP](https://alexslemonade.github.io/refinebio-examples/dimension-reduction/umap_example.nb.html)
+* [Dimension Reduction with PCA](https://alexslemonade.github.io/refinebio-examples/02-microarray/dimension-reduction/pca_example.nb.html)
+* [Dimension Reduction with UMAP](https://alexslemonade.github.io/refinebio-examples/02-microarray/dimension-reduction/umap_example.nb.html)
 
 ## Requirements and usage
 
