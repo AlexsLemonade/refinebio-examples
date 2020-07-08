@@ -1,0 +1,90 @@
+---
+title: "Obtaining Annotation for Ensembl IDs"
+author: "ALSF CCDL - Candace Savonen"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+*Purpose*: This notebook is an example annotation workflow for data obtained from refine.bio
+using Bioconductor annotation packages.
+
+Ensembl IDs can be used to obtain various different annotations at the 
+gene/transcript level.
+Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>),
+to obtain gene symbols this script can be easily converted for use with different 
+species or annotation types <i>eg</i> protein IDs, gene ontology, accession 
+numbers. 
+
+<b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
+written, it must be replaced with the respective species abbreviation <i>eg</i>
+for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
+A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).
+
+For different types of annotation, other annotation objects besides
+`org.Dr.egSYMBOL` can be used for mapping.
+For a full list annotation objects from a package this command can be used: 
+`ls("package::org.Dr.eg.db")`. 
+In this example, wherever `SYMBOL` is written, it would need to be replaced 
+with the name of the desired annotation such as `ACCNUM` for accession numbers.
+
+## 1) Install libraries with species-specific annotation package
+
+```{r Install libraries}
+# Install the Zebrafish package
+if (!("org.Dr.eg.db" %in% installed.packages())) {
+  # Install org.Dr.eg.db
+  BiocManager::install("org.Dr.eg.db", update = FALSE)
+}
+```
+
+Attach the `org.Dr.eg.db` library:
+
+```{r}
+# Attach the annotation library 
+library(org.Dr.eg.db)
+```
+
+Make an output directory if it doesn't exist.
+
+```{r}
+# Make a results directory if it isn't created yet
+if (!dir.exists("results")) {
+  dir.create("results")
+}
+```
+
+## 2) Import refine.bio data that has Ensembl identifiers
+
+```{r Import data}
+# Ensembl IDs are in the first column and will be read in as the rownames for 
+# this data frame
+df <- readr::read_tsv(file.path("data", "SRP056136.tsv"))
+```
+
+## 3) Map Ensembl IDs to gene symbols
+*Note*: This code chunk will return a message that indicates that there are many
+mappings between our keys and columns but this is okay and is what we expect 
+since genes and transcripts do not have a 1:1 relationship
+
+```{r Match Ensembl IDs}
+# Map ensembl IDs to their associated gene symbols
+annot.df <- data.frame("Symbols" = mapIds(org.Dr.eg.db, keys = df$Gene, 
+                                         column = "SYMBOL", keytype = "ENSEMBL"),
+                       df)
+```
+
+## 4) Write to file
+
+```{r Write to file}
+# Write annotated data frame to output file
+readr::write_tsv(annot.df, file.path("results", "SRP056136wGeneSymbols.tsv"))
+```
+
+Print session info:
+
+```{r}
+# Print session info 
+sessionInfo()
+```

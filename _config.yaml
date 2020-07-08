@@ -1,0 +1,21 @@
+title: Refinebio-examples
+repository: refinebio-examples
+# Full URL to the repository
+# Again, using training-specific-template to aid in development
+repository_url: https://github.com/AlexsLemonade/refinebio-examples
+# Specific release in AlexsLemonade/training-modules
+# We use master to make development easier
+release_tag: master
+
+# Theme and theme options
+theme: minima
+# Pages to appear in site header.
+header_pages:
+  - 01-getting-started/getting-started.nb.html
+  - 02-microarray/intro-to-microarray.nb.html
+  - 03-rna-seq/intro-to-rna-seq.nb.html
+  - 04-advanced-topics/intro-to-advanced-topics.nb.html
+author: Childhood Cancer Data Lab
+# email: user@site
+twitter_username: CancerDataLab
+github_username:  AlexsLemonade

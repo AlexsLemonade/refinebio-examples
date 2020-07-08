@@ -1,0 +1,41 @@
+<!--
+Derived from https://github.com/jekyll/minima/blob/38a84a949f9753c4542e25f422935f59b4913053/_includes/footer.html
+minima 2.5.1
+-->
+<footer class="site-footer h-card">
+  <data class="u-url" href="{{ "/" | relative_url }}"></data>
+
+  <div class="wrapper">
+
+    <!-- Remove site title from header
+      <h2 class="footer-heading">{{ site.title | escape }}</h2>
+    -->
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">
+            {%- if site.author -%}
+              {{ site.author | escape }}
+            {%- else -%}
+              {{ site.title | escape }}
+            {%- endif -%}
+            </li>
+            {%- if site.email -%}
+            <li><a class="u-email" href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+            {%- endif -%}
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        {%- include social.html -%}
+      </div>
+      <!-- Remove description
+      <div class="footer-col footer-col-3">
+        <p>{{- site.description | escape -}}</p>
+      </div>
+      -->
+    </div>
+
+  </div>
+
+</footer>
