@@ -1,6 +1,6 @@
 ---
 title: "Clustering Heatmap - Microarray"
-author: "ALSF CCDL - Candace Savonen"
+author: "CCDL for ALSF"
 output:   
   html_notebook: 
     toc: true
@@ -15,10 +15,12 @@ In this example, the gene expression matrix is subset to only include genes with
 This set of genes is then used to create a heatmap.
 
 ## Further learning resources about this analysis
- - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)
- - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)
- - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)
- - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)
+
+ - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)  
+ - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)  
+ - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)  
+ - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)  
+ 
 ## How to run this example
 
 ### About dataset we are using for this example
@@ -30,21 +32,21 @@ Using Hoechst fluorescence intensity, these were subdivided into the SP and MP p
 
 ### Obtaining the dataset from refinebio
 
-Go to this [dataset's page on refinebio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).
+Go to this [dataset's page on refinebio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).  
 
-Click the "Download Now" button on the right side of this screen.
+Click the "Download Now" button on the right side of this screen.  
 
-<img src="screenshots/download-now.png" width=200>
+<img src="screenshots/download-now.png" width=200>  
 
-Fill out the pop up window with your email and our Terms and Conditions: 
+Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="screenshots/download-email.png" width=500>
+<img src="screenshots/download-email.png" width=500>  
 
 This will download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
-Double clicking should unzip this for you and create a folder of the same name. 
-<img src="screenshots/download-folder-structure.png" width=400>
+Double clicking should unzip this for you and create a folder of the same name.  
+<img src="screenshots/download-folder-structure.png" width=400> 
 
-For more details on the contents of this folder see [these docs on refinebio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder). 
+For more details on the contents of this folder see [these docs on refinebio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
@@ -59,11 +61,11 @@ Clicking this link will most likely send this to your downloads folder on your c
 Before running the example analysis, we recommend setting up a new folder to hold all your analysis files.
 In this folder you should create another folder called "data". 
 
-*Your new analysis folder should contain:* 
-- The example analysis Rmd you downloaded
-- A folder called "data" which contains:
-     - The gene expression
-     - The metadata TSV 
+*Your new analysis folder should contain:*  
+- The example analysis Rmd you downloaded  
+- A folder called "data" which contains:  
+  - The gene expression  
+  - The metadata TSV  
 
 Your example analysis folder should look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
