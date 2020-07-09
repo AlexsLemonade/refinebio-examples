@@ -72,7 +72,7 @@ if (!("jsonlite" %in% installed.packages())) {
   install.packages("jsonlite")
 }
 
-qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/qn_targets/?organism=DANIO_RERIO")
+qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/v1/qn_targets/danio_rerio")
 ```
 
 We need the `s3_url`, which tells us the link where the file is available for
