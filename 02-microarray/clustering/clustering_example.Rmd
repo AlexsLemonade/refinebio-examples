@@ -8,21 +8,25 @@ output:
 ---
 
 ## Purpose of the analysis:
+
 Clustering can help you investigate which samples (or genes) are more related to each other.
 Here we use the Bioconductor R package `ComplexHeatmap` for clustering and creating a heatmap.
 In this example, the gene expression matrix is subset to only include genes with high variance.
 This set of genes is then used to create a heatmap.
 
-### What this analysis is good for:
-
-### What this analysis is NOT good for:
-
+## Further learning resources about this analysis
+ - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)
+ - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)
+ - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)
+ - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)
 ## How to run this example
 
 ### About dataset we are using for this example
 
 For this example analysis, we will use this [zebrafish microarray dataset](
 https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells)
+This dataset has two experimental groups of lymphoid cells from zebrafish kidney.
+Using Hoechst fluorescence intensity, these were subdivided into the SP and MP populations. 
 
 ### Obtaining the dataset from refinebio
 
@@ -36,16 +40,38 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="screenshots/download-email.png" width=500>
 
-#### Setting up the the folder structure
+This will download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name. 
+<img src="screenshots/download-folder-structure.png" width=400>
 
+For more details on the contents of this folder see [these docs on refinebio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder). 
 
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
 #### Obtaining this example R notebook
 
-To run the examples yourself, you need to [download the Rmd by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/clustering/clustering_example.Rmd)
-and save it to a new directory.
+To run the examples yourself, you need to [download the Rmd by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/clustering/clustering_example.Rmd). 
+Clicking this link will most likely send this to your downloads folder on your computer. 
 
-You can open this R Notebook by opening this `.Rmd` file in RStudio.
+#### Set up your analysis folder
+
+Before running the example analysis, we recommend setting up a new folder to hold all your analysis files.
+In this folder you should create another folder called "data". 
+
+*Your new analysis folder should contain:* 
+- The example analysis Rmd you downloaded
+- A folder called "data" which contains:
+     - The gene expression
+     - The metadata TSV 
+
+Your example analysis folder should look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+<img src="screenshots/analysis-folder-structure.png" width=400>
+
+#### Running the example analysis
+
+You can open the example analysis notebook by opening this `.Rmd` file in RStudio.
 Note that working with R Notebooks requires certain R packages, but RStudio should prompt you to download them the first time you open one.
 This will allow you to modify and run the R code chunks.
 Chunks that have already been included in an example can be run by clicking the green play button in the top right corner of the chunk or by using **Ctrl + Shift + Enter** (**Cmd + Shift + Enter** on a Mac).
@@ -53,23 +79,13 @@ See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/noteb
 
 #### Using your own data
 
-For the example in this module, the gene expression data and sample metadata are stored in a `data/` directory.
-If you'd like to adapt an example to include data you've obtained from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory and changing the filenames and paths in the notebook to match these files.
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook if you move notebooks outside of the GitHub repository structure.
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
-[The clustering R Notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/clustering/clustering_example.nb.html) could be manipulated to sort by another summary statistic to create a heatmap, depending on your dataset and your research questions.
-
-## Further resources for learning
- - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)
- - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)
- - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)
- - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)
+# Example clustering analysis 
 
 ## 1) Install libraries
-This script uses the bioconductor R package ComplexHeatmap for clustering and 
-creating a heatmap.
-<br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
-reveal patterns and correlations in multidimensional genomic data.” Bioinformatics.
 
 ```{r Install and attach the ComplexHeatmap library}
 if (!("ComplexHeatmap" %in% installed.packages())) {
