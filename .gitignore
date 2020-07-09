@@ -20,5 +20,8 @@ _site
 # large experiment
 02-microarray/pathway-analysis/data/GSE75574
 
+# Remove large file 
+04-advanced-topics/normalize-own-data/data/GSE39842_RMA_converted.tsv
+
 # markdown spellcheck
 .spelling

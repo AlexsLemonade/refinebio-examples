@@ -62,8 +62,12 @@ library(WebGestaltR)
 #### Directories
 
 ```{r}
-if (!dir.exists("results")) {
-  dir.create("results")
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
 ```
 
@@ -80,7 +84,11 @@ We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
 
 ```{r}
-dge_df <- readr::read_tsv("https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv")
+# Define the url to your differential expression results file
+dge_url <- "https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv" # Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
+
+# Read in the contents of your differential expression results file
+dge_df <- readr::read_tsv(dge_url)
 ```
 
 Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
@@ -148,14 +156,15 @@ go_enrichment_results <-
               interestGeneType = "ensembl_gene_id",
               referenceGene = all_genes,
               referenceGeneType = "ensembl_gene_id",
-              outputDirectory = "results",
-              projectName = "GSE37418_up_SHH_lfc2_fdr0.05")
+              outputDirectory = results_dir,
+              projectName = "GSE37418_up_SHH_lfc2_fdr0_05" # Replace with a relevant output name for the HTML file
+              )
 ```
 
 As noted in the messages from `WebGestaltR`, the results are in
-`results/Project_GSE37418_up_SHH_lfc2_fdr0.05`.
+`results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
 The HTML report is at 
-[`results/Project_GSE37418_up_SHH_lfc2_fdr0.05/Report_GSE37418_up_SHH_lfc2_fdr0.05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0.05/Report_GSE37418_up_SHH_lfc2_fdr0.05.html).
+[`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
 It looks like there are a lot of pathways associated with ribosomes and
 translation.

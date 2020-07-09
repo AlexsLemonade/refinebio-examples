@@ -144,14 +144,13 @@ We have prepared a [**meta-analysis example workflow**](https://alexslemonade.gi
 [Gene Set Enrichment Analysis (GSEA)](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Main_Page) is a popular method to determine if gene sets show significant differences between two groups ([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102)) and any discussion of pathway analysis would be incomplete without it.
 
 We do not provide an example in this repository, as the folks that maintain GSEA provide a number of well-documented ways to run your analysis.
-However, you may find that our example workflows will help you prepare data for use with GSEA (e.g., [gene ID conversion](https://alexslemonade.github.io/refinebio-examples/02-microarray/ensembl-id-convert/ensembl_id_convert.nb.html), [KEGG ortholog mapping](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/kegg_ortholog_mapping.nb.html).
+However, you may find that our example workflows will help you prepare data for use with GSEA (e.g., [gene ID conversion](https://alexslemonade.github.io/refinebio-examples/02-microarray/ensembl-id-convert/ensembl_id_convert.nb.html), [KEGG ortholog mapping](https://alexslemonade.github.io/refinebio-examples/pathway-analysis/kegg_ortholog_mapping.nb.html).
 
 **Helpful links** (most require registration)
 
 * [GSEA Documentation](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Main_Page)
 * [GSEA Downloads](http://software.broadinstitute.org/gsea/downloads.jsp) (includes Java GUI and CLI, Rscript)
 * [GSEA User Guide](http://software.broadinstitute.org/gsea/doc/GSEAUserGuideFrame.html)
-* GSEA is available as a [GenePattern](https://software.broadinstitute.org/cancer/software/genepattern#) module ([docs](http://software.broadinstitute.org/cancer/software/genepattern/modules/docs/GSEA/14))
 
 ### ssGSEA
 
@@ -159,6 +158,7 @@ Single-sample GSEA (ssGSEA) is a method for calculating enrichment scores for in
 This can be useful if you are not sure what phenotypic groups you'd like to compare and are interested in exploring what pathways have the highest variance in your data or produce enrichment scores that are correlated with some phenotypic measurement.
 
 We demonstrate how to [**perform exploratory data analysis with ssGSEA using the `GSVA` package**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis/ssgsea_example.nb.html) ([Rmd](https://github.com/AlexsLemonade/refinebio-examples/blob/master/02-microarray/pathway-analysis/ssgsea_example.Rmd)).
+Note that there is also an ssGSEA GenePattern module ([docs](https://gsea-msigdb.github.io/ssGSEAProjection-gpmodule/v9/index.html)).
 
 ### Over-representation analysis with WebGestalt
 
