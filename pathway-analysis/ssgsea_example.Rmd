@@ -306,7 +306,7 @@ We'll be using `ggplot2` for plotting, so we'll want our ssGSEA values as a
 ```{r}
 comp_coag_df <- data.frame(
   sample_accession = colnames(ssgsea_results),
-  ssgsea_score = ssgsea_results["KEGG_COMPLEMENT_AND_COAGULATION_CASCADES", ] # Replace <KEGG_COMPLEMENT_AND_COAGULATION_CASCADES> with desired pathway
+  ssgsea_score = ssgsea_results["KEGG_COMPLEMENT_AND_COAGULATION_CASCADES", ] # Replace <KEGG_COMPLEMENT_AND_COAGULATION_CASCADES> with desired pathway -- note that this is distinct from `grep` in that you'd have to write the name exactly as it is in the matrix
 )
 ```
 

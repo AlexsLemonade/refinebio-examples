@@ -106,8 +106,10 @@ The gene expression matrix of the dataset we'll be working with is too large
 to be tracked with git without compression, so we need to unzip it if we have
 not already.
 
+Note that if your file is not zipped you can skip this chunk.
+
 ```{r}
-# if the unzipped folder does not exist
+# if the unzipped folder does not exist -- skip this if you do not have a zipped file
 if (!dir.exists(file.path(data_dir,
                           "GSE75574" # Replace with the name of your file without the .zip extension
                           ))) {
@@ -122,7 +124,7 @@ if (!dir.exists(file.path(data_dir,
 
 ```{r}
 expression_file <- file.path(data_dir,
-                             "GSE75574", # Replace with name of your unzipped folder
+                             "GSE75574", # Replace with name of the folder in which your expression file is stored
                              "GSE75574.tsv" # Replace with name of your expression file
                              )
 exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
@@ -184,7 +186,7 @@ Write to file.
 
 ```{r}
 readr::write_tsv(symbol_exprs_df, file.path(data_dir,
-                                            "GSE75574", # Replace with name of your unzipped folder
+                                            "GSE75574", # Replace with name of the folder in which you would like to store your output file
                                             "GSE75574_symbols.tsv" # Replace with relevant output name
                                             ))
 ```
@@ -193,7 +195,7 @@ readr::write_tsv(symbol_exprs_df, file.path(data_dir,
 
 ```{r}
 metadata_file <- file.path(data_dir,
-                           "GSE75574", # Replace with name of your unzipped folder
+                           "GSE75574", # Replace with name of the folder in which your relevant metadata file is stored
                            "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
                            )
 metadata_df <- readr::read_tsv(metadata_file) %>%
@@ -296,7 +298,7 @@ plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
 Save to plot.
 
 ```{r}
-pdf(file.path("plots", 
+pdf(file.path(plots_dir, 
               "GSE75574_adipose_calorierestricted-control_plotCIs.pdf"), 
     width = 14, height = 8.5)
 plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
@@ -337,7 +339,7 @@ We can look at the distribution of genes in this pathway with the
 We tell this function which pathway to plot with the `path.index` argument.
 
 ```{r}
-grep("ECM_RECEPTOR", # Replace with desired pathway -- names of pathways can be seen using the `names(kegg_pathways)` function
+grep("ECM_RECEPTOR", # Replace with an exact word or phrase that would filter in your desired pathway(s) as the `grep` function looks for all instances of the pattern given -- names of pathways can be seen using the `names(kegg_pathways)` function
      names(kegg_pathways))
 ```
 

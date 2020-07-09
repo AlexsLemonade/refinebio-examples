@@ -196,14 +196,15 @@ if (!file.exists(kegg_file)) {
 
 This dataset is too large to be tracked with git without compression.
 We need to unzip it here if we have not already.
+Note that if your file is not zipped you can skip this chunk. 
 
 ```{r}
-# if the unzipped folder does not exist
+# if the unzipped folder does not exist -- skip this if you do not have a zipped file
 if (!dir.exists(file.path(data_dir,
                           "GSE37382" # Replace with the name of your file without the .zip extension
                           ))) {
   compressed_file <- file.path(data_dir,
-                               "GSE37382.zip" # Replace with the name of zipped your file
+                               "GSE37382.zip" # Replace with the name of your zipped file
                                )
   unzip(compressed_file, exdir = data_dir)
 }
@@ -212,9 +213,11 @@ if (!dir.exists(file.path(data_dir,
 #### Expression data
 
 ```{r}
-northcott_expression_file <- file.path(data_dir, 
-                                       "GSE37382", # Replace with name of your unzipped folder
-                                       "GSE37382.tsv" # Replace with name of your expression file
+northcott_dir <- file.path(data_dir,
+                           "GSE37382" # Replace with name of the folder in which your northcott expression file is stored
+                           )
+northcott_expression_file <- file.path(northcott_dir,
+                                       "GSE37382.tsv" # Replace with name of your northcott expression file
                                        )
 northcott_exprs_df <- readr::read_tsv(northcott_expression_file, 
                                       progress = FALSE)
@@ -238,9 +241,8 @@ rm(northcott_exprs_df)
 #### Metadata
 
 ```{r}
-northcott_metadata_file <- file.path(data_dir,
-                                     "GSE37382", # Replace with name of your unzipped folder
-                                     "metadata_GSE37382.tsv" # Replace with name of your metadata file
+northcott_metadata_file <- file.path(northcott_dir,
+                                     "metadata_GSE37382.tsv" # Replace with name of your northcott metadata file
                                      )
 northcott_metadata_df <- readr::read_tsv(northcott_metadata_file) %>%
   # drop columns that are all NA
@@ -273,9 +275,11 @@ northcott_mat <- northcott_mat[, northcott_metadata_df$refinebio_accession_code]
 #### Expression data
 
 ```{r}
-robinson_expression_file <- file.path(data_dir,
-                                      "GSE37418", # Replace with name of unzipped folder containing the second expression file
-                                      "GSE37418.tsv" # Replace with name of your second expression file
+robinson_dir <- file.path(data_dir,
+                          "GSE37418" # Replace with name of the folder in which your robinson expression file is stored
+                           )
+robinson_expression_file <- file.path(robinson_dir,
+                                      "GSE37418.tsv" # Replace with name of your robinson expression file
                                       )
 robinson_exprs_df <- readr::read_tsv(robinson_expression_file,
                                      progress = FALSE)
@@ -296,9 +300,8 @@ rm(robinson_exprs_df)
 #### Metadata
 
 ```{r}
-robinson_metadata_file <- file.path(data_dir,
-                                    "GSE37418", # Replace with name of unzipped folder containing the second expression file data
-                                    "metadata_GSE37418.tsv" # Replace with name of the metadata file relevant to your second expression file
+robinson_metadata_file <- file.path(robinson_dir,
+                                    "metadata_GSE37418.tsv" # Replace with name of your robinson metadata file
                                     )
 robinson_metadata_df <- readr::read_tsv(robinson_metadata_file) %>%
   # drop columns that are all NA

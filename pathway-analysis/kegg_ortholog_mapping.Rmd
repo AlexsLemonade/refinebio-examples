@@ -184,7 +184,7 @@ Let's pick the polymerase pathway, where our success should be pretty obvious
 from the mouse gene symbols.
 
 ```{r}
-kegg_mouse_list[[grep("POLYMERASE", # Replace with desired pathway
+kegg_mouse_list[[grep("POLYMERASE", # Replace with an exact word or phrase that would filter in your desired pathway(s)
                       names(kegg_mouse_list))]]
 ```
 

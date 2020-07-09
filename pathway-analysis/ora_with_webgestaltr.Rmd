@@ -84,7 +84,11 @@ We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
 
 ```{r}
-dge_df <- readr::read_tsv("https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv") # Replace with path or link to your desired differential expression results TSV file
+# Define the url to your differential expression results file
+dge_url <- "https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv" # Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
+
+# Read in the contents of your differential expression results file
+dge_df <- readr::read_tsv(dge_url)
 ```
 
 Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
@@ -160,7 +164,7 @@ go_enrichment_results <-
 As noted in the messages from `WebGestaltR`, the results are in
 `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
 The HTML report is at 
-[`results/Project_GSE37418_up_SHH_lfc2_fdr0.05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0.05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
+[`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
 It looks like there are a lot of pathways associated with ribosomes and
 translation.
