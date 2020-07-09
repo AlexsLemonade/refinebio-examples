@@ -137,7 +137,7 @@ and follow it along.
 
 ```{r}
 mouse_ortholog_df %>% 
-  dplyr::filter(human_entrez == 5631) %>%
+  dplyr::filter(human_entrez == 5631) %>% 
   dplyr::select(human_entrez, mouse_entrez, human_symbol, mouse_symbol,
                 num_resources_support)
 ```
@@ -184,7 +184,8 @@ Let's pick the polymerase pathway, where our success should be pretty obvious
 from the mouse gene symbols.
 
 ```{r}
-kegg_mouse_list[[grep("POLYMERASE", names(kegg_mouse_list))]]
+kegg_mouse_list[[grep("POLYMERASE", # Replace with a word (case sensitive) or phrase that would filter in your desired pathway(s)
+                      names(kegg_mouse_list))]]
 ```
 
 ### Write mouse pathway list in `GMT` format
@@ -209,8 +210,9 @@ We can pretty easily stick this back in when we write to file with `write()`.
 
 ```{r}
 # filename we're going to write to
-mouse_file <- file.path("gene-sets", 
-                        "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt")
+mouse_file <- file.path("gene-sets", # Replace with path to desired output directory
+                        "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt" # Replace with name for output file
+                        )
 
 # if you run this again after making changes above, you'd just end up appending
 # this to the end of your old file, so we should take steps to get rid of

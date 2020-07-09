@@ -25,6 +25,9 @@ as well.
 ### Set up
 
 ```{r}
+# Set seed
+set.seed(12345)
+
 `%>%` <- dplyr::`%>%`
 ```
 
@@ -49,13 +52,24 @@ library(qusage)
 Make directories to hold the plots and results.
 
 ```{r}
-if (!dir.exists("plots")) {
-  dir.create("plots")
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
+# Make a plots directory if it isn't created yet
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 
-if (!dir.exists("results")) {
-  dir.create("results")
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"
 ```
 
 ### Gene sets
@@ -98,7 +112,10 @@ IDs.
 
 ```{r}
 # read in gene expression data
-expression_file <- file.path("data", "GSE30550", "GSE30550.tsv")
+expression_file <- file.path(data_dir,
+                             "GSE30550", # Replace with name of the folder in which your expression file is stored
+                             "GSE30550.tsv" # Replace with name of your expression file
+                             )
 exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
 # first column is currently named 'Gene' and contains Ensembl gene IDs
 colnames(exprs_df)[1] <- "ENSEMBL"
@@ -123,13 +140,19 @@ exprs_df <- exprs_df %>%
   dplyr::mutate(ENTREZID = entrez_mappings) %>%
   dplyr::select(ENTREZID, ENSEMBL, dplyr::everything())
 readr::write_tsv(exprs_df,
-                 path = file.path("data", "GSE30550", "GSE30550_entrez.tsv"))
+                 path = file.path(data_dir,
+                                  "GSE30550", # Replace with name of the folder in which tour expression data is stored
+                                  "GSE30550_entrez.tsv" # Replace with name of your expression file containing Entrez gene IDs
+                                  ))
 ```
 
 ### Read in metadata and filter
 
 ```{r}
-metadata_file <- file.path("data", "GSE30550", "metadata_GSE30550.tsv")
+metadata_file <- file.path(data_dir,
+                           "GSE30550", # Replace with name of the folder in which your relevant metadata is stored
+                           "metadata_GSE30550.tsv" # Replace with name of the metadata file relevant to your expression file
+                           )
 metadata_df <- readr::read_tsv(metadata_file) %>%
   # drop columns that are all NA
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -225,7 +248,7 @@ timepoint_table <- qsTable(timepoint_qusage_results,
                            # numPathways let's us snag all tested gene sets
                            number = numPathways(timepoint_qusage_results))
 readr::write_tsv(timepoint_table,
-                 file.path("results", "qusage_t1-t0_kegg_results.tsv"))
+                 file.path(results_dir, "qusage_t1-t0_kegg_results.tsv"))
 ```
 
 Note that gene sets with negative fold changes are higher in `t0`.
@@ -235,7 +258,7 @@ shortly, there's lots you can do with qusage results!
 
 ```{r}
 readr::write_rds(timepoint_qusage_results,
-                 file.path("results", "qusage_t1-t0_kegg_QSarray.RDS"))
+                 file.path(results_dir, "qusage_t1-t0_kegg_QSarray.RDS"))
 ```
 
 #### Plotting
@@ -249,7 +272,7 @@ plotCIs(timepoint_qusage_results, cex.xaxis = 0.25)
 It's a bit difficult to see in this notebook, but we'll save the plot as a PDF.
 
 ```{r}
-pdf(file.path("plots", "qusage_t1-t0_plotCIs.pdf"), width = 14, height = 8)
+pdf(file.path(plots_dir, "qusage_t1-t0_plotCIs.pdf"), width = 14, height = 8)
 # adjusting the figure margins to better fit pathway names
 par(mar = c(8, 4, 1, 2))
 plotCIs(timepoint_qusage_results, cex.xaxis = 0.5)
@@ -262,7 +285,7 @@ should be higher at `t0`.
 
 ```{r}
 pathway_index <- 
-  which(names(kegg_genesets) == "KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY")
+  which(names(kegg_genesets) == "KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY") # Replace with exact name of desired pathway -- names of pathways can be seen using the `names(kegg_genesets)` function
 ```
 
 Plot the overall distribution of the pathway (thick black line) and the 
@@ -407,4 +430,3 @@ graphics::boxplot(exprs_mat["3665", ] ~ interaction(filtered_metadata_df$timepoi
 ```{r}
 sessionInfo()
 ```
-

@@ -80,13 +80,24 @@ library(pheatmap)
 Create directories to hold plots and results if they do not yet exist.
 
 ```{r}
-if (!dir.exists("plots")) {
-  dir.create("plots")
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
+# Make a plots directory if it isn't created yet
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 
-if (!dir.exists("results")) {
-  dir.create("results")
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"
 ```
 
 ## Read in refine.bio data
@@ -95,18 +106,27 @@ The gene expression matrix of the dataset we'll be working with is too large
 to be tracked with git without compression, so we need to unzip it if we have
 not already.
 
+Note that if your file is not zipped you can skip this chunk.
+
 ```{r}
-# if the unzipped folder does not exist
-if (!dir.exists(file.path("data", "GSE75574"))) {
-  compressed_file <- file.path("data", "GSE75574.zip")
-  unzip(compressed_file, exdir = "data")
+# if the unzipped folder does not exist -- skip this if you do not have a zipped file
+if (!dir.exists(file.path(data_dir,
+                          "GSE75574" # Replace with the name of your file without the .zip extension
+                          ))) {
+  compressed_file <- file.path(data_dir,
+                               "GSE75574.zip" # Replace with the name of your zipped file
+                               )
+  unzip(compressed_file, exdir = data_dir)
 }
 ```
 
 ### Expression data
 
 ```{r}
-expression_file <- file.path("data", "GSE75574", "GSE75574.tsv")
+expression_file <- file.path(data_dir,
+                             "GSE75574", # Replace with name of the folder in which your expression file is stored
+                             "GSE75574.tsv" # Replace with name of your expression file
+                             )
 exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
 # first column is currently named 'Gene' and contains Ensembl gene IDs
 colnames(exprs_df)[1] <- "ENSEMBL"
@@ -165,14 +185,19 @@ symbol_exprs_df <- symbol_exprs_df %>%
 Write to file.
 
 ```{r}
-readr::write_tsv(symbol_exprs_df, file.path("data", "GSE75574", 
-                                            "GSE75574_symbols.tsv"))
+readr::write_tsv(symbol_exprs_df, file.path(data_dir,
+                                            "GSE75574", # Replace with name of the folder in which you would like to store your output file
+                                            "GSE75574_symbols.tsv" # Replace with relevant output name
+                                            ))
 ```
 
 ### Metadata
 
 ```{r}
-metadata_file <- file.path("data", "GSE75574", "metadata_GSE75574.tsv")
+metadata_file <- file.path(data_dir,
+                           "GSE75574", # Replace with name of the folder in which your relevant metadata file is stored
+                           "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
+                           )
 metadata_df <- readr::read_tsv(metadata_file) %>%
   # drop any metadata columns that are all NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -248,8 +273,9 @@ We can use this object for visualization or other downstream analyses.
 
 ```{r}
 readr::write_rds(qusage_results,
-                 file.path("results", 
-                           "GSE75574_adipose_calorierest-ctrl_QSarray.RDS"))
+                 file.path(results_dir, 
+                           "GSE75574_adipose_calorierest-ctrl_QSarray.RDS" # Replace with file name relevant to output results
+                           ))
 ```
 
 ### Overall results
@@ -272,7 +298,7 @@ plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
 Save to plot.
 
 ```{r}
-pdf(file.path("plots", 
+pdf(file.path(plots_dir, 
               "GSE75574_adipose_calorierestricted-control_plotCIs.pdf"), 
     width = 14, height = 8.5)
 plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
@@ -294,8 +320,9 @@ Write to results.
 
 ```{r}
 qsTable(qusage_results, number = numPathways(qusage_results)) %>%
-  readr::write_tsv(file.path("results", 
-                             "GSE75574_adipose_calorierestricted-control.tsv"))
+  readr::write_tsv(file.path(results_dir, 
+                             "GSE75574_adipose_calorierestricted-control.tsv" # Replace with file name relevant to results output
+                             ))
 ```
 
 `qusage` has functionality that lets us dig into our results a bit more to
@@ -312,7 +339,8 @@ We can look at the distribution of genes in this pathway with the
 We tell this function which pathway to plot with the `path.index` argument.
 
 ```{r}
-grep("ECM_RECEPTOR", names(kegg_pathways))
+grep("ECM_RECEPTOR", # Replace with an exact word or phrase that would filter in your desired pathway(s) as the `grep` function looks for all instances of the pattern given -- names of pathways can be seen using the `names(kegg_pathways)` function
+     names(kegg_pathways))
 ```
 
 ```{r}
@@ -407,7 +435,9 @@ hm_plot <- pheatmap::pheatmap(steroid_mat,
 Save the plot.
 
 ```{r}
-pdf(file.path("plots", "GSE75574_steroid_biosynthesis_heatmap.pdf"),
+pdf(file.path(plots_dir,
+              "GSE75574_steroid_biosynthesis_heatmap.pdf" # Replace with relevant output plot name 
+              ),
     width = 7, height = 5)
 print(hm_plot)
 dev.off()
