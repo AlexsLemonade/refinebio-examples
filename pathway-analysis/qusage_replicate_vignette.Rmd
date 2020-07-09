@@ -25,6 +25,9 @@ as well.
 ### Set up
 
 ```{r}
+# Set seed
+set.seed(12345)
+
 `%>%` <- dplyr::`%>%`
 ```
 
@@ -110,7 +113,7 @@ IDs.
 ```{r}
 # read in gene expression data
 expression_file <- file.path(data_dir,
-                             "GSE30550",  # Replace with name of your unzipped folder
+                             "GSE30550", # Replace with name of the folder in which your expression file is stored
                              "GSE30550.tsv" # Replace with name of your expression file
                              )
 exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
@@ -138,7 +141,7 @@ exprs_df <- exprs_df %>%
   dplyr::select(ENTREZID, ENSEMBL, dplyr::everything())
 readr::write_tsv(exprs_df,
                  path = file.path(data_dir,
-                                  "GSE30550", # Replace with name of your unzipped folder
+                                  "GSE30550", # Replace with name of the folder in which tour expression data is stored
                                   "GSE30550_entrez.tsv" # Replace with name of your expression file containing Entrez gene IDs
                                   ))
 ```
@@ -147,7 +150,7 @@ readr::write_tsv(exprs_df,
 
 ```{r}
 metadata_file <- file.path(data_dir,
-                           "GSE30550", # Replace with name of your unzipped folder
+                           "GSE30550", # Replace with name of the folder in which your relevant metadata is stored
                            "metadata_GSE30550.tsv" # Replace with name of the metadata file relevant to your expression file
                            )
 metadata_df <- readr::read_tsv(metadata_file) %>%
@@ -282,7 +285,7 @@ should be higher at `t0`.
 
 ```{r}
 pathway_index <- 
-  which(names(kegg_genesets) == "KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY") # Replace with desired pathway -- names of pathways can be seen using the `names(kegg_genesets)` function
+  which(names(kegg_genesets) == "KEGG_T_CELL_RECEPTOR_SIGNALING_PATHWAY") # Replace with exact name of desired pathway -- names of pathways can be seen using the `names(kegg_genesets)` function
 ```
 
 Plot the overall distribution of the pathway (thick black line) and the 
