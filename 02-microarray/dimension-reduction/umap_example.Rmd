@@ -43,13 +43,20 @@ library(ggplot2)
 Set up output directories.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
 # Make a results directory if it isn't created yet
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
 # Make a plots directory if it isn't created yet
-if (!dir.exists("plots")) {
-  dir.create("plots")
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 ```
 
@@ -60,10 +67,13 @@ These data set was obtained from [refine.bio](https://www.refine.bio/).
 
 ```{r}
 # Put name of data file
-data.filename <- file.path("data", "GSE37382.tsv")
+data.filename <- file.path("data", # Replace with path to your data file
+                           "GSE37382.tsv") # Replace with the name of your data file
 
 # Unzip the file and direct it to the data folder
-unzip(paste0(data.filename, ".zip"), exdir = "data")
+unzip(paste0(data.filename, ".zip"),
+      exdir = "data" # Replace with path to your data file
+      )
 
 # Read in data tsv file
 df <- readr::read_tsv(data.filename, progress = FALSE) %>% 
@@ -75,7 +85,9 @@ Import the metadata for this dataset
 
 ```{r}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_GSE37382.tsv")
+metadata.filename <- file.path("data", # Replace with path to your metadata file
+                               "metadata_GSE37382.tsv" # Replace with the name of your metadata file
+                               ) 
 
 # Read in metadata tsv file
 metadata <- readr::read_tsv(metadata.filename) %>% 
@@ -119,14 +131,18 @@ umap.plot
 
 ```{r}
 # Save as a png
-ggsave(file.path("plots", "umap_scatterplot.png"))
+ggsave(file.path(plots_dir,
+                 "umap_scatterplot.png" # Replace with a relevant output plot name
+                 ))
 ```
 
 ## 5) Save UMAP coordinates to tsv file.
 
 ```{r}
 umap.df %>% as.data.frame() %>% 
-  readr::write_tsv(file.path("results", "umap_scores.tsv"))
+  readr::write_tsv(file.path(results_dir,
+                             "umap_scores.tsv" # Replace with a relevant output name
+                             ))
 ```
 
 Session info: 

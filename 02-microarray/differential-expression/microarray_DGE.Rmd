@@ -40,13 +40,20 @@ library(limma)
 Create output folders.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results" # Replace with path to desired output results directory
+
 # Create the results folder if it doesn't exist
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the results directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
-if (!dir.exists("plots")) {
-  dir.create("plots")
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
 ```
 
@@ -57,10 +64,13 @@ add them as data.frames to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- readr::read_tsv(file.path("data", "metadata_GSE71270.tsv"))
+metadata <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
+                                      "metadata_GSE71270.tsv")) # Replace with the name of your metadata file
 
 # Read in data tsv file
-df <- readr::read_tsv(file.path("data", "GSE71270.tsv")) %>%
+df <- readr::read_tsv(file.path("data", # Replace with path to your data file
+                                "GSE71270.tsv" # Replace with the name of your data file
+                                )) %>% 
   tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
 ```
 
@@ -117,7 +127,9 @@ gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf
 qq.plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
 
 # Save plot to png
-png(file.path("plots", "qqplot_GSE71270.png"))
+png(file.path(plots_dir,
+              "qqplot_GSE71270.png" # Replace file name with a relevant output plot name
+              ))
 qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
 dev.off()
 ```
@@ -129,7 +141,9 @@ Make a volcano plot and save to png
 voc.plot <- volcanoplot(fit, main = "Volcano Plot")
 
 # Save plot to png
-png(file.path("plots", "volcano_plot_GSE71270.png"))
+png(file.path(plots_dir,
+              "volcano_plot_GSE71270.png" # Replace with a relevant output plot name
+              ))
 volcanoplot(fit, main = "Volcano Plot")
 dev.off()
 ```
@@ -137,7 +151,9 @@ dev.off()
 ## 6) Write statistics to output results file
 
 ```{r  Write results}
-readr::write_tsv(stats, file.path("results", "GSE71270_limma_results.tsv"))
+readr::write_tsv(stats, file.path(results_dir,
+                                  "GSE71270_limma_results.tsv" # Replace with a relevant output name
+                                  ))
 ```
 
 Print session info:

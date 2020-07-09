@@ -52,9 +52,12 @@ devtools::install_github("stephenturner/hcop",
 Create output folder.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results" # Replace with path to desired output results directory
+
 # Create the results folder if it doesn't exist
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
 ```
 
@@ -78,7 +81,9 @@ Because of the formatting of the output of refine.bio, the first column name
 will be filled in with `'X1'`.
 
 ```{r Read in zebrafish gene expression data}
-exprs.df <- readr::read_tsv(file.path("data", "GSE12955.tsv"))
+exprs.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
+                                      "GSE12955.tsv" # Replace with the name of your data file
+                                      ))
 ```
 
 refine.bio data uses Ensembl gene identifiers, which will be in the first 
@@ -117,8 +122,10 @@ head(human.symbol.df, 25)
 ## 3) Write newly annotated data to a tsv file
 
 ```{r Write to file}
-readr::write_tsv(human.symbol.df, file.path("results", 
-                                            "GSE12955_mapped_to_human_gene_symbol.tsv"))
+readr::write_tsv(human.symbol.df,
+                 file.path(results_dir, 
+                           "GSE12955_mapped_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+                           ))
 ```
 
 *There are some things to note:*
