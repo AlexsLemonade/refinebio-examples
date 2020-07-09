@@ -61,7 +61,7 @@ Clicking this link will most likely send this to your downloads folder on your c
 Before running the example analysis, we recommend setting up a new folder to hold all your analysis files.
 In this folder you should create another folder called "data". 
 
-*Your new analysis folder should contain:*  
+#### Your new analysis folder should contain:  
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:  
   - The gene expression  
