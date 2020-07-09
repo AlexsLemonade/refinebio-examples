@@ -248,7 +248,7 @@ timepoint_table <- qsTable(timepoint_qusage_results,
                            # numPathways let's us snag all tested gene sets
                            number = numPathways(timepoint_qusage_results))
 readr::write_tsv(timepoint_table,
-                 file.path(results_dir,"qusage_t1-t0_kegg_results.tsv"))
+                 file.path(results_dir, "qusage_t1-t0_kegg_results.tsv"))
 ```
 
 Note that gene sets with negative fold changes are higher in `t0`.
@@ -430,4 +430,3 @@ graphics::boxplot(exprs_mat["3665", ] ~ interaction(filtered_metadata_df$timepoi
 ```{r}
 sessionInfo()
 ```
-
