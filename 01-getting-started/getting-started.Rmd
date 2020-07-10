@@ -6,3 +6,25 @@ output:
     toc: true
     toc_float: true
 ---
+
+- Getting Started
+    - About refine.bio (link out to docs!) 
+    - About how this tutorial book is structured (i.e. each analysis has its own somewhat repetitive info about getting started)
+    - What you need to install to run the examples
+         - Can borrow from: https://github.com/AlexsLemonade/refinebio-examples#general-requirements-for-the-example-workflows
+   - How to get the data - this is still to be determined 
+      - Might be able to borrow from, but will likely be very different: https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository.
+    - How to use/get Rmds 
+       - Should definitely link to: https://bookdown.org/yihui/rmarkdown/
+- A quick primer on file paths and R
+    - Borrow from: https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse where appropriate. 
+- Resources for learning R
+
+
+This getting started section should also include resources for people who may need more practice with the basics. Some suggestions:  
++ [Swirl, an interactive tutorial](https://swirlstats.com/)  
++ [R Markdown](http://rmarkdown.rstudio.com)  
++ [R for Data Science](https://r4ds.had.co.nz/)  
++ [Tutorial on R, RStudio and R Markdown](https://ismayc.github.io/rbasics-book/)  
++ [Handy R cheatsheets](https://www.rstudio.com/resources/cheatsheets/)  
++ [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
