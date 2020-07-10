@@ -2898,40 +2898,74 @@ div.tocify {
 
 
 <!-- rnb-text-begin -->
+<div id="getting-started" class="section level1">
+<h1>Getting Started</h1>
+<div id="about-refine.bio" class="section level2">
+<h2>About refine.bio</h2>
+<p><a href="https://www.refine.bio/about">refinebio</a> is a collection of ready-to-use pre-processed normalized data! Publicly available gene expression data is <a href="http://docs.refine.bio/en/latest/main_text.html#processing-information">uniformly processed</a> and made available for easy download. This tutorial has follow-along examples for use with refinebio downloads.</p>
+</div>
+<div id="about-how-this-tutorial-book-is-structured" class="section level2">
+<h2>About how this tutorial book is structured</h2>
+<p>This tutorial contains follow-along analysis examples for refinebio gene expression data. The analysis examples are organized by technology: “microarray” or “RNA-seq”, in addition to an “Advanced Topics” section.</p>
+</div>
+<div id="what-you-need-to-install-to-run-the-examples" class="section level2">
+<h2>What you need to install to run the examples</h2>
+<p>Our tutorial module requires you to install the following software to be able to run the examples: These requirements can be installed by following the instructions at these links. We recommend installing <code>devtools</code> from CRAN (e.g. running <code>install.packages(&quot;devtools&quot;)</code> in R).</p>
 <ul>
-<li>Getting Started
-<ul>
-<li>About refine.bio (link out to docs!)</li>
-<li>About how this tutorial book is structured (i.e. each analysis has its own somewhat repetitive info about getting started)</li>
-<li>What you need to install to run the examples
-<ul>
-<li>Can borrow from: <a href="https://github.com/AlexsLemonade/refinebio-examples#general-requirements-for-the-example-workflows" class="uri">https://github.com/AlexsLemonade/refinebio-examples#general-requirements-for-the-example-workflows</a></li>
-</ul></li>
-<li>How to get the data - this is still to be determined
-<ul>
-<li>Might be able to borrow from, but will likely be very different: <a href="https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository" class="uri">https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository</a>.</li>
-</ul></li>
-<li>How to use/get Rmds
-<ul>
-<li>Should definitely link to: <a href="https://bookdown.org/yihui/rmarkdown/" class="uri">https://bookdown.org/yihui/rmarkdown/</a></li>
-</ul></li>
-</ul></li>
-<li>A quick primer on file paths and R
-<ul>
-<li>Borrow from: <a href="https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse" class="uri">https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse</a> where appropriate.</li>
-</ul></li>
-<li>Resources for learning R</li>
+<li><a href="https://cran.r-project.org/"><strong>R</strong></a></li>
+<li><a href="https://www.rstudio.com/products/RStudio/"><strong>RStudio</strong></a> for working with <a href="https://bookdown.org/yihui/rmarkdown/notebook.html">R Notebooks</a>.</li>
+<li><a href="https://bioconductor.org/install/"><strong>Bioconductor</strong></a></li>
+<li><a href="https://www.tidyverse.org/"><strong>tidyverse</strong></a></li>
+<li><a href="https://cran.r-project.org/web/packages/devtools/readme/README.html"><strong>devtools</strong></a> will be required for installing some packages from GitHub.</li>
 </ul>
-<p>This getting started section should also include resources for people who may need more practice with the basics. Some suggestions:<br />
-+ <a href="https://swirlstats.com/">Swirl, an interactive tutorial</a><br />
-+ <a href="http://rmarkdown.rstudio.com">R Markdown</a><br />
-+ <a href="https://r4ds.had.co.nz/">R for Data Science</a><br />
-+ <a href="https://ismayc.github.io/rbasics-book/">Tutorial on R, RStudio and R Markdown</a><br />
-+ <a href="https://www.rstudio.com/resources/cheatsheets/">Handy R cheatsheets</a><br />
-+ <a href="https://bookdown.org/yihui/rmarkdown/">R Notebooks tutorial</a></p>
+<p>Each example R Notebooks have additional required packages but will check if they are installed and will install them if they are not. Depending on your particular configuration, sometimes problems occur (Here’s a <a href="http://mazamascience.com/WorkingWithData/?p=1185">list of the most common R package installation errors and what they mean</a>.). Each example module directory will include further instructions for how to follow along with the examples.</p>
+</div>
+<div id="how-to-get-the-data" class="section level2">
+<h2>How to get the data</h2>
+<p><a href="https://www.refine.bio/" class="uri">https://www.refine.bio/</a> <a href="https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository" class="uri">https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository</a>.</p>
+</div>
+<div id="how-to-use-rmds" class="section level2">
+<h2>How to use Rmds</h2>
+<p>We use <a href="https://bookdown.org/yihui/rmarkdown/">R Markdown</a> throughout this tutorial. R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.</p>
+<p>When you execute code within the notebook, the results appear beneath the code. Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Cmd+Shift+Enter</em>.</p>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoXCJUaGUgb3V0cHV0IGZyb20gdGhlIGNvZGUgaW4gdGhpcyBjaHVuayB3aWxsIHByaW50IGJlbG93IVwiKVxuYGBgIn0= -->
+<pre class="r"><code>print(&quot;The output from the code in this chunk will print below!&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>R Markdown documents also have the added benefit of having HTML file output that is styled and easy to read. Saving one of our R Markdowns (the files that end in <code>.Rmd</code>) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in <code>.nb.html</code>.</p>
+</div>
+<div id="a-quick-primer-on-file-paths.-httpsgithub.comalexslemonadetraining-modulestreemasterintro-to-r-tidyverse-where-appropriate." class="section level2">
+<h2>A quick primer on file paths. <a href="https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse" class="uri">https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse</a> where appropriate.</h2>
+<div id="resources-for-learning-r" class="section level4">
+<h4>Resources for learning R</h4>
+<ul>
+<li><a href="https://swirlstats.com/">Swirl, an interactive tutorial</a><br />
+</li>
+<li><a href="https://r4ds.had.co.nz/">R for Data Science</a><br />
+</li>
+<li><a href="http://rmarkdown.rstudio.com">R Markdown</a><br />
+</li>
+<li><a href="https://ismayc.github.io/rbasics-book/">Tutorial on R, RStudio and R Markdown</a></li>
+<li><a href="https://www.rstudio.com/resources/cheatsheets/">Handy R cheatsheets</a><br />
+</li>
+<li><a href="https://bookdown.org/yihui/rmarkdown/">R Notebooks tutorial</a></li>
+</ul>
+</div>
+<div id="more-resources-from-the-ccdl" class="section level4">
+<h4>More resources from the CCDL:</h4>
+<ul>
+<li><a href="https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md">Tips for debugging code</a></li>
+<li><a href="https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00c-good-scientific-coding-practices.md">Good scientific coding practices</a></li>
+</ul>
+<!-- rnb-text-end -->
+</div>
+</div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiR2V0dGluZyBTdGFydGVkIgphdXRob3I6ICJDQ0RMIGZvciBBTFNGIgpvdXRwdXQ6ICAgCiAgaHRtbF9ub3RlYm9vazogCiAgICB0b2M6IHRydWUKICAgIHRvY19mbG9hdDogdHJ1ZQotLS0KCi0gR2V0dGluZyBTdGFydGVkCiAgICAtIEFib3V0IHJlZmluZS5iaW8gKGxpbmsgb3V0IHRvIGRvY3MhKSAKICAgIC0gQWJvdXQgaG93IHRoaXMgdHV0b3JpYWwgYm9vayBpcyBzdHJ1Y3R1cmVkIChpLmUuIGVhY2ggYW5hbHlzaXMgaGFzIGl0cyBvd24gc29tZXdoYXQgcmVwZXRpdGl2ZSBpbmZvIGFib3V0IGdldHRpbmcgc3RhcnRlZCkKICAgIC0gV2hhdCB5b3UgbmVlZCB0byBpbnN0YWxsIHRvIHJ1biB0aGUgZXhhbXBsZXMKICAgICAgICAgLSBDYW4gYm9ycm93IGZyb206IGh0dHBzOi8vZ2l0aHViLmNvbS9BbGV4c0xlbW9uYWRlL3JlZmluZWJpby1leGFtcGxlcyNnZW5lcmFsLXJlcXVpcmVtZW50cy1mb3ItdGhlLWV4YW1wbGUtd29ya2Zsb3dzCiAgIC0gSG93IHRvIGdldCB0aGUgZGF0YSAtIHRoaXMgaXMgc3RpbGwgdG8gYmUgZGV0ZXJtaW5lZCAKICAgICAgLSBNaWdodCBiZSBhYmxlIHRvIGJvcnJvdyBmcm9tLCBidXQgd2lsbCBsaWtlbHkgYmUgdmVyeSBkaWZmZXJlbnQ6IGh0dHBzOi8vZ2l0aHViLmNvbS9BbGV4c0xlbW9uYWRlL3JlZmluZWJpby1leGFtcGxlcyNob3ctdG8tdXNlLXRoaXMtcmVwb3NpdG9yeS4KICAgIC0gSG93IHRvIHVzZS9nZXQgUm1kcyAKICAgICAgIC0gU2hvdWxkIGRlZmluaXRlbHkgbGluayB0bzogaHR0cHM6Ly9ib29rZG93bi5vcmcveWlodWkvcm1hcmtkb3duLwotIEEgcXVpY2sgcHJpbWVyIG9uIGZpbGUgcGF0aHMgYW5kIFIKICAgIC0gQm9ycm93IGZyb206IGh0dHBzOi8vZ2l0aHViLmNvbS9BbGV4c0xlbW9uYWRlL3RyYWluaW5nLW1vZHVsZXMvdHJlZS9tYXN0ZXIvaW50cm8tdG8tUi10aWR5dmVyc2Ugd2hlcmUgYXBwcm9wcmlhdGUuIAotIFJlc291cmNlcyBmb3IgbGVhcm5pbmcgUgoKClRoaXMgZ2V0dGluZyBzdGFydGVkIHNlY3Rpb24gc2hvdWxkIGFsc28gaW5jbHVkZSByZXNvdXJjZXMgZm9yIHBlb3BsZSB3aG8gbWF5IG5lZWQgbW9yZSBwcmFjdGljZSB3aXRoIHRoZSBiYXNpY3MuIFNvbWUgc3VnZ2VzdGlvbnM6ICAKKyBbU3dpcmwsIGFuIGludGVyYWN0aXZlIHR1dG9yaWFsXShodHRwczovL3N3aXJsc3RhdHMuY29tLykgIAorIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSAgCisgW1IgZm9yIERhdGEgU2NpZW5jZV0oaHR0cHM6Ly9yNGRzLmhhZC5jby5uei8pICAKKyBbVHV0b3JpYWwgb24gUiwgUlN0dWRpbyBhbmQgUiBNYXJrZG93bl0oaHR0cHM6Ly9pc21heWMuZ2l0aHViLmlvL3JiYXNpY3MtYm9vay8pICAKKyBbSGFuZHkgUiBjaGVhdHNoZWV0c10oaHR0cHM6Ly93d3cucnN0dWRpby5jb20vcmVzb3VyY2VzL2NoZWF0c2hlZXRzLykgIAorIFtSIE5vdGVib29rcyB0dXRvcmlhbF0oaHR0cHM6Ly9ib29rZG93bi5vcmcveWlodWkvcm1hcmtkb3duLykgIA==</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiR2V0dGluZyBTdGFydGVkIgphdXRob3I6ICJDQ0RMIGZvciBBTFNGIgpvdXRwdXQ6ICAgCiAgaHRtbF9ub3RlYm9vazogCiAgICB0b2M6IHRydWUKICAgIHRvY19mbG9hdDogdHJ1ZQotLS0KCiMgR2V0dGluZyBTdGFydGVkCgojIyBBYm91dCByZWZpbmUuYmlvIAoKW3JlZmluZWJpb10oaHR0cHM6Ly93d3cucmVmaW5lLmJpby9hYm91dCkgaXMgYSBjb2xsZWN0aW9uIG9mIHJlYWR5LXRvLXVzZSBwcmUtcHJvY2Vzc2VkIG5vcm1hbGl6ZWQgZGF0YSEgClB1YmxpY2x5IGF2YWlsYWJsZSBnZW5lIGV4cHJlc3Npb24gZGF0YSBpcyBbdW5pZm9ybWx5IHByb2Nlc3NlZF0oaHR0cDovL2RvY3MucmVmaW5lLmJpby9lbi9sYXRlc3QvbWFpbl90ZXh0Lmh0bWwjcHJvY2Vzc2luZy1pbmZvcm1hdGlvbikgYW5kIG1hZGUgYXZhaWxhYmxlIGZvciBlYXN5IGRvd25sb2FkLiAKVGhpcyB0dXRvcmlhbCBoYXMgZm9sbG93LWFsb25nIGV4YW1wbGVzIGZvciB1c2Ugd2l0aCByZWZpbmViaW8gZG93bmxvYWRzLiAKCiMjIEFib3V0IGhvdyB0aGlzIHR1dG9yaWFsIGJvb2sgaXMgc3RydWN0dXJlZCAKVGhpcyB0dXRvcmlhbCBjb250YWlucyBmb2xsb3ctYWxvbmcgYW5hbHlzaXMgZXhhbXBsZXMgZm9yIHJlZmluZWJpbyBnZW5lIGV4cHJlc3Npb24gZGF0YS4KVGhlIGFuYWx5c2lzIGV4YW1wbGVzIGFyZSBvcmdhbml6ZWQgYnkgdGVjaG5vbG9neTogIm1pY3JvYXJyYXkiIG9yICJSTkEtc2VxIiwgaW4gYWRkaXRpb24gdG8gYW4gIkFkdmFuY2VkIFRvcGljcyIgc2VjdGlvbi4gCgojIyBXaGF0IHlvdSBuZWVkIHRvIGluc3RhbGwgdG8gcnVuIHRoZSBleGFtcGxlcyAKCk91ciB0dXRvcmlhbCBtb2R1bGUgcmVxdWlyZXMgeW91IHRvIGluc3RhbGwgdGhlIGZvbGxvd2luZyBzb2Z0d2FyZSB0byBiZSBhYmxlIHRvIHJ1biB0aGUgZXhhbXBsZXM6ClRoZXNlIHJlcXVpcmVtZW50cyBjYW4gYmUgaW5zdGFsbGVkIGJ5IGZvbGxvd2luZyB0aGUgaW5zdHJ1Y3Rpb25zIGF0IHRoZXNlIGxpbmtzLgpXZSByZWNvbW1lbmQgaW5zdGFsbGluZyBgZGV2dG9vbHNgIGZyb20gQ1JBTiAoZS5nLiBydW5uaW5nIGBpbnN0YWxsLnBhY2thZ2VzKCJkZXZ0b29scyIpYCBpbiBSKS4gCgoqIFsqKlIqKl0oaHR0cHM6Ly9jcmFuLnItcHJvamVjdC5vcmcvKQoqIFsqKlJTdHVkaW8qKl0oaHR0cHM6Ly93d3cucnN0dWRpby5jb20vcHJvZHVjdHMvUlN0dWRpby8pIGZvciB3b3JraW5nIHdpdGggW1IgTm90ZWJvb2tzXShodHRwczovL2Jvb2tkb3duLm9yZy95aWh1aS9ybWFya2Rvd24vbm90ZWJvb2suaHRtbCkuCiogWyoqQmlvY29uZHVjdG9yKipdKGh0dHBzOi8vYmlvY29uZHVjdG9yLm9yZy9pbnN0YWxsLykKKiBbKip0aWR5dmVyc2UqKl0oaHR0cHM6Ly93d3cudGlkeXZlcnNlLm9yZy8pCiogWyoqZGV2dG9vbHMqKl0oaHR0cHM6Ly9jcmFuLnItcHJvamVjdC5vcmcvd2ViL3BhY2thZ2VzL2RldnRvb2xzL3JlYWRtZS9SRUFETUUuaHRtbCkKd2lsbCBiZSByZXF1aXJlZCBmb3IgaW5zdGFsbGluZyBzb21lIHBhY2thZ2VzIGZyb20gR2l0SHViLiAKCkVhY2ggZXhhbXBsZSBSIE5vdGVib29rcyBoYXZlIGFkZGl0aW9uYWwgcmVxdWlyZWQgcGFja2FnZXMgYnV0IHdpbGwgY2hlY2sgaWYgdGhleSBhcmUgaW5zdGFsbGVkIGFuZCB3aWxsIGluc3RhbGwgdGhlbSBpZiB0aGV5IGFyZSBub3QuCkRlcGVuZGluZyBvbiB5b3VyIHBhcnRpY3VsYXIgY29uZmlndXJhdGlvbiwgc29tZXRpbWVzIHByb2JsZW1zIG9jY3VyIChIZXJlJ3MgYSBbbGlzdCBvZiB0aGUgbW9zdCBjb21tb24gUiBwYWNrYWdlIGluc3RhbGxhdGlvbiBlcnJvcnMgYW5kIHdoYXQgdGhleSBtZWFuXShodHRwOi8vbWF6YW1hc2NpZW5jZS5jb20vV29ya2luZ1dpdGhEYXRhLz9wPTExODUpLikuIApFYWNoIGV4YW1wbGUgbW9kdWxlIGRpcmVjdG9yeSB3aWxsIGluY2x1ZGUgZnVydGhlciBpbnN0cnVjdGlvbnMgZm9yIGhvdyB0byBmb2xsb3cgYWxvbmcgd2l0aCB0aGUgZXhhbXBsZXMuCgojIyBIb3cgdG8gZ2V0IHRoZSBkYXRhCmh0dHBzOi8vd3d3LnJlZmluZS5iaW8vCmh0dHBzOi8vZ2l0aHViLmNvbS9BbGV4c0xlbW9uYWRlL3JlZmluZWJpby1leGFtcGxlcyNob3ctdG8tdXNlLXRoaXMtcmVwb3NpdG9yeS4KCiMjIEhvdyB0byB1c2UgUm1kcwpXZSB1c2UgW1IgTWFya2Rvd25dKGh0dHBzOi8vYm9va2Rvd24ub3JnL3lpaHVpL3JtYXJrZG93bi8pIHRocm91Z2hvdXQgdGhpcyB0dXRvcmlhbC4KUiBNYXJrZG93biBkb2N1bWVudHMgYXJlIGhlbHBmdWwgZm9yIHNjaWVudGlmaWMgY29kZSBieSBhbGxvd2luZyB5b3UgdG8ga2VlcCBkZXRhaWxlZCBub3RlcywgY29kZSwgYW5kIG91dHB1dCBpbiBvbmUgcGxhY2UuCgpXaGVuIHlvdSBleGVjdXRlIGNvZGUgd2l0aGluIHRoZSBub3RlYm9vaywgdGhlIHJlc3VsdHMgYXBwZWFyIGJlbmVhdGggdGhlIGNvZGUuIApUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IApwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkNtZCtTaGlmdCtFbnRlciouIAoKYGBge3IgcHJpbnR9CnByaW50KCJUaGUgb3V0cHV0IGZyb20gdGhlIGNvZGUgaW4gdGhpcyBjaHVuayB3aWxsIHByaW50IGJlbG93ISIpCmBgYAoKUiBNYXJrZG93biBkb2N1bWVudHMgYWxzbyBoYXZlIHRoZSBhZGRlZCBiZW5lZml0IG9mIGhhdmluZyBIVE1MIGZpbGUgb3V0cHV0IHRoYXQgaXMgc3R5bGVkIGFuZCBlYXN5IHRvIHJlYWQuClNhdmluZyBvbmUgb2Ygb3VyIFIgTWFya2Rvd25zICh0aGUgZmlsZXMgdGhhdCBlbmQgaW4gYC5SbWRgKSBvbiB5b3VyIGNvbXB1dGVyIHdpbGwgY3JlYXRlIGFuIEhUTUwgZmlsZSBjb250YWluaW5nIHRoZSBjb2RlIGFuZCBvdXRwdXQgdG8gYmUgc2F2ZWQgYWxvbmdzaWRlIGl0ICh3aWxsIGVuZCBpbiBgLm5iLmh0bWxgLgoKIyMgQSBxdWljayBwcmltZXIgb24gZmlsZSBwYXRocy4gaHR0cHM6Ly9naXRodWIuY29tL0FsZXhzTGVtb25hZGUvdHJhaW5pbmctbW9kdWxlcy90cmVlL21hc3Rlci9pbnRyby10by1SLXRpZHl2ZXJzZSB3aGVyZSBhcHByb3ByaWF0ZS4gCgojIyMjIFJlc291cmNlcyBmb3IgbGVhcm5pbmcgUgorIFtTd2lybCwgYW4gaW50ZXJhY3RpdmUgdHV0b3JpYWxdKGh0dHBzOi8vc3dpcmxzdGF0cy5jb20vKSAgCisgW1IgZm9yIERhdGEgU2NpZW5jZV0oaHR0cHM6Ly9yNGRzLmhhZC5jby5uei8pICAKKyBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgIAorIFtUdXRvcmlhbCBvbiBSLCBSU3R1ZGlvIGFuZCBSIE1hcmtkb3duXShodHRwczovL2lzbWF5Yy5naXRodWIuaW8vcmJhc2ljcy1ib29rLykKKyBbSGFuZHkgUiBjaGVhdHNoZWV0c10oaHR0cHM6Ly93d3cucnN0dWRpby5jb20vcmVzb3VyY2VzL2NoZWF0c2hlZXRzLykgIAorIFtSIE5vdGVib29rcyB0dXRvcmlhbF0oaHR0cHM6Ly9ib29rZG93bi5vcmcveWlodWkvcm1hcmtkb3duLykgIAoKIyMjIyBNb3JlIHJlc291cmNlcyBmcm9tIHRoZSBDQ0RMOiAKLSBbVGlwcyBmb3IgZGVidWdnaW5nIGNvZGVdKGh0dHBzOi8vZ2l0aHViLmNvbS9BbGV4c0xlbW9uYWRlL3RyYWluaW5nLW1vZHVsZXMvYmxvYi9tYXN0ZXIvaW50cm8tdG8tUi10aWR5dmVyc2UvMDBiLWRlYnVnZ2luZ19yZXNvdXJjZXMubWQpCi0gW0dvb2Qgc2NpZW50aWZpYyBjb2RpbmcgcHJhY3RpY2VzXShodHRwczovL2dpdGh1Yi5jb20vQWxleHNMZW1vbmFkZS90cmFpbmluZy1tb2R1bGVzL2Jsb2IvbWFzdGVyL2ludHJvLXRvLVItdGlkeXZlcnNlLzAwYy1nb29kLXNjaWVudGlmaWMtY29kaW5nLXByYWN0aWNlcy5tZCkK</div>
 
 
 </div>

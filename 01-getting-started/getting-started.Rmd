@@ -7,24 +7,64 @@ output:
     toc_float: true
 ---
 
-- Getting Started
-    - About refine.bio (link out to docs!) 
-    - About how this tutorial book is structured (i.e. each analysis has its own somewhat repetitive info about getting started)
-    - What you need to install to run the examples
-         - Can borrow from: https://github.com/AlexsLemonade/refinebio-examples#general-requirements-for-the-example-workflows
-   - How to get the data - this is still to be determined 
-      - Might be able to borrow from, but will likely be very different: https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository.
-    - How to use/get Rmds 
-       - Should definitely link to: https://bookdown.org/yihui/rmarkdown/
-- A quick primer on file paths and R
-    - Borrow from: https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse where appropriate. 
-- Resources for learning R
+# Getting Started
 
+## About refine.bio 
 
-This getting started section should also include resources for people who may need more practice with the basics. Some suggestions:  
+[refinebio](https://www.refine.bio/about) is a collection of ready-to-use pre-processed normalized data! 
+Publicly available gene expression data is [uniformly processed](http://docs.refine.bio/en/latest/main_text.html#processing-information) and made available for easy download. 
+This tutorial has follow-along examples for use with refinebio downloads. 
+
+## About how this tutorial book is structured 
+This tutorial contains follow-along analysis examples for refinebio gene expression data.
+The analysis examples are organized by technology: "microarray" or "RNA-seq", in addition to an "Advanced Topics" section. 
+
+## What you need to install to run the examples 
+
+Our tutorial module requires you to install the following software to be able to run the examples:
+These requirements can be installed by following the instructions at these links.
+We recommend installing `devtools` from CRAN (e.g. running `install.packages("devtools")` in R). 
+
+* [**R**](https://cran.r-project.org/)
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
+* [**Bioconductor**](https://bioconductor.org/install/)
+* [**tidyverse**](https://www.tidyverse.org/)
+* [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html)
+will be required for installing some packages from GitHub. 
+
+Each example R Notebooks have additional required packages but will check if they are installed and will install them if they are not.
+Depending on your particular configuration, sometimes problems occur (Here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185).). 
+Each example module directory will include further instructions for how to follow along with the examples.
+
+## How to get the data
+https://www.refine.bio/
+https://github.com/AlexsLemonade/refinebio-examples#how-to-use-this-repository.
+
+## How to use Rmds
+We use [R Markdown](https://bookdown.org/yihui/rmarkdown/) throughout this tutorial.
+R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.
+
+When you execute code within the notebook, the results appear beneath the code. 
+Try executing this chunk by clicking the *Run* button within the chunk or by 
+placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r print}
+print("The output from the code in this chunk will print below!")
+```
+
+R Markdown documents also have the added benefit of having HTML file output that is styled and easy to read.
+Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in `.nb.html`.
+
+## A quick primer on file paths. https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse where appropriate. 
+
+#### Resources for learning R
 + [Swirl, an interactive tutorial](https://swirlstats.com/)  
-+ [R Markdown](http://rmarkdown.rstudio.com)  
 + [R for Data Science](https://r4ds.had.co.nz/)  
-+ [Tutorial on R, RStudio and R Markdown](https://ismayc.github.io/rbasics-book/)  
++ [R Markdown](http://rmarkdown.rstudio.com)  
++ [Tutorial on R, RStudio and R Markdown](https://ismayc.github.io/rbasics-book/)
 + [Handy R cheatsheets](https://www.rstudio.com/resources/cheatsheets/)  
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
+
+#### More resources from the CCDL: 
+- [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
+- [Good scientific coding practices](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00c-good-scientific-coding-practices.md)
