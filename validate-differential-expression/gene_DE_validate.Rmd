@@ -125,7 +125,7 @@ Note that these differential expression results come with Affymetrix probe IDs
 ```{r}
 # Load in the summary statistics from limma run
 author.full.results <- readr::read_tsv(file.path(results_dir, 
-                                                 "GSE37382_limma_results.tsv" # Replace with name of `limma` results file generated in `author_processed_DE.Rmd`
+                                                 "GSE37382_limma_results.tsv" # Replace with name of your own differential expression results file you've generated that you'd like to compare to refinebio data
                                                  )) 
 ```
 
@@ -156,10 +156,12 @@ probe.conversion <- readr::read_tsv(id.conversion.file,
 
 # Add annotation to imported author limma results 
 author.full.results <- author.full.results %>%
+  # You may need to replace "affy_probe_ids" with the name of the column that        # contains the probe IDs in your data 
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
   dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
   # Determine direction of fold change. 
   # Note up-directed genes will be TRUE, down-genes will be FALSE
+  # You may need to replace <logFC> with the name of the column that contains the    # log fold change values in your data 
   dplyr::mutate('direction' = logFC > 0) %>% 
   # This is to make sure we don't get repeat probes
   dplyr::distinct()
@@ -187,7 +189,7 @@ variable `direction` we made in the previous section.
 ```{r}
 # Summarize the direction of significant probes for each gene
 direction.summary <- author.full.results %>% 
-  # Keep only significant at 0.05 probes
+  # Keep only significant at 0.05 probes -- you may need to replace <adj.P.Val>      # with the name of the column that contains the adjusted P values for your data
   dplyr::filter(adj.P.Val < 0.05) %>% 
   # Group probes by their associated 
   dplyr::group_by(ENSEMBL) %>% 

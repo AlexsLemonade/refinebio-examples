@@ -83,7 +83,7 @@ matrix.file.name <- file.path(data_dir,
                               )
 
 # Download author processed data file directly to the data directory
-geo.data <-  GEOquery::getGEO("GSE37382", # Replace with the GEO Accession ID relevant to your txt file
+geo.data <-  GEOquery::getGEO("GSE37382", # Replace with the GEO Accession ID relevant to your txt file -- you can search for a GEO Accession ID using the [NCBI's Gene Expression Omnibus database](https://www.ncbi.nlm.nih.gov/geo/).The GEO ID will start with `GSE`, `GSM`, `GDS`, or `GPL` (more information here: https://www.rdocumentation.org/packages/GEOquery/versions/2.38.4/topics/getGEO)
                               destdir = data_dir, GSEMatrix = TRUE)
   
 # If the unzipped version of the file doesn't exist, run this
