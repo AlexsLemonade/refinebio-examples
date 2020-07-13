@@ -7,7 +7,20 @@ output:
     toc_float: true
 ---
 
-# Getting Started
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [About refine.bio](#about-refinebio)
+- [About how this tutorial book is structured](#about-how-this-tutorial-book-is-structured)
+- [What you need to install to run the examples](#what-you-need-to-install-to-run-the-examples)
+- [How to get the data](#how-to-get-the-data)
+- [How to use R Markdowns](#how-to-use-r-markdowns)
+- [An important note about file paths and Rmds](#an-important-note-about-file-paths-and-rmds)
+    - [Resources for learning R](#resources-for-learning-r)
+    - [More resources from the CCDL](#more-resources-from-the-ccdl)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## About refine.bio 
 
@@ -20,7 +33,7 @@ This tutorial has follow-along examples for use with refinebio downloads.
 This tutorial contains follow-along analysis examples for refinebio gene expression data.
 The analysis examples are organized by technology: "microarray" or "RNA-seq", in addition to an "Advanced Topics" section. 
 Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refinebio. 
-We encourage you to download the Rmd and follow the example we've provided. 
+We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the example we've provided.
 
 ## What you need to install to run the examples 
 
@@ -86,5 +99,6 @@ For more practice with setting file paths in `.Rmd` files see these:
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
 
 #### More resources from the CCDL: 
+- [Intro to R and Tidyverse course and exercises](https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse)
 - [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
 - [Good scientific coding practices](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00c-good-scientific-coding-practices.md)
