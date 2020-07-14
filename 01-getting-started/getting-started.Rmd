@@ -85,11 +85,11 @@ Directories are the folders of files on your computer; a file path is the series
 Rmarkdown documents have the `current directory` always set as wherever the `.Rmd` file itself is saved. 
 This means all file paths specified in the Rmd must be specified `relative` to the location of the Rmd. 
 
-For more practice with setting file paths in `.Rmd` files see these:
-- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)
-- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)
+For more practice with setting file paths in `.Rmd` files see these:  
+- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)  
+- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)  
 
-### Resources for learning R
+## Resources for learning R
 
 + [Swirl, an interactive tutorial](https://swirlstats.com/)  
 + [R for Data Science](https://r4ds.had.co.nz/)  
@@ -98,7 +98,7 @@ For more practice with setting file paths in `.Rmd` files see these:
 + [Handy R cheatsheets](https://www.rstudio.com/resources/cheatsheets/)  
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
 
-#### More resources from the CCDL: 
+## Additional resources from the CCDL: 
 
 - [Intro to R and Tidyverse course and exercises](https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse)
 - [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
