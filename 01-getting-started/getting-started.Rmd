@@ -41,15 +41,15 @@ Our tutorial module requires you to install the following software to be able to
 These requirements can be installed by following the instructions at these links.
 We recommend installing `devtools` from CRAN (e.g. running `install.packages("devtools")` in R). 
 
-**Required software:**
-* [**R**](https://cran.r-project.org/)
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) for working with [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).
-* [**Bioconductor**](https://bioconductor.org/install/)
-* [**tidyverse**](https://www.tidyverse.org/)
+### Required software:
+* [**R**](https://cran.r-project.org/)  
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) an [integrated development environment](https://en.wikipedia.org/wiki/Integrated_development_environment) for working with R and [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).  
+* [**Bioconductor**](https://bioconductor.org/install/) for installing packages from this package repository. 
+* [**tidyverse**](https://www.tidyverse.org/) - we opt for using tidyverse packages for handling and cleaning the data. 
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html)
-will be required for installing some packages from GitHub. 
+will be required for installing some packages from GitHub.   
 
-Each example R Notebooks have additional required packages but will check if they are installed and will install them if they are not.
+Each example analysis has additional required packages but will check if they are installed and will install them if they are not.
 Depending on your particular configuration, sometimes problems occur (Here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185).). 
 Each example module directory will include further instructions for how to follow along with the examples.
 
@@ -89,7 +89,7 @@ For more practice with setting file paths in `.Rmd` files see these:
 - [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)
 - [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)
 
-#### Resources for learning R
+### Resources for learning R
 
 + [Swirl, an interactive tutorial](https://swirlstats.com/)  
 + [R for Data Science](https://r4ds.had.co.nz/)  
@@ -99,6 +99,7 @@ For more practice with setting file paths in `.Rmd` files see these:
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
 
 #### More resources from the CCDL: 
+
 - [Intro to R and Tidyverse course and exercises](https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse)
 - [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
 - [Good scientific coding practices](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00c-good-scientific-coding-practices.md)
