@@ -28,6 +28,16 @@ Note that we perform a simple two-group comparison here.
 Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
 for more information about additional experimental designs.
 
+# Other alternatives: 
+Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
+of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
+
+To use `edgeR` functionality such as filtering and calculating normalization
+factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
+using the refine.bio data as the `counts`.
+
+
+
 ### Dataset
 
 We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) 
@@ -41,17 +51,12 @@ from patients with _ASXL1/2_ without taking tissue of origin into account.
 
 ## Set up
 
-Install `limma` and `edgeR` if not yet installed.
+Install `DESeq2` if not yet installed.
 
-```{r Install limma}
-if (!("limma" %in% installed.packages())) {
-  # Install limma
-  BiocManager::install("limma", update = FALSE)
-}
-
-if (!("edgeR" %in% installed.packages())) {
-  # Install limma
-  BiocManager::install("edgeR", update = FALSE)
+```{r Install DESeq2}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install DESeq2
+  BiocManager::install("DESeq2", update = FALSE)
 }
 ```
 
@@ -62,8 +67,8 @@ Load libraries.
 `%>%` <- dplyr::`%>%`
 
 # Attach libraries
-library(limma)
-library(edgeR)
+library(DESeq2) # We'll use this for the differential expression analysis
+library(ggplot2) # We will use this for plotting
 ```
 
 Create output folders.
@@ -162,107 +167,97 @@ Check again.
 all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
 ```
 
-### limma-voom
+### DESeq2
 
-Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
-of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
-
-To use `edgeR` functionality such as filtering and calculating normalization
-factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
-using the refine.bio data as the `counts`.
+First we need convert the expression data to integers so it can be converted to 
+a DESEq2 object.
 
 ```{r}
-dge.list <- DGEList(as.matrix(expression.df))
+expression.df <- expression.df %>%
+  # Bring the Gene column back from the rownames
+  tibble::rownames_to_column("Gene") %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, as.integer)
 ```
 
-`DGEList` is a particular type of [S4 class](http://adv-r.had.co.nz/S4.html).
+Now we need to create `DESeqDataSet` from our expression dataset. 
+We use the `mutation_status` of origin in the design formula because that will allow us
+to model this variable of interest.
 
 ```{r}
-str(dge.list)
+ddset <- DESeqDataSetFromMatrix(countData = expression.df,
+                                tidy = TRUE,
+                                colData = metadata.df,
+                                design = ~ mutation_status)
 ```
 
-Filter to only retain genes with enough counts for statistical analysis.
+### Variance stabilizing transformation
 
-```{r}
-keep <- filterByExpr(dge.list)
-dge.list <- dge.list[keep, ]
+Before visualizing the data, we'll transform it such that it is on a `log2` 
+scale for large counts and library size is taken into account with the `DESeq2` 
+function for variance stabilizing transformation.
+See [this section of
+the `DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) 
+for more on this topic. 
+
+```{r vst}
+vst_data <- vst(ddset)
 ```
 
-If we check the structure again, we can see many fewer genes are retained.
+#### Differential expression analysis
 
-```{r}
-str(dge.list)
+We'll use the wrapper function `DESeq` to do our differential expression 
+analysis.
+
+```{r DESeq}
+deseq_object <- DESeq(ddset)
 ```
 
-The next step is to calculate normalization factors for scaling the raw 
-library sizes.
+Let's take a look at the results table.
 
-```{r}
-dge.list <- calcNormFactors(dge.list)
+```{r deseq_results}
+deseq_results <- results(deseq_object)
+deseq_results
 ```
 
-If we take another look at the structure of `dge.list`, we can see that the
-`norm.factors` element has changed as a result of running `calcNormFactors`.
+Sort the results. 
 
-```{r}
-str(dge.list)
-```
+```{r arrange-deseq_results}
+# this is of class DESeqResults -- we want a data.frame
+deseq_df <- deseq_results %>%
+  # make into data.frame
+  as.data.frame() %>%
+  # the gene names are rownames -- let's make this it's own column for easy 
+  # display
+  tibble::rownames_to_column(var = "Gene")
 
-`limma` requires us to specify a design matrix that captures the mutated vs.
-wildtype comparison.
-
-```{r}
-design <- model.matrix(~ metadata.df$mutation_status)
-```
-
-This is the voom step that transforms data to log2CPM, estimates the 
-mean-variance relationship and computes observation-level weights.
-
-```{r}
-voom.elist <- voom(dge.list, design)  # ready for lmFit
-```
-
-`voom()` returns an `EList`.
-
-```{r}
-str(voom.elist)
-```
-
-Now we're ready to fit a linear model, apply smoothing, and extract the results
-in tabular format.
-
-```{r Apply linear model}
-# Apply linear model to data
-fit <- lmFit(voom.elist, design = design)
-
-# Apply empirical Bayes to smooth standard errors
-fit <- eBayes(fit)
-
-# Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(expression.df)) %>% 
-  tibble::rownames_to_column("Gene")
+deseq_df %>%
+  # let's sort by statistic -- the highest values should be what is up in the
+  # MYCN amplified cell lines
+  dplyr::arrange(dplyr::desc(stat))
 ```
 
 Write the `topTable` output to file.
 
 ```{r  Write results}
-readr::write_tsv(stats, file.path(results_dir,
-                                  "SRP078441_limma_results.tsv" # Replace with a relevant output file name
+readr::write_tsv(deseq_df, 
+                 file.path(results_dir,
+                           "SRP078441_limma_results.tsv" # Replace with a relevant output file name
                                   ))
 ```
 
 ### Volcano plot
 
 ```{r}
-# Create volcano plot 
-voc.plot <- volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
+ggplot(deseq_df) +
+  geom_point(aes(x = log2FoldChange, y = -log10(padj))) +
+  xlab("log2 fold change") + 
+  ylab("-log10 adjusted p-value") +
+  theme_classic()
+```
 
-# Save plot to png
-png(file.path(plots_dir,
-              "volcano_plot_SRP078441.png" # Replace with a plot name relevant to your data
-              ))
-volcanoplot(fit, main = "Volcano Plot SRP078441") # Replace title with one relevant to your data
-dev.off()
+```{r}
+ggsave(file.path(plots_dir,"volcano_plot_SRP078441.png")) # Replace with a plot name relevant to your data
 ```
 
 ## Session Info
