@@ -92,14 +92,24 @@ library(limma)
 Set up output directories if they haven't been set up yet.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
 # Make a results directory if it isn't created yet
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
 # Make a plots directory if it isn't created yet
-if (!dir.exists("plots")) {
-  dir.create("plots")
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"  # Replace with path to data directory
 ```
 
 ## 2) Import differential expression results from Northcott dataset
@@ -114,8 +124,9 @@ Note that these differential expression results come with Affymetrix probe IDs
 
 ```{r}
 # Load in the summary statistics from limma run
-author.full.results <- readr::read_tsv(file.path("results", 
-                                                 "GSE37382_limma_results.tsv")) 
+author.full.results <- readr::read_tsv(file.path(results_dir, 
+                                                 "GSE37382_limma_results.tsv" # Replace with name of your own differential expression results file you've generated that you'd like to compare to refinebio data
+                                                 )) 
 ```
 
 ## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
@@ -133,9 +144,9 @@ microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1
 
 ```{r}
 # Unzip hugene11st ID conversion file obtained from identifier refinery
-id.conversion.file <- file.path("data", "hugene11st.tsv") 
+id.conversion.file <- file.path(data_dir, "hugene11st.tsv") 
 if (!file.exists(id.conversion.file)) {
-  unzip(paste0(id.conversion.file, ".zip"), exdir = "data")
+  unzip(paste0(id.conversion.file, ".zip"), exdir = data_dir)
 } 
 
 # Read in the probe conversion info - this step may take some time
@@ -145,10 +156,14 @@ probe.conversion <- readr::read_tsv(id.conversion.file,
 
 # Add annotation to imported author limma results 
 author.full.results <- author.full.results %>%
+  # You may need to replace "affy_probe_ids" with the name of the column that        
+  # contains the probe IDs in your data 
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
   dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
   # Determine direction of fold change. 
   # Note up-directed genes will be TRUE, down-genes will be FALSE
+  # You may need to replace "logFC" with the name of the column that contains the    
+  # log fold change values in your data 
   dplyr::mutate('direction' = logFC > 0) %>% 
   # This is to make sure we don't get repeat probes
   dplyr::distinct()
@@ -176,7 +191,8 @@ variable `direction` we made in the previous section.
 ```{r}
 # Summarize the direction of significant probes for each gene
 direction.summary <- author.full.results %>% 
-  # Keep only significant at 0.05 probes
+  # Keep only significant at 0.05 probes -- you may need to replace "adj.P.Val" 
+  # with the corresponding column name in your data that contains the adjusted P values. 
   dplyr::filter(adj.P.Val < 0.05) %>% 
   # Group probes by their associated 
   dplyr::group_by(ENSEMBL) %>% 
@@ -218,7 +234,9 @@ This data set was obtained from [refine.bio](https://www.refine.bio/).
 
 ```{r}
 # Put name of data file
-refine.bio.data.filename <- file.path("data", "GSE37418.tsv")
+refine.bio.data.filename <- file.path(data_dir,
+                                      "GSE37418.tsv" # Replace with your desired refine.bio processed data file
+                                      )
 
 # Read in data tsv file
 refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
@@ -230,7 +248,9 @@ Set up the metadata for this set.
 
 ```{r}
 # Metadata file name
-metadata.filename <- file.path("data", "metadata_GSE37418.tsv")
+metadata.filename <- file.path(data_dir,
+                               "metadata_GSE37418.tsv" # Replace with name of metadata file relevant to your refine.bio processed data file
+                               )
 
 # Read in metadata tsv file
 metadata <- readr::read_tsv(metadata.filename) %>% 
@@ -324,8 +344,9 @@ refine.bio.results
 Write these results to an output file.
 
 ```{r  Write results}
-readr::write_tsv(refine.bio.results, file.path("results",
-                                               "GSE37418_limma_results.tsv"))
+readr::write_tsv(refine.bio.results, file.path(results_dir,
+                                               "GSE37418_limma_results.tsv" # Replace with relevant output file name
+                                               ))
 ```
 
 ### Create up/down-regulated gene lists for refine.bio results
@@ -413,7 +434,7 @@ Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
 # Make filename to save plot as
-up.plot.file <- file.path("plots", 
+up.plot.file <- file.path(plots_dir, 
                           "up-regulated_venn_northcott_vs_robinson.png")
 
 # Make the Venn diagram
@@ -450,7 +471,7 @@ Repeat the process for down-regulation results.
 
 ```{r}
 # Make filename to save plot as
-down.plot.file <- file.path("plots", 
+down.plot.file <- file.path(plots_dir, 
                             "down-regulated_venn_northcott_vs_robinson.png")
 
 # Make the Venn diagram
@@ -492,11 +513,11 @@ third vector in the output object so we use `[[3]]`.
 ```{r}
 # Write the up-regulated gene overlap lists to tsv file
 data.frame(up.overlap[[3]]) %>% 
-  readr::write_tsv(file.path("results", "up-regulated_overlap_gene_list.tsv"))
+  readr::write_tsv(file.path(results_dir, "up-regulated_overlap_gene_list.tsv"))
 
 # Do the same but for the down-regulated gene overlap list
 data.frame(down.overlap[[3]]) %>% 
-  readr::write_tsv(file.path("results", "down-regulated_overlap_gene_list.tsv"))
+  readr::write_tsv(file.path(results_dir, "down-regulated_overlap_gene_list.tsv"))
 ```
 
 Print session info:
