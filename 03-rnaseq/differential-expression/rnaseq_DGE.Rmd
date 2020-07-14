@@ -229,7 +229,8 @@ deseq_df <- deseq_results %>%
   as.data.frame() %>%
   # the gene names are rownames -- let's make this it's own column for easy 
   # display
-  tibble::rownames_to_column(var = "Gene")
+  tibble::rownames_to_column(var = "Gene") %>% 
+  dplyr::mutate(threshold = padj < 0.05)
 
 deseq_df %>%
   # let's sort by statistic -- the highest values should be what is up in the
@@ -249,16 +250,26 @@ readr::write_tsv(deseq_df,
 ### Volcano plot
 
 ```{r}
-ggplot(deseq_df) +
-  geom_point(aes(x = log2FoldChange, y = -log10(padj))) +
+volcano_plot <- ggplot(deseq_df, aes(x = log2FoldChange, y = -log10(padj), color = threshold)) +
+  geom_point() +
+  theme_classic() +
   xlab("log2 fold change") + 
   ylab("-log10 adjusted p-value") +
-  theme_classic()
+  ggtitle("Volcano plot for mutation status") + 
+  scale_color_manual(values = c("lightgray", "navy")) +
+  theme(legend.position = "none") 
+
+# Print out plot here
+volcano_plot
 ```
 
 ```{r}
-ggsave(file.path(plots_dir,"volcano_plot_SRP078441.png")) # Replace with a plot name relevant to your data
+ggsave(plot = volcano_plot, 
+       file.path(plots_dir,"volcano_plot_SRP078441.png")) # Replace with a plot name relevant to your data
 ```
+
+Heatmaps are also a pretty common way to show differential expression results. 
+You can take your results from this example and make a heatmap following our heatmap module: TODO: link here. 
 
 ## Session Info
 
