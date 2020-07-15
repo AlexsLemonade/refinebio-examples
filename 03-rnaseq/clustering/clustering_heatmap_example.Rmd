@@ -1,0 +1,183 @@
+---
+title: "Clustering Heatmap - RNA-Seq"
+author: "CCDL for ALSF"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+*Purpose*: This notebook illustrates one way that you can use harmonized data 
+from refine.bio in downstream analyses.
+
+## 1) Install libraries
+This script uses the R package `DESeq2` for normalization and the R package
+`pheatmap` for clustering and creating a heatmap.
+<br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2 Genome Biology 15(12):550 (2014)
+<br/> <i> Citation:</i> Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version 1.0.12. https://CRAN.R-project.org/package=pheatmap
+
+```{r Install and attach the pheatmap and DESeq2 libraries}
+if (!("pheatmap" %in% installed.packages())) {
+  # Install pheatmap
+  install.packages("pheatmap", update = FALSE)
+}
+
+if (!("DESeq2" %in% installed.packages())) {
+  # Install DESeq2
+  BiocManager::install("DESeq2", update = FALSE)
+}
+```
+
+Attach the `pheatmap` and `DESeq2` libraries:
+
+```{r}
+# Attach the `pheatmap` library
+library(pheatmap)
+
+# Attach the `DESeq2` library
+library(DESeq2)
+
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Set the seed so our results are reproducible:
+set.seed(12345)
+```
+
+Create output folder.
+
+```{r}
+# Define the file path to the plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+```
+
+## 2) Import and set up data
+Data downloaded from refine.bio include a metadata tab separated values ("tsv")
+file and a data tsv file. This chunk of code will read the both tsv files and 
+add them as data.frames to your environment.
+
+```{r Import data from .tsv files}
+# Read in metadata tsv file
+metadata <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
+                                      "metadata_SRP110235.tsv" # Replace with the name of your metadata file
+                                      )) %>%
+  dplyr::select(refinebio_accession_code, refinebio_title)
+
+# Read in data tsv file
+df <- readr::read_tsv(file.path("data", # Replace with path to your data file
+                                "SRP110235.tsv" # Replace with the name of your data file
+                                )) %>%
+  tibble::column_to_rownames('Gene')
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+```
+
+## 3) Create a DESeq2 dataset
+
+```{r}
+# The `DESeqDataSetFromMatrix` function needs the values to be converted to 
+# integers
+df <- apply(df, 2, as.integer)
+
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(countData = df,
+                              colData = metadata,
+                              design = ~ refinebio_title)
+
+# Place the colData in a separate data.frame object for annotation 
+col_df <- as.data.frame(colData(dds))
+
+# Define a `Groups` column variable 
+col_df <- col_df %>%
+  dplyr::mutate(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
+                                                 each = 2)) %>%
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+
+## 3) Define a minimum counts cutoff
+
+We are going to do some pre-filtering to keep rows with 10 or more reads total.
+
+```{r}
+# Define a minimum counts cutoff
+genes_to_keep <- rowSums(counts(dds)) >= 10
+dds <- dds[genes_to_keep, ]
+```
+
+## 4) Perform DESeq2 normalization
+
+```{r}
+# Perform normalization on the values in the `DESeqDataSet` object
+ntd <- normTransform(dds)
+```
+
+
+## 5) Choose genes of interest
+Although you may want to create a heatmap including all of the genes in the set,
+alternatively, the heatmap could be created using only genes of interest. 
+For this example, we will sort genes by variance, but there are many alternative
+criterion by which you may want to sort your genes <i>eg</i> fold change,
+t-statistic, membership to a particular gene ontology, so on. 
+
+```{r Choose genes}
+# Calculate the variance for each gene
+variances <- apply(df, 1, var)
+
+# Determine summary statistics for gene variances
+sum.stats.var <- summary(variances)
+
+# Subset the data choosing only genes whose variances are in the upper quartile
+df.by.var <- df[which(variances > sum.stats.var[5]), ]
+```
+
+## 4) Create a heatmap
+To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
+
+```{r Create a heatmap}
+# Create the heatmap object -- here we will cluster the data
+pheatmap <- pheatmap(assay(ntd), cluster_rows = TRUE, annotation_col = col_df)
+
+# Display the heatmap
+pheatmap
+
+# Now let's try creating a heatmap without clustering the data by changing the `cluster_rows` argument to be `FALSE`
+pheatmap(assay(ntd), cluster_rows = FALSE, annotation_col = col_df)
+```
+
+## 5) Save heatmap as a png
+You can easily switch this to save to a jpeg or tiff by changing the function 
+and file name within the function to the respective file suffix.
+
+```{r Save heatmap as a png}
+# Open a png file
+png(file.path(plots_dir, 
+              "HeatmapSRP110235.png" # Replace file name with a relevant output plot name
+              ))
+
+# Print your clustered heatmap
+pheatmap
+
+# Close the png file:
+dev.off()
+```
+
+Print session info:
+
+```{r Print session info}
+# Print session info 
+sessionInfo()
+```
