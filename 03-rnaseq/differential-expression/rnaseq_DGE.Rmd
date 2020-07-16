@@ -178,7 +178,7 @@ a DESEq2 object.
 
 ```{r}
 expression.df <- expression.df %>%
-  # Bring the Gene column back from the rownames
+  # Bring the "Gene" column back from the rownames
   tibble::rownames_to_column("Gene") %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, as.integer)
