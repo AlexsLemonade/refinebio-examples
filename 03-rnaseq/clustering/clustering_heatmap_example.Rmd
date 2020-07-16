@@ -105,12 +105,12 @@ sum.stats.var <- summary(variances)
 df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
-## 4) Create a DESeq2 dataset
+## 4) Create a DESeq dataset
 A `DESeqDataSet` object is required to carry out the normalization step that
 you will see later using a function from the `DESeq2` package. This chunk of
 code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
 
-```{r}
+```{r Create a DESeq dataset}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
 df.by.var <- apply(df.by.var, 2, as.integer)
@@ -138,7 +138,7 @@ col_df <- col_df %>%
 We are going to do some pre-filtering to keep only rows with 10 or more reads
 total.
 
-```{r}
+```{r Define minimum counts cutoff}
 # Define a minimum counts cutoff
 genes_to_keep <- rowSums(counts(dds)) >= 10
 dds <- dds[genes_to_keep, ]
@@ -147,7 +147,7 @@ dds <- dds[genes_to_keep, ]
 ## 6) Perform DESeq2 normalization
 We are going to use a function from the `DESeq2` function to normalize the data. 
 
-```{r}
+```{r Perform DESeq2 normalization}
 # Normalize the data in the `DESeqDataSet` object using the
 # `normTransform` function from the `DESEq2` R package
 ntd <- normTransform(dds)
