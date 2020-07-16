@@ -13,7 +13,7 @@ from refine.bio in downstream analyses.
 ## 1) Install libraries
 This script uses the R package `DESeq2` for normalization and the R package
 `pheatmap` for clustering and creating a heatmap.
-<br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2 Genome Biology 15(12):550 (2014)
+<br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2 Genome Biology 15(12):550 (2014)
 <br/> <i> Citation:</i> Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version 1.0.12. https://CRAN.R-project.org/package=pheatmap
 
 ```{r Install and attach the pheatmap and DESeq2 libraries}
@@ -59,20 +59,22 @@ if (!dir.exists(plots_dir)) {
 ## 2) Import and set up data
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
-add them as data.frames to your environment.
+add them as data.frame objects to your environment.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
-metadata <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
-                                      "metadata_SRP110235.tsv" # Replace with the name of your metadata file
-                                      )) %>%
+metadata <- readr::read_tsv(file.path(
+  "data", # Replace with path to your metadata file
+  "metadata_SRP110235.tsv" # Replace with the name of your metadata file
+)) %>%
   dplyr::select(refinebio_accession_code, refinebio_title)
 
 # Read in data tsv file
-df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                "SRP110235.tsv" # Replace with the name of your data file
-                                )) %>%
-  tibble::column_to_rownames('Gene')
+df <- readr::read_tsv(file.path(
+  "data", # Replace with path to your data file
+  "SRP110235.tsv" # Replace with the name of your data file
+)) %>%
+  tibble::column_to_rownames("Gene")
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 
@@ -109,22 +111,25 @@ you will see later using a function from the `DESeq2` package. This chunk of
 code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
 
 ```{r}
-# The `DESeqDataSetFromMatrix` function needs the values to be converted to 
+# The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
 df.by.var <- apply(df.by.var, 2, as.integer)
 
 # Create a `DESeqDataSet` object
-dds <- DESeqDataSetFromMatrix(countData = df.by.var,
-                              colData = metadata,
-                              design = ~ refinebio_title)
+dds <- DESeqDataSetFromMatrix(
+  countData = df.by.var,
+  colData = metadata,
+  design = ~refinebio_title
+)
 
-# Place the colData in a separate data.frame object for annotation 
+# Place the colData in a separate data.frame object for annotation
 col_df <- as.data.frame(colData(dds))
 
-# Define a `Groups` column variable 
+# Define a `Groups` column variable
 col_df <- col_df %>%
   dplyr::mutate(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
-                                                 each = 2)) %>%
+    each = 2
+  )) %>%
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
@@ -152,14 +157,25 @@ ntd <- normTransform(dds)
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r Create a heatmap}
-# Create the heatmap object -- here we will cluster the data
-pheatmap <- pheatmap(assay(ntd), cluster_rows = TRUE, annotation_col = col_df)
+# Create and store the heatmap object -- here we will cluster the data by genes
+pheatmap <-
+  pheatmap(
+    assay(ntd),
+    cluster_rows = TRUE,
+    annotation_col = col_df,
+    main = "Clustered Heatmap"
+  )
 
 # Display the heatmap
 pheatmap
 
 # Now let's try creating a heatmap without clustering the data by changing the `cluster_rows` argument to be `FALSE`
-pheatmap(assay(ntd), cluster_rows = FALSE, annotation_col = col_df)
+pheatmap(
+  assay(ntd),
+  cluster_rows = FALSE,
+  annotation_col = col_df,
+  main = "Non-clustered Heatmap"
+)
 ```
 
 ## 8) Save heatmap as a png
@@ -168,9 +184,10 @@ and file name within the function to the respective file suffix.
 
 ```{r Save heatmap as a png}
 # Open a png file
-png(file.path(plots_dir, 
-              "HeatmapSRP110235.png" # Replace file name with a relevant output plot name
-              ))
+png(file.path(
+  plots_dir,
+  "HeatmapSRP110235.png" # Replace file name with a relevant output plot name
+))
 
 # Print your clustered heatmap
 pheatmap
@@ -182,6 +199,6 @@ dev.off()
 Print session info:
 
 ```{r Print session info}
-# Print session info 
+# Print session info
 sessionInfo()
 ```
