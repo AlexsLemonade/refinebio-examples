@@ -162,8 +162,13 @@ pheatmap <-
   pheatmap(
     assay(ntd),
     cluster_rows = TRUE,
+    cluster_cols = TRUE,
     annotation_col = col_df,
-    main = "Clustered Heatmap"
+    main = "Clustered Heatmap",
+    colorRampPalette(c("deepskyblue",
+                       "black",
+                       "yellow"))(25
+                       )
   )
 
 # Display the heatmap
@@ -173,8 +178,12 @@ pheatmap
 pheatmap(
   assay(ntd),
   cluster_rows = FALSE,
+  cluster_cols = FALSE,
   annotation_col = col_df,
-  main = "Non-clustered Heatmap"
+  main = "Non-clustered Heatmap",
+  colorRampPalette(c("deepskyblue",
+                     "black",
+                     "yellow"))(25)
 )
 ```
 
