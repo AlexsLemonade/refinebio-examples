@@ -85,48 +85,7 @@ df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 all.equal(colnames(df), metadata$refinebio_accession_code)
 ```
 
-## 3) Create a DESeq2 dataset
-
-```{r}
-# The `DESeqDataSetFromMatrix` function needs the values to be converted to 
-# integers
-df <- apply(df, 2, as.integer)
-
-# Create a `DESeqDataSet` object
-dds <- DESeqDataSetFromMatrix(countData = df,
-                              colData = metadata,
-                              design = ~ refinebio_title)
-
-# Place the colData in a separate data.frame object for annotation 
-col_df <- as.data.frame(colData(dds))
-
-# Define a `Groups` column variable 
-col_df <- col_df %>%
-  dplyr::mutate(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
-                                                 each = 2)) %>%
-  tibble::column_to_rownames("refinebio_accession_code")
-```
-
-
-## 3) Define a minimum counts cutoff
-
-We are going to do some pre-filtering to keep rows with 10 or more reads total.
-
-```{r}
-# Define a minimum counts cutoff
-genes_to_keep <- rowSums(counts(dds)) >= 10
-dds <- dds[genes_to_keep, ]
-```
-
-## 4) Perform DESeq2 normalization
-
-```{r}
-# Perform normalization on the values in the `DESeqDataSet` object
-ntd <- normTransform(dds)
-```
-
-
-## 5) Choose genes of interest
+## 3) Choose genes of interest
 Although you may want to create a heatmap including all of the genes in the set,
 alternatively, the heatmap could be created using only genes of interest. 
 For this example, we will sort genes by variance, but there are many alternative
@@ -144,7 +103,52 @@ sum.stats.var <- summary(variances)
 df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
-## 4) Create a heatmap
+## 4) Create a DESeq2 dataset
+A `DESeqDataSet` object is required to carry out the normalization step that
+you will see later using a function from the `DESeq2` package. This chunk of
+code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
+
+```{r}
+# The `DESeqDataSetFromMatrix` function needs the values to be converted to 
+# integers
+df.by.var <- apply(df.by.var, 2, as.integer)
+
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(countData = df.by.var,
+                              colData = metadata,
+                              design = ~ refinebio_title)
+
+# Place the colData in a separate data.frame object for annotation 
+col_df <- as.data.frame(colData(dds))
+
+# Define a `Groups` column variable 
+col_df <- col_df %>%
+  dplyr::mutate(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
+                                                 each = 2)) %>%
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+
+## 5) Define a minimum counts cutoff
+We are going to do some pre-filtering to keep only rows with 10 or more reads
+total.
+
+```{r}
+# Define a minimum counts cutoff
+genes_to_keep <- rowSums(counts(dds)) >= 10
+dds <- dds[genes_to_keep, ]
+```
+
+## 6) Perform DESeq2 normalization
+We are going to use a function from the `DESeq2` function to normalize the data. 
+
+```{r}
+# Normalize the data in the `DESeqDataSet` object using the
+# `normTransform` function from the `DESEq2` R package
+ntd <- normTransform(dds)
+```
+
+## 7) Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r Create a heatmap}
@@ -158,7 +162,7 @@ pheatmap
 pheatmap(assay(ntd), cluster_rows = FALSE, annotation_col = col_df)
 ```
 
-## 5) Save heatmap as a png
+## 8) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
