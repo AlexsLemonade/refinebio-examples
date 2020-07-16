@@ -1,6 +1,6 @@
 ---
 title: "Differential Expression Analysis: RNA-seq with `limma-voom`"
-author: "ALSF CCDL - Jaclyn Taroni"
+author: "CCDL for ALSF"
 output:   
   html_notebook: 
     toc: true
@@ -15,8 +15,13 @@ We recommend skipping quantile normalization for RNA-seq data if you want to
 perform differential expression analysis.
 (You can read more about that [here]((http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments)) 
 in our documentation.)
+
+
 Here we're using the the [_"bias corrected without an offset"_ approach](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#use-with-downstream-bioconductor-dge-packages) described 
-in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html) with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
+in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html)
+
+
+with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
 The voom methodology was introduced in [Law et al. _Genome Biology._ 2014.](https://doi.org/10.1186/gb-2014-15-2-r29)
 
 You may also find [this limma-voom tutorial](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html) 
@@ -28,7 +33,6 @@ Note that we perform a simple two-group comparison here.
 Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
 for more information about additional experimental designs.
 
-# Other alternatives: 
 Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
 of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
 
