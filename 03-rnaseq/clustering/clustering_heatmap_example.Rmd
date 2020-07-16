@@ -61,6 +61,13 @@ Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
 add them as data.frame objects to your environment.
 
+The data that we downloaded from refine.bio for this analysis is a dataset, with
+a total of four samples, containing RNA-sequencing results for mouse primary
+natural killer (NK) cells and NK cells treated with DKK2 for 24 hours.
+
+You can download this dataset by going to the following link and clicking 
+`Download Now`: https://www.refine.bio/experiments/SRP110235/mouse-natural-killer-cells-response-to-dkk2-treatment
+
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
 metadata <- readr::read_tsv(file.path(
