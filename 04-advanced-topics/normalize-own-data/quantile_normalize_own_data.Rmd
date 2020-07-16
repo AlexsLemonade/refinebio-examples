@@ -41,7 +41,7 @@ directory we create below with `bash`.
 
 ```{bash eval=FALSE}
 mkdir data
-wget --directory-prefix=data https://github.com/AlexsLemonade/refinebio-examples/raw/c97cad6a8342d9bb54f120dbd7c7f12b03e3f799/compare-processing/data/GSE39842_RMA_converted.tsv
+wget --directory-prefix=data https://github.com/AlexsLemonade/refinebio-examples/raw/c97cad6a8342d9bb54f120dbd7c7f12b03e3f799/compare-processing/data/GSE39842_RMA_converted.tsv # Replace with link to desired RMA converted file
 ```
 
 ## Obtaining a refine.bio QN target 
@@ -72,7 +72,7 @@ if (!("jsonlite" %in% installed.packages())) {
   install.packages("jsonlite")
 }
 
-qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/qn_targets/?organism=DANIO_RERIO")
+qn_target_info <- jsonlite::fromJSON("https://api.refine.bio/v1/qn_targets/danio_rerio")
 ```
 
 We need the `s3_url`, which tells us the link where the file is available for
@@ -109,7 +109,9 @@ if (!("preprocessCore" %in% installed.packages())) {
 First, the gene expression matrix.
 
 ```{r}
-expression_file <- file.path("data", "GSE39842_RMA_converted.tsv")
+expression_file <- file.path("data",
+                             "GSE39842_RMA_converted.tsv" # Replace with name of desired expression file
+                             )
 expression_df <- readr::read_tsv(expression_file)
 ```
 
@@ -150,7 +152,9 @@ qn_df <- data.frame(Gene = rownames(expression_matrix),
 Let's write the quantile normalized data to file.
 
 ```{r}
-qn_expression_file <- file.path("data", "GSE39842_RMA_refinebio_QN.tsv")
+qn_expression_file <- file.path("data",
+                                "GSE39842_RMA_refinebio_QN.tsv" # Replace with relevant output quantile normalized file name
+                                )
 readr::write_tsv(qn_df, path = qn_expression_file)
 ```
 
