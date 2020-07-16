@@ -34,9 +34,8 @@ This tutorial contains follow-along analysis examples for refinebio gene express
 The analysis examples are organized by technology: ["microarray"](../02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](../03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](../04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
 Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refinebio. 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
-Each analysis contains: 
-Each directory is a module of example workflow(s) and contains:
 
+**Each analysis contains:**   
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.
 - An R Notebook which consists of:
      - An R markdown (Rmd) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refinebio. 
