@@ -1,5 +1,0 @@
-refinebio_accession_code	experiment_accession	refinebio_age	refinebio_cell_line	refinebio_compound	refinebio_disease	refinebio_disease_stage	refinebio_genetic_information	refinebio_organism	refinebio_platform	refinebio_processed	refinebio_race	refinebio_sex	refinebio_source_archive_url	refinebio_source_database	refinebio_specimen_part	refinebio_subject	refinebio_time	refinebio_title	refinebio_treatment
-SRR5828214	SRP110235		c57bl/6					MUS_MUSCULUS	Illumina HiSeq 2000 (IlluminaHiSeq2000)	True				SRA	primary natural killer cells	natural killer cells		Control_rep1	mock
-SRR5828215	SRP110235		c57bl/6					MUS_MUSCULUS	Illumina HiSeq 2000 (IlluminaHiSeq2000)	True				SRA	primary natural killer cells	natural killer cells		Control_rep2	mock
-SRR5828216	SRP110235		c57bl/6					MUS_MUSCULUS	Illumina HiSeq 2000 (IlluminaHiSeq2000)	True				SRA	primary natural killer cells	natural killer cells		DKK2_rep1	200ng/ml dkk2
-SRR5828217	SRP110235		c57bl/6					MUS_MUSCULUS	Illumina HiSeq 2000 (IlluminaHiSeq2000)	True				SRA	primary natural killer cells	natural killer cells		DKK2_rep2	200ng/ml dkk2

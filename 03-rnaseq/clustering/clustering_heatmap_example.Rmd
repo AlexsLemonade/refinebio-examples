@@ -10,6 +10,10 @@ output:
 *Purpose*: This notebook illustrates one way that you can use harmonized data 
 from refine.bio in downstream analyses.
 
+TODO: This introduction section will be revamped when the intro to an example
+analysis (#122: https://github.com/AlexsLemonade/refinebio-examples/pull/122)
+gets more polished/determined.
+
 ## 1) Install libraries
 This script uses the R package `DESeq2` for normalization and the R package
 `pheatmap` for clustering and creating a heatmap.
@@ -57,29 +61,32 @@ if (!dir.exists(plots_dir)) {
 ```
 
 ## 2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. This chunk of code will read the both tsv files and 
-add them as data.frame objects to your environment.
+Data downloaded from refine.bio include a metadata [tab separated values ("tsv")]
+(https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
+This chunk of code will read the both tsv files and add them as data.frame
+objects to your environment.
 
 The data that we downloaded from refine.bio for this analysis is a dataset, with
-a total of four samples, containing RNA-sequencing results for mouse primary
-natural killer (NK) cells and NK cells treated with DKK2 for 24 hours.
+a total of 24 samples (obtained from 6 mice with 4 replicates for each mice),
+containing RNA-sequencing results for Group 3 and 4 medulloblastoma orthotopic
+xenograft mice with and without digoxin treatment.
 
 You can download this dataset by going to the following link and clicking 
-`Download Now`: https://www.refine.bio/experiments/SRP110235/mouse-natural-killer-cells-response-to-dkk2-treatment
+`Download Now`: https://www.refine.bio/experiments/SRP150101/transcriptome-analysis-of-group-3-and-4-medulloblastoma-orthotopic-xenograft-mice-with-digoxin-treatment
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
 metadata <- readr::read_tsv(file.path(
   "data", # Replace with path to your metadata file
-  "metadata_SRP110235.tsv" # Replace with the name of your metadata file
+  "metadata_SRP150101.tsv" # Replace with the name of your metadata file
 )) %>%
-  dplyr::select(refinebio_accession_code, refinebio_title)
+  dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment) %>%
+  replace(is.na(.), "None")
 
 # Read in data tsv file
 df <- readr::read_tsv(file.path(
   "data", # Replace with path to your data file
-  "SRP110235.tsv" # Replace with the name of your data file
+  "SRP150101.tsv" # Replace with the name of your data file
 )) %>%
   tibble::column_to_rownames("Gene")
 ```
@@ -108,25 +115,31 @@ variances <- apply(df, 1, var)
 # Determine summary statistics for gene variances
 sum.stats.var <- summary(variances)
 
+# Print out the summary statistics
+sum.stats.var
+
 # Subset the data choosing only genes whose variances are in the upper quartile
 df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
-## 4) Create a DESeq dataset
+## 4) Create a DESeqDataset
 A `DESeqDataSet` object is required to carry out the normalization step that
 you will see later using a function from the `DESeq2` package. This chunk of
 code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
 
-```{r Create a DESeq dataset}
+```{r Create a DESeqDataset}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
-df.by.var <- apply(df.by.var, 2, as.integer)
+## TODO: Link to explanation about `DESeqDataSet` in the RNA-seq header section
+df.by.var <- df.by.var %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, as.integer)
 
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
   countData = df.by.var,
   colData = metadata,
-  design = ~refinebio_title
+  design = ~ refinebio_treatment
 )
 
 # Place the colData in a separate data.frame object for annotation
@@ -134,12 +147,13 @@ col_df <- as.data.frame(colData(dds))
 
 # Define a `Groups` column variable
 col_df <- col_df %>%
-  dplyr::mutate(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
-    each = 2
+  dplyr::mutate(Groups = dplyr::case_when(
+    refinebio_treatment == "no treatment" ~ "MP",
+    TRUE ~ "SP"
+    # Replace with group names relevant to your data
   )) %>%
   tibble::column_to_rownames("refinebio_accession_code")
 ```
-
 
 ## 5) Define a minimum counts cutoff
 We are going to do some pre-filtering to keep only rows with 10 or more reads
@@ -152,11 +166,12 @@ dds <- dds[genes_to_keep, ]
 ```
 
 ## 6) Perform DESeq2 normalization
-We are going to use a function from the `DESeq2` function to normalize the data. 
+We are going to use a function from the `DESeq2` package to normalize the data. 
 
 ```{r Perform DESeq2 normalization}
 # Normalize the data in the `DESeqDataSet` object using the
 # `normTransform` function from the `DESEq2` R package
+## TODO: Add a note on why we use `normTransform` vs `vst` and `rlog`
 ntd <- normTransform(dds)
 ```
 
@@ -177,10 +192,14 @@ pheatmap <-
                        "yellow"))(25
                        )
   )
+```
 
-# Display the heatmap
+```{r}
+# Display the clustered heatmap
 pheatmap
+```
 
+```{r}
 # Now let's try creating a heatmap without clustering the data by changing the `cluster_rows` argument to be `FALSE`
 pheatmap(
   assay(ntd),
@@ -202,7 +221,7 @@ and file name within the function to the respective file suffix.
 # Open a png file
 png(file.path(
   plots_dir,
-  "HeatmapSRP110235.png" # Replace file name with a relevant output plot name
+  "HeatmapSRP150101.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your clustered heatmap

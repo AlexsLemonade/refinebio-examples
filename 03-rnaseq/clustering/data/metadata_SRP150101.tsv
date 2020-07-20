@@ -1,0 +1,25 @@
+refinebio_accession_code	experiment_accession	refinebio_age	refinebio_cell_line	refinebio_compound	refinebio_disease	refinebio_disease_stage	refinebio_genetic_information	refinebio_organism	refinebio_platform	refinebio_processed	refinebio_race	refinebio_sex	refinebio_source_archive_url	refinebio_source_database	refinebio_specimen_part	refinebio_subject	refinebio_time	refinebio_title	refinebio_treatment
+SRR7284384	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-2555MB-21659-digoxin-bio_S14_L004	treat with digoxin
+SRR7284398	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22241-digoxin-bio_S13_L002	treat with digoxin
+SRR7284385	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18342-Control_S8_L001	no treatment
+SRR7284392	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18343-Control_S9_L004	no treatment
+SRR7284383	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-2555MB-21659-digoxin-bio_S14_L003	treat with digoxin
+SRR7284382	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-2555MB-21659-digoxin-bio_S14_L002	treat with digoxin
+SRR7284377	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		Icb-2555MB-20908_S23_L001	no treatment
+SRR7284379	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		Icb-2555MB-20908_S23_L003	no treatment
+SRR7284391	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18343-Control_S9_L003	no treatment
+SRR7284389	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18343-Control_S9_L001	no treatment
+SRR7284393	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22234-digoxin-bio_S12_L001	treat with digoxin
+SRR7284399	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22241-digoxin-bio_S13_L003	treat with digoxin
+SRR7284387	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18342-Control_S8_L003	no treatment
+SRR7284397	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22241-digoxin-bio_S13_L001	treat with digoxin
+SRR7284394	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22234-digoxin-bio_S12_L002	treat with digoxin
+SRR7284378	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		Icb-2555MB-20908_S23_L002	no treatment
+SRR7284380	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		Icb-2555MB-20908_S23_L004	no treatment
+SRR7284396	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22234-digoxin-bio_S12_L004	treat with digoxin
+SRR7284381	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-2555MB-21659-digoxin-bio_S14_L001	treat with digoxin
+SRR7284388	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18342-Control_S8_L004	no treatment
+SRR7284386	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18342-Control_S8_L002	no treatment
+SRR7284390	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-18343-Control_S9_L002	no treatment
+SRR7284400	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22241-digoxin-bio_S13_L004	treat with digoxin
+SRR7284395	SRP150101				medulloblastoma	medulloblastoma		HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True				SRA	brain	brain		ICb-1078MB-22234-digoxin-bio_S12_L003	treat with digoxin
