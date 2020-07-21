@@ -218,7 +218,8 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 ```{r Perform DESeq2 normalization}
 # Normalize the data in the `DESeqDataSet` object using the
 # `normTransform` function from the `DESEq2` R package
-## TODO: Add a note on why we use `normTransform` vs `vst` and `rlog`
+## TODO: Add a note/link to section in documentation on why we use
+# `normTransform` vs `vst` and `rlog`
 # Let's normalize the data for the collapsed counts first 
 ntd_collapsed <- normTransform(dds_collapsed)
 
