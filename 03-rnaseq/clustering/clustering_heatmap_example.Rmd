@@ -137,7 +137,7 @@ code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
 ## TODO: Link to explanation about `DESeqDataSet` in the RNA-seq header section
 df_by_var <- df_by_var %>%
   # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, as.integer)
+  dplyr::mutate_if(is.numeric, round)
 
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
