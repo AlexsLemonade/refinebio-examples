@@ -67,9 +67,9 @@ This chunk of code will read the both tsv files and add them as data.frame
 objects to your environment.
 
 The data that we downloaded from refine.bio for this analysis is a dataset, with
-a total of 24 samples (obtained from 6 mice with 4 replicates for each mice),
-containing RNA-sequencing results for Group 3 and 4 medulloblastoma orthotopic
-xenograft mice with and without digoxin treatment.
+a total of 24 samples (obtained from 6 mice with 4 technical replicates for each
+mouse), containing RNA-sequencing results for Group 3 and 4 medulloblastoma
+orthotopic xenograft mice with and without digoxin treatment.
 
 You can download this dataset by going to the following link and clicking 
 `Download Now`: https://www.refine.bio/experiments/SRP150101/transcriptome-analysis-of-group-3-and-4-medulloblastoma-orthotopic-xenograft-mice-with-digoxin-treatment
@@ -81,7 +81,13 @@ metadata <- readr::read_tsv(file.path(
   "metadata_SRP150101.tsv" # Replace with the name of your metadata file
 )) %>%
   dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment) %>%
-  replace(is.na(.), "None")
+  replace(is.na(.), "None") %>%
+  dplyr::mutate(Groups = dplyr::case_when(
+    refinebio_treatment == "no treatment" ~ "MP",
+    TRUE ~ "SP"
+    # Replace with group names relevant to your data
+  ),
+  refinebio_title_collapsed = gsub("(_L).*", "", refinebio_title))
 
 # Read in data tsv file
 df <- readr::read_tsv(file.path(
@@ -112,14 +118,12 @@ t-statistic, membership to a particular gene ontology, so on.
 # Calculate the variance for each gene
 variances <- apply(df, 1, var)
 
-# Determine summary statistics for gene variances
-sum.stats.var <- summary(variances)
-
-# Print out the summary statistics
-sum.stats.var
+# Determine the upper quartile variance cutoff value
+upper_var <- quantile(variances, 0.75)
 
 # Subset the data choosing only genes whose variances are in the upper quartile
-df.by.var <- df[which(variances > sum.stats.var[5]), ]
+df_by_var <- df %>%
+  dplyr::filter(variances > upper_var)
 ```
 
 ## 4) Create a DESeqDataset
@@ -131,28 +135,39 @@ code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
 ## TODO: Link to explanation about `DESeqDataSet` in the RNA-seq header section
-df.by.var <- df.by.var %>%
+df_by_var <- df_by_var %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, as.integer)
 
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df.by.var,
+  countData = df_by_var,
   colData = metadata,
   design = ~ refinebio_treatment
 )
 
-# Place the colData in a separate data.frame object for annotation
-col_df <- as.data.frame(colData(dds))
+# Collapse the replicates using the `collapseReplicates` function from the
+# `DESEq2` package -- this function combines the counts from the technical
+# replicates in our dataset 
+dds_collapsed <- collapseReplicates(dds, dds$refinebio_title_collapsed)
 
-# Define a `Groups` column variable
-col_df <- col_df %>%
-  dplyr::mutate(Groups = dplyr::case_when(
-    refinebio_treatment == "no treatment" ~ "MP",
-    TRUE ~ "SP"
-    # Replace with group names relevant to your data
-  )) %>%
+```
+
+## 5) Prepare the metadata
+We are going to format the metadata to be used for annotation on the heatmap.
+
+```{r}
+# Let's prepare the metadata for the uncollapsed `DESeqData` set object
+metadata_uncollapsed <- metadata %>%
+  dplyr::select(-c("refinebio_title_collapsed", "refinebio_title")) %>%
   tibble::column_to_rownames("refinebio_accession_code")
+
+# Now we need to collapse the metadata to match the collapsed `DESeqDataSet` object
+metadata_collapsed <- metadata %>%
+  dplyr::select(-c("refinebio_title", "refinebio_accession_code")) %>%
+  dplyr::distinct() %>%
+  # Now assign the collapsed column of identifiers as rownmaes
+  tibble::column_to_rownames("refinebio_title_collapsed")
 ```
 
 ## 5) Define a minimum counts cutoff
@@ -160,7 +175,39 @@ We are going to do some pre-filtering to keep only rows with 10 or more reads
 total.
 
 ```{r Define minimum counts cutoff}
-# Define a minimum counts cutoff
+# First let's take a look at the distribution of counts -- let's use the
+# collapsed replicates data
+collapsed_count_sums <- data.frame(count = rowSums(counts(dds_collapsed)))
+
+ggplot2::ggplot(collapsed_count_sums, ggplot2::aes(x = count)) +
+  ggplot2::geom_density() +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
+                      color = "blue",
+                      linetype = "dashed") +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count), # This line represents the mean count value
+                                   color = "red",
+                                   linetype = "dashed"))
+
+# Define a minimum counts cutoff -- using the collapsed `DESeqDataSet` object
+genes_to_keep <- rowSums(counts(dds_collapsed)) >= 10
+dds_collapsed <- dds_collapsed[genes_to_keep, ]
+```
+
+```{r}
+# Now let's take a look at the distribution of counts using the uncollapsed
+# replicates data
+uncollapsed_count_sums <- data.frame(count = rowSums(counts(dds)))
+
+ggplot2::ggplot(uncollapsed_count_sums, ggplot2::aes(x = count)) +
+  ggplot2::geom_density() +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
+                      color = "blue",
+                      linetype = "dashed") +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count), # This line represents the mean count value
+                                   color = "red",
+                                   linetype = "dashed"))
+
+# Define a minimum counts cutoff -- using the uncollapsed `DESeqDataSet` object
 genes_to_keep <- rowSums(counts(dds)) >= 10
 dds <- dds[genes_to_keep, ]
 ```
@@ -172,21 +219,25 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 # Normalize the data in the `DESeqDataSet` object using the
 # `normTransform` function from the `DESEq2` R package
 ## TODO: Add a note on why we use `normTransform` vs `vst` and `rlog`
-ntd <- normTransform(dds)
+# Let's normalize the data for the collapsed counts first 
+ntd_collapsed <- normTransform(dds_collapsed)
+
+# Now let's normalize the data for the uncollapsed counts
+ntd_uncollapsed <- normTransform(dds)
 ```
 
 ## 7) Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r Create a heatmap}
-# Create and store the heatmap object -- here we will cluster the data by genes
-pheatmap <-
+# Create and store the heatmap object
+collapsed_pheatmap <-
   pheatmap(
-    assay(ntd),
-    cluster_rows = TRUE,
-    cluster_cols = TRUE,
-    annotation_col = col_df,
-    main = "Clustered Heatmap",
+    assay(ntd_collapsed),
+    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
+    annotation_col = metadata_collapsed,
+    main = "Collapsed Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
@@ -195,22 +246,27 @@ pheatmap <-
 ```
 
 ```{r}
-# Display the clustered heatmap
-pheatmap
+# Display the heatmap
+collapsed_pheatmap
 ```
 
 ```{r}
-# Now let's try creating a heatmap without clustering the data by changing the `cluster_rows` argument to be `FALSE`
-pheatmap(
-  assay(ntd),
-  cluster_rows = FALSE,
-  cluster_cols = FALSE,
-  annotation_col = col_df,
-  main = "Non-clustered Heatmap",
-  colorRampPalette(c("deepskyblue",
-                     "black",
-                     "yellow"))(25)
-)
+# Now let's try creating a heatmap with the uncollapsed replicate data
+uncollapsed_pheatmap <-
+  pheatmap(
+    assay(ntd_uncollapsed),
+    cluster_rows = FALSE,
+    cluster_cols = FALSE,
+    annotation_col = metadata_uncollapsed,
+    main = "Un-collapsed Replicates Heatmap",
+    colorRampPalette(c("deepskyblue",
+                       "black",
+                       "yellow"))(25)
+  )
+```
+```{r}
+# Display the heatmap
+uncollapsed_pheatmap
 ```
 
 ## 8) Save heatmap as a png
@@ -225,7 +281,7 @@ png(file.path(
 ))
 
 # Print your clustered heatmap
-pheatmap
+collapsed_pheatmap
 
 # Close the png file:
 dev.off()
