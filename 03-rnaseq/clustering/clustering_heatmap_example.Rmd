@@ -66,10 +66,10 @@ Data downloaded from refine.bio include a metadata [tab separated values ("tsv")
 This chunk of code will read the both tsv files and add them as data.frame
 objects to your environment.
 
-The data that we downloaded from refine.bio for this analysis is a dataset, with
-a total of 24 samples (obtained from 6 mice with 4 technical replicates for each
-mouse), containing RNA-sequencing results for Group 3 and 4 medulloblastoma
-orthotopic xenograft mice with and without digoxin treatment.
+The data that we downloaded from refine.bio for this analysis has 24 samples
+(obtained from 6 mice with 4 technical replicates for each mouse), containing
+RNA-sequencing results for Group 3 and 4 medulloblastoma orthotopic xenograft
+mice with and without digoxin treatment.
 
 You can download this dataset by going to the following link and clicking 
 `Download Now`: https://www.refine.bio/experiments/SRP150101/transcriptome-analysis-of-group-3-and-4-medulloblastoma-orthotopic-xenograft-mice-with-digoxin-treatment
@@ -80,13 +80,36 @@ metadata <- readr::read_tsv(file.path(
   "data", # Replace with path to your metadata file
   "metadata_SRP150101.tsv" # Replace with the name of your metadata file
 )) %>%
-  dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment) %>%
-  replace(is.na(.), "None") %>%
+  # We only need the three variables from the metadata for this notebook
+  dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment)
+
+# Read in data tsv file
+df <- readr::read_tsv(file.path(
+  "data", # Replace with path to your data file
+  "SRP150101.tsv" # Replace with the name of your data file
+)) %>%
+  # Here we are going to store the gene IDs as rownames so that we can have a
+  # numeric matrix to perform calculations on later 
+  tibble::column_to_rownames("Gene")
+```
+
+Let's take a look at the metadata object that we read into the R environment.
+
+```{r}
+head(metadata)
+```
+
+We are going to manipulate the metadata and add variables with the information
+that we would like to use to annotate the heatmaps.
+
+```{r}
+metadata <- metadata %>%
   dplyr::mutate(
+    # Create a variable to store the treatment group information
     groups = dplyr::case_when(
-    refinebio_treatment == "no treatment" ~ "control",
-    TRUE ~ "digoxin"
-    # Replace with group names relevant to your data
+      refinebio_treatment == "no treatment" ~ "control",
+      TRUE ~ "digoxin"
+      # Replace with group names relevant to your data
     ),
     # Create a variable to hold the sample summary information
     # (excluding the lane information)
@@ -98,17 +121,11 @@ metadata <- readr::read_tsv(file.path(
       startsWith(mouse_id, "2555MB") ~ "group 3",
       startsWith(mouse_id, "1078MB") ~ "group 4",
       TRUE ~ "unknown"
-  ))
-
-# Read in data tsv file
-df <- readr::read_tsv(file.path(
-  "data", # Replace with path to your data file
-  "SRP150101.tsv" # Replace with the name of your data file
-)) %>%
-  tibble::column_to_rownames("Gene")
+    )
+  )
 ```
 
-Let's ensure that the metadata and data are in the same sample order. 
+Now let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
 # Make the data in the order of the metadata
@@ -139,6 +156,16 @@ df_by_var <- df %>%
 
 ## How are our technical replicates clustering together?
 
+We know that our dataset includes technical replicates because we have replicate
+data which has been split across lanes of sequencing from the same animal,
+sample, and library (we were able to determine this information using the
+metadata and associated article which can be found at the following
+link: https://pubmed.ncbi.nlm.nih.gov/30355798/).
+
+Before we look at the biological clustering of our data, we should first
+determine how our technical replicates cluster together and how that may affect
+our biological interpretation.
+
 ### 4) Create a DESeqDataset
 A `DESeqDataSet` object is required to carry out the normalization step that
 you will see later using a function from the `DESeq2` package. This chunk of
@@ -156,7 +183,7 @@ df_by_var <- df_by_var %>%
 dds <- DESeqDataSetFromMatrix(
   countData = df_by_var,
   colData = metadata,
-  design = ~ refinebio_treatment
+  design = ~ refinebio_treatment # Replace with an appropriate design variable for your analysis
 )
 ```
 
@@ -164,24 +191,32 @@ dds <- DESeqDataSetFromMatrix(
 We are going to format the metadata to be used for annotation on the heatmap.
 
 ```{r}
-# Let's prepare the metadata for the uncollapsed `DESeqData` set object
-metadata_uncollapsed <- metadata %>%
+# Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
+# object which will be used to create the technical replicates heatmap
+technical_annotation_df <- metadata %>%
+  # We do not need this information for annotating the technical replicates heatmap
   dplyr::select(-c("sample_info_summary", "refinebio_title")) %>%
+  # The `pheatmap` function requires that the rownames of our annotation object
+  # matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
 ### 6) Define a minimum counts cutoff
 We are going to do some pre-filtering to keep only rows with 10 or more reads
-total.
+total. We want to filter out the genes that have not been expressed or that have
+low expression counts because we want to remove any possible noise from our data
+before we normalize the data and create our heatmap.
 
 ```{r Define minimum counts cutoff}
 # Let's take a look at the distribution of counts first
 
-# Sum up the counts for each row
-uncollapsed_count_sums <- data.frame(count = rowSums(counts(dds)))
+# Sum up the counts for each gene -- which means we want the sum of counts for
+# each row as the rows represent gene data and the columns represent sample data
+# in our dataset
+technical_count_sums <- data.frame(count = rowSums(counts(dds)))
 
 # Create a density plot using the sums
-ggplot2::ggplot(uncollapsed_count_sums, ggplot2::aes(x = count)) +
+ggplot2::ggplot(technical_count_sums, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
                       color = "blue",
@@ -206,7 +241,7 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 # `normTransform` function from the `DESEq2` R package
 ## TODO: Add a note/link to section in documentation on why we use
 # `normTransform` vs `vst` and `rlog`
-ntd_uncollapsed <- normTransform(dds)
+ntd_technical <- normTransform(dds)
 ```
 
 ### 8) Create a heatmap
@@ -214,12 +249,12 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r Create a heatmap}
 # Create and store the heatmap object
-uncollapsed_pheatmap <-
+technical_pheatmap <-
   pheatmap(
-    assay(ntd_uncollapsed),
+    assay(ntd_technical),
     cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
     cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
-    annotation_col = metadata_uncollapsed,
+    annotation_col = technical_annotation_df,
     main = "Technical Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
@@ -251,10 +286,14 @@ dds_collapsed <- collapseReplicates(dds, dds$sample_info_summary)
 ```{r}
 # Now we need to collapse the metadata to match the collapsed `DESeqDataSet`
 # object
-metadata_collapsed <- metadata %>%
+biological_annotation_df <- metadata %>%
+  # We do not need this information for annotating the biological replicates heatmap
   dplyr::select(-c("refinebio_title", "refinebio_accession_code")) %>%
+  # Use `distinct()` to get rid of the duplicates created from removing the
+  # variables above as we do not need to represent the technical replicates here
   dplyr::distinct() %>%
-  # Now assign the collapsed column of identifiers as rownmaes
+  # The `pheatmap` function requires that the rownames of our annotation object
+  # matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("sample_info_summary")
 ```
 
@@ -263,11 +302,12 @@ metadata_collapsed <- metadata %>%
 ```{r}
 # Let's take a look at the distribution of counts for the collapsed data
 
-# Sum up the counts for each row
-collapsed_count_sums <- data.frame(count = rowSums(counts(dds)))
+# Sum up the counts for each gene -- which means we want the sum of counts for
+# each row
+biological_count_sums <- data.frame(count = rowSums(counts(dds)))
 
 # Create a density plot using the sums
-ggplot2::ggplot(collapsed_count_sums, ggplot2::aes(x = count)) +
+ggplot2::ggplot(biological_count_sums, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
                       color = "blue",
@@ -290,19 +330,19 @@ dds_collapsed <- dds_collapsed[genes_to_keep, ]
 # Now let's normalize the data for the collapsed counts using the
 # `normTransform` function from the `DESeq2` package that we used in the
 # previous section
-ntd_collapsed <- normTransform(dds_collapsed)
+ntd_biological <- normTransform(dds_collapsed)
 ```
 
 ### 8) Create a heatmap
 
 ```{r}
-# Now let's try creating a heatmap with the collapsed replicate data
-collapsed_pheatmap <-
+# Now let's try creating a heatmap with the collapsed biological replicate data
+biological_pheatmap <-
   pheatmap(
-    assay(ntd_collapsed),
+    assay(ntd_biological),
     cluster_rows = FALSE,
     cluster_cols = FALSE,
-    annotation_col = metadata_collapsed,
+    annotation_col = biological_annotation_df,
     main = "Biological Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
@@ -324,7 +364,7 @@ png(file.path(
 ))
 
 # Print your heatmap
-collapsed_pheatmap
+biological_pheatmap
 
 # Close the png file:
 dev.off()
