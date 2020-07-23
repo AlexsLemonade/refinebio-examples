@@ -188,7 +188,8 @@ dds <- DESeqDataSetFromMatrix(
 ```
 
 ### 5) Prepare the metadata
-We are going to format the metadata to be used for annotation on the heatmap.
+We are going to format the metadata to be used for annotation on the technical
+replicates heatmap.
 
 ```{r}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
@@ -248,7 +249,7 @@ ntd_technical <- normTransform(dds)
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r Create a heatmap}
-# Create and store the heatmap object
+# Create and store the technical replicates heatmap object
 technical_pheatmap <-
   pheatmap(
     assay(ntd_technical),
@@ -282,6 +283,8 @@ dds_collapsed <- collapseReplicates(dds, dds$sample_info_summary)
 ```
 
 ### 5) Prepare the metadata
+Now, we are going to format the metadata to be used for annotation on the
+biological replicates heatmap.
 
 ```{r}
 # Now we need to collapse the metadata to match the collapsed `DESeqDataSet`
@@ -298,6 +301,10 @@ biological_annotation_df <- metadata %>%
 ```
 
 ### 6) Define a minimum counts cutoff
+We are going to do some pre-filtering to keep only rows with 10 or more reads
+total. We want to filter out the genes that have not been expressed or that have
+low expression counts because we want to remove any possible noise from our data
+before we normalize the data and create our heatmap.
 
 ```{r}
 # Let's take a look at the distribution of counts for the collapsed data
@@ -325,6 +332,7 @@ dds_collapsed <- dds_collapsed[genes_to_keep, ]
 ```
 
 ### 7) Perform DESeq2 normalization
+We are going to use a function from the `DESeq2` package to normalize the data. 
 
 ```{r}
 # Now let's normalize the data for the collapsed counts using the
@@ -334,6 +342,7 @@ ntd_biological <- normTransform(dds_collapsed)
 ```
 
 ### 8) Create a heatmap
+To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r}
 # Now let's try creating a heatmap with the collapsed biological replicate data
