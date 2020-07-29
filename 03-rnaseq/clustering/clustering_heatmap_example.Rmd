@@ -71,8 +71,8 @@ The data that we downloaded from refine.bio for this analysis has 24 samples
 RNA-sequencing results for Group 3 and 4 medulloblastoma orthotopic xenograft
 mice with and without digoxin treatment.
 
-You can download this dataset by going to the following link and clicking 
-`Download Now`: https://www.refine.bio/experiments/SRP150101/transcriptome-analysis-of-group-3-and-4-medulloblastoma-orthotopic-xenograft-mice-with-digoxin-treatment
+TODO: Add link to the `getting started` section, specifically to point out how
+one can download the dataset.
 
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
@@ -106,7 +106,7 @@ that we would like to use to annotate the heatmaps.
 metadata <- metadata %>%
   dplyr::mutate(
     # Create a variable to store the treatment group information
-    groups = dplyr::case_when(
+    treatment_group = dplyr::case_when(
       refinebio_treatment == "no treatment" ~ "control",
       TRUE ~ "digoxin"
       # Replace with group names relevant to your data
@@ -157,19 +157,19 @@ df_by_var <- df %>%
 ## How are our technical replicates clustering together?
 
 We know that our dataset includes technical replicates because we have replicate
-data which has been split across lanes of sequencing from the same animal,
-sample, and library (we were able to determine this information using the
-metadata and associated article which can be found at the following
-link: https://pubmed.ncbi.nlm.nih.gov/30355798/).
+data which were multiple sequencing lanes from the same samples and library (we
+were able to determine this information using the metadata and associated
+article which can be found at the following link: https://pubmed.ncbi.nlm.nih.gov/30355798/).
 
 Before we look at the biological clustering of our data, we should first
 determine how our technical replicates cluster together and how that may affect
 our biological interpretation.
 
 ### 4) Create a DESeqDataset
-A `DESeqDataSet` object is required to carry out the normalization step that
-you will see later using a function from the `DESeq2` package. This chunk of
-code will turn the data.frame (or matrix) into a `DESeqDataSet` object.
+We will be using the `DESeq2` package for normalization, which requires us to
+format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
+into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
+which variable labels our experimental groups using the `design` argument. 
 
 ```{r Create a DESeqDataset}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
@@ -183,7 +183,7 @@ df_by_var <- df_by_var %>%
 dds <- DESeqDataSetFromMatrix(
   countData = df_by_var,
   colData = metadata,
-  design = ~ refinebio_treatment # Replace with an appropriate design variable for your analysis
+  design = ~ treatment_group + subgroup # Replace with an appropriate design variable for your analysis
 )
 ```
 
@@ -194,7 +194,7 @@ replicates heatmap.
 ```{r}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
 # object which will be used to create the technical replicates heatmap
-technical_annotation_df <- metadata %>%
+annotation_df <- metadata %>%
   # We do not need this information for annotating the technical replicates heatmap
   dplyr::select(-c("sample_info_summary", "refinebio_title")) %>%
   # The `pheatmap` function requires that the rownames of our annotation object
@@ -214,10 +214,10 @@ before we normalize the data and create our heatmap.
 # Sum up the counts for each gene -- which means we want the sum of counts for
 # each row as the rows represent gene data and the columns represent sample data
 # in our dataset
-technical_count_sums <- data.frame(count = rowSums(counts(dds)))
+count_sums <- data.frame(count = rowSums(counts(dds)))
 
 # Create a density plot using the sums
-ggplot2::ggplot(technical_count_sums, ggplot2::aes(x = count)) +
+ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
                       color = "blue",
@@ -242,7 +242,7 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 # `normTransform` function from the `DESEq2` R package
 ## TODO: Add a note/link to section in documentation on why we use
 # `normTransform` vs `vst` and `rlog`
-ntd_technical <- normTransform(dds)
+ntd <- normTransform(dds)
 ```
 
 ### 8) Create a heatmap
@@ -250,12 +250,12 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r Create a heatmap}
 # Create and store the technical replicates heatmap object
-technical_pheatmap <-
+pheatmap <-
   pheatmap(
-    assay(ntd_technical),
+    assay(ntd),
     cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
     cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
-    annotation_col = technical_annotation_df,
+    annotation_col = annotation_df,
     main = "Technical Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
@@ -264,32 +264,51 @@ technical_pheatmap <-
   )
 ```
 
-"Now that we've seen our replicates are fairly identical... let's take a look at our experimental question". 
+### 9) Save heatmap as a png
+You can easily switch this to save to a jpeg or tiff by changing the function 
+and file name within the function to the respective file suffix.
+
+```{r Save all reps heatmap as a png}
+# Open a png file
+png(file.path(
+  plots_dir,
+  "HeatmapSRP150101_all_reps.png" # Replace file name with a relevant output plot name
+))
+
+# Print your heatmap
+pheatmap
+
+# Close the png file:
+dev.off()
+```
+
+Now that we've seen our replicates are fairly identical... let's take a look at our experimental question. 
 
 ## How are our biological replicates clustering together?
 
 ### 4) Create a DESeqDataset
-A `DESeqDataSet` object is required to carry out the normalization step that
-you will see later using a function from the `DESeq2` package. This chunk of
-code will collapse the `DESeqDataSet` object that we created above to account
-for technical replicates.
+We will be using the `DESeq2` package for normalization, which requires us to
+format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
+into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
+which variable labels our experimental groups using the `design` argument. 
+
 
 ```{r}
 # Collapse the replicates using the `collapseReplicates` function from the
 # `DESEq2` package on the `DESeqDataSet` object we created in
 # "Create a DESeqDataset" from the previous section -- this function combines
 # the counts from the technical replicates in our dataset 
-dds_collapsed <- collapseReplicates(dds, dds$sample_info_summary)
+dds_collapsed_reps <- collapseReplicates(dds, dds$sample_info_summary)
 ```
 
-### 5) Prepare the metadata
+### 5) Prepare the metadata for the collapsed replicates `DESeqDataSet` object
 Now, we are going to format the metadata to be used for annotation on the
 biological replicates heatmap.
 
 ```{r}
 # Now we need to collapse the metadata to match the collapsed `DESeqDataSet`
 # object
-biological_annotation_df <- metadata %>%
+annotation_df_collapsed_reps <- metadata %>%
   # We do not need this information for annotating the biological replicates heatmap
   dplyr::select(-c("refinebio_title", "refinebio_accession_code")) %>%
   # Use `distinct()` to get rid of the duplicates created from removing the
@@ -311,10 +330,11 @@ before we normalize the data and create our heatmap.
 
 # Sum up the counts for each gene -- which means we want the sum of counts for
 # each row
-biological_count_sums <- data.frame(count = rowSums(counts(dds)))
+count_sums_collapsed_reps <-
+  data.frame(count = rowSums(counts(dds_collapsed_reps)))
 
 # Create a density plot using the sums
-ggplot2::ggplot(biological_count_sums, ggplot2::aes(x = count)) +
+ggplot2::ggplot(count_sums_collapsed_reps, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
                       color = "blue",
@@ -327,8 +347,8 @@ ggplot2::ggplot(biological_count_sums, ggplot2::aes(x = count)) +
 ```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds_collapsed)) >= 10
-dds_collapsed <- dds_collapsed[genes_to_keep, ]
+genes_to_keep <- rowSums(counts(dds_collapsed_reps)) >= 10
+dds_collapsed_reps <- dds_collapsed_reps[genes_to_keep, ]
 ```
 
 ### 7) Perform DESeq2 normalization
@@ -338,7 +358,7 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 # Now let's normalize the data for the collapsed counts using the
 # `normTransform` function from the `DESeq2` package that we used in the
 # previous section
-ntd_biological <- normTransform(dds_collapsed)
+ntd_collapsed_reps <- normTransform(dds_collapsed_reps)
 ```
 
 ### 8) Create a heatmap
@@ -346,12 +366,12 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r}
 # Now let's try creating a heatmap with the collapsed biological replicate data
-biological_pheatmap <-
+pheatmap_collapsed_reps <-
   pheatmap(
-    assay(ntd_biological),
+    assay(ntd_collapsed_reps),
     cluster_rows = FALSE,
     cluster_cols = FALSE,
-    annotation_col = biological_annotation_df,
+    annotation_col = annotation_df_collapsed_reps,
     main = "Biological Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
@@ -365,15 +385,15 @@ In the heatmap above, it looks like not only do our technical replicates cluster
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
-```{r Save heatmap as a png}
+```{r Save collapsed reps heatmap as a png}
 # Open a png file
 png(file.path(
   plots_dir,
-  "HeatmapSRP150101.png" # Replace file name with a relevant output plot name
+  "HeatmapSRP150101_collapsed_reps.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
-biological_pheatmap
+pheatmap_collapsed_reps
 
 # Close the png file:
 dev.off()
