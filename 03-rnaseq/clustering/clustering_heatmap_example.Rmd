@@ -180,7 +180,7 @@ df_by_var <- df_by_var %>%
   dplyr::mutate_if(is.numeric, round)
 
 # Create a `DESeqDataSet` object
-dds <- DESeqDataSetFromMatrix(
+dds_all_reps <- DESeqDataSetFromMatrix(
   countData = df_by_var,
   colData = metadata,
   design = ~ treatment_group + subgroup # Replace with an appropriate design variable for your analysis
@@ -194,7 +194,7 @@ replicates heatmap.
 ```{r}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
 # object which will be used to create the technical replicates heatmap
-annotation_df <- metadata %>%
+annotation_df_all_reps <- metadata %>%
   # We do not need this information for annotating the technical replicates heatmap
   dplyr::select(-c("sample_info_summary", "refinebio_title")) %>%
   # The `pheatmap` function requires that the rownames of our annotation object
@@ -214,10 +214,10 @@ pre-filtering to keep only rows with 10 or more reads total.
 # Sum up the counts for each gene -- which means we want the sum of counts for
 # each row as the rows represent gene data and the columns represent sample data
 # in our dataset
-count_sums <- data.frame(count = rowSums(counts(dds)))
+count_sums_all_reps <- data.frame(count = rowSums(counts(dds_all_reps)))
 
 # Create a density plot using the sums
-ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
+ggplot2::ggplot(count_sums_all_reps, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
                       color = "blue",
@@ -230,8 +230,8 @@ ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
 ```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds)) >= 10
-dds <- dds[genes_to_keep, ]
+genes_to_keep_all_reps <- rowSums(counts(dds_all_reps)) >= 10
+dds_all_reps <- dds_all_reps[genes_to_keep_all_reps, ]
 ```
 
 ### 7) Perform DESeq2 normalization
@@ -242,7 +242,7 @@ We are going to use a function from the `DESeq2` package to normalize the data.
 # `normTransform` function from the `DESEq2` R package
 ## TODO: Add a note/link to section in documentation on why we use
 # `normTransform` vs `vst` and `rlog`
-ntd <- normTransform(dds)
+ntd_all_reps <- normTransform(dds_all_reps)
 ```
 
 ### 8) Create a heatmap
@@ -250,12 +250,12 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r Create a heatmap}
 # Create and store the technical replicates heatmap object
-pheatmap <-
+pheatmap_all_reps <-
   pheatmap(
-    assay(ntd),
+    assay(ntd_all_reps),
     cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
     cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
-    annotation_col = annotation_df,
+    annotation_col = annotation_df_all_reps,
     main = "Technical Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
@@ -276,7 +276,7 @@ png(file.path(
 ))
 
 # Print your heatmap
-pheatmap
+pheatmap_all_reps
 
 # Close the png file:
 dev.off()
@@ -298,7 +298,8 @@ which variable labels our experimental groups using the `design` argument.
 # `DESEq2` package on the `DESeqDataSet` object we created in
 # "Create a DESeqDataset" from the previous section -- this function combines
 # the counts from the technical replicates in our dataset 
-dds_collapsed_reps <- collapseReplicates(dds, dds$sample_info_summary)
+dds_collapsed_reps <- collapseReplicates(dds_all_reps,
+                                         dds_all_reps$sample_info_summary)
 ```
 
 ### 5) Prepare the metadata for the collapsed replicates `DESeqDataSet` object
@@ -347,8 +348,8 @@ ggplot2::ggplot(count_sums_collapsed_reps, ggplot2::aes(x = count)) +
 ```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds_collapsed_reps)) >= 10
-dds_collapsed_reps <- dds_collapsed_reps[genes_to_keep, ]
+genes_to_keep_collapsed_reps <- rowSums(counts(dds_collapsed_reps)) >= 10
+dds_collapsed_reps <- dds_collapsed_reps[genes_to_keep_collapsed_reps, ]
 ```
 
 ### 7) Perform DESeq2 normalization
