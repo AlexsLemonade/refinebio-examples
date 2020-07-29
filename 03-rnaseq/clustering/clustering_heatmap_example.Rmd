@@ -156,7 +156,7 @@ df_by_var <- df %>%
 
 ## How are our technical replicates clustering together?
 
-We know that our dataset includes technical replicates because we have replicate
+Our dataset includes technical replicates because we have replicate
 data which were multiple sequencing lanes from the same samples and library (we
 were able to determine this information using the metadata and associated
 article which can be found at the following link: https://pubmed.ncbi.nlm.nih.gov/30355798/).
@@ -203,10 +203,10 @@ annotation_df <- metadata %>%
 ```
 
 ### 6) Define a minimum counts cutoff
-We are going to do some pre-filtering to keep only rows with 10 or more reads
-total. We want to filter out the genes that have not been expressed or that have
+We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
-before we normalize the data and create our heatmap.
+before we normalize the data and create our heatmap. We are going to do some
+pre-filtering to keep only rows with 10 or more reads total.
 
 ```{r Define minimum counts cutoff}
 # Let's take a look at the distribution of counts first
@@ -320,10 +320,10 @@ annotation_df_collapsed_reps <- metadata %>%
 ```
 
 ### 6) Define a minimum counts cutoff
-We are going to do some pre-filtering to keep only rows with 10 or more reads
-total. We want to filter out the genes that have not been expressed or that have
+We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
-before we normalize the data and create our heatmap.
+before we normalize the data and create our heatmap. We are going to do some
+pre-filtering to keep only rows with 10 or more reads total.
 
 ```{r}
 # Let's take a look at the distribution of counts for the collapsed data
