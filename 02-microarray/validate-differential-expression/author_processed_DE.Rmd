@@ -47,17 +47,28 @@ library(limma)
 Set up output directories.
 
 ```{r}
+# Define the file path to the results directory
+results_dir <- "results"  # Replace with path to desired output results directory
+
 # Make a results directory if it isn't created yet
-if (!dir.exists("results")) {
-  dir.create("results")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
+
+# Define the file path to the plots directory
+plots_dir <- "plots"  # Replace with path to desired output plots directory
+
 # Make a plots directory if it isn't created yet
-if (!dir.exists("plots")) {
-  dir.create("plots")
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
 }
+
+# Define the file path to the data directory
+data_dir <- "data"  # Replace with path to data directory
+
 # Make a data directory if it isn't created yet
-if (!dir.exists("data")) {
-  dir.create("data")
+if (!dir.exists(data_dir)) {
+  dir.create(data_dir)
 }
 ```
 
@@ -67,10 +78,13 @@ For more information on how this data was processed, see its
 
 ```{r}
 # Store file name for gene matrix
-matrix.file.name <- file.path("data", "GSE37382_series_matrix.txt")
+matrix.file.name <- file.path(data_dir,
+                              "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
+                              )
 
-# Download author processed data file directly to `data` folder
-geo.data <-  GEOquery::getGEO("GSE37382", destdir = "data", GSEMatrix = TRUE)
+# Download author processed data file directly to the data directory
+geo.data <-  GEOquery::getGEO("GSE37382", # Replace with the GEO Accession ID relevant to your txt file -- you can search for a GEO Accession ID using the [NCBI's Gene Expression Omnibus database](https://www.ncbi.nlm.nih.gov/geo/).The GEO ID will start with `GSE`, `GSM`, `GDS`, or `GPL` (more information here: https://www.rdocumentation.org/packages/GEOquery/versions/2.38.4/topics/getGEO)
+                              destdir = data_dir, GSEMatrix = TRUE)
   
 # If the unzipped version of the file doesn't exist, run this
 if (!file.exists(matrix.file.name)) {
@@ -83,7 +97,9 @@ Read in the gene matrix.
 
 ```{r}
 # Read in the author processed gene matrix
-author.df <- readr::read_tsv(file.path("data", "GSE37382_series_matrix.txt"), 
+author.df <- readr::read_tsv(file.path(data_dir,
+                                       "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
+                                       ), 
                              comment = "!") %>% 
   # Store probe ids as the rownames
   tibble::column_to_rownames("ID_REF")
@@ -179,7 +195,7 @@ Looks like what we would expect to see.
 
 ```{r  Write results}
 # Save summary statistics to a tsv file
-readr::write_tsv(stats, file.path("results", "GSE37382_limma_results.tsv"))
+readr::write_tsv(stats, file.path(results_dir, "GSE37382_limma_results.tsv"))
 ```
 
 Print session info:
