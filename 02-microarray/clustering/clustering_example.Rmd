@@ -25,13 +25,13 @@ This set of genes is then used to create a heatmap.
 
 # How to run this example
 
-For general information about our tutorials, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#how-this-tutorial-is-structured).
+For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#resources-for-learning-r) if you have not written code in R before. 
 
-## About dataset we are using for this example
+## About the dataset we are using for this example
 
 For this example analysis, we will use this [zebrafish microarray dataset](
-https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells)
+https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).
 This dataset has two experimental groups of lymphoid cells from zebrafish kidney.
 Using Hoechst fluorescence intensity, these were subdivided into the SP and MP populations. 
 
@@ -49,7 +49,9 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="screenshots/download-email.png" width=500>  
 
-This will download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+It make take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 <img src="screenshots/download-folder-structure.png" width=400> 
 
@@ -68,7 +70,7 @@ If you are unfamiliar with R notebooks, see our [introduction to using Rmds](htt
 ### Set up your analysis folder
 
 Good file organization is helpful for keeping your data analysis project on track. 
-If you are unfamiliar with file paths, see our [introduction to navigiating directories](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#quick-primer-on-file-paths) for tips and resources. 
+If you are unfamiliar with file paths, see our [introduction to navigiating directories](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#an-important-note-about-file-paths-and-rmds) for tips and resources. 
 
 We recommend setting up a new folder to hold all your analysis files.
 In this folder you should create another folder called "data". 
@@ -185,6 +187,7 @@ df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
 ## Create a heatmap
+
 To further customize the heatmap, see the vignettes on Bioconductor for a guide 
 at this [link](https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html).
 
