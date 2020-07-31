@@ -135,25 +135,6 @@ df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 all.equal(colnames(df), metadata$refinebio_accession_code)
 ```
 
-## 3) Choose genes of interest
-Although you may want to create a heatmap including all of the genes in the set,
-alternatively, the heatmap could be created using only genes of interest. 
-For this example, we will sort genes by variance, but there are many alternative
-criterion by which you may want to sort your genes <i>eg</i> fold change,
-t-statistic, membership to a particular gene ontology, so on. 
-
-```{r Choose genes}
-# Calculate the variance for each gene
-variances <- apply(df, 1, var)
-
-# Determine the upper quartile variance cutoff value
-upper_var <- quantile(variances, 0.75)
-
-# Subset the data choosing only genes whose variances are in the upper quartile
-df_by_var <- df %>%
-  dplyr::filter(variances > upper_var)
-```
-
 ## How are our technical replicates clustering together?
 
 Our dataset includes technical replicates because we have replicate
@@ -165,17 +146,16 @@ Before we look at the biological clustering of our data, we should first
 determine how our technical replicates cluster together and how that may affect
 our biological interpretation.
 
-### 4) Create a DESeqDataset
+### 3a) Create a DESeqDataset
 We will be using the `DESeq2` package for normalization, which requires us to
 format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
 into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
 which variable labels our experimental groups using the `design` argument. 
 
-```{r Create a DESeqDataset}
+```{r Create a DESeqDataset for all replicates}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
-## TODO: Link to explanation about `DESeqDataSet` in the RNA-seq header section
-df_by_var <- df_by_var %>%
+df_by_var <- df %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, round)
 
@@ -187,28 +167,29 @@ dds_all_reps <- DESeqDataSetFromMatrix(
 )
 ```
 
-### 5) Prepare the metadata
+### 4a) Prepare the metadata for all replicates
 We are going to format the metadata to be used for annotation on the technical
 replicates heatmap.
 
-```{r}
+```{r Prepare the metadata for all replicates object}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
 # object which will be used to create the technical replicates heatmap
 annotation_df_all_reps <- metadata %>%
-  # We do not need this information for annotating the technical replicates heatmap
-  dplyr::select(-c("sample_info_summary", "refinebio_title")) %>%
+  # We want to select the variables that we want for annotating the technical
+  # replicates heatmap
+  dplyr::select(refinebio_accession_code, mouse_id, treatment_group, subgroup) %>%
   # The `pheatmap` function requires that the rownames of our annotation object
   # matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
-### 6) Define a minimum counts cutoff
+### 5a) Define a minimum counts cutoff
 We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
 before we normalize the data and create our heatmap. We are going to do some
 pre-filtering to keep only rows with 10 or more reads total.
 
-```{r Define minimum counts cutoff}
+```{r Plot distribution of counts for all replicates object}
 # Let's take a look at the distribution of counts first
 
 # Sum up the counts for each gene -- which means we want the sum of counts for
@@ -227,32 +208,52 @@ ggplot2::ggplot(count_sums_all_reps, ggplot2::aes(x = count)) +
                                    linetype = "dashed")
 ```
 
-```{r}
+```{r Define a minimum counts cutoff for all replicates object}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
 genes_to_keep_all_reps <- rowSums(counts(dds_all_reps)) >= 10
 dds_all_reps <- dds_all_reps[genes_to_keep_all_reps, ]
 ```
 
-### 7) Perform DESeq2 normalization
-We are going to use a function from the `DESeq2` package to normalize the data. 
+### 6a) Perform DESeq2 normalization
+We are going to use the `rlog` function from the `DESeq2` package to normalize
+the data. 
+TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst`
+and `normTransform`.
 
-```{r Perform DESeq2 normalization}
+```{r Perform DESeq2 normalization on all replicates object}
 # Normalize the data in the `DESeqDataSet` object using the
-# `normTransform` function from the `DESEq2` R package
-## TODO: Add a note/link to section in documentation on why we use
-# `normTransform` vs `vst` and `rlog`
-ntd_all_reps <- normTransform(dds_all_reps)
+# `rlog` function from the `DESEq2` R package
+dds_norm_all_reps <- rlog(dds_all_reps)
 ```
 
-### 8) Create a heatmap
+### 7a) Choose genes of interest
+Although you may want to create a heatmap including all of the genes in the set,
+alternatively, the heatmap could be created using only genes of interest. 
+For this example, we will sort genes by variance, but there are many alternative
+criterion by which you may want to sort your genes <i>eg</i> fold change,
+t-statistic, membership to a particular gene ontology, so on. 
+
+```{r Choose genes for all replicates object}
+# Calculate the variance for each gene
+variances_all_reps <- apply(assay(dds_norm_all_reps), 1, var)
+
+# Determine the upper quartile variance cutoff value
+upper_var_all_reps <- quantile(variances_all_reps, 0.75)
+
+# Subset the data choosing only genes whose variances are in the upper quartile
+df_by_var_all_reps <- data.frame(assay(dds_norm_all_reps)) %>%
+  dplyr::filter(variances_all_reps > upper_var_all_reps)
+```
+
+### 8a) Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
-```{r Create a heatmap}
+```{r Create a heatmap for all replicates object}
 # Create and store the technical replicates heatmap object
 pheatmap_all_reps <-
   pheatmap(
-    assay(ntd_all_reps),
+    df_by_var_all_reps,
     cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
     cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
     annotation_col = annotation_df_all_reps,
@@ -264,7 +265,7 @@ pheatmap_all_reps <-
   )
 ```
 
-### 9) Save heatmap as a png
+### 9a) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
@@ -286,14 +287,14 @@ Now that we've seen our replicates are fairly identical... let's take a look at 
 
 ## How are our biological replicates clustering together?
 
-### 4) Create a DESeqDataset
+### 3b) Create a DESeqDataset
 We will be using the `DESeq2` package for normalization, which requires us to
 format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
 into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
 which variable labels our experimental groups using the `design` argument. 
 
 
-```{r}
+```{r Create a DESeqDataset for collapsed replicates}
 # Collapse the replicates using the `collapseReplicates` function from the
 # `DESEq2` package on the `DESeqDataSet` object we created in
 # "Create a DESeqDataset" from the previous section -- this function combines
@@ -302,16 +303,17 @@ dds_collapsed_reps <- collapseReplicates(dds_all_reps,
                                          dds_all_reps$sample_info_summary)
 ```
 
-### 5) Prepare the metadata for the collapsed replicates `DESeqDataSet` object
+### 4b) Prepare the metadata for the collapsed replicates `DESeqDataSet` object
 Now, we are going to format the metadata to be used for annotation on the
 biological replicates heatmap.
 
-```{r}
+```{r Prepare the metadata for collapsed replicates object}
 # Now we need to collapse the metadata to match the collapsed `DESeqDataSet`
 # object
 annotation_df_collapsed_reps <- metadata %>%
-  # We do not need this information for annotating the biological replicates heatmap
-  dplyr::select(-c("refinebio_title", "refinebio_accession_code")) %>%
+  # We want to select the variables we will need for annotating the biological
+  # replicates heatmap
+  dplyr::select(sample_info_summary, mouse_id, treatment_group, subgroup) %>%
   # Use `distinct()` to get rid of the duplicates created from removing the
   # variables above as we do not need to represent the technical replicates here
   dplyr::distinct() %>%
@@ -320,13 +322,13 @@ annotation_df_collapsed_reps <- metadata %>%
   tibble::column_to_rownames("sample_info_summary")
 ```
 
-### 6) Define a minimum counts cutoff
+### 5b) Define a minimum counts cutoff
 We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
 before we normalize the data and create our heatmap. We are going to do some
 pre-filtering to keep only rows with 10 or more reads total.
 
-```{r}
+```{r Plot distribution of counts for collapsed replicates object}
 # Let's take a look at the distribution of counts for the collapsed data
 
 # Sum up the counts for each gene -- which means we want the sum of counts for
@@ -345,44 +347,69 @@ ggplot2::ggplot(count_sums_collapsed_reps, ggplot2::aes(x = count)) +
                                    linetype = "dashed")
 ```
 
-```{r}
+```{r Define a minimum counts cutoff for collapsed replicates object}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
 genes_to_keep_collapsed_reps <- rowSums(counts(dds_collapsed_reps)) >= 10
 dds_collapsed_reps <- dds_collapsed_reps[genes_to_keep_collapsed_reps, ]
 ```
 
-### 7) Perform DESeq2 normalization
+### 6b) Perform DESeq2 normalization
 We are going to use a function from the `DESeq2` package to normalize the data. 
 
-```{r}
+```{r Perform DESeq2 normalization on collapsed replicates object}
 # Now let's normalize the data for the collapsed counts using the
-# `normTransform` function from the `DESeq2` package that we used in the
+# `rlog` function from the `DESeq2` package that we used in the
 # previous section
-ntd_collapsed_reps <- normTransform(dds_collapsed_reps)
+dds_norm_collapsed_reps <- rlog(dds_collapsed_reps)
 ```
 
-### 8) Create a heatmap
+### 7b) Choose genes of interest
+Although you may want to create a heatmap including all of the genes in the set,
+alternatively, the heatmap could be created using only genes of interest. 
+For this example, we will sort genes by variance, but there are many alternative
+criterion by which you may want to sort your genes <i>eg</i> fold change,
+t-statistic, membership to a particular gene ontology, so on. 
+
+```{r Choose genes for collapsed replicates object}
+# Calculate the variance for each gene
+variances_collapsed_reps <- apply(assay(dds_norm_collapsed_reps), 1, var)
+
+# Determine the upper quartile variance cutoff value
+upper_var_collapsed_reps <- quantile(variances_collapsed_reps, 0.75)
+
+# Subset the data choosing only genes whose variances are in the upper quartile
+df_by_var_collapsed_reps <- data.frame(assay(dds_norm_collapsed_reps)) %>%
+  dplyr::filter(variances_collapsed_reps > upper_var_collapsed_reps)
+```
+
+### 8b) Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
-```{r}
+```{r Create a heatmap for collapsed replicates object}
+# Before creating a heatmap here, we need to make sure the column names of the
+# collapsed replicates object match the row names of the annotation data.frame 
+colnames(df_by_var_collapsed_reps) <-
+  gsub("[.]", "-", colnames(df_by_var_collapsed_reps))
+
 # Now let's try creating a heatmap with the collapsed biological replicate data
 pheatmap_collapsed_reps <-
   pheatmap(
-    assay(ntd_collapsed_reps),
-    cluster_rows = FALSE,
-    cluster_cols = FALSE,
+    df_by_var_collapsed_reps,
+    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
     annotation_col = annotation_df_collapsed_reps,
     main = "Biological Replicates Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
-                       "yellow"))(25)
+                       "yellow"))(25
+                       )
   )
 ```
 
 In the heatmap above, it looks like not only do our technical replicates cluster together, but our biological replicates also cluster together (within the same technical environment).
 
-### 9) Save heatmap as a png
+### 9b) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
