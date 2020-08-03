@@ -14,11 +14,12 @@ output:
 - [About refine.bio](#about-refinebio)
 - [About how this tutorial book is structured](#about-how-this-tutorial-book-is-structured)
 - [What you need to install to run the examples](#what-you-need-to-install-to-run-the-examples)
-- [How to get the data](#how-to-get-the-data)
-- [How to use R Markdowns](#how-to-use-r-markdowns)
+  - [Required software:](#required-software)
+- [How to get the data for these examples](#how-to-get-the-data-for-these-examples)
+- [How to use R Markdown Documents](#how-to-use-r-markdown-documents)
 - [An important note about file paths and Rmds](#an-important-note-about-file-paths-and-rmds)
-    - [Resources for learning R](#resources-for-learning-r)
-    - [More resources from the CCDL](#more-resources-from-the-ccdl)
+- [Resources for learning R](#resources-for-learning-r)
+- [Additional resources from the CCDL:](#additional-resources-from-the-ccdl)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -59,7 +60,7 @@ Each example analysis has additional required packages but will check if they ar
 Depending on your particular configuration, sometimes problems occur (here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185)).
 Each example module directory will include further instructions for how to follow along with the examples.
 
-## How to get the data
+## How to get the data for these examples
 
 Each analysis will include a link to the example dataset's page on [refine.bio](https://www.refine.bio/) as well as step-by-step instructions of how to set up your data and folders for your analysis. 
 As you become more comfortable with the analysis, we encourage you to switch out this example dataset for another that may better suit your interests and scientific questions. 
@@ -88,8 +89,8 @@ Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer wi
 
 A `current directory` refers to where R will look for files or otherwise operate. 
 Directories are the folders of files on your computer; a file path is the series of folders leading to the file you are referring to.
-Rmarkdown documents have the `current directory` always set as wherever the `.Rmd` file itself is saved. 
-This means all file paths specified in the Rmd must be specified `relative` to the location of the Rmd. 
+R Markdown documents have the `current directory` always set as wherever the `.Rmd` file itself is saved. 
+This means all file paths specified in the `.Rmd` must be specified _relative_ to the location of the Rmd. 
 
 For more practice with setting file paths in `.Rmd` files see these:  
 - [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)  
