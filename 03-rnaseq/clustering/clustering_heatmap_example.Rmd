@@ -74,6 +74,8 @@ mice with and without digoxin treatment.
 TODO: Add link to the `getting started` section, specifically to point out how
 one can download the dataset.
 
+Let's import the metadata and count data files.
+
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
 metadata <- readr::read_tsv(file.path(
@@ -155,14 +157,14 @@ which variable labels our experimental groups using the `design` argument.
 ```{r Create a DESeqDataset for all replicates}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
-df_by_var <- df %>%
+df <- df %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, round)
 
 # Create a `DESeqDataSet` object
 dds_all_reps <- DESeqDataSetFromMatrix(
-  countData = df_by_var,
-  colData = metadata,
+  countData = df, # This is the data.frame with the counts values for all replicates in our dataset
+  colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
   design = ~ treatment_group + subgroup # Replace with an appropriate design variable for your analysis
 )
 ```
@@ -177,7 +179,10 @@ replicates heatmap.
 annotation_df_all_reps <- metadata %>%
   # We want to select the variables that we want for annotating the technical
   # replicates heatmap
-  dplyr::select(refinebio_accession_code, mouse_id, treatment_group, subgroup) %>%
+  dplyr::select(refinebio_accession_code,
+                mouse_id,
+                treatment_group,
+                subgroup) %>% 
   # The `pheatmap` function requires that the rownames of our annotation object
   # matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
@@ -187,7 +192,8 @@ annotation_df_all_reps <- metadata %>%
 We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
 before we normalize the data and create our heatmap. We are going to do some
-pre-filtering to keep only rows with 10 or more reads total.
+pre-filtering to keep only genes with 10 or more reads total. Note that rows
+represent gene data and the columns represent sample data in our dataset.
 
 ```{r Plot distribution of counts for all replicates object}
 # Let's take a look at the distribution of counts first
@@ -264,6 +270,11 @@ pheatmap_all_reps <-
                        )
   )
 ```
+It appears that are technical replicates are fairly similar as they appear to
+cluster in the heatmap above. We know this because the values in the `mouse_id`
+annotation appear to cluster together. In order to get a better visualization of
+these clusters, you can try re-running the `pheatmap` function in the code chunk
+above but with the `cluster_cols` argument changed to be equal to `TRUE`.
 
 ### 9a) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
@@ -326,7 +337,8 @@ annotation_df_collapsed_reps <- metadata %>%
 We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
 before we normalize the data and create our heatmap. We are going to do some
-pre-filtering to keep only rows with 10 or more reads total.
+pre-filtering to keep only rows with 10 or more reads total. Note that rows
+represent gene data and the columns represent sample data in our dataset.
 
 ```{r Plot distribution of counts for collapsed replicates object}
 # Let's take a look at the distribution of counts for the collapsed data
@@ -407,7 +419,10 @@ pheatmap_collapsed_reps <-
   )
 ```
 
-In the heatmap above, it looks like not only do our technical replicates cluster together, but our biological replicates also cluster together (within the same technical environment).
+In the heatmap above, it looks like not only do our technical replicates cluster
+together, but our biological replicates also cluster together (within the same
+technical environment). We know this because the subgroups cluster together, and
+treatment groups cluster together within those subgroups and technical groups.
 
 ### 9b) Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
