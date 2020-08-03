@@ -32,7 +32,7 @@ This tutorial has follow-along examples for use with refine.bio downloads.
 ## About how this tutorial book is structured 
 
 This tutorial contains follow-along analysis examples for refinebio gene expression data.
-The analysis examples are organized by technology: ["microarray"](../02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](../03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](../04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
+The analysis examples are organized by technology: ["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
 Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
@@ -82,7 +82,7 @@ placing your cursor inside it and pressing *Cmd+Shift+Enter*.
 print("The output from the code in this chunk will print below!")
 ```
 
-R Markdown documents also have the added benefit of producing HTML file output that is styled and easy to read.
+R Markdown documents also have the added benefit of producing HTML file output that is nicely rendered and easy to read.
 Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in `.nb.html`).
 
 ## An important note about file paths and Rmds
