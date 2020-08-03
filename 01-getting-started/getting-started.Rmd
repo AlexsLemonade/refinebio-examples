@@ -24,22 +24,22 @@ output:
 
 ## About refine.bio 
 
-[refinebio](https://www.refine.bio/about) is a collection of ready-to-use pre-processed normalized data! 
+[refine.bio](https://www.refine.bio/about) is a collection of ready-to-use transcriptomic data! 
 Publicly available gene expression data is [uniformly processed](http://docs.refine.bio/en/latest/main_text.html#processing-information) and made available for easy download. 
-This tutorial has follow-along examples for use with refinebio downloads. 
+This tutorial has follow-along examples for use with refine.bio downloads. 
 
 ## About how this tutorial book is structured 
 
 This tutorial contains follow-along analysis examples for refinebio gene expression data.
 The analysis examples are organized by technology: ["microarray"](../02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](../03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](../04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
-Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refinebio. 
+Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
 **Each analysis contains:**   
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.
 - An R Notebook which consists of:
-     - An R markdown (Rmd) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refinebio. 
-    - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.
+     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refinebio. 
+     - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.
 
 ## What you need to install to run the examples 
 
@@ -56,7 +56,7 @@ We recommend installing `devtools` from CRAN (e.g. running `install.packages("de
 will be required for installing some packages from GitHub.   
 
 Each example analysis has additional required packages but will check if they are installed and will install them if they are not.
-Depending on your particular configuration, sometimes problems occur (Here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185).). 
+Depending on your particular configuration, sometimes problems occur (here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185)).
 Each example module directory will include further instructions for how to follow along with the examples.
 
 ## How to get the data
@@ -68,7 +68,7 @@ Each analysis also includes links to resources and documentation that we hope he
 You will likely encounter errors and bugs as you make changes; don't let this discourage you, it is all a part of the process.
 See this [debugging guide](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md) for our list of the most common R errors and how you might be able to address them. 
 
-## How to use R Markdowns
+## How to use R Markdown Documents
 
 We use [R Markdown](https://bookdown.org/yihui/rmarkdown/) throughout this tutorial.
 R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.
@@ -81,8 +81,8 @@ placing your cursor inside it and pressing *Cmd+Shift+Enter*.
 print("The output from the code in this chunk will print below!")
 ```
 
-R Markdown documents also have the added benefit of having HTML file output that is styled and easy to read.
-Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in `.nb.html`.
+R Markdown documents also have the added benefit of producing HTML file output that is styled and easy to read.
+Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in `.nb.html`).
 
 ## An important note about file paths and Rmds
 
