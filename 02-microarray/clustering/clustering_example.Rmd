@@ -35,11 +35,11 @@ https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish
 This dataset has two experimental groups of lymphoid cells from zebrafish kidney.
 Using Hoechst fluorescence intensity, these were subdivided into the SP and MP populations. 
 
-## Obtaining the dataset from refinebio
+## Obtaining the dataset from refine.bio
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.nb.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refinebio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).  
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).  
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -55,7 +55,7 @@ Follow the prompt to download a zip file that has a name with a series of letter
 Double clicking should unzip this for you and create a folder of the same name.  
 <img src="screenshots/download-folder-structure.png" width=400> 
 
-For more details on the contents of this folder see [these docs on refinebio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
