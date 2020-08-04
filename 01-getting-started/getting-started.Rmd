@@ -39,7 +39,7 @@ We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and foll
 **Each analysis contains:**   
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.
 - An R Notebook which consists of:
-     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refinebio. 
+     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio. 
      - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.
 
 ## What you need to install to run the examples 
