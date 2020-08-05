@@ -31,9 +31,6 @@ option_list <- list(
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
 
-# Make these file paths
-opt$rmd <- file.path(opt$rmd)
-
 # Check that the file exists
 if (!file.exists(opt$rmd)) {
   stop("Rmd file specified with --rmd is not found.")
