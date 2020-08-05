@@ -1,0 +1,165 @@
+[
+  {
+    "author": [
+      {
+        "family": "Gu",
+        "given": "Zuguang"
+      },
+      {
+        "family": "Eils",
+        "given": "Roland"
+      },
+      {
+        "family": "Schlesner",
+        "given": "Matthias"
+      }
+    ],
+    "container-title": "Bioinformatics",
+    "id": "ComplexHeatmap",
+    "issued": {
+      "date-parts": [
+        [
+          2016
+        ]
+      ]
+    },
+    "title": "Complex heatmaps reveal patterns and correlations in multidimensional genomic data",
+    "type": "article-journal"
+  },
+  {
+    "URL": "https://www.R-project.org",
+    "author": [
+      {
+        "literal": "R Core Team"
+      }
+    ],
+    "id": "R-base",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "publisher": "R Foundation for Statistical Computing",
+    "publisher-place": "Vienna, Austria",
+    "title": "R: A language and environment for statistical computing",
+    "title-short": "R",
+    "type": "book"
+  },
+  {
+    "DOI": "10.21105/joss.01686",
+    "author": [
+      {
+        "family": "Wickham",
+        "given": "Hadley"
+      },
+      {
+        "family": "Averick",
+        "given": "Mara"
+      },
+      {
+        "family": "Bryan",
+        "given": "Jennifer"
+      },
+      {
+        "family": "Chang",
+        "given": "Winston"
+      },
+      {
+        "family": "McGowan",
+        "given": "Lucy D’Agostino"
+      },
+      {
+        "family": "François",
+        "given": "Romain"
+      },
+      {
+        "family": "Grolemund",
+        "given": "Garrett"
+      },
+      {
+        "family": "Hayes",
+        "given": "Alex"
+      },
+      {
+        "family": "Henry",
+        "given": "Lionel"
+      },
+      {
+        "family": "Hester",
+        "given": "Jim"
+      },
+      {
+        "family": "Kuhn",
+        "given": "Max"
+      },
+      {
+        "family": "Pedersen",
+        "given": "Thomas Lin"
+      },
+      {
+        "family": "Miller",
+        "given": "Evan"
+      },
+      {
+        "family": "Bache",
+        "given": "Stephan Milton"
+      },
+      {
+        "family": "Müller",
+        "given": "Kirill"
+      },
+      {
+        "family": "Ooms",
+        "given": "Jeroen"
+      },
+      {
+        "family": "Robinson",
+        "given": "David"
+      },
+      {
+        "family": "Seidel",
+        "given": "Dana Paige"
+      },
+      {
+        "family": "Spinu",
+        "given": "Vitalie"
+      },
+      {
+        "family": "Takahashi",
+        "given": "Kohske"
+      },
+      {
+        "family": "Vaughan",
+        "given": "Davis"
+      },
+      {
+        "family": "Wilke",
+        "given": "Claus"
+      },
+      {
+        "family": "Woo",
+        "given": "Kara"
+      },
+      {
+        "family": "Yutani",
+        "given": "Hiroaki"
+      }
+    ],
+    "container-title": "Journal of Open Source Software",
+    "id": "tidyverse",
+    "issue": "43",
+    "issued": {
+      "date-parts": [
+        [
+          2019
+        ]
+      ]
+    },
+    "page": "1686",
+    "title": "Welcome to the <span class=\"nocase\">tidyverse</span>",
+    "type": "article-journal",
+    "volume": "4"
+  }
+]

@@ -4,12 +4,12 @@
 ## General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
-We should also attempt to keep notebooks under 400 lines where possible.
+We should also attempt to keep notebooks under 400 lines to whenever possible.
 
 **.Rmd Header**
 
 Each analysis notebook should have this header.
-This will automatically number the sections, so no manual numbering should be used.
+This will automatically number the sections, _so no manual numbering should be used_.
 
 ```
 ---
@@ -21,7 +21,6 @@ output:
     toc: true
     toc_float: true
     number_sections: true
-bibliography: ../../references.bib  
 ---
 ```
 
@@ -44,7 +43,7 @@ Copy and paste the template here and replace all the `<description>` points with
 ### Chunk naming
 
 Chunks preferably shouldn't be named.
-If we do end up using bookdown at some point, repetitive chunk names like `Import data` will cause havoc.
+If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
 
 ## Formatting of typical words/items:
@@ -53,12 +52,22 @@ Plus its just another thing to have to keep track of.
     - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
     - "tidyverse", not "Tidyverse"
 
+## Citation strategy:
+
+### Intro to section notebooks
+
+The `reference.bib` file will only be used for header section intros: e.g. `01-getting-started/getting-started.Rmd` and `02-microarray/intro-to-microarray.Rmd`.
+In these documents, we need to add one line to the header that says `bibliography: ../reference.bib`.
+
+### Analysis module notebooks
+In analysis module notebooks, markdown links should be used, but a `reference.bib` being used will break the self-contained goal of the analysis notebooks.
+
 ## Citing sources in text
 
 From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html):
 > Items can be cited directly within the documentation using the syntax @key where key is the citation key in the first line of the entry, e.g., @R-base. To put citations in parentheses, use [@key]. To cite multiple entries, separate the keys by semicolons, e.g., [@key-1; @key-2; @key-3]. To suppress the mention of the author, add a minus sign before @, e.g., [-@R-base].
 
-- Note that citations do not have links, so links to helpful docs and vignettes need to be added separately. 
+- Note that citations do not have links, so links to helpful docs and vignettes need to be added separately.
 - Links to websites can be added in the Markdown format `[]()` but should also be added to the `references.bib` file in the next section.
 - Links to other notebooks in `refinebio-examples` should always go to the online version of the book (to maintain the self-contained functionality).
 - Links to sections within the same notebook can still be done like: `#how-to-use-data`.
