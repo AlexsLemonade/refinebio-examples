@@ -4,18 +4,29 @@
 ## General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
-We should also attempt to keep notebooks under 400 lines to whenever possible.
+
+## Rendering notebooks
+
+The `scripts/render-notebooks.R` is responsible for rendering all analyses notebooks in a way that all citations are automatically rendered but `.Rmd` files can still be individually downloaded by a user and [ran without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+So the following should be ran after changes have been made and before any `Pull Request` changes are filed:
+
+```
+scripts/render-notebooks.R
+```
+
+This script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+The default `--bib_file` is the `references.bib` script at the top of the repository.
 
 **.Rmd Header**
 
-Each analysis notebook should have this header.
+Each analysis `.Rmd` should have this header below:
 This will automatically number the sections, _so no manual numbering should be used_.
 
 ```
 ---
 title: "Name of the analysis - Microarray/RNA-seq/Advanced"
 author: "CCDL for ALSF"
-date:"`r format(Sys.time(), '%B, %Y')`"
+date:"`r format(Sys.time(), '%B %Y')`"
 output:   
   html_notebook:
     toc: true
