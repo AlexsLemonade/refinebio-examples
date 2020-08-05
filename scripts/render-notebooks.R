@@ -43,7 +43,7 @@ if (!file.exists(opt$bib_file)) {
   header_line <- paste("bibliography:", normalizePath(opt$bib_file))
 }
 
-# Specify the output file
+# Specify the temp file
 tmp_file <-  stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
 
 # Read in as lines
