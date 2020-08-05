@@ -21,9 +21,16 @@ option_list <- list(
     metavar = "character"
   ),
   make_option(
-    opt_str = c("-b", "--bib_file"), type = "character",
+    opt_str = c("-b", "--bib_file"), 
+    type = "character",
     default = "references.bib", # Default is this file, but it can be changed
     help = "File name of the references file. Can be any format pandoc works with. Will be normalized with normalizePath().",
+    metavar = "character"
+  ), 
+  make_option(
+    opt_str = c("-o", "--html"), type = "character",
+    default = NULL,
+    help = "Desired filename for rendered output html file",
     metavar = "character"
   )
 )
@@ -31,12 +38,12 @@ option_list <- list(
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
 
-# Check that the file exists
+# Check that the rmd file exists
 if (!file.exists(opt$rmd)) {
   stop("Rmd file specified with --rmd is not found.")
 }
 
-# Check that the file exists
+# Check that the bib file exists
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
@@ -63,8 +70,12 @@ new_lines <- append(lines, header_line, header_range[1])
 # Write to an tmp file
 readr::write_lines(new_lines, tmp_file)
 
-# Specify final output file
-output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".nb.html")
+# If no output html filename specification, make one from the original filename
+if (is.null(opt$html)){
+  output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
+} else {
+  output_file <- normalizePath(opt$html)
+}
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
