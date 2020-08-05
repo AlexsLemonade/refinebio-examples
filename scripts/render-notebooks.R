@@ -8,11 +8,7 @@ root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 
 # List of files to render
 infiles <- c(
-  file.path(root_dir, "01-getting-started", "getting-started.Rmd"),
-  file.path(
-    root_dir, "02-microarray",
-    file.path("clustering", "clustering_example.Rmd")
-  )
+  file.path(root_dir, "01-getting-started", "getting-started.Rmd")
 )
 
 # Load library:
@@ -23,7 +19,7 @@ option_list <- list(
   make_option(
     opt_str = c("-b", "--bib_file"), type = "character",
     default = "references.bib", # Default is this file, but it can be changed
-    help = "File path relative to root directory (where .git is) 
+    help = "File path relative to root directory (where .git is)
     and file name of the references file. Can be any format pandoc works with",
     metavar = "character"
   )
