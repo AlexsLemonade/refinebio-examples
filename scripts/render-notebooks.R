@@ -31,11 +31,7 @@ option_list <- list(
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
 
-opt$bib_file <- "references.bib"
-opt$rmd <- "01-getting-started/getting-started.Rmd"
-
 # Make these file paths
-opt$bib_file <- normalizePath(opt$bib_file)
 opt$rmd <- file.path(opt$rmd)
 
 # Check that the file exists
@@ -47,7 +43,7 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  header_line <- paste("bibliography:", opt$bib_file)
+  header_line <- paste("bibliography:", normalizePath(opt$bib_file))
 }
 
 # Specify the output file
