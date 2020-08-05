@@ -60,11 +60,11 @@ if (length(header_range) == 0) {
 # Add the bibliography specification line at the beginning of the chunk
 new_lines <- append(lines, header_line, header_range[1])
 
-# Write to an outfile
+# Write to an tmp file
 readr::write_lines(new_lines, tmp_file)
 
 # Specify final output file
-output_file <- stringr::str_replace(basename(opt$rmd), "\\.Rmd$", ".nb.html")
+output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".nb.html")
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
@@ -73,5 +73,5 @@ rmarkdown::render(tmp_file,
   output_file = output_file
 )
 
-# Remove the temporary header change .Rmd output file
+# Remove the temporary header change .Rmd tmp file
 file.remove(tmp_file)
