@@ -19,8 +19,7 @@ option_list <- list(
   make_option(
     opt_str = c("-b", "--bib_file"), type = "character",
     default = "references.bib", # Default is this file, but it can be changed
-    help = "File path relative to root directory (where .git is)
-    and file name of the references file. Can be any format pandoc works with",
+    help = "File name of the references file. Can be any format pandoc works with. Will be normalized with normalizePath().",
     metavar = "character"
   )
 )
@@ -29,7 +28,7 @@ option_list <- list(
 opt <- parse_args(OptionParser(option_list = option_list))
 
 # Make it normalized to root_dir
-normalized_bib_file <- file.path(root_dir, opt$bib_file)
+normalized_bib_file <- normalizePath(opt$bib_file, mustWork = TRUE)
 
 # Check that the file exists in the root directory
 if (!file.exists(normalized_bib_file)) {
@@ -41,17 +40,21 @@ if (!file.exists(normalized_bib_file)) {
 
 # Make specialized function for adding a header specification
 add_header_line <- function(infile,
-                            header_line = bib_specify_line,
-                            outfile = file.path(dirname(infile), "tmp-header-changed.Rmd")) {
+                            outfile = NULL,
+                            header_line) {
 
+  if (is.null(outfile)) {
+    outfile <-  file.path(dirname(infile), "tmp-header-changed.Rmd")
+  }
+  
   # Read in as lines
   lines <- readr::read_lines(infile)
 
   # Find which lines are the beginning and end of the header chunk
-  header_range <- which(stringr::str_detect(lines, "---"))
+  header_range <- which(lines == "---")
 
   # Add the bibliography specification line at the beginning of the chunk
-  new_lines <- append(lines, bib_specify_line, header_range[1])
+  new_lines <- append(lines, header_line, header_range[1])
 
   # Write to an outfile
   readr::write_lines(new_lines, outfile)
@@ -68,4 +71,4 @@ add_header_line <- function(infile,
 }
 
 # Render all the notebooks but with added header line
-purrr::map(infiles, add_header_line)
+purrr::map(infiles, add_header_line, header_line = normalized_bib_file)
