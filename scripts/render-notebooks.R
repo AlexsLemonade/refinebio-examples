@@ -5,8 +5,8 @@
 
 # Example use:
 
-# Rscript scripts/render-notesbooks.R \
-# -r 01-getting-started/getting-started.Rmd
+# Rscript scripts/render-notebooks.R \
+# -r 01-getting-started/getting-started.Rmd \
 # -b references.bib
 
 # Load library:
@@ -31,8 +31,11 @@ option_list <- list(
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
 
+opt$bib_file <- "references.bib"
+opt$rmd <- "01-getting-started/getting-started.Rmd"
+
 # Make these file paths
-opt$bib_file <- file.path(opt$bib_file)
+opt$bib_file <- normalizePath(opt$bib_file)
 opt$rmd <- file.path(opt$rmd)
 
 # Check that the file exists
@@ -44,30 +47,38 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  bib_specify_line <- paste("bibliography:", normalized_bib_file)
+  header_line <- paste("bibliography:", opt$bib_file)
 }
 
 # Specify the output file
-outfile <-  stringr::str_replace(infile, ".Rmd", "tmp-header-changed.Rmd")
+tmp_file <-  stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
 
 # Read in as lines
-lines <- readr::read_lines(infile)
+lines <- readr::read_lines(opt$rmd)
 
 # Find which lines are the beginning and end of the header chunk
 header_range <- which(lines == "---")
+
+# Stop if no chunk found
+if (length(header_range) == 0) {
+  stop("Not finding the `---` which is at the beginning of the header.")
+}
 
 # Add the bibliography specification line at the beginning of the chunk
 new_lines <- append(lines, header_line, header_range[1])
 
 # Write to an outfile
-readr::write_lines(new_lines, outfile)
+readr::write_lines(new_lines, tmp_file)
+
+# Specify final output file
+output_file <- stringr::str_replace(basename(opt$rmd), "\\.Rmd$", ".nb.html")
 
 # Render the header added notebook
-rmarkdown::render(outfile,
+rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(),
   # Save to original html output file name
-  output_file = stringr::str_replace(infile, ".Rmd", ".nb.html")
+  output_file = output_file
 )
 
 # Remove the temporary header change .Rmd output file
-file.remove(outfile)
+file.remove(tmp_file)
