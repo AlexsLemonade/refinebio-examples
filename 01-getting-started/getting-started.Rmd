@@ -5,15 +5,6 @@ output:
   html_notebook: 
     toc: true
     toc_float: true
-navbar:
-  title: "Refinebio-examples"
-  left:
-    - text: "Microarray"
-      href: 02-microarray/intro-to-microarray.nb.html
-    - text: "RNA-seq"
-      href: 03-rnaseq/intro-to-rna-seq.nb.html
-    - text: "Advanced Topics"
-      href: 04-advanced-topics/intro-to-advanced-topics.nb.html
 ---
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
