@@ -12,11 +12,9 @@ bibliography: ../../references.bib
 *Purpose*: This notebook illustrates one way that you can use harmonized data 
 from refine.bio in downstream analyses.
 
-## 1) Install libraries
-This script uses the bioconductor R package ComplexHeatmap for clustering and 
-creating a heatmap.
-<br/> <i> Citation:</i> Gu Z, Eils R, Schlesner M (2016). “Complex heatmaps 
-reveal patterns and correlations in multidimensional genomic data.” Bioinformatics.
+## Install libraries
+This script uses the bioconductor R package [ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/) for clustering and 
+creating a heatmap. [@ComplexHeatmap]
 
 ```{r Install and attach the ComplexHeatmap library}
 if (!("ComplexHeatmap" %in% installed.packages())) {
@@ -50,7 +48,7 @@ if (!dir.exists(plots_dir)) {
 }
 ```
 
-## 2) Import and set up data
+## Import and set up data
 Data downloaded from refine.bio include a metadata tab separated values ("tsv")
 file and a data tsv file. This chunk of code will read the both tsv files and 
 add them as data.frames to your environment.
@@ -78,7 +76,7 @@ df <- df %>% dplyr::select(metadata$geo_accession)
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
-## 3) Choose genes of interest
+## Choose genes of interest
 Although you may want to create a heatmap including all of the genes in the set,
 alternatively, the heatmap could be created using only genes of interest. 
 For this example, we will sort genes by variance, but there are many alternative
@@ -96,7 +94,7 @@ sum.stats.var <- summary(variances)
 df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
-## 4) Create a heatmap
+## Create a heatmap
 To further customize the heatmap, see the vignettes on Bioconductor for a guide 
 at this [link](https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html).
 
@@ -123,7 +121,7 @@ heatmap <- Heatmap(df.by.var,
 heatmap
 ```
 
-## 5) Save heatmap as a png
+## Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 

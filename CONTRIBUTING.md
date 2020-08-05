@@ -1,9 +1,15 @@
 
-# Setting up a new module
+# Contributing guidelines
 
-## Notebook set up
+## General guidelines for analyses notebooks
 
-### Rmd Header
+Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
+We should also attempt to keep notebooks under 400 lines where possible.
+
+**.Rmd Header**
+
+Each analysis notebook should have this header.
+This will automatically number the sections, so no manual numbering should be used.
 
 ```
 ---
@@ -18,14 +24,17 @@ output:
 bibliography: ../../references.bib  
 ---
 ```
-**Inputs:**
-- refine.bio download files.
-- Any additional reference files should be downloaded in the notebook.
 
-**Outputs**
-- A `plots` and/or `results` folder should be created by the analysis notebook
-- Output results should be `TSV` when possible.
-- Plots should be saved to `PNG` whenever possible.  
+**Inputs:**  
+
+- refine.bio download files.  
+- Any additional reference files should be downloaded in the notebook.  
+
+**Outputs**  
+
+- A `plots` and/or `results` folder should be created by the analysis notebook.  
+- Output results should be `TSV` when possible.  
+- Plots should be saved to `PNG` whenever possible.    
 
 ### Analysis Getting Started Template
 
@@ -34,35 +43,58 @@ Copy and paste the template here and replace all the `<description>` points with
 
 ### Chunk naming
 
-Chunks shouldn't be named?
-
-### Section formatting
-
-Sections shouldn't be numbered?
+Chunks preferably shouldn't be named.
+If we do end up using bookdown at some point, repetitive chunk names like `Import data` will cause havoc.
+Plus its just another thing to have to keep track of.
 
 ## Formatting of typical words/items:
+
     - Use "refine.bio", NOT "refinebio"
     - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-    -
-## Citations
+    - "tidyverse", not "Tidyverse"
 
-For sources, add them to the `references.bib` file.
+## Citing sources in text
 
-### Citing R packages
-Use this kind of command in the console: `toBibtex(citation("ComplexHeatmap"))`.
+From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html):
+> Items can be cited directly within the documentation using the syntax @key where key is the citation key in the first line of the entry, e.g., @R-base. To put citations in parentheses, use [@key]. To cite multiple entries, separate the keys by semicolons, e.g., [@key-1; @key-2; @key-3]. To suppress the mention of the author, add a minus sign before @, e.g., [-@R-base].
+
+- Note that citations do not have links, so links to helpful docs and vignettes need to be added separately. 
+- Links to websites can be added in the Markdown format `[]()` but should also be added to the `references.bib` file in the next section.
+- Links to other notebooks in `refinebio-examples` should always go to the online version of the book (to maintain the self-contained functionality).
+- Links to sections within the same notebook can still be done like: `#how-to-use-data`.
+
+### Adding new sources to the `references.bib`
+
+The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
+You can copy and paste
+
+- _R packages_: Use this kind of command in the console: `toBibtex(citation("tidyverse"))`.
 Copy and paste the output to the `references.bib` file.
 
-### Citing Articles
+- _Articles_: For PubMed articles, you can use [this website to find the article](https://www.bioinformatics.org/texmed/). Select the correct article that pops up and click `Export`. Then copy and paste the reference to the `references.bib` file.
 
+- _Websites_: Websites can be added using this template:
+```
+@online{website,
+    author = "First Last",
+    title = "Title",
+    url  = "http://www.someurl.html",
+}
+```
 
-### Links
+After you copy and paste the LaTeX formatted reference to the `reference.bib` file (see instructions by source type below), you need to add a key in the first line, after the `{` and before the `,`.
+For example the tidyverse citation starts like this:
 
-- Links to other notebooks should always go to the online version of the book.
-- Links to sections within the notebook can be used as usual (e.g. `#how-to-use-data`)
+```
+@Article{tidyverse,
+```
+
+This allows you to reference it by `@tidyverse` as [mentioned in the section above](#citing-sources-in-text)
 
 ## How to spell check
 
 In RStudio, go to `Edit` > `Check Spelling`.
+Unfortunately, it will also spell check your code and urls. ¯\\_(ツ)_/¯
 
 ## Code Style
 
