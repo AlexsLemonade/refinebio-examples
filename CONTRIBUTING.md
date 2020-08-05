@@ -52,16 +52,6 @@ Plus its just another thing to have to keep track of.
     - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
     - "tidyverse", not "Tidyverse"
 
-## Citation strategy:
-
-### Intro to section notebooks
-
-The `reference.bib` file will only be used for header section intros: e.g. `01-getting-started/getting-started.Rmd` and `02-microarray/intro-to-microarray.Rmd`.
-In these documents, we need to add one line to the header that says `bibliography: ../reference.bib`.
-
-### Analysis module notebooks
-In analysis module notebooks, markdown links should be used, but a `reference.bib` being used will break the self-contained goal of the analysis notebooks.
-
 ## Citing sources in text
 
 From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html):

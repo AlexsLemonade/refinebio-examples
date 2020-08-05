@@ -6,7 +6,6 @@ output:
     toc: true
     toc_float: true
     number_sections: true
-bibliography: ../../references.bib  
 ---
 
 *Purpose*: This notebook illustrates one way that you can use harmonized data 
