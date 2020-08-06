@@ -50,7 +50,7 @@ set.seed(12345)
 ```
 
 We are going to need an output folder for our heatmaps. Let's create an output
-plots directory.
+`plots` directory.
 
 ```{r}
 # Define the file path to the plots directory
@@ -75,7 +75,7 @@ RNA-sequencing results for types of AML under controlled treatment conditions.
 TODO: Add link to the `getting started` section, specifically to point out how
 one can download the dataset.
 
-Let's import the metadata and count data files.
+Now let's import the metadata and count data files.
 
 ```{r}
 # Read in metadata tsv file
@@ -83,9 +83,6 @@ metadata <- readr::read_tsv(file.path(
   "data", # Replace with path to your metadata file
   "metadata_SRP070849.tsv" # Replace with the name of your metadata file
 ))
-  # # We only need to select the three variables from the metadata that we will
-  # # need for this notebook
-  # dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment)
 
 # Read in data tsv file
 df <- readr::read_tsv(file.path(
@@ -219,9 +216,12 @@ pheatmap <-
   )
 ```
 
-Now let's add some annotation bars to our heatmap.
+We've created a heatmap but we cannot gather much information from it because we
+did not provide the `pheatmap` function with annotation labels for our samples.
 
-### Add annotation bars
+Let's add some annotation bars to our heatmap.
+
+### Prepare metadata for annotation
 We are going to manipulate the metadata and add variables with the information
 that we would like to use to annotate the heatmap.
 
@@ -268,6 +268,9 @@ pheatmap_annotated <-
   )
 ```
 
+Now that we have annotation bars on our heatmap, we can get a better idea of the
+sample variable groups that appear to cluster together.
+
 ### Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
@@ -286,16 +289,20 @@ pheatmap_annotated
 dev.off()
 ```
 
+Now that we've add annotation bars to our heatmap, let's get a better
+visualization of how our data cluster by explicitly telling the `pheatmap`
+function to cluster our samples and genes.
+
 ### Create clustered heatmap and save
 You can create a clustered heatmap by telling the `pheatmap` function to cluster
-the rows and/or columns.
+the rows (genes) and/or columns (samples).
 
 ```{r}
 # Create and store a heatmap object with clustered samples and genes
 pheatmap_clustered <-
   pheatmap(
     df_by_var,
-    cluster_rows = TRUE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
     cluster_cols = TRUE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
     annotation_col = annotation_df,
     main = "Clustered Heatmap",
