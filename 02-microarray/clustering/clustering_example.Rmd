@@ -5,6 +5,7 @@ output:
   html_notebook: 
     toc: true
     toc_float: true
+    number_sections: true
 ---
 
 # Purpose of the analysis:
