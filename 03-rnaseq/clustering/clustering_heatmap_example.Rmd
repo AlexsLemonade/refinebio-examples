@@ -21,7 +21,7 @@ This script uses the R package `DESeq2` for normalization and the R package
 <br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2 Genome Biology 15(12):550 (2014)
 <br/> <i> Citation:</i> Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version 1.0.12. https://CRAN.R-project.org/package=pheatmap
 
-```{r Install and attach the pheatmap and DESeq2 libraries}
+```{r}
 if (!("pheatmap" %in% installed.packages())) {
   # Install pheatmap
   install.packages("pheatmap", update = FALSE)
@@ -49,7 +49,8 @@ library(DESeq2)
 set.seed(12345)
 ```
 
-Create output folder.
+We are going to need an output folder for our heatmaps. Let's create an output
+plots directory.
 
 ```{r}
 # Define the file path to the plots directory
@@ -76,7 +77,7 @@ one can download the dataset.
 
 Let's import the metadata and count data files.
 
-```{r Import data from .tsv files}
+```{r}
 # Read in metadata tsv file
 metadata <- readr::read_tsv(file.path(
   "data", # Replace with path to your metadata file
@@ -120,7 +121,7 @@ format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
 into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
 which variable labels our experimental groups using the `design` argument. 
 
-```{r Create a DESeqDataset}
+```{r}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to
 # integers
 df <- df %>%
@@ -142,7 +143,7 @@ before we normalize the data and create our heatmap. We are going to do some
 pre-filtering to keep only genes with 10 or more reads total. Note that rows
 represent gene data and the columns represent sample data in our dataset.
 
-```{r Plot distribution of counts}
+```{r}
 # Let's take a look at the distribution of counts first
 
 # Sum up the counts for each gene -- which means we want the sum of counts for
@@ -161,7 +162,7 @@ ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
                                    linetype = "dashed")
 ```
 
-```{r Define a minimum counts cutoff}
+```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
 genes_to_keep <- rowSums(counts(dds)) >= 10
@@ -174,7 +175,7 @@ the data.
 TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst`
 and `normTransform`.
 
-```{r Perform DESeq2 normalization}
+```{r}
 # Normalize the data in the `DESeqDataSet` object using the
 # `rlog` function from the `DESEq2` R package
 dds_norm <- rlog(dds)
@@ -187,7 +188,7 @@ For this example, we will sort genes by variance, but there are many alternative
 criterion by which you may want to sort your genes <i>eg</i> fold change,
 t-statistic, membership to a particular gene ontology, so on. 
 
-```{r Choose genes of interest}
+```{r}
 # Calculate the variance for each gene
 variances <- apply(assay(dds_norm), 1, var)
 
@@ -202,7 +203,7 @@ df_by_var <- data.frame(assay(dds_norm)) %>%
 ### Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
-```{r Create a heatmap}
+```{r}
 # Create and store the technical replicates heatmap object
 pheatmap <-
   pheatmap(
@@ -213,7 +214,8 @@ pheatmap <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       )
+                       ),
+    scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
 
@@ -223,7 +225,7 @@ Now let's add some annotation bars to our heatmap.
 We are going to manipulate the metadata and add variables with the information
 that we would like to use to annotate the heatmap.
 
-```{r Prepare the metadata for annotation}
+```{r}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
 # object which will be used to create the technical replicates heatmap
 annotation_df <- metadata %>%
@@ -249,7 +251,7 @@ annotation_df <- metadata %>%
 You can create an annotated heatmap by providing our annotation object to the
 `annotation_col` argument of the `pheatmap` function.
 
-```{r Create annotated heatmap}
+```{r}
 # Create and store the annotated heatmap object
 pheatmap_annotated <-
   pheatmap(
@@ -261,7 +263,8 @@ pheatmap_annotated <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       )
+                       ),
+    scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
 
@@ -269,7 +272,7 @@ pheatmap_annotated <-
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
-```{r Save annotated heatmap as a png}
+```{r}
 # Open a png file
 png(file.path(
   plots_dir,
@@ -287,7 +290,7 @@ dev.off()
 You can create a clustered heatmap by telling the `pheatmap` function to cluster
 the rows and/or columns.
 
-```{r Create clustered heatmap}
+```{r}
 # Create and store a heatmap object with clustered samples and genes
 pheatmap_clustered <-
   pheatmap(
@@ -299,13 +302,14 @@ pheatmap_clustered <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       )
+                       ),
+    scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
 
 Now let's save our clustered heatmap.
 
-```{r Save clustered heatmap as a png}
+```{r}
 # Open a png file
 png(file.path(
   plots_dir,
@@ -321,7 +325,7 @@ dev.off()
 
 Print session info:
 
-```{r Print session info}
+```{r}
 # Print session info
 sessionInfo()
 ```
