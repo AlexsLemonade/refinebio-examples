@@ -14,7 +14,7 @@ output:
 - [About refine.bio](#about-refinebio)
 - [About how this tutorial book is structured](#about-how-this-tutorial-book-is-structured)
 - [What you need to install to run the examples](#what-you-need-to-install-to-run-the-examples)
-  - [Required software:](#required-software)
+  - [Required software](#required-software)
 - [How to get the data for these examples](#how-to-get-the-data-for-these-examples)
 - [How to use R Markdown Documents](#how-to-use-r-markdown-documents)
 - [An important note about file paths and Rmds](#an-important-note-about-file-paths-and-rmds)
@@ -25,7 +25,7 @@ output:
 
 ## About refine.bio 
 
-[refine.bio](https://www.refine.bio/about) is a collection of ready-to-use transcriptomic data! 
+[refine.bio](https://www.refine.bio/about) is a collection of ready-to-use transcriptomic data!
 Publicly available gene expression data is [uniformly processed](http://docs.refine.bio/en/latest/main_text.html#processing-information) and made available for easy download. 
 This tutorial has follow-along examples for use with refine.bio downloads. 
 
@@ -37,10 +37,11 @@ Each analysis is self-contained and provides information with how to obtain the 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
 **Each analysis contains:**   
-- A README that introduces you to the analyses, concepts, requirements, and workflows for that module.
-- An R Notebook which consists of:
-     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio. 
-     - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.
+
+- A README that introduces you to the analyses, concepts, requirements, and workflows for that module.  
+- An R Notebook which consists of:  
+    - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio.   
+    - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.  
 
 ## What you need to install to run the examples 
 
@@ -49,12 +50,12 @@ These requirements can be installed by following the instructions at these links
 We recommend installing `devtools` from CRAN (e.g. running `install.packages("devtools")` in R). 
 
 ### Required software:
-* [**R**](https://cran.r-project.org/)  
-* [**RStudio**](https://www.rstudio.com/products/RStudio/) an [integrated development environment](https://en.wikipedia.org/wiki/Integrated_development_environment) for working with R and [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html).  
-* [**Bioconductor**](https://bioconductor.org/install/) for installing packages from this package repository. 
-* [**tidyverse**](https://www.tidyverse.org/) - we opt for using tidyverse packages for handling and cleaning the data. 
+* [**R**](https://cran.r-project.org/)  [@R-base]  
+* [**RStudio**](https://www.rstudio.com/products/RStudio/) an [integrated development environment](https://en.wikipedia.org/wiki/Integrated_development_environment) for working with R and [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html) [@RStudio].    
+* [**Bioconductor**](https://bioconductor.org/install/) for installing packages from this package repository [@Bioconductor].    
+* [**tidyverse**](https://www.tidyverse.org/) - we opt for using tidyverse packages for handling and cleaning the data [@tidyverse].    
 * [**devtools**](https://cran.r-project.org/web/packages/devtools/readme/README.html)
-will be required for installing some packages from GitHub.   
+will be required for installing some packages from GitHub [@devtools].  
 
 Each example analysis has additional required packages but will check if they are installed and will install them if they are not.
 Depending on your particular configuration, sometimes problems occur (here's a [list of the most common R package installation errors and what they mean](http://mazamascience.com/WorkingWithData/?p=1185)).
@@ -62,7 +63,7 @@ Each example module directory will include further instructions for how to follo
 
 ## How to get the data for these examples
 
-Each analysis will include a link to the example dataset's page on [refine.bio](https://www.refine.bio/) as well as step-by-step instructions of how to set up your data and folders for your analysis. 
+Each analysis will include a link to the example dataset's page on [refine.bio](https://www.refine.bio/) [refine.bio] as well as step-by-step instructions of how to set up your data and folders for your analysis. 
 As you become more comfortable with the analysis, we encourage you to switch out this example dataset for another that may better suit your interests and scientific questions. 
 We've placed comments where the code will absolutely need to be changed for a different dataset, but you may find other parts of the analysis you will want to alter to fit your needs.
 Each analysis also includes links to resources and documentation that we hope helps you make useful alterations to the analysis. 
@@ -93,8 +94,9 @@ R Markdown documents have the `current directory` always set as wherever the `.R
 This means all file paths specified in the `.Rmd` must be specified _relative_ to the location of the Rmd. 
 
 For more practice with setting file paths in `.Rmd` files see these:  
-- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)  
-- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)  
+
+- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)
+- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)
 
 ## Resources for learning R
 
@@ -105,8 +107,10 @@ For more practice with setting file paths in `.Rmd` files see these:
 + [Handy R cheatsheets](https://www.rstudio.com/resources/cheatsheets/)  
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
 
-## Additional resources from the CCDL: 
+## Additional resources from the CCDL 
 
 - [Intro to R and Tidyverse course and exercises](https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse)
 - [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
 - [Good scientific coding practices](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00c-good-scientific-coding-practices.md)
+
+## References
