@@ -14,7 +14,7 @@ TODO: This introduction section will be revamped when the intro to an example
 analysis (#122: https://github.com/AlexsLemonade/refinebio-examples/pull/122)
 gets more polished/determined.
 
-## 1) Install libraries
+## Install libraries
 This script uses the R package `DESeq2` for normalization and the R package
 `pheatmap` for clustering and creating a heatmap.
 <br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2 Genome Biology 15(12):550 (2014)
@@ -60,7 +60,7 @@ if (!dir.exists(plots_dir)) {
 }
 ```
 
-## 2) Import and set up data
+## Import and set up data
 Data downloaded from refine.bio include a metadata [tab separated values ("tsv")]
 (https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
 This chunk of code will read the both tsv files and add them as data.frame
@@ -113,7 +113,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 ## How are our samples clustering together?
 
-### 3) Create a DESeqDataset
+### Create a DESeqDataset
 We will be using the `DESeq2` package for normalization, which requires us to
 format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
 into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
@@ -134,7 +134,7 @@ dds <- DESeqDataSetFromMatrix(
 )
 ```
 
-### 4) Define a minimum counts cutoff
+### Define a minimum counts cutoff
 We want to filter out the genes that have not been expressed or that have
 low expression counts because we want to remove any possible noise from our data
 before we normalize the data and create our heatmap. We are going to do some
@@ -167,7 +167,7 @@ genes_to_keep <- rowSums(counts(dds)) >= 10
 dds <- dds[genes_to_keep, ]
 ```
 
-### 5) Perform DESeq2 normalization
+### Perform DESeq2 normalization
 We are going to use the `rlog` function from the `DESeq2` package to normalize
 the data. 
 TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst`
@@ -179,7 +179,7 @@ and `normTransform`.
 dds_norm <- rlog(dds)
 ```
 
-### 6) Choose genes of interest
+### Choose genes of interest
 Although you may want to create a heatmap including all of the genes in the set,
 alternatively, the heatmap could be created using only genes of interest. 
 For this example, we will sort genes by variance, but there are many alternative
@@ -198,7 +198,7 @@ df_by_var <- data.frame(assay(dds_norm)) %>%
   dplyr::filter(variances > upper_var)
 ```
 
-### 7) Create a heatmap
+### Create a heatmap
 To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
 
 ```{r Create a heatmap}
@@ -219,7 +219,7 @@ pheatmap <-
 
 Now let's add some annotation bars to our heatmap.
 
-### 8) Add annotation bars
+### Add annotation bars
 We are going to manipulate the metadata and add variables with the information
 that we would like to use to annotate the heatmap.
 
@@ -245,7 +245,7 @@ annotation_df <- metadata %>%
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
-### 9) Create annotated heatmap
+#### Create annotated heatmap
 You can create an annotated heatmap by providing our annotation object to the
 `annotation_col` argument of the `pheatmap` function.
 
@@ -266,7 +266,7 @@ pheatmap_annotated <-
   )
 ```
 
-### 10) Save heatmap as a png
+### Save heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
@@ -284,7 +284,7 @@ pheatmap_annotated
 dev.off()
 ```
 
-### 11) Create clustered heatmap and save
+### Create clustered heatmap and save
 You can create a clustered heatmap by telling the `pheatmap` function to cluster
 the rows and/or columns.
 
