@@ -9,7 +9,7 @@ rule render_citations:
     output: 
        "{basename}.html"
     shell:
-        "Rscript scripts/render-notebooks.R "
-        "--rmd {input.rmd} "
-        "--bib_file {input.bib} "
-        "--html {output}"
+        "Rscript scripts/render-notebooks.R"
+        " --rmd {input.rmd}"
+        " --bib_file {input.bib}"
+        " --html {output}"

@@ -16,17 +16,17 @@ library(optparse)
 option_list <- list(
   make_option(
     opt_str = c("-r", "--rmd"), type = "character",
-    default = "01-getting-started/getting-started.Rmd",
+    default = NULL,
     help = "File path to an .Rmd file that should have the bib_file added",
     metavar = "character"
   ),
   make_option(
-    opt_str = c("-b", "--bib_file"), 
+    opt_str = c("-b", "--bib_file"),
     type = "character",
     default = "references.bib", # Default is this file, but it can be changed
     help = "File name of the references file. Can be any format pandoc works with. Will be normalized with normalizePath().",
     metavar = "character"
-  ), 
+  ),
   make_option(
     opt_str = c("-o", "--html"), type = "character",
     default = NULL,
@@ -74,7 +74,7 @@ readr::write_lines(new_lines, tmp_file)
 if (is.null(opt$html)){
   output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
 } else {
-  output_file <- normalizePath(opt$html)
+  output_file <- basename(opt$html)
 }
 
 # Render the header added notebook
