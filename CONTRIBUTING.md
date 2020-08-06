@@ -3,8 +3,8 @@
 
 ## Rendering notebooks
 
-This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render the all notebooks.
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the notebooks but leaves these `.Rmd` files still be individually downloaded by a user and [ran without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).=
+This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
+The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
 `snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
 
 ### How to re-render the notebooks
@@ -12,7 +12,15 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the noteboo
 **Step 1)** Install snakemake (if you haven't before).
 Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
-**Step 2)** Add any new `.Rmd` notebooks to `target:`, `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
+**Step 2)** Add any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
+Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
+```
+rule target:
+    input:
+        "01-getting-started/getting-started.html",
+        "a-directory/the-name-of-the-new-rmd.html"
+```
+File paths should be relative to the `Snakefile`.
 
 **Step 3)** Run the thing!
 Navigate to the `refinebio-examples` repository.
@@ -36,7 +44,7 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
 Default is the `references.bib` script at the top of the repository.  
-- `--html`: Default is to save the output `.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
+- `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
 ## General guidelines for analyses notebooks
 
@@ -87,7 +95,7 @@ Plus its just another thing to have to keep track of.
 
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-  - "tidyverse", not "Tidyverse"
+  - Use "tidyverse", not "Tidyverse"
 
 ## Citing sources in text
 
@@ -101,8 +109,8 @@ From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/
 
 ### Adding new sources to the `references.bib`
 
+You can obtain formatted `LaTeX` reference entry following the instructions below and copying and pasting the whole thing in `reference.bib`.
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
-You can copy and paste
 
 - _R packages_: Use this kind of command in the console: `toBibtex(citation("tidyverse"))`.
 Copy and paste the output to the `references.bib` file.
