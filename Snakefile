@@ -4,6 +4,12 @@ rule target:
 
 rule render_citations:
     input:
-        "01-getting-started/getting-started.Rmd"
+        rmd = "01-getting-started/getting-started.Rmd",
+        bib = "references.bib
+    output: 
+       "01-getting-started/getting-started.html"
     shell:
-        "Rscript scripts/render-notebooks.R --rmd {input} --bib_file references.bib"
+        "Rscript scripts/render-notebooks.R \"
+        "--rmd {input.rmd} \"
+        "--bib_file {input.bib} \"
+        "--html {output}"
