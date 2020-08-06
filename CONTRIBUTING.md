@@ -1,21 +1,45 @@
 
 # Contributing guidelines
 
+## Rendering notebooks
+
+This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render the all notebooks.
+The `Snakefile` calls the `scripts/render-notebooks.R` which renders the notebooks but leaves these `.Rmd` files still be individually downloaded by a user and [ran without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).=
+`snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
+
+### How to re-render the notebooks with snakemake
+
+**Step 1)** Install snakemake (if you haven't before)
+Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+
+**Step 2)** Add any new `.Rmd` notebooks to `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
+
+**Step 3)** Run the thing!
+Navigate to the `refinebio-examples` repository.
+
+Activate snakemake
+```
+conda activate snakemake
+````
+Run it!
+```
+snakemake --cores 1
+```
+If ran successfully, it will spit out a log and all the html output files will have nicely rendered citations. 
+
+### About the render-notebooks.R script
+
+The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+
+**Options:**
+`--rmd`: provided by snakemake, the input `.Rmd` file to render.   
+`--bib_file`: File path to the file to be used for the  `bibliography:` header option.
+The default `--bib_file` is the `references.bib` script at the top of the repository.  
+`--html`: Default is to save the output `.nb.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
+
 ## General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
-
-## Rendering notebooks
-
-The `scripts/render-notebooks.R` is responsible for rendering all analyses notebooks in a way that all citations are automatically rendered but `.Rmd` files can still be individually downloaded by a user and [ran without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
-So the following should be ran after changes have been made and before any `Pull Request` changes are filed:
-
-```
-scripts/render-notebooks.R
-```
-
-This script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
-The default `--bib_file` is the `references.bib` script at the top of the repository.
 
 **.Rmd Header**
 
