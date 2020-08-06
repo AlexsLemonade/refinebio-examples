@@ -1,0 +1,329 @@
+---
+title: "Clustering Heatmap - RNA-Seq"
+author: "CCDL for ALSF"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+*Purpose*: This notebook illustrates one way that you can use harmonized data 
+from refine.bio in downstream analyses.
+
+TODO: This introduction section will be revamped when the intro to an example
+analysis (#122: https://github.com/AlexsLemonade/refinebio-examples/pull/122)
+gets more polished/determined.
+
+## 1) Install libraries
+This script uses the R package `DESeq2` for normalization and the R package
+`pheatmap` for clustering and creating a heatmap.
+<br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2 Genome Biology 15(12):550 (2014)
+<br/> <i> Citation:</i> Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version 1.0.12. https://CRAN.R-project.org/package=pheatmap
+
+```{r Install and attach the pheatmap and DESeq2 libraries}
+if (!("pheatmap" %in% installed.packages())) {
+  # Install pheatmap
+  install.packages("pheatmap", update = FALSE)
+}
+
+if (!("DESeq2" %in% installed.packages())) {
+  # Install DESeq2
+  BiocManager::install("DESeq2", update = FALSE)
+}
+```
+
+Attach the `pheatmap` and `DESeq2` libraries:
+
+```{r}
+# Attach the `pheatmap` library
+library(pheatmap)
+
+# Attach the `DESeq2` library
+library(DESeq2)
+
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Set the seed so our results are reproducible:
+set.seed(12345)
+```
+
+Create output folder.
+
+```{r}
+# Define the file path to the plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+```
+
+## 2) Import and set up data
+Data downloaded from refine.bio include a metadata [tab separated values ("tsv")]
+(https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
+This chunk of code will read the both tsv files and add them as data.frame
+objects to your environment.
+
+The data that we downloaded from refine.bio for this analysis has 19 samples
+(obtained from 19 mice with acute myeloid leukemia (AML)), containing
+RNA-sequencing results for types of AML under controlled treatment conditions.
+
+TODO: Add link to the `getting started` section, specifically to point out how
+one can download the dataset.
+
+Let's import the metadata and count data files.
+
+```{r Import data from .tsv files}
+# Read in metadata tsv file
+metadata <- readr::read_tsv(file.path(
+  "data", # Replace with path to your metadata file
+  "metadata_SRP070849.tsv" # Replace with the name of your metadata file
+))
+  # # We only need to select the three variables from the metadata that we will
+  # # need for this notebook
+  # dplyr::select(refinebio_accession_code, refinebio_title, refinebio_treatment)
+
+# Read in data tsv file
+df <- readr::read_tsv(file.path(
+  "data", # Replace with path to your data file
+  "SRP070849.tsv" # Replace with the name of your data file
+)) %>%
+  # Here we are going to store the gene IDs as rownames so that we can have a
+  # numeric matrix to perform calculations on later 
+  tibble::column_to_rownames("Gene")
+```
+
+Let's take a look at the metadata object that we read into the R environment.
+
+```{r}
+head(metadata)
+```
+
+Now let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+```
+
+## How are our samples clustering together?
+
+### 3) Create a DESeqDataset
+We will be using the `DESeq2` package for normalization, which requires us to
+format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
+into a [`DESeqDataSet` object](TODO: Add link to header section) and specify
+which variable labels our experimental groups using the `design` argument. 
+
+```{r Create a DESeqDataset}
+# The `DESeqDataSetFromMatrix` function needs the values to be converted to
+# integers
+df <- df %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, round)
+
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(
+  countData = df, # This is the data.frame with the counts values for all replicates in our dataset
+  colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
+  design = ~ refinebio_treatment # Replace with an appropriate design variable for your analysis
+)
+```
+
+### 4) Define a minimum counts cutoff
+We want to filter out the genes that have not been expressed or that have
+low expression counts because we want to remove any possible noise from our data
+before we normalize the data and create our heatmap. We are going to do some
+pre-filtering to keep only genes with 10 or more reads total. Note that rows
+represent gene data and the columns represent sample data in our dataset.
+
+```{r Plot distribution of counts}
+# Let's take a look at the distribution of counts first
+
+# Sum up the counts for each gene -- which means we want the sum of counts for
+# each row as the rows represent gene data and the columns represent sample data
+# in our dataset
+count_sums <- data.frame(count = rowSums(counts(dds)))
+
+# Create a density plot using the sums
+ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
+  ggplot2::geom_density() +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
+                      color = "blue",
+                      linetype = "dashed") +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count)), # This line represents the mean count value
+                                   color = "red",
+                                   linetype = "dashed")
+```
+
+```{r Define a minimum counts cutoff}
+# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
+# only rows that have counts above the cutoff
+genes_to_keep <- rowSums(counts(dds)) >= 10
+dds <- dds[genes_to_keep, ]
+```
+
+### 5) Perform DESeq2 normalization
+We are going to use the `rlog` function from the `DESeq2` package to normalize
+the data. 
+TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst`
+and `normTransform`.
+
+```{r Perform DESeq2 normalization}
+# Normalize the data in the `DESeqDataSet` object using the
+# `rlog` function from the `DESEq2` R package
+dds_norm <- rlog(dds)
+```
+
+### 6) Choose genes of interest
+Although you may want to create a heatmap including all of the genes in the set,
+alternatively, the heatmap could be created using only genes of interest. 
+For this example, we will sort genes by variance, but there are many alternative
+criterion by which you may want to sort your genes <i>eg</i> fold change,
+t-statistic, membership to a particular gene ontology, so on. 
+
+```{r Choose genes of interest}
+# Calculate the variance for each gene
+variances <- apply(assay(dds_norm), 1, var)
+
+# Determine the upper quartile variance cutoff value
+upper_var <- quantile(variances, 0.75)
+
+# Subset the data choosing only genes whose variances are in the upper quartile
+df_by_var <- data.frame(assay(dds_norm)) %>%
+  dplyr::filter(variances > upper_var)
+```
+
+### 7) Create a heatmap
+To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
+
+```{r Create a heatmap}
+# Create and store the technical replicates heatmap object
+pheatmap <-
+  pheatmap(
+    df_by_var,
+    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
+    main = "Heatmap",
+    colorRampPalette(c("deepskyblue",
+                       "black",
+                       "yellow"))(25
+                       ),
+    width = 15
+  )
+```
+
+Now let's add some annotation bars to our heatmap.
+
+### 8) Add annotation bars
+We are going to manipulate the metadata and add variables with the information
+that we would like to use to annotate the heatmap.
+
+```{r Prepare the metadata for annotation}
+# Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set
+# object which will be used to create the technical replicates heatmap
+annotation_df <- metadata %>%
+  # Create a variable to store the cancer type information
+  dplyr::mutate(
+    cancer_type = dplyr::case_when(
+      startsWith(refinebio_title, "TET2") ~ "TET2",
+      startsWith(refinebio_title, "IDH2") ~ "IDH2",
+      startsWith(refinebio_title, "WT") ~ "WT",
+      TRUE ~ "unknown")
+  ) %>%
+  # We want to select the variables that we want for annotating the technical
+  # replicates heatmap
+  dplyr::select(refinebio_accession_code,
+                cancer_type,
+                refinebio_treatment) %>%
+  # The `pheatmap` function requires that the rownames of our annotation object
+  # matches the column names of our `DESeaDataSet` object
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+### 9) Create annotated heatmap
+You can create an annotated heatmap by providing our annotation object to the
+`annotation_col` argument of the `pheatmap` function.
+
+```{r Create annotated heatmap}
+# Create and store the annotated heatmap object
+pheatmap_annotated <-
+  pheatmap(
+    df_by_var,
+    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
+    annotation_col = annotation_df,
+    main = "Annotated Heatmap",
+    colorRampPalette(c("deepskyblue",
+                       "black",
+                       "yellow"))(25
+                       ),
+    width = 15
+  )
+```
+
+### 10) Save heatmap as a png
+You can easily switch this to save to a jpeg or tiff by changing the function 
+and file name within the function to the respective file suffix.
+
+```{r Save annotated heatmap as a png}
+# Open a png file
+png(file.path(
+  plots_dir,
+  "HeatmapSRP070849_annotated.png" # Replace file name with a relevant output plot name
+))
+
+# Print your heatmap
+pheatmap_annotated
+
+# Close the png file:
+dev.off()
+```
+
+### 11) Create clustered heatmap and save
+You can create a clustered heatmap by telling the `pheatmap` function to cluster
+the rows and/or columns.
+
+```{r Create clustered heatmap}
+# Create and store a heatmap object with clustered samples and genes
+pheatmap_clustered <-
+  pheatmap(
+    df_by_var,
+    cluster_rows = TRUE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
+    cluster_cols = TRUE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
+    annotation_col = annotation_df,
+    main = "Clustered Heatmap",
+    colorRampPalette(c("deepskyblue",
+                       "black",
+                       "yellow"))(25
+                       ),
+    width = 15
+  )
+```
+
+Now let's save our clustered heatmap.
+
+```{r Save clustered heatmap as a png}
+# Open a png file
+png(file.path(
+  plots_dir,
+  "HeatmapSRP070849_clustered.png" # Replace file name with a relevant output plot name
+))
+
+# Print your heatmap
+pheatmap_clustered
+
+# Close the png file:
+dev.off()
+```
+
+Print session info:
+
+```{r Print session info}
+# Print session info
+sessionInfo()
+```
