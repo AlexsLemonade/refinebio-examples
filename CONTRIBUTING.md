@@ -9,15 +9,16 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the noteboo
 
 ### How to re-render the notebooks
 
-**Step 1)** Install snakemake (if you haven't before)
+**Step 1)** Install snakemake (if you haven't before).
 Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
-**Step 2)** Add any new `.Rmd` notebooks to `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
+**Step 2)** Add any new `.Rmd` notebooks to `render_citation:`, `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
+Similarly, add the corresponding output `.html` file of the same name underneath the `target:`, `input` section.
 
 **Step 3)** Run the thing!
 Navigate to the `refinebio-examples` repository.
 
-Activate snakemake
+Activate snakemake (if you are using conda; otherwise skip this.)
 ```
 conda activate snakemake
 ```
@@ -25,7 +26,8 @@ Run it!
 ```
 snakemake --cores 1
 ```
-If ran successfully, it will spit out a log and all the html output files will have nicely rendered citations.
+If ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
+Note that all `.nb.html` files are `.gitignore` because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
 
 ### About the render-notebooks.R script
 
@@ -35,7 +37,7 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
 Default is the `references.bib` script at the top of the repository.  
-- `--html`: Default is to save the output `.nb.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
+- `--html`: Default is to save the output `.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
 
 ## General guidelines for analyses notebooks
 
