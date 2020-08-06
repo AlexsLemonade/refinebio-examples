@@ -4,6 +4,8 @@ _site
 .DS_Store
 .RData
 .Rhistory
+.snakemake
+*.nb.html
 
 # This data is downloaded from another part of the repo in essence
 04-advanced-topics/normalize-own-data/data/GSE39842_RMA_converted.tsv
