@@ -7,7 +7,7 @@ This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/gett
 The `Snakefile` calls the `scripts/render-notebooks.R` which renders the notebooks but leaves these `.Rmd` files still be individually downloaded by a user and [ran without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).=
 `snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
 
-### How to re-render the notebooks with snakemake
+### How to re-render the notebooks
 
 **Step 1)** Install snakemake (if you haven't before)
 Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
@@ -20,22 +20,22 @@ Navigate to the `refinebio-examples` repository.
 Activate snakemake
 ```
 conda activate snakemake
-````
+```
 Run it!
 ```
 snakemake --cores 1
 ```
-If ran successfully, it will spit out a log and all the html output files will have nicely rendered citations. 
+If ran successfully, it will spit out a log and all the html output files will have nicely rendered citations.
 
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
 
 **Options:**
-`--rmd`: provided by snakemake, the input `.Rmd` file to render.   
-`--bib_file`: File path to the file to be used for the  `bibliography:` header option.
-The default `--bib_file` is the `references.bib` script at the top of the repository.  
-`--html`: Default is to save the output `.nb.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
+- `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
+- `--bib_file`: File path for the  `bibliography:` header option.
+Default is the `references.bib` script at the top of the repository.  
+- `--html`: Default is to save the output `.nb.html` file of the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.   
 
 ## General guidelines for analyses notebooks
 
@@ -72,6 +72,7 @@ output:
 
 ### Analysis Getting Started Template
 
+**This template is still under construction**
 Each analysis notebook has its own getting started section before getting to the code.
 Copy and paste the template here and replace all the `<description>` points with the information that is pertinent to current dataset and analysis example.
 
@@ -83,9 +84,9 @@ Plus its just another thing to have to keep track of.
 
 ## Formatting of typical words/items:
 
-    - Use "refine.bio", NOT "refinebio"
-    - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-    - "tidyverse", not "Tidyverse"
+  - Use "refine.bio", NOT "refinebio"
+  - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
+  - "tidyverse", not "Tidyverse"
 
 ## Citing sources in text
 
