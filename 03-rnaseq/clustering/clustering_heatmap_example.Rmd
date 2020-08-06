@@ -5,6 +5,7 @@ output:
   html_notebook: 
     toc: true
     toc_float: true
+    number_sections: true
 ---
 
 *Purpose*: This notebook illustrates one way that you can use harmonized data 
@@ -212,8 +213,7 @@ pheatmap <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       ),
-    width = 15
+                       )
   )
 ```
 
@@ -261,8 +261,7 @@ pheatmap_annotated <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       ),
-    width = 15
+                       )
   )
 ```
 
@@ -300,8 +299,7 @@ pheatmap_clustered <-
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
-                       ),
-    width = 15
+                       )
   )
 ```
 
