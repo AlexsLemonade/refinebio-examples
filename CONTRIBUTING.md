@@ -12,8 +12,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the noteboo
 **Step 1)** Install snakemake (if you haven't before).
 Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
-**Step 2)** Add any new `.Rmd` notebooks to `render_citation:`, `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
-Similarly, add the corresponding output `.html` file of the same name underneath the `target:`, `input` section.
+**Step 2)** Add any new `.Rmd` notebooks to `target:`, `input` section of the `Snakefile` as a file paths relative to the `Snakefile`.
 
 **Step 3)** Run the thing!
 Navigate to the `refinebio-examples` repository.
