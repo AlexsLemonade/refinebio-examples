@@ -38,6 +38,9 @@ option_list <- list(
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
 
+# Get working directory
+base_dir <- getwd()
+
 # Check that the rmd file exists
 if (!file.exists(opt$rmd)) {
   stop("Rmd file specified with --rmd is not found.")
@@ -74,7 +77,8 @@ readr::write_lines(new_lines, tmp_file)
 if (is.null(opt$html)){
   output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
 } else {
-  output_file <- basename(opt$html)
+  # Render is weird about relative file paths, so we have to do this  
+  output_file <- file.path(base_dir, opt$html)
 }
 
 # Render the header added notebook
