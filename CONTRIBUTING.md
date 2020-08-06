@@ -27,7 +27,7 @@ Run it!
 snakemake --cores 1
 ```
 If ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
-Note that all `.nb.html` files are `.gitignore` because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
+Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
 
 ### About the render-notebooks.R script
 
