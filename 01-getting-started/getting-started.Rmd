@@ -105,7 +105,7 @@ For more practice with setting file paths in `.Rmd` files see these:
 + [Handy R cheatsheets](https://www.rstudio.com/resources/cheatsheets/)  
 + [R Notebooks tutorial](https://bookdown.org/yihui/rmarkdown/)  
 
-## Additional resources from the CCDL: 
+## Additional resources from the CCDL 
 
 - [Intro to R and Tidyverse course and exercises](https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse)
 - [Tips for debugging code](https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md)
