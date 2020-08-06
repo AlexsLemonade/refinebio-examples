@@ -1,3 +1,7 @@
+rule target:
+    input: 
+        "01-getting-started/getting-started.html" 
+
 rule render_citations:
     input:
         "01-getting-started/getting-started.Rmd"

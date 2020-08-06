@@ -16,7 +16,7 @@ library(optparse)
 option_list <- list(
   make_option(
     opt_str = c("-r", "--rmd"), type = "character",
-    default = NULL,
+    default = "01-getting-started/getting-started.Rmd",
     help = "File path to an .Rmd file that should have the bib_file added",
     metavar = "character"
   ),
@@ -79,7 +79,7 @@ if (is.null(opt$html)){
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
-  output_format = rmarkdown::html_document(),
+  output_format = rmarkdown::html_document(toc = TRUE, toc_depth = 2, toc_float = TRUE),
   # Save to original html output file name
   output_file = output_file
 )
