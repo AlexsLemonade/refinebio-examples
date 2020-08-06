@@ -4,7 +4,7 @@ _site
 .DS_Store
 .RData
 .Rhistory
-.snakemake/*
+.snakemake
 *.nb.html
 
 # This data is downloaded from another part of the repo in essence

@@ -37,6 +37,7 @@ Each analysis is self-contained and provides information with how to obtain the 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
 **Each analysis contains:**   
+
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.  
 - An R Notebook which consists of:  
     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio.   
@@ -93,8 +94,9 @@ R Markdown documents have the `current directory` always set as wherever the `.R
 This means all file paths specified in the `.Rmd` must be specified _relative_ to the location of the Rmd. 
 
 For more practice with setting file paths in `.Rmd` files see these:  
-- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)   
-- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)  
+
+- [This handy course chapter from Baumer and Crouser](https://beanumber.github.io/sds192/lab-import.html#paths)
+- [The CCDL's intro to R course material](https://alexslemonade.github.io/training-modules/intro-to-R-tidyverse/01-intro_to_base_R.nb.html)
 
 ## Resources for learning R
 

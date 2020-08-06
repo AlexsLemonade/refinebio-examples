@@ -53,6 +53,14 @@ if (!file.exists(opt$bib_file)) {
   header_line <- paste("bibliography:", normalizePath(opt$bib_file))
 }
 
+# If no output html filename specification, make one from the original filename
+if (is.null(opt$html)){
+  output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
+} else {
+  # Render is weird about relative file paths, so we have to do this
+  output_file <- file.path(base_dir, opt$html)
+}
+
 # Specify the temp file
 tmp_file <-  stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
 
@@ -72,14 +80,6 @@ new_lines <- append(lines, header_line, header_range[1])
 
 # Write to an tmp file
 readr::write_lines(new_lines, tmp_file)
-
-# If no output html filename specification, make one from the original filename
-if (is.null(opt$html)){
-  output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
-} else {
-  # Render is weird about relative file paths, so we have to do this  
-  output_file <- file.path(base_dir, opt$html)
-}
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
