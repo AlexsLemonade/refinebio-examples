@@ -86,7 +86,7 @@ df <- readr::read_tsv(file.path(
   "SRP070849.tsv" # Replace with the name of your data file
 )) %>%
   # Here we are going to store the gene IDs as rownames so that we can have a
-  # numeric matrix to perform calculations on later 
+  # numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 
@@ -128,7 +128,7 @@ df <- df %>%
 dds <- DESeqDataSetFromMatrix(
   countData = df, # This is the data.frame with the counts values for all replicates in our dataset
   colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
-  design = ~ refinebio_treatment # Replace with an appropriate design variable for your analysis
+  design = ~refinebio_treatment # Replace with an appropriate design variable for your analysis
 )
 ```
 
@@ -151,11 +151,13 @@ count_sums <- data.frame(count = rowSums(counts(dds)))
 ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
   ggplot2::geom_density() +
   ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
-                      color = "blue",
-                      linetype = "dashed") +
+    color = "blue",
+    linetype = "dashed"
+  ) +
   ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count)), # This line represents the mean count value
-                                   color = "red",
-                                   linetype = "dashed")
+    color = "red",
+    linetype = "dashed"
+  )
 ```
 
 ```{r}
@@ -207,10 +209,12 @@ pheatmap <-
     cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
     cluster_cols = TRUE, # We also want to cluster the heatmap by columns (samples in this case)
     main = "Clustered Heatmap",
-    colorRampPalette(c("deepskyblue",
-                       "black",
-                       "yellow"))(25
-                       ),
+    colorRampPalette(c(
+      "deepskyblue",
+      "black",
+      "yellow"
+    ))(25
+    ),
     scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
@@ -255,13 +259,16 @@ annotation_df <- metadata %>%
       startsWith(refinebio_title, "TET2") ~ "TET2",
       startsWith(refinebio_title, "IDH2") ~ "IDH2",
       startsWith(refinebio_title, "WT") ~ "WT",
-      TRUE ~ "unknown")
+      TRUE ~ "unknown"
+    )
   ) %>%
   # We want to select the variables that we want for annotating the technical
   # replicates heatmap
-  dplyr::select(refinebio_accession_code,
-                cancer_type,
-                refinebio_treatment) %>%
+  dplyr::select(
+    refinebio_accession_code,
+    cancer_type,
+    refinebio_treatment
+  ) %>%
   # The `pheatmap` function requires that the rownames of our annotation object
   # matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
@@ -280,10 +287,12 @@ pheatmap_annotated <-
     cluster_cols = TRUE,
     annotation_col = annotation_df,
     main = "Annotated Heatmap",
-    colorRampPalette(c("deepskyblue",
-                       "black",
-                       "yellow"))(25
-                       ),
+    colorRampPalette(c(
+      "deepskyblue",
+      "black",
+      "yellow"
+    ))(25
+    ),
     scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
