@@ -108,6 +108,9 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 ## How are our samples clustering together?
 
+Now we are going to use a combination of functions from the `DESeq2` and 
+`pheatmap` packages to look at how are samples and genes are clustering.
+
 ### Create a DESeqDataset
 We will be using the `DESeq2` package for normalization, which requires us to
 format our data into a `DESeqDataSet` object. We turn the data.frame (or matrix)
@@ -212,8 +215,9 @@ pheatmap <-
   )
 ```
 
-We've created a heatmap but we cannot gather much information from it because we
-did not provide the `pheatmap` function with annotation labels for our samples.
+We've created a heatmap but although our genes and samples are clustered, there
+is not much information that we can gather here because we did not provide the
+`pheatmap` function with annotation labels for our samples.
 
 First let's save our clustered heatmap.
 
