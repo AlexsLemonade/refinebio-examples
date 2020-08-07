@@ -46,27 +46,16 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 Default is the `references.bib` script at the top of the repository.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-## General guidelines for analyses notebooks
+
+## Adding a new analysis
+
+Copy, paste and rename the `template/template_example.Rmd` file to start a new analysis and the `template/screenshots` folder.
+Search for `<<` or `>>` and replace those with the pertinent information.
+The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
+
+### General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
-
-**.Rmd Header**
-
-Each analysis `.Rmd` should have this header below:
-This will automatically number the sections, _so no manual numbering should be used_.
-
-```
----
-title: "Name of the analysis - Microarray/RNA-seq/Advanced"
-author: "CCDL for ALSF"
-date:"`r format(Sys.time(), '%B %Y')`"
-output:   
-  html_notebook:
-    toc: true
-    toc_float: true
-    number_sections: true
----
-```
 
 **Inputs:**  
 
@@ -79,17 +68,20 @@ output:
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
 
-### Analysis Getting Started Template
-
-**This template is still under construction**
-Each analysis notebook has its own getting started section before getting to the code.
-Copy and paste the template here and replace all the `<description>` points with the information that is pertinent to current dataset and analysis example.
-
-### Chunk naming
+**Chunk naming**
 
 Chunks preferably shouldn't be named.
 If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
+
+**No manual section numbering**
+
+Numbering will be done automatically in rendering; so no numbers should be put on the sections.
+
+**Citation**
+
+Sources should be cited whenever possible.
+See [the sections about citations](#citing-sources-in-text).
 
 ## Formatting of typical words/items:
 

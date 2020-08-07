@@ -1,5 +1,5 @@
 ---
-title: "<NAME OF ANALYSIS> - <SECTION NAME>"
+title: "<<NAME OF ANALYSIS>> - <<SECTION NAME>>"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -11,7 +11,7 @@ output:
 
 # Purpose of the analysis:
 
-<<<<WHAT DOES THIS ANALSIS DO AND WHEN WOULD YOU USE IT?>>>>>
+<<WHAT DOES THIS ANALSIS DO AND WHEN WOULD YOU USE IT?>>
 
 # How to run this example
 
@@ -20,7 +20,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file of this analysis
 
-To run this example yourself, [download the `.Rmd` or this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<<<<<RELATIVE PATH TO THIS ANALYSIS>>>>>> ). 
+To run this example yourself, [download the `.Rmd` or this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS>> ). 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
@@ -65,7 +65,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](<REFINEBIO DATASET PAGE LINK>).
+Go to this [dataset's page on refine.bio](<<REFINEBIO DATASET PAGE LINK>>).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -80,9 +80,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [<BRIEF DATASET NAME>](<RELATIVE PATH TO THIS ANALYSIS>).
+For this example analysis, we will use this [<<BRIEF DATASET NAME>>](<<RELATIVE PATH TO THIS ANALYSIS>>).
 
-<<<<<BRIEFLY SUMMARIZE THIS DATASET>>>>>> 
+<<BRIEFLY SUMMARIZE THIS DATASET>> 
 
 ## Place the dataset in your new `data/` folder
 
@@ -115,10 +115,10 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <DATA_ACCESSION FILENAME>))
+file.exists(file.path(data_dir, <<DATA_ACCESSION FILENAME>>))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <METADATA_ACCESSION FILENAME>))
+file.exists(file.path(data_dir, <<METADATA_ACCESSION FILENAME>>))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -133,25 +133,25 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
 
-In this analysis, we will be using <PACKAGE> [<CITATION>].
+In this analysis, we will be using <<PACKAGE>> [<<CITATION>>].
 
 ```{r}
-if (!(<PACKAGE> %in% installed.packages())) {
+if (!(<<PACKAGE>> %in% installed.packages())) {
   # Install this package if it isn't installed yet
-  BiocManager::install(<PACKAGE>, update = FALSE)
+  BiocManager::install(<<PACKAGE>>, update = FALSE)
 }
 ```
 
-Attach the <PACKAGE>:
+Attach the <<PACKAGE>>:
 
 ```{r}
 # Attach the library
-library(<PACKAGE>)
+library(<<PACKAGE>>)
 
 # Magrittr pipe
 `%>%` <- dplyr::`%>%`
 
-<<<SET THE SEED IF YOU NEED>>>>
+<<SET THE SEED IF YOU NEED>>
 ```
 
 ## Import and set up data
@@ -163,12 +163,12 @@ add them as data.frames to your environment.
 ```{r Import data from .tsv files}
 # Read in metadata tsv file
 metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your metadata file
-                                      <METADATA_ACCESSION FILENAME> # Replace with the name of your metadata file
+                                      <<METADATA_ACCESSION FILENAME>> # Replace with the name of your metadata file
                                       ))
 
 # Read in data tsv file
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
-                                <DATA_ACCESSION FILENAME> # Replace with the name of your data file
+                                <<DATA_ACCESSION FILENAME>> # Replace with the name of your data file
                                 )) %>%
   tibble::column_to_rownames('Gene')
 ```
@@ -195,7 +195,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 # Further learning resources about this analysis
 
-- [<HELPFUL RESOURCE NAME>](<LINK TO HELPFUL RESOURCE>) [<CITATION>]
+- [<<HELPFUL RESOURCE NAME>>](<<LINK TO HELPFUL RESOURCE>>) [<<CITATION>>]
 
 ## Print session info:
 
