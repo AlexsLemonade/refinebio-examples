@@ -35,22 +35,15 @@ RUN install2.r --error --deps TRUE \
     class \
     cluster \
     data.table \
-    DT \
-    flextable \
-    foreign \
     GGally \
     lattice \
-    MASS \
-    Matrix \
-    mgcv \
-    nlme \
-    nnet \
     optparse \
     R.utils \
     RColorBrewer \
     rpart \
     rprojroot \
-    viridis
+    viridis \
+    styler
 
 ##########################
 # Install bioconductor packages
