@@ -1,6 +1,6 @@
 ---
-title: "Clustering Heatmap - Microarray"
-author: "CCDL for ALSF"
+title: "Clustering Data - Microarray"
+author: "ALSF CCDL - Candace Savonen"
 output:   
   html_notebook: 
     toc: true
@@ -8,131 +8,12 @@ output:
     number_sections: true
 ---
 
-# Purpose of the analysis:
-
-Clustering can help you investigate which samples (or genes) are more related to each other.
-Here we use the Bioconductor R package `ComplexHeatmap` for clustering and creating a heatmap.
-In this example, the gene expression matrix is subset to only include genes with high variance.
-This set of genes is then used to create a heatmap.
-
-# How to run this example
-
-For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
-
-## Obtain this example analysis file
-
-To run this example yourself, [download the Rmd by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/clustering/clustering_example.Rmd). 
-You can open this `.Rmd` file in RStudio (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
-Clicking this link will most likely send this to your downloads folder on your computer. 
-Move this `.Rmd` file to where you would like this example and its files to be stored.
-
-## Set up your analysis folders
-
-Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
-Run this next chunk to set up your folders! 
-
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
-
-```{r}
-# Define the file path to the results directory
-data_dir <- "data" # Replace with path to desired data directory
-
-# Create the data folder if it doesn't exist
-if (!dir.exists(data_dir)) {
-  dir.create(data_dir)
-}
-
-# Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
-
-# Create the plots folder if it doesn't exist
-if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir)
-}
-
-# Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
-
-# Create the results folder if it doesn't exist
-if (!dir.exists(results_dir)) {
-  dir.create(results_dir)
-}
-```
-
-In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
-
-## Obtain the dataset from refine.bio
-
-For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
-
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).  
-
-Click the "Download Now" button on the right side of this screen.  
-
-<img src="screenshots/download-now.png" width=200>  
-
-Fill out the pop up window with your email and our Terms and Conditions:  
-
-<img src="screenshots/download-email.png" width=500>  
-
-It make take a few minutes for the dataset to process.
-You will get an email when it is ready. 
-
-## About the dataset we are using for this example
-
-For this example analysis, we will use this [zebrafish microarray dataset](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).
-This dataset has two experimental groups of lymphoid cells from zebrafish kidney.
-Using Hoechst fluorescence intensity, these were subdivided into the SP and MP populations. 
-
-## Place the dataset in your new `data/` folder
-
-Refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
-Double clicking should unzip this for you and create a folder of the same name.  
-<img src="screenshots/download-folder-structure.png" width=400> 
-
-For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
-
-The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
-Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
-
-## Checkout our file structure!
-
-Your new analysis folder should contain: 
-
-- The example analysis Rmd you downloaded  
-- A folder called "data" which contains:  
-  - The gene expression  
-  - The metadata TSV  
-
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
-
-<img src="screenshots/analysis-folder-structure.png" width=400>
-
-In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
-Run this chunk to double check that your files are in the right place. 
-
-```{r}
-# Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "GSE12955.tsv"))
-
-# Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "metadata_GSE12955.tsv"))
-```
-
-If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
-
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
-
-***
-
-# Clustering analysis example 
+*Purpose*: This notebook illustrates one way that you can use harmonized data 
+from refine.bio in downstream analyses.
 
 ## Install libraries
-
-See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+This script uses the bioconductor R package [ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/) for clustering and 
+creating a heatmap. [@ComplexHeatmap]
 
 ```{r Install and attach the ComplexHeatmap library}
 if (!("ComplexHeatmap" %in% installed.packages())) {
@@ -152,6 +33,18 @@ library(ComplexHeatmap)
 
 # Set the seed so our results are reproducible:
 set.seed(12345)
+```
+
+Create output folder.
+
+```{r}
+# Define the file path to the plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
 ```
 
 ## Import and set up data
@@ -183,7 +76,6 @@ all.equal(colnames(df), metadata$geo_accession)
 ```
 
 ## Choose genes of interest
-
 Although you may want to create a heatmap including all of the genes in the set,
 alternatively, the heatmap could be created using only genes of interest. 
 For this example, we will sort genes by variance, but there are many alternative
@@ -202,11 +94,13 @@ df.by.var <- df[which(variances > sum.stats.var[5]), ]
 ```
 
 ## Create a heatmap
-
 To further customize the heatmap, see the vignettes on Bioconductor for a guide 
 at this [link](https://bioconductor.org/packages/devel/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html).
 
 ```{r Create a heatmap}
+# Reference the ComplexHeatmap guide for further customizing your heatmap
+browseVignettes("ComplexHeatmap")
+
 # Create an annotation that labels samples' groups by color
 annot <-
   HeatmapAnnotation(df = data.frame(Groups = rep(c("SP", "MP"), # Replace with group names relevant to your data
@@ -243,23 +137,7 @@ heatmap
 dev.off()
 ```
 
-# Using your own data with this analysis
-
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
-
-# Further learning resources about this analysis
-
- - [Clustering strategies](https://www.statsandr.com/blog/clustering-analysis-k-means-and-hierarchical-clustering-by-hand-and-in-r/)  
- - [Complex Heatmap book](https://jokergoo.github.io/ComplexHeatmap-reference/book/)  
- - [Complex Heatmap vignette](https://bioconductor.riken.jp/packages/3.4/bioc/vignettes/ComplexHeatmap/inst/doc/s1.introduction.html)  
- - [Complex Heatmap publication](https://academic.oup.com/bioinformatics/article/32/18/2847/1743594)
-
-## Print session info:
-
-At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+Print session info:
 
 ```{r Print session info}
 # Print session info 
