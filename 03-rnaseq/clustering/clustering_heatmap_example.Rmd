@@ -205,9 +205,9 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 pheatmap <-
   pheatmap(
     df_by_var,
-    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
-    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
-    main = "Heatmap",
+    cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
+    cluster_cols = TRUE, # We also want to cluster the heatmap by columns (samples in this case)
+    main = "Clustered Heatmap",
     colorRampPalette(c("deepskyblue",
                        "black",
                        "yellow"))(25
@@ -219,7 +219,27 @@ pheatmap <-
 We've created a heatmap but we cannot gather much information from it because we
 did not provide the `pheatmap` function with annotation labels for our samples.
 
-Let's add some annotation bars to our heatmap.
+First let's save our clustered heatmap.
+
+#### Save heatmap as a png
+You can easily switch this to save to a jpeg or tiff by changing the function 
+and file name within the function to the respective file suffix.
+
+```{r}
+# Open a png file
+png(file.path(
+  plots_dir,
+  "HeatmapSRP070849_clustered.png" # Replace file name with a relevant output plot name
+))
+
+# Print your heatmap
+pheatmap
+
+# Close the png file:
+dev.off()
+```
+
+Now, let's add some annotation bars to our heatmap.
 
 ### Prepare metadata for annotation
 We are going to manipulate the metadata and add variables with the information
@@ -256,8 +276,8 @@ You can create an annotated heatmap by providing our annotation object to the
 pheatmap_annotated <-
   pheatmap(
     df_by_var,
-    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
-    cluster_cols = FALSE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
+    cluster_rows = TRUE,
+    cluster_cols = TRUE,
     annotation_col = annotation_df,
     main = "Annotated Heatmap",
     colorRampPalette(c("deepskyblue",
@@ -268,10 +288,10 @@ pheatmap_annotated <-
   )
 ```
 
-Now that we have annotation bars on our heatmap, we can get a better idea of the
+Now that we have annotation bars on our heatmap, we have a better idea of the
 sample variable groups that appear to cluster together.
 
-### Save heatmap as a png
+#### Save annotated heatmap as a png
 You can easily switch this to save to a jpeg or tiff by changing the function 
 and file name within the function to the respective file suffix.
 
@@ -289,47 +309,7 @@ pheatmap_annotated
 dev.off()
 ```
 
-Now that we've add annotation bars to our heatmap, let's get a better
-visualization of how our data cluster by explicitly telling the `pheatmap`
-function to cluster our samples and genes.
-
-### Create clustered heatmap and save
-You can create a clustered heatmap by telling the `pheatmap` function to cluster
-the rows (genes) and/or columns (samples).
-
-```{r}
-# Create and store a heatmap object with clustered samples and genes
-pheatmap_clustered <-
-  pheatmap(
-    df_by_var,
-    cluster_rows = FALSE, # Replace with `TRUE` to cluster heatmap by rows (genes in this case)
-    cluster_cols = TRUE, # Replace with `TRUE` to cluster heatmap by columns (samples in this case)
-    annotation_col = annotation_df,
-    main = "Clustered Heatmap",
-    colorRampPalette(c("deepskyblue",
-                       "black",
-                       "yellow"))(25
-                       ),
-    scale = "row" # Scale values in the direction of genes (rows)
-  )
-```
-
-Now let's save our clustered heatmap.
-
-```{r}
-# Open a png file
-png(file.path(
-  plots_dir,
-  "HeatmapSRP070849_clustered.png" # Replace file name with a relevant output plot name
-))
-
-# Print your heatmap
-pheatmap_clustered
-
-# Close the png file:
-dev.off()
-```
-
+### Session Info
 Print session info:
 
 ```{r}
