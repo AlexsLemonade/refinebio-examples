@@ -127,7 +127,7 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 ***
 
-# Clustering analysis example 
+# <<NAME OF example>>
 
 ## Install libraries
 
