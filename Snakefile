@@ -13,3 +13,4 @@ rule render_citations:
         " --rmd {input.rmd}"
         " --bib_file {input.bib}"
         " --html {output}"
+        " --style"
