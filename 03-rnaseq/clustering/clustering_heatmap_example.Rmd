@@ -16,10 +16,7 @@ analysis (#122: https://github.com/AlexsLemonade/refinebio-examples/pull/122)
 gets more polished/determined.
 
 ## Install libraries
-This script uses the R package `DESeq2` for normalization and the R package
-`pheatmap` for clustering and creating a heatmap.
-<br/> <i> Citation:</i> Love, M.I., Huber, W., Anders, S. Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2 Genome Biology 15(12):550 (2014)
-<br/> <i> Citation:</i> Raivo Kolde (2019). pheatmap: Pretty Heatmaps. R package version 1.0.12. https://CRAN.R-project.org/package=pheatmap
+This script uses the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization and the R package `pheatmap` [@pheatmap] for clustering and creating a heatmap.
 
 ```{r}
 if (!("pheatmap" %in% installed.packages())) {
@@ -63,8 +60,7 @@ if (!dir.exists(plots_dir)) {
 ```
 
 ## Import and set up data
-Data downloaded from refine.bio include a metadata [tab separated values ("tsv")]
-(https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
+Data downloaded from refine.bio include a metadata [tab separated values ("tsv")](https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
 This chunk of code will read the both tsv files and add them as data.frame
 objects to your environment.
 
