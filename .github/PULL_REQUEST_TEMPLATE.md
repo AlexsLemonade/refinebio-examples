@@ -14,5 +14,4 @@ What things should reviewers look out for?
 * [ ] Remove any instances of chunk naming.
 * [ ] Spell check any Rmd file or md file.
 * [ ] Comments and documentation are up to date
-* [ ] Run [r-lib/styler package](https://github.com/r-lib/styler)
 * [ ] Run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/CONTRIBUTING.md#how-to-re-render-the-notebooks)
