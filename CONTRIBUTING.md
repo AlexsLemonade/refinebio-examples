@@ -17,7 +17,7 @@ Or by pulling the image from Docker hub.
 ```
 docker pull ccdl/refinebio-examples
 ```
-Replace `<PASSWORD` with your own password in the command below.
+Replace `<PASSWORD>` with your own password in the command below.
 Then run the command to start up a container (only works correctly if you are in the `refinebio-examples` directory):
 ```
 docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSWORD> -p 8787:8787 ccdl/refinebio-examples
