@@ -1,5 +1,5 @@
-FROM rocker/tidyverse:4.0.0
-MAINTAINER ccdl@alexslemonade.org
+FROM rocker/tidyverse:4.0.2
+LABEL maintainer="ccdl@alexslemonade.org"
 WORKDIR /rocker-build/
 
 ### Install apt-getable packages to start

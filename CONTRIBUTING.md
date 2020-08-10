@@ -17,11 +17,13 @@ Or by pulling the image from Docker hub.
 ```
 docker pull ccdl/refinebio-examples
 ```
-Then run this command to start up a container:
+Replace `<PASSWORD` with your own password in the command below.
+Then run the command to start up a container (only works correctly if you are in the `refinebio-examples` directory):
 ```
-docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=eevee -p 8787:8787 ccdl/refinebio-examples
+docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSWORD> -p 8787:8787 ccdl/refinebio-examples
 ```
 Now you can navigate to http://localhost:8787/ to start developing.
+Login to the RStudio server with the username `rstudio` and the password you set above.
 
 ## Rendering notebooks
 
@@ -58,7 +60,7 @@ Note that all `.nb.html` files are `.gitignore`'d because we want users to be ab
 Navigate to the `refinebio-examples` repository.
 If you already have the `refinebio-examples` docker image:
 ```
-docker run --mount type=bind,target=/home/rstudio,source=$PWD refinebio-examples snakemake --cores 1
+docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 1
 ```
 ### About the render-notebooks.R script
 
