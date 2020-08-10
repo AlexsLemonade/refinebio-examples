@@ -61,7 +61,7 @@ if (!dir.exists(plots_dir)) {
 
 ## Import and set up data
 Data downloaded from refine.bio include a metadata [tab separated values ("tsv")](https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
-This chunk of code will read the both tsv files and add them as data.frame
+This chunk of code will read the both TSV files and add them as `data.frame`
 objects to your environment.
 
 The data that we downloaded from refine.bio for this analysis has 19 samples
@@ -173,7 +173,7 @@ dds <- dds[genes_to_keep, ]
 ```
 
 ### Perform DESeq2 normalization
-We are going to use the `rlog` function from the `DESeq2` package to normalize
+We are going to use the `rlog()` function from the `DESeq2` package to normalize
 the data. 
 TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst`
 and `normTransform`.
