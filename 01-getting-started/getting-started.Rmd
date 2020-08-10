@@ -32,7 +32,7 @@ This tutorial has follow-along examples for use with refine.bio downloads.
 ## About how this tutorial book is structured 
 
 This tutorial contains follow-along analysis examples for refinebio gene expression data.
-The analysis examples are organized by technology: ["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
+The analysis examples are organized by technology: x["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
 Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
@@ -76,8 +76,7 @@ We use [R Markdown](https://bookdown.org/yihui/rmarkdown/) throughout this tutor
 R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.
 
 When you execute code within the notebook, the results appear beneath the code. 
-Try executing this chunk by clicking the *Run* button within the chunk or by 
-placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r print}
 print("The output from the code in this chunk will print below!")
