@@ -68,20 +68,28 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
 
-**Chunk naming**
+**Chunk naming**  
 
 Chunks preferably shouldn't be named.
 If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
 
-**No manual section numbering**
-
-Numbering will be done automatically in rendering; so no numbers should be put on the sections.
-
-**Citation**
+**Citation**  
 
 Sources should be cited whenever possible.
 See [the sections about citations](#citing-sources-in-text).
+
+**No manual section numbering**  
+
+Numbering will be done automatically in rendering; so no numbers should be put on the sections.
+
+**Paragraph formatting**  
+
+Each sentence should be on its own line.
+
+**Session Info**  
+`sessionInfo()` should always be printed out at the end.
+(It is included in the `.Rmd` template)
 
 ## Formatting of typical words/items:
 
