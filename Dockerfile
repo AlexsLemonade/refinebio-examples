@@ -24,7 +24,8 @@ RUN apt-get -y --no-install-recommends install \
 # Install pip3 and instalation tools
 RUN apt-get -y --no-install-recommends install \
     python3-pip  python3-dev
-RUN pip3 install "setuptools==46.3.0" "six==1.14.0" "wheel==0.34.2"
+
+RUN pip3 install "setuptools==49.3.0" "six==1.15.0" "wheel==0.34.2"
 
 
 #### R packages
@@ -68,10 +69,10 @@ RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad0
 
 # Install python3 data science tools
 RUN pip3 install \
-    "cycler==0.10.0" "kiwisolver==1.1.0" "pyparsing==2.4.5" "python-dateutil==2.8.1" "pytz==2019.3" \
-    "numpy==1.17.3" \
-    "pandas==0.25.3" \
-    "snakemake==5.8.1"
+    "cycler==0.10.0" "kiwisolver==1.2.0" "pyparsing==2.4.7" "python-dateutil==2.8.1" "pytz==2020.1" \
+    "numpy==1.19.1" \
+    "pandas==1.1.0" \
+    "snakemake==5.20.1"
 
 # set final workdir for commands
 WORKDIR /home/rstudio
