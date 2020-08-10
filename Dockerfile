@@ -32,15 +32,11 @@ RUN pip3 install "setuptools==46.3.0" "six==1.14.0" "wheel==0.34.2"
 
 # Commonly used R packages
 RUN install2.r --error --deps TRUE \
-    class \
     cluster \
-    data.table \
     GGally \
-    lattice \
     optparse \
     R.utils \
     RColorBrewer \
-    rpart \
     rprojroot \
     viridis \
     styler
