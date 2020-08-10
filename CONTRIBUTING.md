@@ -1,6 +1,38 @@
 
 # Contributing guidelines
 
+## Docker for refinebio-examples
+
+This repository uses a Docker image to manage dependencies and keep software versions consistent.
+Development should take place in the Docker container.
+
+### Setting up the docker container
+
+You can build the docker image locally using:
+```
+docker build -< Dockerfile -t refinebio-examples
+```
+Or by pulling the image from Docker hub.
+```
+docker pull ccdl/refinebio-examples
+```
+Run the container with whatever method you choose.
+
+**With Kitematic**
+```
+docker run -e PASSWORD=<PASSWORD> -p 8787:8787 refinebio-examples
+```
+Then navigate to Kitematic to set your volume.
+Then you can navigate to http://localhost:8787/ to start developing.
+
+**Without Kitematic**
+
+Replace `<LOCAL_PATH_TO_REFINEBIO-EXAMPLES_REPO>` and run.
+```
+docker run -it --rm --mount type=volume,dst=/home/rstudio/kitematic,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=<LOCAL_PATH_TO_REFINEBIO-EXAMPLES_REPO> -e PASSWORD=<PASSWORD> -p 8787:8787 refinebio-examples
+```
+Now navigate to http://localhost:8787/ to start developing.
+
 ## Rendering notebooks
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
