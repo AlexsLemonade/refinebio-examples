@@ -14,4 +14,4 @@ What things should reviewers look out for?
 * [ ] Remove any instances of chunk naming.
 * [ ] Spell check any Rmd file or md file.
 * [ ] Comments and documentation are up to date
-* [ ] Run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/CONTRIBUTING.md#how-to-re-render-the-notebooks)
+* [ ] In the Docker container, run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/CONTRIBUTING.md#how-to-re-render-the-notebooks)

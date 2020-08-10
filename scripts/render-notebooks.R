@@ -94,7 +94,8 @@ readr::write_lines(new_lines, tmp_file)
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
-  output_format = rmarkdown::html_document(toc = TRUE, toc_depth = 2, toc_float = TRUE),
+  output_format = rmarkdown::html_document(toc = TRUE, toc_depth = 2,
+    toc_float = TRUE, number_sections = TRUE),
   # Save to original html output file name
   output_file = output_file
 )
