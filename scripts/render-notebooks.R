@@ -7,7 +7,8 @@
 
 # Rscript scripts/render-notebooks.R \
 # -r 01-getting-started/getting-started.Rmd \
-# -b references.bib
+# -b references.bib \
+# --style
 
 # Load library:
 library(optparse)
@@ -32,6 +33,11 @@ option_list <- list(
     default = NULL,
     help = "Desired filename for rendered output html file",
     metavar = "character"
+  ),
+  make_option(
+    opt_str = c("-s", "--style"), action = "store_true",
+    default = FALSE,
+    help = "Style input file before processing"
   )
 )
 
@@ -54,15 +60,20 @@ if (!file.exists(opt$bib_file)) {
 }
 
 # If no output html filename specification, make one from the original filename
-if (is.null(opt$html)){
+if (is.null(opt$html)) {
   output_file <- stringr::str_replace(normalizePath(opt$rmd), "\\.Rmd$", ".html")
 } else {
   # Render is weird about relative file paths, so we have to do this
   output_file <- file.path(base_dir, opt$html)
 }
 
+# Run styler if option is used
+if (opt$style) {
+  styler::style_file(opt$rmd)
+}
+
 # Specify the temp file
-tmp_file <-  stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
+tmp_file <- stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
 
 # Read in as lines
 lines <- readr::read_lines(opt$rmd)
