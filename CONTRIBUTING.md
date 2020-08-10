@@ -47,7 +47,7 @@ rule target:
 File paths should be relative to the `Snakefile`.
 
 **Step 3)** Run the thing!
-Make sure you are running this from a `refinebio-examples` Docker container.
+Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
 Run it!
 ```
 snakemake --cores 1
