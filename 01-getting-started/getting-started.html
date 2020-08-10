@@ -1533,11 +1533,11 @@ div.tocify {
 </ul>
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 <div id="about-refine.bio" class="section level2">
-<h2>About refine.bio</h2>
+<h2><span class="header-section-number">0.1</span> About refine.bio</h2>
 <p><a href="https://www.refine.bio/about">refine.bio</a> is a collection of ready-to-use transcriptomic data! Publicly available gene expression data is <a href="http://docs.refine.bio/en/latest/main_text.html#processing-information">uniformly processed</a> and made available for easy download. This tutorial has follow-along examples for use with refine.bio downloads.</p>
 </div>
 <div id="about-how-this-tutorial-book-is-structured" class="section level2">
-<h2>About how this tutorial book is structured</h2>
+<h2><span class="header-section-number">0.2</span> About how this tutorial book is structured</h2>
 <p>This tutorial contains follow-along analysis examples for refinebio gene expression data. The analysis examples are organized by technology: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html">“microarray”</a> or <a href="https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html">“RNA-seq”</a>, in addition to an <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html">“Advanced Topics”</a> section. Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. We encourage you to download the <a href="http://rmarkdown.rstudio.com"><code>.Rmd</code></a> and follow the “getting started” section in the example before diving into our analysis examples.</p>
 <p><strong>Each analysis contains:</strong></p>
 <ul>
@@ -1552,10 +1552,10 @@ div.tocify {
 </ul>
 </div>
 <div id="what-you-need-to-install-to-run-the-examples" class="section level2">
-<h2>What you need to install to run the examples</h2>
+<h2><span class="header-section-number">0.3</span> What you need to install to run the examples</h2>
 <p>Our tutorial module requires you to install the following software to be able to run the examples. These requirements can be installed by following the instructions at these links in the section below. We recommend installing <code>devtools</code> from CRAN (e.g. running <code>install.packages(&quot;devtools&quot;)</code> in R).</p>
 <div id="required-software" class="section level3">
-<h3>Required software:</h3>
+<h3><span class="header-section-number">0.3.1</span> Required software:</h3>
 <ul>
 <li><a href="https://cran.r-project.org/"><strong>R</strong></a> <span class="citation">(R Core Team 2019)</span><br />
 </li>
@@ -1571,11 +1571,11 @@ div.tocify {
 </div>
 </div>
 <div id="how-to-get-the-data-for-these-examples" class="section level2">
-<h2>How to get the data for these examples</h2>
+<h2><span class="header-section-number">0.4</span> How to get the data for these examples</h2>
 <p>Each analysis will include a link to the example dataset’s page on <a href="https://www.refine.bio/">refine.bio</a> [refine.bio] as well as step-by-step instructions of how to set up your data and folders for your analysis. As you become more comfortable with the analysis, we encourage you to switch out this example dataset for another that may better suit your interests and scientific questions. We’ve placed comments where the code will absolutely need to be changed for a different dataset, but you may find other parts of the analysis you will want to alter to fit your needs. Each analysis also includes links to resources and documentation that we hope helps you make useful alterations to the analysis. You will likely encounter errors and bugs as you make changes; don’t let this discourage you, it is all a part of the process. See this <a href="https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md">debugging guide</a> for our list of the most common R errors and how you might be able to address them.</p>
 </div>
 <div id="how-to-use-r-markdown-documents" class="section level2">
-<h2>How to use R Markdown Documents</h2>
+<h2><span class="header-section-number">0.5</span> How to use R Markdown Documents</h2>
 <p>We use <a href="https://bookdown.org/yihui/rmarkdown/">R Markdown</a> throughout this tutorial. R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.</p>
 <p>When you execute code within the notebook, the results appear beneath the code. Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Cmd+Shift+Enter</em>.</p>
 <pre class="r"><code>print(&quot;The output from the code in this chunk will print below!&quot;)</code></pre>
@@ -1583,7 +1583,7 @@ div.tocify {
 <p>R Markdown documents also have the added benefit of producing HTML file output that is nicely rendered and easy to read. Saving one of our R Markdowns (the files that end in <code>.Rmd</code>) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in <code>.nb.html</code>).</p>
 </div>
 <div id="an-important-note-about-file-paths-and-rmds" class="section level2">
-<h2>An important note about file paths and Rmds</h2>
+<h2><span class="header-section-number">0.6</span> An important note about file paths and Rmds</h2>
 <p>A <code>current directory</code> refers to where R will look for files or otherwise operate. Directories are the folders of files on your computer; a file path is the series of folders leading to the file you are referring to. R Markdown documents have the <code>current directory</code> always set as wherever the <code>.Rmd</code> file itself is saved. This means all file paths specified in the <code>.Rmd</code> must be specified <em>relative</em> to the location of the Rmd.</p>
 <p>For more practice with setting file paths in <code>.Rmd</code> files see these:</p>
 <ul>
@@ -1592,7 +1592,7 @@ div.tocify {
 </ul>
 </div>
 <div id="resources-for-learning-r" class="section level2">
-<h2>Resources for learning R</h2>
+<h2><span class="header-section-number">0.7</span> Resources for learning R</h2>
 <ul>
 <li><a href="https://swirlstats.com/">Swirl, an interactive tutorial</a><br />
 </li>
@@ -1607,7 +1607,7 @@ div.tocify {
 </ul>
 </div>
 <div id="additional-resources-from-the-ccdl" class="section level2">
-<h2>Additional resources from the CCDL</h2>
+<h2><span class="header-section-number">0.8</span> Additional resources from the CCDL</h2>
 <ul>
 <li><a href="https://github.com/AlexsLemonade/training-modules/tree/master/intro-to-R-tidyverse">Intro to R and Tidyverse course and exercises</a></li>
 <li><a href="https://github.com/AlexsLemonade/training-modules/blob/master/intro-to-R-tidyverse/00b-debugging_resources.md">Tips for debugging code</a></li>

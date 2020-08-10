@@ -1,6 +1,30 @@
 
 # Contributing guidelines
 
+## Docker for refinebio-examples
+
+This repository uses a Docker image to manage dependencies and keep software versions consistent.
+Development should take place in the Docker container.
+
+### Setting up the docker container
+
+Navigate your local `refinebio-examples` repository.
+Now, you can build the docker image locally using:
+```
+docker build -< Dockerfile -t ccdl/refinebio-examples
+```
+Or by pulling the image from Docker hub.
+```
+docker pull ccdl/refinebio-examples
+```
+Replace `<PASSWORD>` with your own password in the command below.
+Then run the command to start up a container (only works correctly if you are in the `refinebio-examples` directory):
+```
+docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSWORD> -p 8787:8787 ccdl/refinebio-examples
+```
+Now you can navigate to http://localhost:8787/ to start developing.
+Login to the RStudio server with the username `rstudio` and the password you set above.
+
 ## Rendering notebooks
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
@@ -23,19 +47,21 @@ rule target:
 File paths should be relative to the `Snakefile`.
 
 **Step 3)** Run the thing!
-Navigate to the `refinebio-examples` repository.
-
-Activate snakemake (if you are using conda; otherwise skip this.)
-```
-conda activate snakemake
-```
+Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
 Run it!
 ```
 snakemake --cores 1
 ```
-If ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
+If `snakemake` ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
 Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
 
+### Run snakemake without queueing up a web browser for the Docker container
+
+Navigate to the `refinebio-examples` repository.
+If you already have the `refinebio-examples` docker image:
+```
+docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 1
+```
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
@@ -95,7 +121,12 @@ Plus its just another thing to have to keep track of.
 
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-  - Use "tidyverse", not "Tidyverse"
+  - Use "tidyverse", NOT "Tidyverse"
+  - Use "TSV",  NOT tsv or `tsv` or .tsv
+  - Use "PNG", NOT png or `png` or .png (and etc.)
+
+For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
+Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
 
 ## Citing sources in text
 
