@@ -16,20 +16,12 @@ Or by pulling the image from Docker hub.
 ```
 docker pull ccdl/refinebio-examples
 ```
-Run the container with whatever method you choose.
 
-**With Kitematic**
-```
-docker run -e PASSWORD=<PASSWORD> -p 8787:8787 refinebio-examples
-```
-Then navigate to Kitematic to set your volume.
-Then you can navigate to http://localhost:8787/ to start developing.
+Navigate to your local `refinebio-examples` repository.
 
-**Without Kitematic**
-
-Replace `<LOCAL_PATH_TO_REFINEBIO-EXAMPLES_REPO>` and run.
+Then run this command:
 ```
-docker run -it --rm --mount type=volume,dst=/home/rstudio/kitematic,volume-driver=local,volume-opt=type=none,volume-opt=o=bind,volume-opt=device=<LOCAL_PATH_TO_REFINEBIO-EXAMPLES_REPO> -e PASSWORD=<PASSWORD> -p 8787:8787 refinebio-examples
+docker run --mount type=bind,target=/home/rstudio,source=<LOCAL_PATH_TO_REFINEBIO-EXAMPLES_REPO> -e PASSWORD=<PASSWORD> -p 8787:8787 refinebio-examples
 ```
 Now navigate to http://localhost:8787/ to start developing.
 
@@ -55,12 +47,8 @@ rule target:
 File paths should be relative to the `Snakefile`.
 
 **Step 3)** Run the thing!
+Make sure you are running this from a `refinebio-examples` Docker container.
 Navigate to the `refinebio-examples` repository.
-
-Activate snakemake (if you are using conda; otherwise skip this.)
-```
-conda activate snakemake
-```
 Run it!
 ```
 snakemake --cores 1

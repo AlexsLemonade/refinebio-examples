@@ -43,7 +43,8 @@ RUN install2.r --error --deps TRUE \
 
 ##########################
 # Install bioconductor packages
-RUN R -e "BiocManager::install(c('affy', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'limma', 'marray'))"
+RUN R -e "BiocManager::install(c('affy', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'limma', 'marray'), \
+    update = FALSE)"
 
 # Installs packages needed for plottings
 # treemap, interactive plots, and hex plots
@@ -51,18 +52,16 @@ RUN R -e "BiocManager::install(c('affy', 'Biobase', 'ComplexHeatmap', 'DESeq2', 
 RUN install2.r --error --deps TRUE \
     ggfortify \
     ggsignif \
+    patchwork \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram
+    VennDiagram 
 
 ##########################
-# Install with devtools
+# Install packages from github
 # Need this package to make plots colorblind friendly
 RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
-
-# Patchwork for plot compositions
-RUN R -e "remotes::install_github('thomasp85/patchwork', ref = 'c67c6603ba59dd46899f17197f9858bc5672e9f4')"
 
 # Install python libraries
 ##########################
@@ -72,4 +71,7 @@ RUN pip3 install \
     "cycler==0.10.0" "kiwisolver==1.1.0" "pyparsing==2.4.5" "python-dateutil==2.8.1" "pytz==2019.3" \
     "numpy==1.17.3" \
     "pandas==0.25.3" \
-    "snakemake==5.8.1" \
+    "snakemake==5.8.1"
+
+# set final workdir for commands
+WORKDIR /home/rstudio
