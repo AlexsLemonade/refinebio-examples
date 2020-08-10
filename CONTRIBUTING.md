@@ -52,7 +52,7 @@ Run it!
 ```
 snakemake --cores 1
 ```
-If ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
+If `snakemake` ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
 Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
 
 ### Run snakemake without queueing up a web browser for the Docker container
@@ -121,9 +121,9 @@ Plus its just another thing to have to keep track of.
 
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-  - Use "tidyverse", not "Tidyverse"
-  - Use "TSV" vs tsv or `tsv` or .tsv
-  - Use "PNG" vs png or `png` or .png (and etc.)
+  - Use "tidyverse", NOT "Tidyverse"
+  - Use "TSV",  NOT tsv or `tsv` or .tsv
+  - Use "PNG", NOT png or `png` or .png (and etc.)
 
 For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
 Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
