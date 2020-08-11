@@ -281,7 +281,7 @@ df_by_var <- data.frame(assay(dds_norm)) %>%
 
 ## Create a heatmap
 
-To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/).
+To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/) [@make-heatmaps].
 
 ```{r}
 # Create and store the heatmap object
@@ -403,7 +403,11 @@ dev.off()
 
 # Further learning resources about this analysis
 
-- [<<HELPFUL RESOURCE NAME>>](<<LINK TO HELPFUL RESOURCE>>) [<<CITATION>>]
+- [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@make-heatmaps]
+
+For more complex heatmaps, you may want to take a look at:
+
+- [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@complex-heatmaps]
 
 # Print session info:
 
