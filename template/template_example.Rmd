@@ -11,21 +11,25 @@ output:
 
 # Purpose of the analysis:
 
-<<WHAT DOES THIS ANALSIS DO AND WHEN WOULD YOU USE IT?>>
+<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
 # How to run this example
+<!-- LEAVE THIS SECTION AS IS -->
 
 For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file of this analysis
+<!-- ADD PATH, THEN LEAVE THIS SECTION AS IS -->
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>> ). 
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/<<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>>
+).
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
-## Set up your analysis folders
+## Set up your analysis folders 
+<!-- LEAVE THIS SECTION AS IS -->
 
 Good file organization is helpful for keeping your data analysis project on track!
 We have set up some code that will automatically set up a folder structure for you. 
@@ -62,6 +66,7 @@ if (!dir.exists(results_dir)) {
 In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
 ## Obtain the dataset from refine.bio
+<!-- ADD LINK, THEN LEAVE THIS SECTION AS IS -->
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
@@ -69,28 +74,30 @@ Go to this [dataset's page on refine.bio](<<REFINEBIO DATASET PAGE LINK>>).
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="screenshots/download-now.png" width=200>  
+<img src="https://raw.githubusercontent.com/AlexsLemonade/refinebio-examples/master/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="screenshots/download-email.png" width=500>  
+<img src="https://raw.githubusercontent.com/AlexsLemonade/refinebio-examples/master/template/screenshots/download-email.png" width=500>  
 
 It make take a few minutes for the dataset to process.
 You will get an email when it is ready. 
 
 ## About the dataset we are using for this example
+<!-- ADD PATH AND SUMMARY -->
 
-For this example analysis, we will use this [<<BRIEF DATASET NAME>>](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>> )..
+For this example analysis, we will use this [<!--BRIEF DATASET NAME-->](https://alexslemonade.github.io/refinebio-examples/ <!--RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES--> )..
 
-<<BRIEFLY SUMMARIZE THIS DATASET>> 
+<!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
 ## Place the dataset in your new `data/` folder
+<!-- LEAVE THIS SECTION AS IS -->
 
 Refine.bio will send you a download button in the email when it is ready. 
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="screenshots/download-folder-structure.png" width=400> 
+<img src="https://raw.githubusercontent.com/AlexsLemonade/refinebio-examples/master/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
@@ -98,6 +105,7 @@ The `<experiment_accession_id>` folder has the data and metadata TSV files you w
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
 ## Check out our file structure!
+<!-- LEAVE THIS SECTION AS IS -->
 
 Your new analysis folder should contain: 
 
@@ -108,17 +116,17 @@ Your new analysis folder should contain:
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="screenshots/analysis-folder-structure.png" width=400>
+<img src="https://raw.githubusercontent.com/AlexsLemonade/refinebio-examples/master/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
 
 ```{r}
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <<DATA_ACCESSION FILENAME>>))
+file.exists(file.path(data_dir, <!--DATA_ACCESSION FILENAME-->))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <<METADATA_ACCESSION FILENAME>>))
+file.exists(file.path(data_dir, <!--METADATA_ACCESSION FILENAME-->))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -126,6 +134,7 @@ If the chunk above printed out `FALSE` to either of those tests, you won't be ab
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
 
 # Using a different refine.bio dataset with this analysis?
+<!-- LEAVE THIS SECTION AS IS -->
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
@@ -133,7 +142,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ***
 
-# <<NAME OF example>>
+# <!--NAME OF example-->
 
 ## Install libraries
 
@@ -188,7 +197,7 @@ all.equal(colnames(df), metadata$geo_accession)
 ```
 
 
-<<<< ALL THE ANALYSIS STEPS HERE>>>>>>>>
+<<<<<<<< ALL THE ANALYSIS STEPS HERE >>>>>>>>
 
 
 # Further learning resources about this analysis
@@ -196,6 +205,7 @@ all.equal(colnames(df), metadata$geo_accession)
 - [<<HELPFUL RESOURCE NAME>>](<<LINK TO HELPFUL RESOURCE>>) [<<CITATION>>]
 
 # Print session info:
+<!-- LEAVE THIS SECTION AS IS -->
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
