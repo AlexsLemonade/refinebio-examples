@@ -4,10 +4,11 @@ rule target:
 
 rule render_citations:
     input:
-        rmd = "{basename}.Rmd",
+        rmd = "{basedir}/{basename}.Rmd",
+        nav = "{basedir}/_navbar.html",
         bib = "references.bib"
     output: 
-       "{basename}.html"
+       "{basedir}/{basename}.html"
     shell:
         "Rscript scripts/render-notebooks.R"
         " --rmd {input.rmd}"
