@@ -83,37 +83,38 @@ The introductory info in this template file helps toward our goal of these analy
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
 
-**Inputs:**  
+#### Inputs  
 
 - refine.bio download files.  
 - Any additional reference files should be downloaded in the notebook.  
 
-**Outputs**  
+#### Outputs  
 
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
 
-**Chunk naming**  
+#### Chunk naming  
 
 Chunks preferably shouldn't be named.
 If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
 
-**Citation**  
+#### Citation  
 
 Sources should be cited whenever possible.
 See [the sections about citations](#citing-sources-in-text).
 
-**No manual section numbering**  
+#### No manual section numbering  
 
 Numbering will be done automatically in rendering; so no numbers should be put on the sections.
 
-**Paragraph formatting**  
+#### Paragraph formatting  
 
 Each sentence should be on its own line.
 
-**Session Info**  
+#### Session Info
+ 
 `sessionInfo()` should always be printed out at the end.
 (It is included in the `.Rmd` template)
 
@@ -125,7 +126,7 @@ Each sentence should be on its own line.
   - Use "TSV",  NOT tsv or `tsv` or .tsv
   - Use "PNG", NOT png or `png` or .png (and etc.)
   - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
-  
+
 For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
 Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
 
