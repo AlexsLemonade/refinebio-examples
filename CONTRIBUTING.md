@@ -124,7 +124,8 @@ Each sentence should be on its own line.
   - Use "tidyverse", NOT "Tidyverse"
   - Use "TSV",  NOT tsv or `tsv` or .tsv
   - Use "PNG", NOT png or `png` or .png (and etc.)
-
+  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
+  
 For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
 Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
 

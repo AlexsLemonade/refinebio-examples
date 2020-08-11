@@ -20,7 +20,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file of this analysis
 
-To run this example yourself, [download the `.Rmd` or this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS>> ). 
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>> ). 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
@@ -125,6 +125,12 @@ If the chunk above printed out `FALSE` to either of those tests, you won't be ab
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
 
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
 ***
 
 # <<NAME OF example>>
@@ -184,12 +190,6 @@ all.equal(colnames(df), metadata$geo_accession)
 
 <<<< ALL THE ANALYSIS STEPS HERE>>>>>>>>
 
-
-# Using your own data with this analysis
-
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 # Further learning resources about this analysis
 
