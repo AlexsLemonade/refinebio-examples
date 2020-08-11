@@ -80,7 +80,7 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [<<BRIEF DATASET NAME>>](<<RELATIVE PATH TO THIS ANALYSIS>>).
+For this example analysis, we will use this [<<BRIEF DATASET NAME>>](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>> )..
 
 <<BRIEFLY SUMMARIZE THIS DATASET>> 
 
