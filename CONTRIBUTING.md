@@ -1,4 +1,3 @@
-
 # Contributing guidelines
 
 ## Docker for refinebio-examples
@@ -33,8 +32,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 
 ### How to re-render the notebooks
 
-**Step 1)** Install snakemake (if you haven't before).
-Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+**Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
 
 **Step 2)** Add any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
 Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
@@ -72,50 +70,51 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 Default is the `references.bib` script at the top of the repository.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-## General guidelines for analyses notebooks
+
+## Adding a new analysis
+
+Copy, paste and rename the `template/template_example.Rmd` file to start a new analysis and the `template/screenshots` folder.
+Search for `<<` or `>>` and replace those with the pertinent information.
+The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
+
+### General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
 
-**.Rmd Header**
-
-Each analysis `.Rmd` should have this header below:
-This will automatically number the sections, _so no manual numbering should be used_.
-
-```
----
-title: "Name of the analysis - Microarray/RNA-seq/Advanced"
-author: "CCDL for ALSF"
-date:"`r format(Sys.time(), '%B %Y')`"
-output:   
-  html_notebook:
-    toc: true
-    toc_float: true
-    number_sections: true
----
-```
-
-**Inputs:**  
+#### Inputs  
 
 - refine.bio download files.  
 - Any additional reference files should be downloaded in the notebook.  
 
-**Outputs**  
+#### Outputs  
 
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
 
-### Analysis Getting Started Template
-
-**This template is still under construction**
-Each analysis notebook has its own getting started section before getting to the code.
-Copy and paste the template here and replace all the `<description>` points with the information that is pertinent to current dataset and analysis example.
-
-### Chunk naming
+#### Chunk naming  
 
 Chunks preferably shouldn't be named.
 If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
+
+#### Citation  
+
+Sources should be cited whenever possible.
+See [the sections about citations](#citing-sources-in-text).
+
+#### No manual section numbering  
+
+Numbering will be done automatically in rendering; so no numbers should be put on the sections.
+
+#### Paragraph formatting  
+
+Each sentence should be on its own line.
+
+#### Session Info
+
+`sessionInfo()` should always be printed out at the end.
+(It is included in the `.Rmd` template)
 
 ## Formatting of typical words/items:
 
@@ -124,6 +123,7 @@ Plus its just another thing to have to keep track of.
   - Use "tidyverse", NOT "Tidyverse"
   - Use "TSV",  NOT tsv or `tsv` or .tsv
   - Use "PNG", NOT png or `png` or .png (and etc.)
+  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
 
 For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
 Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.

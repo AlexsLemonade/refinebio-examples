@@ -76,8 +76,7 @@ We use [R Markdown](https://bookdown.org/yihui/rmarkdown/) throughout this tutor
 R Markdown documents are helpful for scientific code by allowing you to keep detailed notes, code, and output in one place.
 
 When you execute code within the notebook, the results appear beneath the code. 
-Try executing this chunk by clicking the *Run* button within the chunk or by 
-placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ```{r print}
 print("The output from the code in this chunk will print below!")
@@ -85,6 +84,8 @@ print("The output from the code in this chunk will print below!")
 
 R Markdown documents also have the added benefit of producing HTML file output that is nicely rendered and easy to read.
 Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer will create an HTML file containing the code and output to be saved alongside it (will end in `.nb.html`).
+
+See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
 
 ## An important note about file paths and Rmds
 
