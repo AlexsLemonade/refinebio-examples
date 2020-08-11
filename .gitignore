@@ -4,6 +4,7 @@ _site
 .DS_Store
 .RData
 .Rhistory
+.Rproj.user
 .snakemake
 *.nb.html
 
