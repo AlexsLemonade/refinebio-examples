@@ -1739,7 +1739,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 <p>Now we are going to use a combination of functions from the <code>DESeq2</code> and <code>pheatmap</code> packages to look at how are samples and genes are clustering.</p>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.1</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data.frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <code>design</code> argument.</p>
+<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data.frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <code>design</code> argument. In this chunk of code, we will specify the <code>refinebio-treatment</code> variable to label our experimental groups because it is included in the experimental design as noted in the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/28193779/">paper</a>.<span class="citation">(Shih et al. 2017)</span></p>
 <pre class="r"><code># The `DESeqDataSetFromMatrix` function needs the values to be converted to integers
 df &lt;- df %&gt;%
   # Mutate numeric variables to be integers
@@ -1992,6 +1992,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-DESeq2">
 <p>Love, Michael I, Wolfgang Huber, and Simon Anders. 2014. “Moderated Estimation of Fold Change and Dispersion for Rna-Seq Data with Deseq2.” <em>Genome Biology</em> 15 (550). <a href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>.</p>
+</div>
+<div id="ref-AML">
+<p>Shih, Alan H, Cem Meydan, Kaitlyn Shank, Francine E Garrett-Bakelman, Patrick S Ward, Andrew M Intlekofer, Abbas Nazir, et al. 2017. “Combination Targeted Therapy to Disrupt Aberrant Oncogenic Signaling and Reverse Epigenetic Dysfunction in Idh2- and Tet2-Mutant Acute Myeloid Leukemia.” <em>Cancer Discovery</em> 7 (5). <a href="https://doi.org/10.1158/2159-8290.CD-16-1049">https://doi.org/10.1158/2159-8290.CD-16-1049</a>.</p>
 </div>
 <div id="ref-make-heatmaps">
 <p>Slowikowski, Kamil. 2017. “Make Heatmaps in R with Pheatmap.” <a href="https://slowkow.com/notes/pheatmap-tutorial/">https://slowkow.com/notes/pheatmap-tutorial/</a>.</p>

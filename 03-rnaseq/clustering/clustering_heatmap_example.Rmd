@@ -201,7 +201,8 @@ Now we are going to use a combination of functions from the `DESeq2` and `pheatm
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data.frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the `design` argument. 
+We turn the data.frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the `design` argument.
+In this chunk of code, we will specify the `refinebio-treatment` variable to label our experimental groups because it is included in the experimental design as noted in the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/).[@AML]
 
 ```{r}
 # The `DESeqDataSetFromMatrix` function needs the values to be converted to integers
