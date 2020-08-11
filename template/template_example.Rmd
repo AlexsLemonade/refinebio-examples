@@ -97,7 +97,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-## Checkout our file structure!
+## Check out our file structure!
 
 Your new analysis folder should contain: 
 
@@ -154,8 +154,8 @@ Attach the <<PACKAGE>>:
 # Attach the library
 library(<<PACKAGE>>)
 
-# Magrittr pipe
-`%>%` <- dplyr::`%>%`
+# We will need this so we can use the pipe: %>%
+library(magrittr)
 
 <<SET THE SEED IF YOU NEED>>
 ```
@@ -195,7 +195,7 @@ all.equal(colnames(df), metadata$geo_accession)
 
 - [<<HELPFUL RESOURCE NAME>>](<<LINK TO HELPFUL RESOURCE>>) [<<CITATION>>]
 
-## Print session info:
+# Print session info:
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 

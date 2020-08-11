@@ -1,4 +1,3 @@
-
 # Contributing guidelines
 
 ## Docker for refinebio-examples
@@ -33,8 +32,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 
 ### How to re-render the notebooks
 
-**Step 1)** Install snakemake (if you haven't before).
-Follow the installation instructions on the [snakemake docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+**Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
 
 **Step 2)** Add any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
 Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
@@ -114,7 +112,7 @@ Numbering will be done automatically in rendering; so no numbers should be put o
 Each sentence should be on its own line.
 
 #### Session Info
- 
+
 `sessionInfo()` should always be printed out at the end.
 (It is included in the `.Rmd` template)
 
