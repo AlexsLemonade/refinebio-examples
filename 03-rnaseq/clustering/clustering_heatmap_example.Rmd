@@ -412,7 +412,7 @@ dev.off()
 # Further learning resources about this analysis
 
 - [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@make-heatmaps]
-- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@complex-heatmaps]
+- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@make-complex-heatmaps]
 
 # Print session info:
 
