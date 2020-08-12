@@ -116,10 +116,10 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <!--DATA_ACCESSION FILENAME-->))
+file.exists(file.path(data_dir, {{DATA_ACCESSION FILENAME}}))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, <!--METADATA_ACCESSION FILENAME-->))
+file.exists(file.path(data_dir, {{METADATA_ACCESSION FILENAME}}))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
