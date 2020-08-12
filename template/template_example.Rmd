@@ -163,15 +163,16 @@ library(magrittr)
 
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata tab separated values ("tsv") file and a data tsv file. This chunk of code will read the both tsv files and add them as data.frames to your environment.
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+This chunk of code will read the both TSV files and add them as data frames to your environment.
 
-```{r Import data from .tsv files}
-# Read in metadata tsv file
+```{r}
+# Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your metadata file
                                       {{METADATA_ACCESSION FILENAME}} # Replace with the name of your metadata file
                                       ))
 
-# Read in data tsv file
+# Read in data TSV file
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
                                 {{DATA_ACCESSION FILENAME}} # Replace with the name of your data file
                                 )) %>%
