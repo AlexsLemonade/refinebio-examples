@@ -202,9 +202,8 @@ Now we are going to use a combination of functions from the `DESeq2` and `pheatm
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the `design` argument.
-From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).[@AML]
-In this chunk of code, we will specify the `refinebio_treatment` variable to label our experimental groups as it contains the data on the specific treatment given for each sample as a part of the experimental design briefly described above.
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@DESeq2].
+In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
 # The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
@@ -216,7 +215,7 @@ df <- df %>%
 dds <- DESeqDataSetFromMatrix(
   countData = df, # This is the data.frame with the counts values for all replicates in our dataset
   colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
-  design = ~refinebio_treatment # Replace with an appropriate design variable for your analysis
+  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
 )
 ```
 
@@ -330,7 +329,8 @@ Now, let's add some annotation bars to our heatmap.
 
 ## Prepare metadata for annotation
 
-We are going to manipulate the metadata and add variables with the information that we would like to use to annotate the heatmap.
+From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). [@AML]
+We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.
 
 ```{r}
 # Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set object which will be used to create the technical replicates heatmap

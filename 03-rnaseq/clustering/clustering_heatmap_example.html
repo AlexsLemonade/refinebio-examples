@@ -1740,7 +1740,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 </div>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.3</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <code>design</code> argument. From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/28193779/">paper</a>, we know that the mice with <code>IDH2</code> mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with <code>TET2</code> mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).<span class="citation">(Shih et al. 2017)</span> In this chunk of code, we will specify the <code>refinebio_treatment</code> variable to label our experimental groups as it contains the data on the specific treatment given for each sample as a part of the experimental design briefly described above.</p>
+<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love, Huber, and Anders 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <pre class="r"><code># The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
 df &lt;- df %&gt;%
   # Mutate numeric variables to be integers
@@ -1750,15 +1750,9 @@ df &lt;- df %&gt;%
 dds &lt;- DESeqDataSetFromMatrix(
   countData = df, # This is the data.frame with the counts values for all replicates in our dataset
   colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
-  design = ~refinebio_treatment # Replace with an appropriate design variable for your analysis
+  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
 )</code></pre>
 <pre><code>## converting counts to integer mode</code></pre>
-<pre><code>## Warning in DESeqDataSet(se, design = design, ignoreRank): some variables in
-## design formula are characters, converting to factors</code></pre>
-<pre><code>##   Note: levels of factors in the design contain characters other than
-##   letters, numbers, &#39;_&#39; and &#39;.&#39;. It is recommended (but not required) to use
-##   only letters, numbers, and delimiters &#39;_&#39; or &#39;.&#39;, as these are safe characters
-##   for column names in R. [This is a message, not an warning or error]</code></pre>
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
 <h2><span class="header-section-number">4.4</span> Define a minimum counts cutoff</h2>
@@ -1791,10 +1785,6 @@ dds &lt;- dds[genes_to_keep, ]</code></pre>
 <p>We are going to use the <code>rlog()</code> function from the <code>DESeq2</code> package to normalize the data. TODO: Add a note/link to section in documentation on why we use <code>rlog</code> vs <code>vst</code> and <code>normTransform</code>.</p>
 <pre class="r"><code># Normalize the data in the `DESeqDataSet` object using the `rlog()` function from the `DESEq2` R package
 dds_norm &lt;- rlog(dds)</code></pre>
-<pre><code>##   Note: levels of factors in the design contain characters other than
-##   letters, numbers, &#39;_&#39; and &#39;.&#39;. It is recommended (but not required) to use
-##   only letters, numbers, and delimiters &#39;_&#39; or &#39;.&#39;, as these are safe characters
-##   for column names in R. [This is a message, not an warning or error]</code></pre>
 </div>
 <div id="choose-genes-of-interest" class="section level2">
 <h2><span class="header-section-number">4.6</span> Choose genes of interest</h2>
@@ -1852,7 +1842,7 @@ dev.off()</code></pre>
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.8</span> Prepare metadata for annotation</h2>
-<p>We are going to manipulate the metadata and add variables with the information that we would like to use to annotate the heatmap.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/28193779/">paper</a>, we know that the mice with <code>IDH2</code> mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with <code>TET2</code> mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). <span class="citation">(Shih et al. 2017)</span> We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.</p>
 <pre class="r"><code># Let&#39;s prepare the annotation data.frame for the uncollapsed `DESeqData` set object which will be used to create the technical replicates heatmap
 annotation_df &lt;- metadata %&gt;%
   # Create a variable to store the cancer type information
