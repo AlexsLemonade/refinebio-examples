@@ -98,6 +98,8 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
+Copy and paste both the equivalent `metadata_<experiment_accession_id>.tsv` and `<experiment_accession_id>.tsv` TSV files into your newly created `data/` folder.
+
 ## Check out our file structure!
 
 Your new analysis folder should contain: 
