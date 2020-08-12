@@ -74,7 +74,8 @@ Default is the `references.bib` script at the top of the repository.
 ## Adding a new analysis
 
 Copy, paste and rename the `template/template_example.Rmd` file to the new pertinent analysis folder.
-Search for `<<` or `>>` and replace those with the pertinent information.
+Search for `{{` or `}}` and replace those with the pertinent information.
+Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
 
 ### General guidelines for analyses notebooks
