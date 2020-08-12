@@ -159,17 +159,17 @@ set.seed(12345)
 
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata [tab separated values ("tsv")](https://en.wikipedia.org/wiki/Tab-separated_values) file and a data tsv file.
-This chunk of code will read in both tsv files and add them as data.frames to your environment.
+Data downloaded from refine.bio include a metadata [tab separated values (TSV)](https://en.wikipedia.org/wiki/Tab-separated_values) file and a data TSV file.
+This chunk of code will read in both TSV files and add them as data frames to your environment.
 
 ```{r}
-# Read in metadata tsv file
+# Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(
   "data", # Replace with path to your metadata file
   "metadata_SRP070849.tsv" # Replace with the name of your metadata file
 ))
 
-# Read in data tsv file
+# Read in data TSV file
 df <- readr::read_tsv(file.path(
   "data", # Replace with path to your data file
   "SRP070849.tsv" # Replace with the name of your data file
@@ -201,11 +201,11 @@ Now we are going to use a combination of functions from the `DESeq2` and `pheatm
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data.frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the `design` argument.
-In this chunk of code, we will specify the `refinebio-treatment` variable to label our experimental groups because it is included in the experimental design as noted in the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/).[@AML]
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the `design` argument.
+In this chunk of code, we will specify the `refinebio_treatment` variable to label our experimental groups because it is included in the experimental design as noted in the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/).[@AML]
 
 ```{r}
-# The `DESeqDataSetFromMatrix` function needs the values to be converted to integers
+# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
 df <- df %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, round)
@@ -259,7 +259,7 @@ TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst` 
 
 ```{r}
 # Normalize the data in the `DESeqDataSet` object using the
-# `rlog` function from the `DESEq2` R package
+# `rlog()` function from the `DESEq2` R package
 dds_norm <- rlog(dds)
 ```
 
@@ -305,7 +305,7 @@ pheatmap <-
 
 We've created a heatmap but although our genes and samples are clustered, there
 is not much information that we can gather here because we did not provide the
-`pheatmap` function with annotation labels for our samples.
+`pheatmap()` function with annotation labels for our samples.
 
 First let's save our clustered heatmap.
 
@@ -352,13 +352,13 @@ annotation_df <- metadata %>%
     mutation,
     refinebio_treatment
   ) %>%
-  # The `pheatmap` function requires that the rownames of our annotation object matches the column names of our `DESeaDataSet` object
+  # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
 ### Create annotated heatmap
 
-You can create an annotated heatmap by providing our annotation object to the `annotation_col` argument of the `pheatmap` function.
+You can create an annotated heatmap by providing our annotation object to the `annotation_col` argument of the `pheatmap()` function.
 
 ```{r}
 # Create and store the annotated heatmap object
@@ -386,10 +386,10 @@ Let's save our annotated heatmap.
 
 ### Save annotated heatmap as a png
 
-You can easily switch this to save to a jpeg or tiff by changing the function and file name within the function to the respective file suffix.
+You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
-# Open a png file
+# Open a PNG file
 png(file.path(
   plots_dir,
   "HeatmapSRP070849_annotated.png" # Replace file name with a relevant output plot name
