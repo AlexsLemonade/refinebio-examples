@@ -11,6 +11,8 @@ output:
 
 # Purpose of the analysis:
 
+<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
+
 This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio in downstream analyses, specifically in plotting clustered heatmaps.
 
 # How to run this example
@@ -73,6 +75,8 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute myeloid leukemia sample dataset](https://www.refine.bio/experiments/SRP070849).
+
+<!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
 The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mice with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.
 
@@ -199,6 +203,8 @@ df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 # Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)
 ```
+
+<!--ALL THE ANALYSIS STEPS HERE -->
 
 Now we are going to use a combination of functions from the `DESeq2` and `pheatmap` packages to look at how are samples and genes are clustering.
 
