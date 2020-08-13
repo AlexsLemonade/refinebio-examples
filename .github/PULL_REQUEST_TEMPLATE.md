@@ -11,7 +11,7 @@ What things should reviewers look out for?
 
 ### Content checks
 * [ ] All `{{BLANKS}}` have been replaced with the correct content.
-* [ ] [Sources are cited](https://github.com/AlexsLemonade/refinebio-examples/CONTRIBUTING.md#citing-sources-in-text)
+* [ ] [Sources are cited](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#citing-sources-in-text)
 * [ ] Set the seed (if applicable)
 
 ### Formatting Checks
