@@ -22,4 +22,4 @@ What things should reviewers look out for?
 
 ### Docker/Snakemake
 * [ ] Any not yet added packages needed for this analysis have been added to the Dockerfile and it successfully builds.
-* [ ] In the Docker container, run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/CONTRIBUTING.md#how-to-re-render-the-notebooks)
+* [ ] In the Docker container, run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#how-to-re-render-the-notebooks)
