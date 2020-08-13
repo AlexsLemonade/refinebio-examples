@@ -97,6 +97,7 @@ docker push ccdl/refinebio-examples:dev
 ```
 After a few rounds of changes to the Dockerfile has occurred, we can make a new version tag.
 For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
+So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number. 
 
 ### General guidelines for analyses notebooks
 
