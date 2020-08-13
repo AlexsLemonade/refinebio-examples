@@ -1,0 +1,176 @@
+refinebio_accession_code	experiment_accession	refinebio_age	refinebio_cell_line	refinebio_compound	refinebio_disease	refinebio_disease_stage	refinebio_genetic_information	refinebio_organism	refinebio_platform	refinebio_processed	refinebio_race	refinebio_sex	refinebio_source_archive_url	refinebio_source_database	refinebio_specimen_part	refinebio_subject	refinebio_time	refinebio_title	refinebio_treatment
+SRR6786931	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-RP	post-adt
+SRR6786850	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-RP	post-adt
+SRR6786813	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-Bx	pre-adt
+SRR6786980	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-1	pre-adt
+SRR6786893	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-Bx	pre-adt
+SRR6786857	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-RP	post-adt
+SRR6786812	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-Bx	pre-adt
+SRR6786956	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-TURP	post-adt
+SRR6786897	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-RP	post-adt
+SRR6786975	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-1	pre-adt
+SRR6786820	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-Bx	pre-adt
+SRR6786830	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-Bx	pre-adt
+SRR6786836	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-Bx	pre-adt
+SRR6786811	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-RP	post-adt
+SRR6786872	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-RP	post-adt
+SRR6786948	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-Bx	pre-adt
+SRR6786826	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-RP	post-adt
+SRR6786880	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-RP	post-adt
+SRR6786977	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-2	post-adt
+SRR6786871	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-Bx	pre-adt
+SRR6786848	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-RP	post-adt
+SRR6786891	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-RP	post-adt
+SRR6786984	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-2	post-adt
+SRR6786894	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-Bx	pre-adt
+SRR6786940	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-Bx	pre-adt
+SRR6786817	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-RP	post-adt
+SRR6786915	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-RP	post-adt
+SRR6786892	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-Bx	pre-adt
+SRR6786854	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-Bx	pre-adt
+SRR6786808	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-RP	post-adt
+SRR6786961	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-Bx	pre-adt
+SRR6786898	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-RP	post-adt
+SRR6786896	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-RP	post-adt
+SRR6786869	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-Bx	pre-adt
+SRR6786852	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-Bx	pre-adt
+SRR6786967	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-1	pre-adt
+SRR6786959	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-TURP	post-adt
+SRR6786974	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-1	pre-adt
+SRR6786966	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-1	pre-adt
+SRR6786851	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-RP	post-adt
+SRR6786942	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-Bx	pre-adt
+SRR6786927	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-Bx	pre-adt
+SRR6786858	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-RP	post-adt
+SRR6786986	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-2	post-adt
+SRR6786964	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-1	pre-adt
+SRR6786879	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-Bx	pre-adt
+SRR6786895	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-Bx	pre-adt
+SRR6786944	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-RP	post-adt
+SRR6786856	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-RP	post-adt
+SRR6786921	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-RP	post-adt
+SRR6786843	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-RP	post-adt
+SRR6786978	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-2	post-adt
+SRR6786918	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-Bx	pre-adt
+SRR6786816	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-RP	post-adt
+SRR6786837	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-Bx	pre-adt
+SRR6786916	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-Bx	pre-adt
+SRR6786863	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-Bx	pre-adt
+SRR6786815	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-Bx	pre-adt
+SRR6786890	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-RP	post-adt
+SRR6786939	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-RP	post-adt
+SRR6786827	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-RP	post-adt
+SRR6786926	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-Bx	pre-adt
+SRR6786923	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-RP	post-adt
+SRR6786981	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-1	pre-adt
+SRR6786845	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-Bx	pre-adt
+SRR6786908	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU020-RP	post-adt
+SRR6786953	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU028-RP	post-adt
+SRR6786889	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-RP	post-adt
+SRR6786930	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-RP	post-adt
+SRR6786846	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-Bx	pre-adt
+SRR6786874	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-RP	post-adt
+SRR6786968	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-2	post-adt
+SRR6786933	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-Bx	pre-adt
+SRR6786962	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-Bx	pre-adt
+SRR6786877	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-Bx	pre-adt
+SRR6786818	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-RP	post-adt
+SRR6786876	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-Bx	pre-adt
+SRR6786860	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-Bx	pre-adt
+SRR6786987	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-2	post-adt
+SRR6786870	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-Bx	pre-adt
+SRR6786883	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-RP	post-adt
+SRR6786976	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-2	post-adt
+SRR6786835	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-RP	post-adt
+SRR6786855	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-Bx	pre-adt
+SRR6786929	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-RP	post-adt
+SRR6786840	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-RP	post-adt
+SRR6786919	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-Bx	pre-adt
+SRR6786963	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-Bx	pre-adt
+SRR6786899	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-RP	post-adt
+SRR6786973	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-1	pre-adt
+SRR6786822	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-Bx	pre-adt
+SRR6786960	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-Bx	pre-adt
+SRR6786971	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-2	post-adt
+SRR6786810	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-RP	post-adt
+SRR6786957	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-TURP	post-adt
+SRR6786844	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-Bx	pre-adt
+SRR6786834	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-RP	post-adt
+SRR6786922	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-RP	post-adt
+SRR6786945	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-RP	post-adt
+SRR6786825	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-RP	post-adt
+SRR6786859	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-RP	post-adt
+SRR6786946	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-RP	post-adt
+SRR6786838	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-Bx	pre-adt
+SRR6786809	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-RP	post-adt
+SRR6786943	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-Bx	pre-adt
+SRR6786878	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-Bx	pre-adt
+SRR6786823	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-Bx	pre-adt
+SRR6786917	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-Bx	pre-adt
+SRR6786875	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-RP	post-adt
+SRR6786881	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-RP	post-adt
+SRR6786814	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU001-Bx	pre-adt
+SRR6786938	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-RP	post-adt
+SRR6786833	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-RP	post-adt
+SRR6786862	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-Bx	pre-adt
+SRR6786985	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-2	post-adt
+SRR6786839	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-Bx	pre-adt
+SRR6786868	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-Bx	pre-adt
+SRR6786928	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-RP	post-adt
+SRR6786937	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-RP	post-adt
+SRR6786950	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-Bx	pre-adt
+SRR6786949	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-Bx	pre-adt
+SRR6786906	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU019-Bx	pre-adt
+SRR6786866	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-RP	post-adt
+SRR6786884	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-Bx	pre-adt
+SRR6786914	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-RP	post-adt
+SRR6786969	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-2	post-adt
+SRR6786924	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-Bx	pre-adt
+SRR6786972	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-1	pre-adt
+SRR6786849	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-RP	post-adt
+SRR6786853	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU009-Bx	pre-adt
+SRR6786847	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-Bx	pre-adt
+SRR6786911	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU020-Bx	pre-adt
+SRR6786951	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-Bx	pre-adt
+SRR6786831	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-Bx	pre-adt
+SRR6786955	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU028-Bx	pre-adt
+SRR6786842	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-RP	post-adt
+SRR6786909	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU020-RP	post-adt
+SRR6786865	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-RP	post-adt
+SRR6786901	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-Bx	pre-adt
+SRR6786829	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-Bx	pre-adt
+SRR6786841	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU008-RP	post-adt
+SRR6786873	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU014-RP	post-adt
+SRR6786912	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-RP	post-adt
+SRR6786982	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-1	pre-adt
+SRR6786936	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-RP	post-adt
+SRR6786983	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU073-TURP-1	pre-adt
+SRR6786832	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU007-RP	post-adt
+SRR6786882	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-RP	post-adt
+SRR6786947	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU026-RP	post-adt
+SRR6786885	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-Bx	pre-adt
+SRR6786902	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-Bx	pre-adt
+SRR6786913	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU021-RP	post-adt
+SRR6786941	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU025-Bx	pre-adt
+SRR6786910	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU020-Bx	pre-adt
+SRR6786886	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-Bx	pre-adt
+SRR6786979	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU069-TURP-2	post-adt
+SRR6786958	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU067-TURP	post-adt
+SRR6786864	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-RP	post-adt
+SRR6786824	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-RP	post-adt
+SRR6786867	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU013-RP	post-adt
+SRR6786903	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-Bx	pre-adt
+SRR6786828	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU006-Bx	pre-adt
+SRR6786887	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU015-Bx	pre-adt
+SRR6786920	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-RP	post-adt
+SRR6786900	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU018-Bx	pre-adt
+SRR6786905	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU019-RP	post-adt
+SRR6786970	SRP133573				turp			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU068-TURP-2	post-adt
+SRR6786821	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-Bx	pre-adt
+SRR6786925	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU022-Bx	pre-adt
+SRR6786932	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-Bx	pre-adt
+SRR6786935	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU024-Bx	pre-adt
+SRR6786888	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU016-RP	post-adt
+SRR6786861	SRP133573				biopsy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU011-Bx	pre-adt
+SRR6786952	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU028-RP	post-adt
+SRR6786819	SRP133573				radical prostatectomy			HOMO_SAPIENS	Illumina HiSeq 2500 (IlluminaHiSeq2500)	True	white			SRA		prostate tumor tissue		CHU003-RP	post-adt
