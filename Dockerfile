@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialo
 
 # Add curl, bzip2 and some dev libs
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-    curl \
+    awscli \
     bzip2 \
     zlib1g \
     libbz2-dev \
