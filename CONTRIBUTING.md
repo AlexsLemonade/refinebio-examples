@@ -12,7 +12,7 @@ Now, you can build the docker image locally using:
 ```
 docker build -< Dockerfile -t ccdl/refinebio-examples
 ```
-Or by pulling the image from Docker hub.
+Or by pulling the image from Docker hub (this will by default pull the `latest` version).
 ```
 docker pull ccdl/refinebio-examples
 ```
@@ -70,13 +70,34 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 Default is the `references.bib` script at the top of the repository.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-
 ## Adding a new analysis
 
 Copy, paste and rename the `template/template_example.Rmd` file to the new pertinent analysis folder.
 Search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
+
+### Docker image management
+
+All necessary packages needed for running the analysis should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
+In the `refinebio-examples` repository:
+```
+docker build -< Dockerfile -t ccdl/refinebio-examples
+```
+After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository using a `dev` tag.  
+```
+# log in with your credentials
+docker login
+
+# Attach a tag to your docker image
+docker tag ccdl/refinebio-examples ccdl/refinebio-examples:dev
+
+# Push it!
+docker push ccdl/refinebio-examples:dev
+```
+After a few rounds of changes to the Dockerfile has occurred, we can make a new version tag.
+For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
+So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number. 
 
 ### General guidelines for analyses notebooks
 
