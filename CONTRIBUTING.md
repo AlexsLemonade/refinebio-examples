@@ -1,5 +1,37 @@
 # Contributing guidelines
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Contributing guidelines](#contributing-guidelines)
+  - [Docker for refinebio-examples](#docker-for-refinebio-examples)
+    - [Setting up the docker container](#setting-up-the-docker-container)
+  - [Download the datasets](#download-the-datasets)
+  - [Rendering notebooks](#rendering-notebooks)
+    - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
+    - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+    - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+  - [Adding a new analysis](#adding-a-new-analysis)
+    - [File naming conventions](#file-naming-conventions)
+    - [How to use the template.Rmd](#how-to-use-the-templatermd)
+    - [Docker image management](#docker-image-management)
+    - [General guidelines for analyses notebooks](#general-guidelines-for-analyses-notebooks)
+      - [Inputs](#inputs)
+      - [Outputs](#outputs)
+      - [Chunk naming](#chunk-naming)
+      - [Citation](#citation)
+      - [No manual section numbering](#no-manual-section-numbering)
+      - [Paragraph formatting](#paragraph-formatting)
+      - [Session Info](#session-info)
+  - [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
+  - [Citing sources in text](#citing-sources-in-text)
+    - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
+  - [How to spell check](#how-to-spell-check)
+  - [Code Style](#code-style)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Docker for refinebio-examples
 
 This repository uses a Docker image to manage dependencies and keep software versions consistent.
@@ -79,13 +111,25 @@ Default is the `references.bib` script at the top of the repository.
 
 ## Adding a new analysis
 
-- Start with the `template/template_example.Rmd`
+To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent analysis folder.
+
 - Update Dockerfile with needed packages
 - Add example dataset's experiment folder to S3 buckets
 - Push update Docker image
 
-Copy, paste and rename the `template/template_example.Rmd` file to the new pertinent analysis folder.
-Search for `{{` or `}}` and replace those with the pertinent information.
+### File naming conventions
+
+Rename the template file according to what the new analysis' content will be and what analysis group it will belong to.
+In other words, `.Rmd` files are named like `<analysis_module>_<section/tech>_<notebook#>_<name_of_analysis>.Rmd`
+For example: `dimension_reduction_microarray_01_pca.Rmd` is the first notebook in the dimension reduction group and is in the `02-microarray` section/folder.
+Notebooks numbers should be kept in relative order of `least background knowledge/simple implementation` -> `most background knowledge needed/most complex`.
+
+If the analysis you are adding doesn't fit with any of the existing groups, try to carefully label it with a new group name.
+Even though it is the only `.Rmd` in its group, it should still be labeled with a `01` in its name.
+
+### How to use the template.Rmd
+
+When editing the new analysis from the `template/template_example.Rmd`, search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
 
@@ -112,21 +156,48 @@ After a few rounds of changes to the Dockerfile has occurred, we can make a new 
 For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
 So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number.
 
+### Adding datasets to the S3 bucket
+
+You will need an AWS account to add files to S3 bucket.
+Go to the [refinebio-examples bucket](https://s3.console.aws.amazon.com/s3/buckets/refinebio-examples/02-microarray/?region=us-east-2&tab=overview) on Amazon Web Services.
+
+Each section has a folder (`02-microarray`, `03-rnaseq`, and `04-advanced-topics`).
+1) Click on the section folder you are adding to.
+2) Click the `+ Create folder` button and name the folder with the experiment accession (e.g. `GSE12345` - as it would be on refine.bio download, aggregate by experiment).
+3) Click `Save`.
+4) Click on the experiment_accession folder you created.
+5) Click `Upload`.
+6) Choose the `metadata` and `data` TSV files you obtained from refine.bio (make sure they are correctly non-QN'ed or QN'ed upon your download).
+7) Click `Next`.
+8) Under `Manage public permissions` > Choose `Grant public read access to this object`.
+9) Click `Next`.
+10) Click `Next` again.
+11) Click Upload.
+
+Test that the files you've uploaded succesfully download by running the `download-data.sh`
+script.
+If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the  file and click the `Make it Public` button and try testing your download again.
+
 ### General guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
 
 #### Inputs  
 
-- refine.bio download files.
+- refine.bio download files
 - The refine.bio download files should be [added to the S3 bucket]().
 - Any additional reference files should be downloaded in the notebook.  
 
 #### Outputs  
 
+Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
+For example: `GSE12345_pca_plot.png`
+
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
+- Underscores instead of `-` just so we don't have to think about it.
+- No camel case.   
 
 #### Chunk naming  
 
@@ -161,8 +232,11 @@ Each sentence should be on its own line.
   - Use "PNG", NOT png or `png` or .png (and etc.)
   - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
 
-For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
-Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
+  - **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
+  Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  
+
+  - **Variable names**: Variable names, like those that are stored as column names in a data frame
+  should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
 
 ## Citing sources in text
 
