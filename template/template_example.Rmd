@@ -39,8 +39,8 @@ If you have trouble running this chunk, see our [introduction to using Rmds](htt
 data_dir <- file.path("data", {{experiment_accession}}) # Replace with path to desired data directory
 
 # Create the data folder if it doesn't exist
-if (!dir.exists(data_dir)) {
-  dir.create(data_dir)
+if (!dir.exists("data")) {
+  dir.create("data")
 }
 
 # Define the file path to the plots directory

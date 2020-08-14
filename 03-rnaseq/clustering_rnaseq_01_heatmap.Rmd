@@ -36,16 +36,11 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-<<<<<<< HEAD:03-rnaseq/clustering/clustering_heatmap_example.Rmd
 # Define the file path to the data directory
-data_dir <- file.path("data", "SRP070849") # Replace with path to desired data directory
-=======
-# Define the file path to the results directory
 data_dir <- file.path("data", "SRP070849") # Replace with path to desired data directory
 
 # Define the file path to the plots directory
 plots_dir <- file.path("plots", "SRP070849") # Can replace with path to desired output plots directory
->>>>>>> master:03-rnaseq/clustering_rnaseq_01_heatmap.Rmd
 
 # Create the data folder if it doesn't exist
 if (!dir.exists("data")) {
@@ -413,7 +408,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "HeatmapSRP070849_annotated.png" # Replace file name with a relevant output plot name
+  "heatmap_SRP070849_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
