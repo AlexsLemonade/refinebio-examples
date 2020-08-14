@@ -7,9 +7,9 @@ _site
 .Rproj.user
 .snakemake
 *.nb.html
-*/plots
-*/results
-*/data
+*/plots/*
+*/results/*
+*/data/*
 
 # markdown spellcheck
 .spelling
