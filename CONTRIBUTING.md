@@ -24,6 +24,13 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSW
 Now you can navigate to http://localhost:8787/ to start developing.
 Login to the RStudio server with the username `rstudio` and the password you set above.
 
+## Download the datasets
+
+For developing purposes, you can download all the datasets for examples by running this command in the Docker container:
+```
+scripts/download-data.sh
+```
+
 ## Rendering notebooks
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
@@ -72,6 +79,11 @@ Default is the `references.bib` script at the top of the repository.
 
 ## Adding a new analysis
 
+- Start with the `template/template_example.Rmd`
+- Update Dockerfile with needed packages
+- Add example dataset's experiment folder to S3 buckets
+- Push update Docker image
+
 Copy, paste and rename the `template/template_example.Rmd` file to the new pertinent analysis folder.
 Search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
@@ -80,6 +92,7 @@ The introductory info in this template file helps toward our goal of these analy
 ### Docker image management
 
 All necessary packages needed for running the analysis should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
+
 In the `refinebio-examples` repository:
 ```
 docker build -< Dockerfile -t ccdl/refinebio-examples
@@ -97,7 +110,7 @@ docker push ccdl/refinebio-examples:dev
 ```
 After a few rounds of changes to the Dockerfile has occurred, we can make a new version tag.
 For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
-So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number. 
+So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number.
 
 ### General guidelines for analyses notebooks
 
@@ -105,7 +118,8 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 
 #### Inputs  
 
-- refine.bio download files.  
+- refine.bio download files.
+- The refine.bio download files should be [added to the S3 bucket]().
 - Any additional reference files should be downloaded in the notebook.  
 
 #### Outputs  

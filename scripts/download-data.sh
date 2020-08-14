@@ -1,5 +1,8 @@
-# Download refinebio-example data for development purposes
+#!/bin/bash
 # C. Savonen
+# CCDL for ALSF 2020
+
+# Download refinebio-example data for development purposes
 
 set -e
 set -o pipefail
