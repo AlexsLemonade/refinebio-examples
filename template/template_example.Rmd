@@ -35,12 +35,12 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the results directory
-data_dir <- "data" # Replace with path to desired data directory
+# Define the file path to the data directory
+data_dir <- file.path("data", {{experiment_accession}}) # Replace with path to desired data directory
 
 # Create the data folder if it doesn't exist
-if (!dir.exists(data_dir)) {
-  dir.create(data_dir)
+if (!dir.exists("data")) {
+  dir.create("data")
 }
 
 # Define the file path to the plots directory
@@ -76,7 +76,17 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
 
-It make take a few minutes for the dataset to process.
+<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
+
+{{DELETE THIS LINE}}
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
+{{DELETE THIS LINE}}
+
+It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
 
 ## About the dataset we are using for this example
@@ -98,20 +108,21 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste both the equivalent `metadata_<experiment_accession_id>.tsv` and `<experiment_accession_id>.tsv` TSV files into your newly created `data/` folder.
+Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
 Your new analysis folder should contain: 
 
 - The example analysis Rmd you downloaded  
-- A folder called "data" which contains:  
-  - The gene expression  
-  - The metadata TSV  
+- A folder called "data" which contains:
+  - The `<experiment_accession_id>` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
