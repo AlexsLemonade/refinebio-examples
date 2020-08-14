@@ -123,10 +123,14 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 
 #### Outputs  
 
+Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
+For example: `GSE12345_pca_plot.png`
+
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
-- To keep file naming consistent, let's not use capitalization and stick to underscores instead of `-` or a space.
+- Underscores instead of `-` just so we don't have to think about it.
+- No camel case. 
 
 #### Chunk naming  
 
