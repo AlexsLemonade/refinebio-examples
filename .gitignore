@@ -7,24 +7,9 @@ _site
 .Rproj.user
 .snakemake
 *.nb.html
-
-# This data is downloaded from another part of the repo in essence
-04-advanced-topics/normalize-own-data/data/GSE39842_RMA_converted.tsv
-
-# don't track msigdb pathway files
-02-microarray/pathway-analysis/gene-sets/
-
-# ignore this id conversion file
-02-microarray/validate-differential-expression/data/hugenest11.tsv
-
-# large human medulloblastoma dataset
-02-microarray/pathway-analysis/data/GSE37382
-
-# large experiment
-02-microarray/pathway-analysis/data/GSE75574
-
-# Remove large file 
-04-advanced-topics/normalize-own-data/data/GSE39842_RMA_converted.tsv
+*/plots/*
+*/results/*
+*/data/*
 
 # markdown spellcheck
 .spelling

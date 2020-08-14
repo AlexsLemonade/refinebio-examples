@@ -1,7 +1,7 @@
 rule target:
     input: 
         "01-getting-started/getting-started.html",
-	  "03-rnaseq/clustering/clustering_heatmap_example.html" 
+        "03-rnaseq/clustering_rnaseq_01_heatmap.html" 
 
 rule render_citations:
     input:
