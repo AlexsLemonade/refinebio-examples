@@ -20,6 +20,9 @@ What things should reviewers look out for?
 * [ ] Spell checked any Rmd file or md file.
 * [ ] Comments and documentation are up to date.
 
+### Add datasets to S3
+* [ ] Add [data and metadata files to S3](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#adding-datasets-to-the-S3-bucket)
+
 ### Docker/Snakemake
 * [ ] Any not yet added packages needed for this analysis have been added to the Dockerfile and it successfully builds.
 * [ ] In the Docker container, run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#how-to-re-render-the-notebooks)

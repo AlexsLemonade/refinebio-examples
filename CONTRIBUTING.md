@@ -111,11 +111,7 @@ Default is the `references.bib` script at the top of the repository.
 
 ## Adding a new analysis
 
-To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent analysis folder.
-
-- Update Dockerfile with needed packages
-- Add example dataset's experiment folder to S3 buckets
-- Push update Docker image
+To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent section's folder.
 
 ### File naming conventions
 

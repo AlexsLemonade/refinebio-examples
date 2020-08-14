@@ -3,6 +3,10 @@ rule target:
         "01-getting-started/getting-started.html",
 	  "03-rnaseq/clustering/clustering_heatmap_example.html" 
 
+rule download: 
+    shell: 
+       "scripts/download-data.sh"
+
 rule render_citations:
     input:
         rmd = "{basename}.Rmd",
