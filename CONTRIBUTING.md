@@ -72,8 +72,21 @@ Default is the `references.bib` script at the top of the repository.
 
 ## Adding a new analysis
 
-Copy, paste and rename the `template/template_example.Rmd` file to the new pertinent analysis folder.
-Search for `{{` or `}}` and replace those with the pertinent information.
+To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent analysis folder.
+
+#### File naming conventions
+
+Rename the template file according to what the new analysis' content will be and what analysis group it will belong to.
+In other words, `.Rmd` files are named like `<analysis_module>_<section/tech>_<notebook#>_<name_of_analysis>.Rmd`
+For example: `dimension_reduction_microarray_01_pca.Rmd` is the first notebook in the dimension reduction group and is in the `02-microarray` section/folder.
+Notebooks numbers should be kept in relative order of `least background knowledge/simple implementation` -> `most background knowledge needed/most complex`.
+
+If the analysis you are adding doesn't fit with any of the existing groups, try to carefully label it with a new group name.
+Even though it is the only `.Rmd` in its group, it should still be labeled with a `01` in its name.
+
+## How to use the template.Rmd
+
+When editing the new analysis from the `template/template_example.Rmd`, search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
 
@@ -97,7 +110,7 @@ docker push ccdl/refinebio-examples:dev
 ```
 After a few rounds of changes to the Dockerfile has occurred, we can make a new version tag.
 For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
-So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number. 
+So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number.
 
 ### General guidelines for analyses notebooks
 
@@ -110,9 +123,14 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 
 #### Outputs  
 
+Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
+For example: `GSE12345_pca_plot.png`
+
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
+- Underscores instead of `-` just so we don't have to think about it.
+- No camel case. 
 
 #### Chunk naming  
 
@@ -147,8 +165,11 @@ Each sentence should be on its own line.
   - Use "PNG", NOT png or `png` or .png (and etc.)
   - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
 
-For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
-Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.
+- **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
+Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  
+
+- **Variable names**: Variable names, like those that are stored as column names in a data frame
+should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
 
 ## Citing sources in text
 
