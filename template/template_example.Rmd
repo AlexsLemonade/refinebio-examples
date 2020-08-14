@@ -83,7 +83,7 @@ We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
 {{DELETE THIS LINE}}
 
 It may take a few minutes for the dataset to process.
@@ -122,7 +122,7 @@ Your new analysis folder should contain:
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
