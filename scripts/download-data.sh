@@ -13,6 +13,7 @@ FOLDERS=(02-microarray 03-rnaseq 04-advanced-topics)
 # Download by each folder
 for FOLDER in "${FOLDERS[@]}"
   do
-  mkdir -p ../$FOLDER/data/
-  aws --no-sign-request s3 cp s3://refinebio-examples/$FOLDER ../$FOLDER/data --recursive
+  mkdir -p $FOLDER/data/
+  # Copy over folders and their contents and put them in the respective section/data folder
+  aws --no-sign-request s3 cp s3://refinebio-examples/$FOLDER/ $FOLDER/data/ --recursive
   done
