@@ -155,7 +155,7 @@ So the same steps would be followed above, but you can change where it says `dev
 ### Adding datasets to the S3 bucket
 
 You will need an AWS account to add files to S3 bucket.
-Go to the [refinebio-examples bucket](https://s3.console.aws.amazon.com/s3/buckets/refinebio-examples/02-microarray/?region=us-east-2&tab=overview) on Amazon Web Services.
+Go to the [refinebio-examples bucket](https://s3.console.aws.amazon.com/s3/buckets/refinebio-examples/?region=us-east-2) on Amazon Web Services.
 
 Each section has a folder (`02-microarray`, `03-rnaseq`, and `04-advanced-topics`).
 1) Click on the section folder you are adding to.
@@ -172,7 +172,7 @@ Each section has a folder (`02-microarray`, `03-rnaseq`, and `04-advanced-topics
 
 Test that the files you've uploaded succesfully download by running the `download-data.sh`
 script.
-If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the  file and click the `Make it Public` button and try testing your download again.
+If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the file and click the `Make it Public` button and try testing your download again.
 
 ### General guidelines for analyses notebooks
 
