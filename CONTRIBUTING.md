@@ -181,7 +181,7 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 #### Inputs  
 
 - refine.bio download files
-- The refine.bio download files should be [added to the S3 bucket]().
+- The refine.bio download files should be [added to the S3 bucket](#adding-datasets-to-the-s3-bucket).
 - Any additional reference files should be downloaded in the notebook.  
 
 #### Outputs  
