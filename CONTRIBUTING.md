@@ -193,7 +193,7 @@ For example: `GSE12345_pca_plot.png`
 - Output results should be `TSV` when possible.  
 - Plots should be saved to `PNG` whenever possible.    
 - Underscores instead of `-` just so we don't have to think about it.
-- No camel case.   
+- No camel case (except for packages/functions where it is already in use!)
 
 #### Chunk naming  
 
