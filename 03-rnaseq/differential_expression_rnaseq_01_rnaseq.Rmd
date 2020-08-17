@@ -1,129 +1,217 @@
 ---
-title: "Differential Expression Analysis: RNA-seq with `limma-voom`"
+title: "Differential Expression - RNA-seq"
 author: "CCDL for ALSF"
+date: "`r format(Sys.time(), '%B %Y')`"
 output:   
-  html_notebook: 
+  html_notebook:
     toc: true
     toc_float: true
+    number_sections: true
 ---
 
-## Background
+# Purpose of the analysis:
 
-This notebook takes RNA-seq data and metadata from refine.bio and 
-identifies differentially expressed genes. 
-We recommend skipping quantile normalization for RNA-seq data if you want to
-perform differential expression analysis.
-(You can read more about that [here]((http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments)) 
-in our documentation.)
+<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
+This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes. 
 
-Here we're using the the [_"bias corrected without an offset"_ approach](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#use-with-downstream-bioconductor-dge-packages) described 
-in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html)
+# How to run this example
 
+For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
-with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
-The voom methodology was introduced in [Law et al. _Genome Biology._ 2014.](https://doi.org/10.1186/gb-2014-15-2-r29)
+## Obtain the `.Rmd` file of this analysis
 
-You may also find [this limma-voom tutorial](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html) 
-from the 
-[UC Davis Bioinformatics Core 2018 RNA-Seq Workshop](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/)
-helpful.
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
 
-Note that we perform a simple two-group comparison here. 
-Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
-for more information about additional experimental designs.
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
 
-Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
-of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
+## Set up your analysis folders 
 
-To use `edgeR` functionality such as filtering and calculating normalization
-factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
-using the refine.bio data as the `counts`.
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
 
-
-
-### Dataset
-
-We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) 
-from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429) 
-in this notebook.
-
-The authors performed RNA-seq on primary peripheral blood and bone marrow
-samples from patients with acute myeloid leukemia.
-We will compare samples from patients without _ASXL1/2_ mutations to samples
-from patients with _ASXL1/2_ without taking tissue of origin into account.
-
-## Set up
-
-Install `DESeq2` if not yet installed.
-
-```{r Install DESeq2}
-if (!("DESeq2" %in% installed.packages())) {
-  # Install DESeq2
-  BiocManager::install("DESeq2", update = FALSE)
-}
-```
-
-Load libraries.
+If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Magrittr pipe
-`%>%` <- dplyr::`%>%`
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP078441") # Replace with path to desired data directory
 
-# Attach libraries
-library(DESeq2) # We'll use this for the differential expression analysis
-library(ggplot2) # We will use this for plotting
-```
-
-Create output folders.
-
-```{r}
-# Define the file path to the results directory
-results_dir <- "results" # Replace with path to desired output results directory
-
-# Create the results folder if it doesn't exist
-if (!dir.exists(results_dir)) {
-  dir.create(results_dir)
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
 }
 
-# Define the file path to the results directory
-plots_dir <- "plots" # Replace with path to desired output plots directory
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
 ```
 
-### Read in refine.bio data
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
-```{r Import data from .tsv files}
-# Read in metadata tsv file
-metadata.df <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
-                                         "metadata_SRP078441.tsv" # Replace with the name of your metadata file
-                                         )) %>%
-  # Get rid of columns that have only NAs
-  dplyr::select(-which(apply(is.na(.), 2, all)))
+## Obtain the dataset from refine.bio
 
-# Read in data tsv file
-expression.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                           "SRP078441.tsv" # Replace with the name of your data file
-                                           )) %>%
-  tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
+
+<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
+{{DELETE THIS LINE}}
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute myeloid leukemia dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol]
+
+Micol _et._ _al_, performed RNA-seq on primary peripheral blood and bone marrow
+samples from AML patients with and without _ASXL1/2_ mutations. 
+
+## Place the dataset in your new `data/` folder
+
+Refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
+
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis Rmd you downloaded  
+- A folder called "data" which contains:
+  - The `<experiment_accession_id>` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+
+Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+Run this chunk to double check that your files are in the right place. 
+
+```{r}
+# Check if the gene expression matrix file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "SRP078441", "SRP078441.tsv"))
+
+# Check if the metadata file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "SRP078441", "metadata_SRP078441.tsv"))
 ```
 
-The information we need to make the comparison is in the `refinebio_title` 
-column of the metadata data.frame.
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+# {{NAME OF example}}
+
+## Install libraries
+
+See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+
+In this analysis, we will be using DESeq2 [@DESeq2].
+
+```{r}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+```
+
+Attach the DESeq2:
+
+```{r}
+# Attach the library
+library(DESeq2)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import and set up data
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your metadata file
+                                      "metadata_SRP078441.tsv" # Replace with the name of your metadata file
+                                      ))
+
+# Read in data TSV file
+df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
+                                "SRP078441.tsv" # Replace with the name of your data file
+                                )) %>%
+  tibble::column_to_rownames('Gene')
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>% dplyr::select(metadata$geo_accession)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$geo_accession)
+```
+
+The information we need to make the comparison is in the `refinebio_title` column of the metadata data.frame.
 
 ```{r}
 head(metadata.df$refinebio_title)
 ```
 
-We'll use some tidyverse functionality to extract this information into its
-own column to make it easier to use.
+We'll use some tidyverse functionality to extract this information into its own column to make it easier to use.
 
 ```{r}
-metadata.df <- metadata.df %>%
+metadata_df <- metadata_df %>%
   # the last bit of the title, separated by "-" contains the mutation 
   # information that we want to extract
   dplyr::mutate(mutation_status = stringr::word(refinebio_title,
@@ -135,46 +223,17 @@ metadata.df <- metadata.df %>%
   )) 
 ```
 
-Let's take a look at `metadata.df` to see if this worked.
+Let's take a look at `metadata_df` to see if this worked.
 
 ```{r}
 # looking at the first 6 rows of the metadata_df and only at the columns that
 # contain the title and the mutation status we extracted from the title
-head(dplyr::select(metadata.df, refinebio_title, mutation_status))
-```
-
-## Differential expression analysis
-
-Now that we've prepped our data, we're ready to test for differentially 
-expressed genes.
-
-Let's check if samples are in the same order.
-
-```{r}
-all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
-```
-
-```{r}
-# put samples in ascending order according to their accession code in the 
-# metadata
-metadata.df <- metadata.df %>%
-  dplyr::arrange(refinebio_accession_code)
-
-# use the metadata.df information to reorder the columns of the expression
-# data frame
-expression.df <- expression.df[, metadata.df$refinebio_accession_code]
-```
-
-Check again.
-
-```{r}
-all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
+head(dplyr::select(metadata_df, refinebio_title, mutation_status))
 ```
 
 ### DESeq2
 
-First we need convert the expression data to integers so it can be converted to 
-a DESEq2 object.
+First we need convert the expression data to integers so it can be converted to a DESEq2 object.
 
 ```{r}
 expression.df <- expression.df %>%
@@ -197,12 +256,9 @@ ddset <- DESeqDataSetFromMatrix(countData = expression.df,
 
 ### Variance stabilizing transformation
 
-Before visualizing the data, we'll transform it such that it is on a `log2` 
-scale for large counts and library size is taken into account with the `DESeq2` 
-function for variance stabilizing transformation.
-See [this section of
-the `DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) 
-for more on this topic. 
+Before visualizing the data, we'll transform it such that it is on a `log2` scale for large counts and library size is taken into account with the `DESeq2` function for variance stabilizing transformation.
+See [this section of the `DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for more on this topic. 
+TODO: Add link to DESeq2 section in RNA-seq intro document. 
 
 ```{r vst}
 vst_data <- vst(ddset)
@@ -210,8 +266,7 @@ vst_data <- vst(ddset)
 
 #### Differential expression analysis
 
-We'll use the wrapper function `DESeq` to do our differential expression 
-analysis.
+We'll use the wrapper function `DESeq` to do our differential expression analysis.
 
 ```{r DESeq}
 deseq_object <- DESeq(ddset)
@@ -242,7 +297,7 @@ deseq_df %>%
   dplyr::arrange(dplyr::desc(stat))
 ```
 
-Write the `topTable` output to file.
+Write the `topTable()` output to file.
 
 ```{r  Write results}
 readr::write_tsv(deseq_df, 
@@ -267,9 +322,11 @@ volcano_plot <- ggplot(deseq_df, aes(x = log2FoldChange, y = -log10(padj), color
 volcano_plot
 ```
 
+Save the plot to a PNG. 
+
 ```{r}
 ggsave(plot = volcano_plot, 
-       file.path(plots_dir,"volcano_plot_SRP078441.png")) # Replace with a plot name relevant to your data
+       file.path(plots_dir,"SRP078441_volcano_plot.png")) # Replace with a plot name relevant to your data
 ```
 
 Heatmaps are also a pretty common way to show differential expression results. 
@@ -277,6 +334,16 @@ You can take your results from this example and make a heatmap following our hea
 
 ## Session Info
 
+# Further learning resources about this analysis
+
+- [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization)
+
+# Print session info:
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+
 ```{r}
+# Print session info 
 sessionInfo()
 ```
