@@ -58,7 +58,7 @@ Login to the RStudio server with the username `rstudio` and the password you set
 
 ## Download the datasets
 
-For developing purposes, you can download all the datasets for examples by running this command in the Docker container:
+For development purposes, you can download all the datasets for the example notebooks by running this command in the Docker container:
 ```
 scripts/download-data.sh
 ```
@@ -158,7 +158,7 @@ You will need an AWS account to add files to S3 bucket.
 Go to the [refinebio-examples bucket](https://s3.console.aws.amazon.com/s3/buckets/refinebio-examples/) on Amazon Web Services.
 
 Each section has a folder (`02-microarray`, `03-rnaseq`, and `04-advanced-topics`).
-1) Click on the section folder you are adding to.
+1) Click on the folder for the section you are adding to, then on the `data` subfolder.
 2) Click the `+ Create folder` button and name the folder with the experiment accession (e.g. `GSE12345` - as it would be on refine.bio download, aggregate by experiment).
 3) Click `Save`.
 4) Click on the experiment_accession folder you created.
