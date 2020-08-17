@@ -22,7 +22,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file of this analysis
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -68,7 +68,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -85,7 +85,6 @@ To get this data, you will need to check the box that says "Skip quantile normal
 Note that this option will only be available for RNA-seq datasets.
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
-{{DELETE THIS LINE}}
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -149,7 +148,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ***
 
-# {{NAME OF example}}
+# Differential Expression
 
 ## Install libraries
 
