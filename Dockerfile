@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialo
 RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     awscli \
     bzip2 \
+    curl \
     zlib1g \
     libbz2-dev \
     liblzma-dev \
