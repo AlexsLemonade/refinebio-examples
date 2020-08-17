@@ -1,14 +1,28 @@
 ## Purpose:
 What issue(s) does your PR address?
 
-## Results
-If applicable, briefly report your findings.
+## Strategy
+What was your strategy for this new or edited analysis?
 
-## Pull Request Check List:
-* [ ] Run a linter
+## Concerns/Questions for reviewers:
+What things should reviewers look out for?
+
+## Analysis Pull Request Check List (roughly in order):
+
+### Content checks
+* [ ] All `{{BLANKS}}` have been replaced with the correct content.
+* [ ] [Sources are cited](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#citing-sources-in-text)
 * [ ] Set the seed (if applicable)
-* [ ] Comments and/or documentation up to date
-* [ ] Double check your paths
-* [ ] Check headline numbering
-* [ ] Spell check any Rmd file or md file
-* [ ] Restart R and run all notebooks fresh and save
+
+### Formatting Checks
+* [ ] Removed any manual numbering of sections.
+* [ ] Removed any instances of chunk naming.
+* [ ] Spell checked any Rmd file or md file.
+* [ ] Comments and documentation are up to date.
+
+### Add datasets to S3
+* [ ] Add [data and metadata files to S3](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#adding-datasets-to-the-S3-bucket)
+
+### Docker/Snakemake
+* [ ] Any not yet added packages needed for this analysis have been added to the Dockerfile and it successfully builds.
+* [ ] In the Docker container, run [snakemake for rendering](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#how-to-re-render-the-notebooks)

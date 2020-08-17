@@ -1,0 +1,282 @@
+---
+title: "Differential Expression Analysis: RNA-seq with `limma-voom`"
+author: "CCDL for ALSF"
+output:   
+  html_notebook: 
+    toc: true
+    toc_float: true
+---
+
+## Background
+
+This notebook takes RNA-seq data and metadata from refine.bio and 
+identifies differentially expressed genes. 
+We recommend skipping quantile normalization for RNA-seq data if you want to
+perform differential expression analysis.
+(You can read more about that [here]((http://docs.refine.bio/en/latest/main_text.html#skipping-quantile-normalization-for-rna-seq-experiments)) 
+in our documentation.)
+
+
+Here we're using the the [_"bias corrected without an offset"_ approach](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#use-with-downstream-bioconductor-dge-packages) described 
+in the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html)
+
+
+with [limma-voom](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom).
+The voom methodology was introduced in [Law et al. _Genome Biology._ 2014.](https://doi.org/10.1186/gb-2014-15-2-r29)
+
+You may also find [this limma-voom tutorial](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/thursday/DE.html) 
+from the 
+[UC Davis Bioinformatics Core 2018 RNA-Seq Workshop](https://ucdavis-bioinformatics-training.github.io/2018-June-RNA-Seq-Workshop/)
+helpful.
+
+Note that we perform a simple two-group comparison here. 
+Consult the [limma user guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
+for more information about additional experimental designs.
+
+Here, we're following the steps in [this section](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html#limma-voom) 
+of the [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html).
+
+To use `edgeR` functionality such as filtering and calculating normalization
+factors, we will construct a [`DGEList`](https://www.rdocumentation.org/packages/edgeR/versions/3.10.5/topics/DGEList-class) 
+using the refine.bio data as the `counts`.
+
+
+
+### Dataset
+
+We are using [`SRP078441`](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) 
+from [Micol et al. _Nat Commun._ 2017.](https://dx.doi.org/10.1038/ncomms15429) 
+in this notebook.
+
+The authors performed RNA-seq on primary peripheral blood and bone marrow
+samples from patients with acute myeloid leukemia.
+We will compare samples from patients without _ASXL1/2_ mutations to samples
+from patients with _ASXL1/2_ without taking tissue of origin into account.
+
+## Set up
+
+Install `DESeq2` if not yet installed.
+
+```{r Install DESeq2}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install DESeq2
+  BiocManager::install("DESeq2", update = FALSE)
+}
+```
+
+Load libraries.
+
+```{r}
+# Magrittr pipe
+`%>%` <- dplyr::`%>%`
+
+# Attach libraries
+library(DESeq2) # We'll use this for the differential expression analysis
+library(ggplot2) # We will use this for plotting
+```
+
+Create output folders.
+
+```{r}
+# Define the file path to the results directory
+results_dir <- "results" # Replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
+# Define the file path to the results directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+```
+
+### Read in refine.bio data
+
+```{r Import data from .tsv files}
+# Read in metadata tsv file
+metadata.df <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
+                                         "metadata_SRP078441.tsv" # Replace with the name of your metadata file
+                                         )) %>%
+  # Get rid of columns that have only NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+
+# Read in data tsv file
+expression.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
+                                           "SRP078441.tsv" # Replace with the name of your data file
+                                           )) %>%
+  tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
+```
+
+The information we need to make the comparison is in the `refinebio_title` 
+column of the metadata data.frame.
+
+```{r}
+head(metadata.df$refinebio_title)
+```
+
+We'll use some tidyverse functionality to extract this information into its
+own column to make it easier to use.
+
+```{r}
+metadata.df <- metadata.df %>%
+  # the last bit of the title, separated by "-" contains the mutation 
+  # information that we want to extract
+  dplyr::mutate(mutation_status = stringr::word(refinebio_title,
+                                                -1, sep = "-")) %>%
+  # now let's make this simpler
+  dplyr::mutate(mutation_status = dplyr::case_when(
+    grepl("ASXL1|ASXL2", mutation_status) ~ "mutation",
+    grepl("ASXLwt", mutation_status) ~ "wildtype"
+  )) 
+```
+
+Let's take a look at `metadata.df` to see if this worked.
+
+```{r}
+# looking at the first 6 rows of the metadata_df and only at the columns that
+# contain the title and the mutation status we extracted from the title
+head(dplyr::select(metadata.df, refinebio_title, mutation_status))
+```
+
+## Differential expression analysis
+
+Now that we've prepped our data, we're ready to test for differentially 
+expressed genes.
+
+Let's check if samples are in the same order.
+
+```{r}
+all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
+```
+
+```{r}
+# put samples in ascending order according to their accession code in the 
+# metadata
+metadata.df <- metadata.df %>%
+  dplyr::arrange(refinebio_accession_code)
+
+# use the metadata.df information to reorder the columns of the expression
+# data frame
+expression.df <- expression.df[, metadata.df$refinebio_accession_code]
+```
+
+Check again.
+
+```{r}
+all.equal(colnames(expression.df), metadata.df$refinebio_accession_code)
+```
+
+### DESeq2
+
+First we need convert the expression data to integers so it can be converted to 
+a DESEq2 object.
+
+```{r}
+expression.df <- expression.df %>%
+  # Bring the "Gene" column back from the rownames
+  tibble::rownames_to_column("Gene") %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, as.integer)
+```
+
+Now we need to create `DESeqDataSet` from our expression dataset. 
+We use the `mutation_status` of origin in the design formula because that will allow us
+to model this variable of interest.
+
+```{r}
+ddset <- DESeqDataSetFromMatrix(countData = expression.df,
+                                tidy = TRUE,
+                                colData = metadata.df,
+                                design = ~ mutation_status)
+```
+
+### Variance stabilizing transformation
+
+Before visualizing the data, we'll transform it such that it is on a `log2` 
+scale for large counts and library size is taken into account with the `DESeq2` 
+function for variance stabilizing transformation.
+See [this section of
+the `DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) 
+for more on this topic. 
+
+```{r vst}
+vst_data <- vst(ddset)
+```
+
+#### Differential expression analysis
+
+We'll use the wrapper function `DESeq` to do our differential expression 
+analysis.
+
+```{r DESeq}
+deseq_object <- DESeq(ddset)
+```
+
+Let's take a look at the results table.
+
+```{r deseq_results}
+deseq_results <- results(deseq_object)
+deseq_results
+```
+
+Sort the results. 
+
+```{r arrange-deseq_results}
+# this is of class DESeqResults -- we want a data.frame
+deseq_df <- deseq_results %>%
+  # make into data.frame
+  as.data.frame() %>%
+  # the gene names are rownames -- let's make this it's own column for easy 
+  # display
+  tibble::rownames_to_column(var = "Gene") %>% 
+  dplyr::mutate(threshold = padj < 0.05)
+
+deseq_df %>%
+  # let's sort by statistic -- the highest values should be what is up in the
+  # MYCN amplified cell lines
+  dplyr::arrange(dplyr::desc(stat))
+```
+
+Write the `topTable` output to file.
+
+```{r  Write results}
+readr::write_tsv(deseq_df, 
+                 file.path(results_dir,
+                           "SRP078441_limma_results.tsv" # Replace with a relevant output file name
+                                  ))
+```
+
+### Volcano plot
+
+```{r}
+volcano_plot <- ggplot(deseq_df, aes(x = log2FoldChange, y = -log10(padj), color = threshold)) +
+  geom_point() +
+  theme_classic() +
+  xlab("log2 fold change") + 
+  ylab("-log10 adjusted p-value") +
+  ggtitle("Volcano plot for mutation status") + 
+  scale_color_manual(values = c("lightgray", "navy")) +
+  theme(legend.position = "none") 
+
+# Print out plot here
+volcano_plot
+```
+
+```{r}
+ggsave(plot = volcano_plot, 
+       file.path(plots_dir,"volcano_plot_SRP078441.png")) # Replace with a plot name relevant to your data
+```
+
+Heatmaps are also a pretty common way to show differential expression results. 
+You can take your results from this example and make a heatmap following our heatmap module: TODO: link here. 
+
+## Session Info
+
+```{r}
+sessionInfo()
+```
