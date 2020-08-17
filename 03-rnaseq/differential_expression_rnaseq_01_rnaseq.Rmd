@@ -13,7 +13,7 @@ output:
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
-This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes. 
+This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes based on an experimental groups. 
 
 # How to run this example
 
@@ -131,10 +131,10 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "SRP078441", "SRP078441.tsv"))
+file.exists(file.path(data_dir, "SRP078441.tsv"))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "SRP078441", "metadata_SRP078441.tsv"))
+file.exists(file.path(data_dir, "metadata_SRP078441.tsv"))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -167,8 +167,11 @@ if (!("DESeq2" %in% installed.packages())) {
 Attach the DESeq2:
 
 ```{r}
-# Attach the library
+# Attach the DESeq2 library
 library(DESeq2)
+
+# Attach the ggplot2 library for plotting
+library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
@@ -196,22 +199,22 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$geo_accession)
+df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
+all.equal(colnames(df), metadata$refinebio_accession_code)
 ```
 
 The information we need to make the comparison is in the `refinebio_title` column of the metadata data.frame.
 
 ```{r}
-head(metadata.df$refinebio_title)
+head(metadata$refinebio_title)
 ```
 
 We'll use some tidyverse functionality to extract this information into its own column to make it easier to use.
 
 ```{r}
-metadata_df <- metadata_df %>%
+metadata <- metadata %>%
   # the last bit of the title, separated by "-" contains the mutation 
   # information that we want to extract
   dplyr::mutate(mutation_status = stringr::word(refinebio_title,
@@ -228,7 +231,7 @@ Let's take a look at `metadata_df` to see if this worked.
 ```{r}
 # looking at the first 6 rows of the metadata_df and only at the columns that
 # contain the title and the mutation status we extracted from the title
-head(dplyr::select(metadata_df, refinebio_title, mutation_status))
+head(dplyr::select(metadata, refinebio_title, mutation_status))
 ```
 
 ### DESeq2
@@ -236,7 +239,7 @@ head(dplyr::select(metadata_df, refinebio_title, mutation_status))
 First we need convert the expression data to integers so it can be converted to a DESEq2 object.
 
 ```{r}
-expression.df <- expression.df %>%
+df <- df %>%
   # Bring the "Gene" column back from the rownames
   tibble::rownames_to_column("Gene") %>%
   # Mutate numeric variables to be integers
@@ -248,9 +251,9 @@ We use the `mutation_status` of origin in the design formula because that will a
 to model this variable of interest.
 
 ```{r}
-ddset <- DESeqDataSetFromMatrix(countData = expression.df,
+ddset <- DESeqDataSetFromMatrix(countData = df,
                                 tidy = TRUE,
-                                colData = metadata.df,
+                                colData = metadata,
                                 design = ~ mutation_status)
 ```
 
