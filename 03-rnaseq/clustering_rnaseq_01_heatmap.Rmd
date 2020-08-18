@@ -49,7 +49,7 @@ if (!dir.exists("data")) {
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir)
+  dir.create(plots_dir, recursive = TRUE)
 }
 ```
 
