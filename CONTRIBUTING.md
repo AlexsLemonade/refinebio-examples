@@ -1,10 +1,9 @@
-# Contributing guidelines
+# Contributing guidelines - refinebio-examples
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Steps for adding a new analysis](#steps-for-adding-a-new-analysis)
 - [Docker for refinebio-examples](#docker-for-refinebio-examples)
   - [Setting up the docker container](#setting-up-the-docker-container)
   - [Pushing Docker image updates](#pushing-docker-image-updates)
@@ -13,6 +12,9 @@
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+  - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
+  - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
+- [Add a new analysis](#add-a-new-analysis)
 - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
   - [How to use the template.Rmd](#how-to-use-the-templatermd)
   - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
@@ -20,6 +22,7 @@
     - [Inputs](#inputs)
     - [Outputs](#outputs)
     - [Chunk naming](#chunk-naming)
+    - [Code Style](#code-style)
     - [Citation](#citation)
     - [No manual section numbering](#no-manual-section-numbering)
     - [Paragraph formatting](#paragraph-formatting)
@@ -28,21 +31,8 @@
 - [Citing sources in text](#citing-sources-in-text)
   - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
 - [How to spell check](#how-to-spell-check)
-- [Code Style](#code-style)
-- [Add to navigation bar](#add-to-navigation-bar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-## Steps for adding a new analysis
-
-- On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
-- Add a [link to the html file to `_navbar.html` (with a short title)](#add-to-navigation-bar)
-- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
-- Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
-- Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
-- Add the [expected output html file to snakemake](#how-to-re-render-the-notebooks)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
-- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ## Docker for refinebio-examples
 
@@ -102,15 +92,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 
 **Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
 
-**Step 2)** Add any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
-Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
-```
-rule target:
-    input:
-        "01-getting-started/getting-started.html",
-        "a-directory/the-name-of-the-new-rmd.html"
-```
-File paths should be relative to the `Snakefile`.
+**Step 2)** Make sure any newly added analyses are [added to the Snakefile](#add-new-analyses-to-the-snakefile) and [added to the navbar](#add-new-analyses-to-the-navbar).
 
 **Step 3)** Run the thing!
 Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
@@ -137,6 +119,36 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 - `--bib_file`: File path for the  `bibliography:` header option.
 Default is the `references.bib` script at the top of the repository.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
+
+### Add new analyses to the Snakefile
+
+Any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
+Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
+```
+rule target:
+    input:
+        "01-getting-started/getting-started.html",
+        "a-directory/the-name-of-the-new-rmd.html"
+```
+File paths should be relative to the `Snakefile`.
+
+### Add new analyses to the navbar
+
+The same `.html` file path should be added to the `components/_navbar.html` file before rendering with snakemake.
+
+## Add a new analysis
+
+Here are the summarized steps for adding a new analysis.
+Click on the links to go to the detailed instructions for each step.
+
+- On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
+- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
+- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
+- Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
+- Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
+- Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
+- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
+- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ## Setting up a new analysis file
 
@@ -205,6 +217,13 @@ For example: `GSE12345_pca_plot.png`
 Chunks preferably shouldn't be named.
 If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
 Plus its just another thing to have to keep track of.
+
+#### Code Style
+
+These analyses follow the [Google R Style Guide](http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html) which is based on the tidyverse style guide.
+
+Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
+This will help fix some spacing and formatting issues automatically.
 
 #### Citation  
 
@@ -281,13 +300,3 @@ This allows you to reference it by `@tidyverse` as [mentioned in the section abo
 
 In RStudio, go to `Edit` > `Check Spelling`.
 Unfortunately, it will also spell check your code and urls. ¯\\_(ツ)_/¯
-
-## Code Style
-
-These analyses follow the [Google R Style Guide](http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html) which is based on the tidyverse style guide.
-
-Using the [r-lib/styler package](https://github.com/r-lib/styler) can help you automatically fix a lot of the spacing and formatting issues.
-You can use the `styler::style_file("name-of-notebook.Rmd")` function to do this all at once for a notebook.
-But snakemake will automatically run this. 
-
-## Add to navigation bar
