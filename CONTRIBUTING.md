@@ -4,17 +4,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Steps for adding a new analysis](#steps-for-adding-a-new-analysis)
 - [Docker for refinebio-examples](#docker-for-refinebio-examples)
   - [Setting up the docker container](#setting-up-the-docker-container)
+  - [Pushing Docker image updates](#pushing-docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
-- [Adding a new analysis](#adding-a-new-analysis)
-  - [File naming conventions](#file-naming-conventions)
+- [Setting up a new analysis file](#setting-up-a-new-analysis-file)
   - [How to use the template.Rmd](#how-to-use-the-templatermd)
-  - [Docker image management](#docker-image-management)
   - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
   - [General guidelines for analyses notebooks](#general-guidelines-for-analyses-notebooks)
     - [Inputs](#inputs)
@@ -29,8 +29,20 @@
   - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
 - [How to spell check](#how-to-spell-check)
 - [Code Style](#code-style)
+- [Add to navigation bar](#add-to-navigation-bar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Steps for adding a new analysis
+
+- On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
+- Add a [link to the html file to `_navbar.html` (with a short title)](#add-to-navigation-bar)
+- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
+- Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
+- Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
+- Add the [expected output html file to snakemake](#how-to-re-render-the-notebooks)
+- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
+- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ## Docker for refinebio-examples
 
@@ -55,6 +67,23 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSW
 ```
 Now you can navigate to http://localhost:8787/ to start developing.
 Login to the RStudio server with the username `rstudio` and the password you set above.
+
+### Pushing Docker image updates
+
+All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
+
+In the `refinebio-examples` repository:
+```
+docker build -< Dockerfile -t ccdl/refinebio-examples
+```
+After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.   
+```
+# log in with your credentials
+docker login
+
+# Push it!
+docker push ccdl/refinebio-examples
+```
 
 ## Download the datasets
 
@@ -109,11 +138,9 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 Default is the `references.bib` script at the top of the repository.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-## Adding a new analysis
+## Setting up a new analysis file
 
 To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent section's folder.
-
-### File naming conventions
 
 Rename the template file according to the module group, section, and analysis name following the following format: `<analysis-module>_<section/tech>_<notebook#>_<name-of-analysis>.Rmd`.
 Separate multi-word phrases within a section with hyphens.
@@ -129,29 +156,6 @@ Even though it is the only `.Rmd` in its group, it should still be labeled with 
 When editing the new analysis from the `template/template_example.Rmd`, search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
-
-### Docker image management
-
-All necessary packages needed for running the analysis should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
-
-In the `refinebio-examples` repository:
-```
-docker build -< Dockerfile -t ccdl/refinebio-examples
-```
-After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository using a `dev` tag.  
-```
-# log in with your credentials
-docker login
-
-# Attach a tag to your docker image
-docker tag ccdl/refinebio-examples ccdl/refinebio-examples:dev
-
-# Push it!
-docker push ccdl/refinebio-examples:dev
-```
-After a few rounds of changes to the Dockerfile has occurred, we can make a new version tag.
-For example, if there is a `ccdl/refinebio-examples:v1` we can move to `v2`.
-So the same steps would be followed above, but you can change where it says `dev` with the appropriate `v` number.
 
 ### Adding datasets to the S3 bucket
 
@@ -285,3 +289,5 @@ These analyses follow the [Google R Style Guide](http://web.stanford.edu/class/c
 Using the [r-lib/styler package](https://github.com/r-lib/styler) can help you automatically fix a lot of the spacing and formatting issues.
 After installing it with `install.packages("styler")`, set the style to tidyverse using `usethis::use_tidy_style()`.
 You can use the `styler::style_file("name-of-notebook.Rmd")` function to do this all at once for a notebook.
+
+## Add to navigation bar
