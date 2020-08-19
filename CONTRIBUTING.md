@@ -12,18 +12,20 @@
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
     - [How to use the template.Rmd](#how-to-use-the-templatermd)
     - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
-    - [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
-    - [Guidelines for analyses notebooks](#guidelines-for-analyses-notebooks)
+  - [Guidelines for analyses notebooks](#guidelines-for-analyses-notebooks)
+    - [Notebook code chunks](#notebook-code-chunks)
       - [Input files](#input-files)
       - [Output files](#output-files)
       - [Chunk naming](#chunk-naming)
       - [Code Style](#code-style)
+      - [Session Info](#session-info)
+    - [Notebook text](#notebook-text)
+      - [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
       - [No manual section numbering](#no-manual-section-numbering)
       - [Paragraph formatting](#paragraph-formatting)
-      - [Session Info](#session-info)
-    - [Citing sources in text](#citing-sources-in-text)
-    - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
-    - [How to spell check](#how-to-spell-check)
+      - [Citing sources in text](#citing-sources-in-text)
+        - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
+      - [How to spell check](#how-to-spell-check)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
@@ -136,24 +138,11 @@ Test that the files you've uploaded succesfully download by running the `downloa
 script.
 If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the file and click the `Make it Public` button and try testing your download again.
 
-#### Formatting of typical words/items:
-
-  - Use "refine.bio", NOT "refinebio"
-  - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
-  - Use "tidyverse", NOT "Tidyverse"
-  - Use "TSV",  NOT tsv or `tsv` or .tsv
-  - Use "PNG", NOT png or `png` or .png (and etc.)
-  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
-
-  - **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
-  Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  
-
-  - **Variable names**: Variable names, like those that are stored as column names in a data frame
-  should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
-
-#### Guidelines for analyses notebooks
+### Guidelines for analyses notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
+
+#### Notebook code chunks
 
 ##### Input files
 
@@ -185,6 +174,28 @@ These analyses follow the [Google R Style Guide](https://google.github.io/styleg
 Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
 This will help fix some spacing and formatting issues automatically.
 
+##### Session Info
+
+`sessionInfo()` should always be printed out at the end.
+(It is included in the `.Rmd` template)
+
+#### Notebook text
+
+##### Formatting of typical words/items:
+
+  - Use "refine.bio", NOT "refinebio"
+  - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
+  - Use "tidyverse", NOT "Tidyverse"
+  - Use "TSV",  NOT tsv or `tsv` or .tsv
+  - Use "PNG", NOT png or `png` or .png (and etc.)
+  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
+
+  - **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
+  Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  
+
+  - **Variable names**: Variable names, like those that are stored as column names in a data frame
+  should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
+
 ##### No manual section numbering  
 
 Numbering will be done automatically in rendering; so no numbers should be put on the sections.
@@ -193,12 +204,7 @@ Numbering will be done automatically in rendering; so no numbers should be put o
 
 Each sentence should be on its own line.
 
-##### Session Info
-
-`sessionInfo()` should always be printed out at the end.
-(It is included in the `.Rmd` template)
-
-#### Citing sources in text
+##### Citing sources in text
 
 From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html):
 > Items can be cited directly within the documentation using the syntax @key where key is the citation key in the first line of the entry, e.g., @R-base. To put citations in parentheses, use [@key]. To cite multiple entries, separate the keys by semicolons, e.g., [@key-1; @key-2; @key-3]. To suppress the mention of the author, add a minus sign before @, e.g., [-@R-base].
@@ -208,7 +214,7 @@ From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/
 - Links to other notebooks in `refinebio-examples` should always go to the online version of the book (to maintain the self-contained functionality).
 - Links to sections within the same notebook can still be done like: `#how-to-use-data`.
 
-#### Adding new sources to the `references.bib`
+###### Adding new sources to the `references.bib`
 
 You can obtain formatted `LaTeX` reference entry following the instructions below and copying and pasting the whole thing in `reference.bib`.
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
@@ -236,7 +242,7 @@ For example the tidyverse citation starts like this:
 
 This allows you to reference it by `@tidyverse` as [mentioned in the section above](#citing-sources-in-text)
 
-#### How to spell check
+##### How to spell check
 
 In R, run the following:
 ```
