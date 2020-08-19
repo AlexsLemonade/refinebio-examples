@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -1344,7 +1343,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1361,6 +1359,93 @@ summary {
 </style>
 
 
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
 
 <!-- tabsets -->
 
@@ -1406,6 +1491,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1434,6 +1520,12 @@ summary {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -1499,6 +1591,64 @@ div.tocify {
 
 
 
+<!-- Navigation header for refine.bio example Rmarkdown notebooks -->
+<nav class="navbar navbar-default  navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <!-- NOTE: add "navbar-inverse" class for an alternate navbar background -->
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">refine.bio examples</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <!-- This outer list is the main navigation menu elements -->
+      <ul class="nav navbar-nav">
+        <!-- Getting started (no dropdown) -->
+        <li><a href="../01-getting-started/getting-started.html">Getting Started</a></li>
+
+        <!-- Microarray Dropdown -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Microarray<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <!-- Individual microarray pages go in this list -->
+            <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
+
+          </ul>
+        </li> <!--/microarray dropdown-->
+
+        <!-- RNA-Seq dropdown -->
+        <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">RNA-seq<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <!-- Individual RNA-Seq pages go in this list -->
+            <li><a href="../03-rnaseq/00-intro-to-rnaseq.html">Introduction</a></li>
+            <li><a href="../03-rnaseq/clustering_rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
+
+          </ul>
+        </li><!--/rna-seq dropdown-->
+
+        <!-- Advanced topics dropdown -->
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced Topics<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <!-- Individual Advanced topics pages go in this list -->
+              <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
+
+            </ul>
+        </li><!--/advanced dropdown-->
+      </ul>
+
+      <!-- Right side menubar -->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://github.com/AlexsLemonade/refinebio-examples">GitHub</a></li>
+        <li><a href="https://www.refine.bio">refine.bio</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</nav><!--/.navbar -->
 
 <div class="fluid-row" id="header">
 
@@ -1679,7 +1829,6 @@ library(DESeq2)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:Biobase&#39;:
 ## 
 ##     anyMissing, rowMedians</code></pre>
-<pre><code>## Loading required package: BiocParallel</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;DelayedArray&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:matrixStats&#39;:
@@ -1845,8 +1994,8 @@ ggplot(pcaData, aes(
 
 # Close the PNG file:
 dev.off()</code></pre>
-<pre><code>## quartz_off_screen 
-##                 2</code></pre>
+<pre><code>## png 
+##   2</code></pre>
 </div>
 </div>
 <div id="print-session-info" class="section level1">
@@ -1854,16 +2003,20 @@ dev.off()</code></pre>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.6
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
@@ -1966,7 +2119,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
