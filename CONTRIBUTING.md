@@ -138,7 +138,7 @@ Test that the files you've uploaded succesfully download by running the `downloa
 script.
 If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the file and click the `Make it Public` button and try testing your download again.
 
-### Guidelines for analyses notebooks
+## Guidelines for analysis notebooks
 
 Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
 
