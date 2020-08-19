@@ -281,7 +281,7 @@ df <- df %>%
 ```
 
 Now we need to create `DESeqDataSet` from our expression dataset. 
-We use the `mutation_status` variable we created in the design formula because that will allow us
+We use the `asxl_mutation_status` variable we created in the design formula because that will allow us
 to model the presence/absence of _ASXL1/2_ mutation.
 
 ```{r}
@@ -317,7 +317,7 @@ ddset_norm <- rlog(ddset)
 
 ## Run differential expression analysis
 
-We'll use the wrapper function `DESeq` to do our differential expression analysis.
+We'll use the wrapper function `DESeq()` to do our differential expression analysis.
 
 ```{r DESeq}
 deseq_object <- DESeq(ddset)
@@ -333,13 +333,13 @@ deseq_results
 Sort and filter the results. 
 
 ```{r arrange-deseq_results}
-# this is of class DESeqResults -- we want a data.frame
+# this is of class DESeqResults -- we want a data frame
 deseq_df <- deseq_results %>%
   # make into data.frame
   as.data.frame() %>%
   # the gene names are rownames -- let's make this it's own column for easy
   # display
-  tibble::rownames_to_column(var = "Gene") %>%
+  tibble::rownames_to_column("Gene") %>%
   dplyr::mutate(threshold = padj < 0.05) %>%
   # let's sort by statistic -- the highest values should be what is up in the
   # ASX mutated samples
@@ -362,7 +362,7 @@ The `mutation` group samples have higher expression of this gene than the contro
 
 ## Save results to TSV 
 
-Write the `topTable()` output to file.
+Write the results table to file.
 
 ```{r  Write results}
 readr::write_tsv(
