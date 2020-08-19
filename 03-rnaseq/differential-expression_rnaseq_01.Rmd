@@ -221,14 +221,14 @@ We'll use some tidyverse functionality to extract this information into its own 
 metadata <- metadata %>%
   # the last bit of the title, separated by "-" contains the mutation
   # information that we want to extract
-  dplyr::mutate(mutation_status = stringr::word(refinebio_title,
+  dplyr::mutate(asxl_mutation_status = stringr::word(refinebio_title,
     -1,
     sep = "-"
   )) %>%
   # now let's make this simpler
-  dplyr::mutate(mutation_status = dplyr::case_when(
-    grepl("ASXL1|ASXL2", mutation_status) ~ "mutation",
-    grepl("ASXLwt", mutation_status) ~ "wildtype"
+  dplyr::mutate(asxl_mutation_status = dplyr::case_when(
+    grepl("ASXL1|ASXL2", asxl_mutation_status) ~ "asxl_mutation",
+    grepl("ASXLwt", asxl_mutation_status) ~ "no_mutation"
   ))
 ```
 
@@ -237,9 +237,36 @@ Let's take a look at `metadata_df` to see if this worked.
 ```{r}
 # looking at the first 6 rows of the metadata_df and only at the columns that
 # contain the title and the mutation status we extracted from the title
-head(dplyr::select(metadata, refinebio_title, mutation_status))
+head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
 ```
- 
+
+Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
+We always want our "control" to to be set as the first level in the variable we provide as our experimental variable. 
+
+```{r}
+str(metadata$asxl_mutation_status)
+```
+
+Currently, `asxl_mutation_status` is a character.
+To make sure its set how we want, let's mutate it to a factor so we can explicitly set the levels. 
+
+```{r}
+# Make asxl_mutation_status a factor and set the levels appropriately
+metadata <- metadata %>%
+  dplyr::mutate(
+    # Here we will set up the factor aspect of our new variable.
+    asxl_mutation_status = factor(asxl_mutation_status, levels = c("no_mutation", "asxl_mutation"))
+  )
+```
+
+Let's double check if the levels are what we want using the `levels()` function. 
+
+```{r}
+levels(metadata$asxl_mutation_status)
+```
+
+Yes! `no_mutation` is the first level as we want it to be. We're all set and ready to move on to making our `DESeq2Dataset` object. 
+
 ## Create a DESeq2Dataset
 
 We will be using the `DESeq2` package for normalization and differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
@@ -254,27 +281,27 @@ df <- df %>%
 ```
 
 Now we need to create `DESeqDataSet` from our expression dataset. 
-We use the `mutation_status` of origin in the design formula because that will allow us
-to model this variable of interest.
+We use the `mutation_status` variable we created in the design formula because that will allow us
+to model the presence/absence of _ASXL1/2_ mutation.
 
 ```{r}
 ddset <- DESeqDataSetFromMatrix(
   countData = df,
   tidy = TRUE,
   colData = metadata,
-  design = ~mutation_status
+  design = ~asxl_mutation_status
 )
 ```
 
 ## Define a minimum counts cutoff
 
 We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and perform differential expression. 
-We are going to do some pre-filtering to keep only genes with 5 or more reads in total across the samples.
+We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
 
 ```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(ddset)) >= 5
+genes_to_keep <- rowSums(counts(ddset)) >= 10
 ddset <- ddset[genes_to_keep, ]
 ```
 
@@ -303,7 +330,7 @@ deseq_results <- results(deseq_object)
 deseq_results
 ```
 
-Sort the results. 
+Sort and filter the results. 
 
 ```{r arrange-deseq_results}
 # this is of class DESeqResults -- we want a data.frame
@@ -313,13 +340,25 @@ deseq_df <- deseq_results %>%
   # the gene names are rownames -- let's make this it's own column for easy
   # display
   tibble::rownames_to_column(var = "Gene") %>%
-  dplyr::mutate(threshold = padj < 0.05)
-
-deseq_df %>%
+  dplyr::mutate(threshold = padj < 0.05) %>%
   # let's sort by statistic -- the highest values should be what is up in the
-  # MYCN amplified cell lines
+  # ASX mutated samples
   dplyr::arrange(dplyr::desc(stat))
 ```
+
+Let's print out the top results are. 
+
+```{r}
+head(deseq_df)
+```
+### Check results by plotting one gene
+
+To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function. 
+
+```{r}
+plotCounts(ddset, gene = "ENSG00000196074", intgroup = "asxl_mutation_status")
+```
+The `mutation` group samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
 
 ## Save results to TSV 
 
