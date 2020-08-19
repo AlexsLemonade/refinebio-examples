@@ -222,7 +222,7 @@ Each sentence should be on its own line.
 
 ## Formatting of typical words/items:
 
-  - Use "refine.bio", NOT "refinebio"
+  - Use "refine.bio", NOT "refinebio"; use "refine.bio" NOT "Refine.bio" when starting a sentence
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
   - Use "tidyverse", NOT "Tidyverse"
   - Use "TSV",  NOT tsv or `tsv` or .tsv

@@ -9,7 +9,7 @@ output:
     number_sections: true
 ---
 
-# Purpose of the analysis:
+# Purpose
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
@@ -18,7 +18,7 @@ output:
 For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
-## Obtain the `.Rmd` file of this analysis
+## Obtain the `.Rmd` file
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
 
@@ -97,13 +97,13 @@ For this example analysis, we will use this [{{BRIEF DATASET NAME}}]({{REFINEBIO
 
 ## Place the dataset in your new `data/` folder
 
-Refine.bio will send you a download button in the email when it is ready. 
+refine.bio will send you a download button in the email when it is ready. 
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
 
-For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
@@ -162,7 +162,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 }
 ```
 
-Attach the {{PACKAGE}}:
+Attach the {{PACKAGE}}.
 
 ```{r}
 # Attach the library
@@ -206,11 +206,11 @@ all.equal(colnames(df), metadata$geo_accession)
 <!--ALL THE ANALYSIS STEPS HERE -->
 
 
-# Further learning resources about this analysis
+# Resources for further learning
 
 - [{{HELPFUL RESOURCE NAME}}]({{LINK TO HELPFUL RESOURCE}}) [{{CITATION}}]
 
-# Print session info:
+# Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
