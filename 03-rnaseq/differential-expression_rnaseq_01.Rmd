@@ -176,7 +176,7 @@ library(ggplot2)
 library(magrittr)
 ```
 
-## Import and set up data
+## Import data and metadata
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
 This chunk of code will read the both TSV files and add them as data frames to your environment.
@@ -200,7 +200,8 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+df <- df %>%
+  dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)
@@ -211,6 +212,8 @@ The information we need to make the comparison is in the `refinebio_title` colum
 ```{r}
 head(metadata$refinebio_title)
 ```
+
+## Set up metadata
 
 We'll use some tidyverse functionality to extract this information into its own column to make it easier to use.
 
@@ -236,17 +239,19 @@ Let's take a look at `metadata_df` to see if this worked.
 # contain the title and the mutation status we extracted from the title
 head(dplyr::select(metadata, refinebio_title, mutation_status))
 ```
+ 
+## Create a DESeq2Dataset
 
-### DESeq2
-
-First we need convert the expression data to integers so it can be converted to a DESeq2 object.
+We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@DESeq2].
+In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
 df <- df %>%
   # Bring the "Gene" column back from the rownames
   tibble::rownames_to_column("Gene") %>%
   # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, as.integer)
+  dplyr::mutate_if(is.numeric, round)
 ```
 
 Now we need to create `DESeqDataSet` from our expression dataset. 
@@ -262,17 +267,51 @@ ddset <- DESeqDataSetFromMatrix(
 )
 ```
 
-### Variance stabilizing transformation
+## Define a minimum counts cutoff
 
-Before visualizing the data, we'll transform it such that it is on a `log2` scale for large counts and library size is taken into account with the `DESeq2` function for variance stabilizing transformation.
-See [this section of the `DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization) for more on this topic. 
-TODO: Add link to DESeq2 section in RNA-seq intro document. 
+We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap.
+We are going to do some pre-filtering to keep only genes with 10 or more reads total.
+Note that rows represent gene data and the columns represent sample data in our dataset.
 
-```{r vst}
-vst_data <- vst(ddset)
+```{r}
+# Let's take a look at the distribution of counts first
+
+# Sum up the counts for each gene -- which means we want the sum of counts for each row as the rows represent gene data and the columns represent sample data in our dataset
+count_sums <- data.frame(count = rowSums(counts(ddset)))
+
+# Create a density plot using the sums
+ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
+  ggplot2::geom_density() +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
+    color = "blue",
+    linetype = "solid"
+  ) +
+  ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count)), # This line represents the mean count value
+    color = "red",
+    linetype = "dashed"
+  )
 ```
 
-#### Differential expression analysis
+It appears that our arbitrary cutoff of 10 (the solid blue line) is a decent cutoff to make here as it seems to be just about inline with the mean counts value (the red dashed line) and retains the data points that are not in the majority and therefore may hold significance.
+
+```{r}
+# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
+# only rows that have counts above the cutoff
+genes_to_keep <- rowSums(counts(ddset)) >= 10
+ddset <- ddset[genes_to_keep, ]
+```
+
+## Perform DESeq2 normalization
+
+We are going to use the `rlog()` function from the `DESeq2` package to normalize the data.
+TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst` and `normTransform`.
+
+```{r}
+# Normalize the data in the `DESeqDataSet` object using the `rlog()` function from the `DESEq2` R package
+ddset_norm <- rlog(ddset)
+```
+
+## Run differential expression analysis
 
 We'll use the wrapper function `DESeq` to do our differential expression analysis.
 
@@ -305,6 +344,8 @@ deseq_df %>%
   dplyr::arrange(dplyr::desc(stat))
 ```
 
+## Save results to TSV 
+
 Write the `topTable()` output to file.
 
 ```{r  Write results}
@@ -317,7 +358,7 @@ readr::write_tsv(
 )
 ```
 
-### Volcano plot
+## Create a volcano plot
 
 ```{r}
 volcano_plot <- ggplot(deseq_df, aes(x = log2FoldChange, y = -log10(padj), color = threshold)) +
@@ -345,11 +386,11 @@ ggsave(
 Heatmaps are also a pretty common way to show differential expression results. 
 You can take your results from this example and make a heatmap following our heatmap module: TODO: link here. 
 
-## Session Info
-
 # Further learning resources about this analysis
 
 - [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization)
+- [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love]
+- [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
 
 # Print session info:
 
