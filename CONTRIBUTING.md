@@ -136,17 +136,17 @@ File paths should be relative to the `Snakefile`.
 
 Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
-1) Open up the `components/_navbar.html` file with a text editor of your choice.
-2) Look for the corresponding dropdown section (look for this kind of thing: `<!-- RNA-Seq dropdown -->`) according to which section you are adding the new analysis for.
-3) See the part where it says `<!-- Individual _____ pages go in this list -->`.
+1) Open up the `components/_navbar.html` file with a text editor of your choice.  
+2) Look for the corresponding dropdown section (look for this kind of thing: `<!-- RNA-Seq dropdown -->`) according to which section you are adding the new analysis for.  
+3) See the part where it says `<!-- Individual _____ pages go in this list -->`.  
 4) Use this kind of structure to add in the new line:
 ```
 <li><a href="../tech-section/analysis_file_name.html">Brief Analysis Name</a></li>
 ```
-5) Replace `Brief Analysis Name` with the brief name for the analysis that will show up as the button.
-6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.
-7) Save the file!
-8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.
+5) Replace `Brief Analysis Name` with the brief name for the analysis that will show up as the button.  
+6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
+7) Save the file!  
+8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
 
 ## Add a new analysis
 
@@ -232,7 +232,7 @@ Plus its just another thing to have to keep track of.
 
 #### Code Style
 
-These analyses follow the [Google R Style Guide](http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html) which is based on the tidyverse style guide.
+These analyses follow the [Google R Style Guide](https://google.github.io/styleguide/Rguide.html) which is based on the tidyverse style guide.
 
 Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
 This will help fix some spacing and formatting issues automatically.
