@@ -281,7 +281,7 @@ dds <- dds[genes_to_keep, ]
 ## Perform DESeq2 normalization
 
 We are going to use the `vst()` function from the `DESeq2` package to normalize the data.
-TODO: Add a note/link to section in documentation on why we use `vst` vs `rlog` and `normTransform`.
+TODO: Add a note/link to section in documentation on why we use `vst()` vs `rlog()` and `normTransform()`.
 
 ```{r}
 # Normalize the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
@@ -291,7 +291,7 @@ dds_norm <- vst(dds)
 
 ## Create PCA plot using DESeq2
 
-In this code chunk, the variable "refinebio_treatment" is given to the `plotPCA()` function as part of the goal of the experiment is to analyze the differential responses to androgen deprivation therapy (ADT).
+In this code chunk, the variable `refinebio_treatment` is given to the `plotPCA()` function as part of the goal of the experiment is to analyze the differential responses to androgen deprivation therapy (ADT).
 
 ```{r}
 plotPCA(dds_norm,
@@ -310,9 +310,9 @@ plotPCA(dds_norm,
 )
 ```
 
-It's hard to distinguish the different "refinebio_treatment" versus "refinebio_disease" in the plot above.
+It's hard to distinguish the different `refinebio_treatment` versus `refinebio_disease` in the plot above.
 
-Let's use the `ggplot2` function to customize our plot further.
+Let's use the `ggplot2` package functionality to customize our plot further.
 
 ```{r}
 # We first have to save the results of the `plotPCA` function for use with `ggplot2`
@@ -341,7 +341,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "pca_plot_SRP133573_annotated.png" # Replace file name with a relevant output plot name
+  "SRP133573_annotated_pca_plot.png" # Replace file name with a relevant output plot name
 ))
 
 # Paste the code to create your PCA plot from the chunk above

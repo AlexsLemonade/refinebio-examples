@@ -58,7 +58,8 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram 
+    VennDiagram \
+    ggplot2
 
 ##########################
 # Install packages from github
