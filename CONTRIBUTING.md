@@ -8,12 +8,6 @@
   - [Setting up the docker container](#setting-up-the-docker-container)
   - [Pushing Docker image updates](#pushing-docker-image-updates)
 - [Download the datasets](#download-the-datasets)
-- [Rendering notebooks](#rendering-notebooks)
-  - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
-  - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
-  - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
-  - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
-  - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
 - [Add a new analysis](#add-a-new-analysis)
 - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
   - [How to use the template.Rmd](#how-to-use-the-templatermd)
@@ -31,6 +25,12 @@
 - [Citing sources in text](#citing-sources-in-text)
   - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
 - [How to spell check](#how-to-spell-check)
+- [Rendering notebooks](#rendering-notebooks)
+  - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
+  - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+  - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+  - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
+  - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -250,6 +250,8 @@ dictionary <- readLines(file.path("components", "dictionary.txt"))
 spelling::spell_check_files("<tech-section>_<file_name>.Rmd",
                             ignore = dictionary)
 ```
+Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
+Keep words alphabetical; each word is on its own line.  
 
 ## Rendering notebooks
 
