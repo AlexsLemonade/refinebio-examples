@@ -22,7 +22,8 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file of this analysis
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ <<RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES>> ). 
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/dimension_reduction_rnaseq_01_pca.Rmd).
+
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
@@ -36,8 +37,8 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the results directory
-data_dir <- "data" # Replace with path to desired data directory
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP133573") # Replace with path to desired data directory
 
 # Create the data folder if it doesn't exist
 if (!dir.exists(data_dir)) {
@@ -65,26 +66,36 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## Obtain the dataset from refine.bio
 
-For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data).
 
-Go to this [dataset's page on refine.bio](<<REFINEBIO DATASET PAGE LINK>>).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP133573).
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/fe91830c24b5d3c289efd9fc2ff3a59611e9b001/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/fe91830c24b5d3c289efd9fc2ff3a59611e9b001/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
 
-It make take a few minutes for the dataset to process.
+<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
+
+It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [<<BRIEF DATASET NAME>>](https://www.refine.bio/experiments/<<REFINEBIO DATSET LINK>> )..
+For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
 
-<<BRIEFLY SUMMARIZE THIS DATASET>> 
+<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+
+The data that we downloaded from refine.bio for this analysis has 175 samples (obtained from 20 patients with prostate cancer), containing RNA-sequencing results for samples that have been treated with ADT obtained via radical prostatectomy and that have not been treated with ADT obtained via biopsy (this was done for each patient).
 
 ## Place the dataset in your new `data/` folder
 
@@ -92,25 +103,28 @@ Refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/fe91830c24b5d3c289efd9fc2ff3a59611e9b001/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
+Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+
 ## Check out our file structure!
 
 Your new analysis folder should contain: 
 
 - The example analysis Rmd you downloaded  
-- A folder called "data" which contains:  
-  - The gene expression  
-  - The metadata TSV  
+- A folder called "data" which contains:
+  - The `<experiment_accession_id>` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/fe91830c24b5d3c289efd9fc2ff3a59611e9b001/template/screenshots/analysis-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -130,7 +144,7 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+We suggest saving plots to the `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 ***
@@ -141,7 +155,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
 
-In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization and plotting of PCA values.
+In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization and production of PCA values and the R package [`ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@ggplot2] for plotting the PCA values.
 
 ```{r}
 if (!("ggplot2" %in% installed.packages())) {
@@ -173,32 +187,26 @@ set.seed(12345)
 
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata [tab separated values (TSV)](https://en.wikipedia.org/wiki/Tab-separated_values) file and a data TSV file.
-This chunk of code will read in both TSV files and add them as data frames to your environment.
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+This chunk of code will read the both TSV files and add them as data frames to your environment.
 
 ```{r}
 # Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(
-  "data", # Replace with path to your metadata file
+  data_dir, # Replace with path to your metadata file
   "metadata_SRP133573.tsv" # Replace with the name of your metadata file
 ))
 
 # Read in data TSV file
 df <- readr::read_tsv(file.path(
-  "data", # Replace with path to your data file
+  data_dir, # Replace with path to your data file
   "SRP133573.tsv" # Replace with the name of your data file
 )) %>%
   # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 
-Let's take a look at the metadata object that we read into the R environment.
-
-```{r}
-head(metadata)
-```
-
-Now let's ensure that the metadata and data are in the same sample order. 
+Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
 # Make the data in the order of the metadata
@@ -210,7 +218,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 <!--ALL THE ANALYSIS STEPS HERE -->
 
-Now we are going to use a combination of functions from the `DESeq2` and `pheatmap` packages to look at how are samples and genes are clustering.
+Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to look at the differential expression of our pre-ADT and post-ADT samples.
 
 ## Create a DESeqDataset
 
@@ -224,6 +232,10 @@ df <- df %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, round)
 
+# We need to also format the variables from the metadata, that we will be using for annotation of the PCA plot, into factors
+metadata$refinebio_treatment <- as.factor(metadata$refinebio_treatment)
+metadata$disease <- as.factor(metadata$refinebio_disease)
+
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
   countData = df, # This is the data.frame with the counts values for all replicates in our dataset
@@ -234,7 +246,7 @@ dds <- DESeqDataSetFromMatrix(
 
 ## Define a minimum counts cutoff
 
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap.
+We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our plot.
 We are going to do some pre-filtering to keep only genes with 10 or more reads total.
 Note that rows represent gene data and the columns represent sample data in our dataset.
 
@@ -279,27 +291,71 @@ dds_norm <- vst(dds)
 
 ## Create PCA plot using DESeq2
 
-In this code chunk, the variables "refinebio_treatment" and "refinebio_disease" were given to the `plotPCA()` function due to the hypothesis of the experiment stating "that differences in tumor transcriptional programs may reflect differential responses to androgen deprivation therapy (ADT) and subsequent metastasis".
+In this code chunk, the variable "refinebio_treatment" is given to the `plotPCA()` function as part of the goal of the experiment is to analyze the differential responses to androgen deprivation therapy (ADT).
+
+```{r}
+plotPCA(dds_norm,
+  intgroup = "refinebio_treatment"
+)
+```
+
+In this chunk, we are going to add a variable to our plot for annotation.
+
+The variables "refinebio_treatment" and "refinebio_disease" are given to the `plotPCA()`
+due to the hypothesis of the experiment stating "that differences in tumor transcriptional programs may reflect differential responses to androgen deprivation therapy (ADT) and subsequent metastasis".
 
 ```{r}
 plotPCA(dds_norm,
   intgroup = c("refinebio_treatment", "refinebio_disease")
 )
-
-# pcaData <- plotPCA(dds_norm, intgroup = c("refinebio_treatment", "refinebio_disease"), returnData = TRUE)
-#
-# ggplot(pcaData, aes(
-#   x = PC1,
-#   y = PC2,
-#   color = factor(refinebio_treatment),
-#   shape = factor(refinebio_disease)
-# )) +
-#   geom_point(size = 3)
 ```
 
-# Further learning resources about this analysis
+It's hard to distinguish the different "refinebio_treatment" versus "refinebio_disease" in the plot above.
 
-- [<<HELPFUL RESOURCE NAME>>](<<LINK TO HELPFUL RESOURCE>>) [<<CITATION>>]
+Let's use the `ggplot2` function to customize our plot further.
+
+```{r}
+# We first have to save the results of the `plotPCA` function for use with `ggplot2`
+pcaData <-
+  plotPCA(
+    dds_norm,
+    intgroup = c("refinebio_treatment", "refinebio_disease"),
+    returnData = TRUE # This argument tells R to return the PCA values
+  )
+
+# Now let's plot using `ggplot2` functionality
+ggplot(pcaData, aes(
+  x = PC1,
+  y = PC2,
+  color = refinebio_treatment,
+  shape = refinebio_disease
+)) +
+  geom_point(size = 3)
+```
+
+## Save annotated PCA plot as a PNG
+
+You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
+
+```{r}
+# Open a PNG file
+png(file.path(
+  plots_dir,
+  "pca_plot_SRP133573_annotated.png" # Replace file name with a relevant output plot name
+))
+
+# Paste the code to create your PCA plot from the chunk above
+ggplot(pcaData, aes(
+  x = PC1,
+  y = PC2,
+  color = refinebio_treatment,
+  shape = refinebio_disease
+)) +
+  geom_point(size = 3)
+
+# Close the PNG file:
+dev.off()
+```
 
 # Print session info:
 
