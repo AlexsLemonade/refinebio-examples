@@ -301,7 +301,7 @@ plotPCA(dds_norm,
 
 In this chunk, we are going to add a variable to our plot for annotation.
 
-The variables "refinebio_treatment" and "refinebio_disease" are given to the `plotPCA()`
+The variables `refinebio_treatment` and `refinebio_disease` are given to the `plotPCA()`
 due to the hypothesis of the experiment stating "that differences in tumor transcriptional programs may reflect differential responses to androgen deprivation therapy (ADT) and subsequent metastasis".
 
 ```{r}
