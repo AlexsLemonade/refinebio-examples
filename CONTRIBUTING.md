@@ -9,22 +9,21 @@
   - [Pushing Docker image updates](#pushing-docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Add a new analysis](#add-a-new-analysis)
-- [Setting up a new analysis file](#setting-up-a-new-analysis-file)
-  - [How to use the template.Rmd](#how-to-use-the-templatermd)
-  - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
-  - [General guidelines for analyses notebooks](#general-guidelines-for-analyses-notebooks)
-    - [Inputs](#inputs)
-    - [Outputs](#outputs)
-    - [Chunk naming](#chunk-naming)
-    - [Code Style](#code-style)
-    - [Citation](#citation)
-    - [No manual section numbering](#no-manual-section-numbering)
-    - [Paragraph formatting](#paragraph-formatting)
-    - [Session Info](#session-info)
-- [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
-- [Citing sources in text](#citing-sources-in-text)
-  - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
-- [How to spell check](#how-to-spell-check)
+  - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
+    - [How to use the template.Rmd](#how-to-use-the-templatermd)
+    - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
+    - [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
+    - [Guidelines for analyses notebooks](#guidelines-for-analyses-notebooks)
+      - [Input files](#input-files)
+      - [Output files](#output-files)
+      - [Chunk naming](#chunk-naming)
+      - [Code Style](#code-style)
+      - [No manual section numbering](#no-manual-section-numbering)
+      - [Paragraph formatting](#paragraph-formatting)
+      - [Session Info](#session-info)
+    - [Citing sources in text](#citing-sources-in-text)
+    - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
+    - [How to spell check](#how-to-spell-check)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
@@ -96,7 +95,7 @@ Click on the links to go to the detailed instructions for each step.
 - In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
 - After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
-## Setting up a new analysis file
+### Setting up a new analysis file
 
 To start a new analysis, copy and paste the `template/template_example.Rmd` file to the new pertinent section's folder.
 
@@ -109,13 +108,13 @@ Notebooks numbers should be kept in relative order of `least background knowledg
 If the analysis you are adding doesn't fit with any of the existing groups, try to carefully label it with a new group name.
 Even though it is the only `.Rmd` in its group, it should still be labeled with a `01` in its name.
 
-### How to use the template.Rmd
+#### How to use the template.Rmd
 
 When editing the new analysis from the `template/template_example.Rmd`, search for `{{` or `}}` and replace those with the pertinent information.
 Leave comments that are `<!--`and `-->`.
 The introductory info in this template file helps toward our goal of these analyses notebooks being self-contained.
 
-### Adding datasets to the S3 bucket
+#### Adding datasets to the S3 bucket
 
 You will need an AWS account to add files to S3 bucket.
 Go to the [refinebio-examples bucket](https://s3.console.aws.amazon.com/s3/buckets/refinebio-examples/) on Amazon Web Services.
@@ -137,59 +136,7 @@ Test that the files you've uploaded succesfully download by running the `downloa
 script.
 If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the file and click the `Make it Public` button and try testing your download again.
 
-### General guidelines for analyses notebooks
-
-Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
-
-#### Inputs  
-
-- refine.bio download files
-- The refine.bio download files should be [added to the S3 bucket](#adding-datasets-to-the-s3-bucket).
-- Any additional reference files should be downloaded in the notebook.  
-
-#### Outputs  
-
-Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
-For example: `GSE12345_pca_plot.png`
-
-- A `plots` and/or `results` folder should be created by the analysis notebook.  
-- Output results should be `TSV` when possible.  
-- Plots should be saved to `PNG` whenever possible.    
-- Underscores instead of `-` just so we don't have to think about it.
-- No camel case (except for packages/functions where it is already in use!)
-
-#### Chunk naming  
-
-Chunks preferably shouldn't be named.
-If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
-Plus its just another thing to have to keep track of.
-
-#### Code Style
-
-These analyses follow the [Google R Style Guide](https://google.github.io/styleguide/Rguide.html) which is based on the tidyverse style guide.
-
-Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
-This will help fix some spacing and formatting issues automatically.
-
-#### Citation  
-
-Sources should be cited whenever possible.
-See [the sections about citations](#citing-sources-in-text).
-
-#### No manual section numbering  
-
-Numbering will be done automatically in rendering; so no numbers should be put on the sections.
-
-#### Paragraph formatting  
-
-Each sentence should be on its own line.
-
-#### Session Info
-
-`sessionInfo()` should always be printed out at the end.
-(It is included in the `.Rmd` template)
-
-## Formatting of typical words/items:
+#### Formatting of typical words/items:
 
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
@@ -204,7 +151,54 @@ Each sentence should be on its own line.
   - **Variable names**: Variable names, like those that are stored as column names in a data frame
   should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
 
-## Citing sources in text
+#### Guidelines for analyses notebooks
+
+Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user can download the `.Rmd` file and have all the necessary steps and information to complete the example analysis.
+
+##### Input files
+
+- refine.bio download files
+- The refine.bio download files should be [added to the S3 bucket](#adding-datasets-to-the-s3-bucket).
+- Any additional reference files should be downloaded in the notebook.  
+
+##### Output files
+
+Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
+For example: `GSE12345_pca_plot.png`
+
+- A `plots` and/or `results` folder should be created by the analysis notebook.  
+- Output results should be `TSV` when possible.  
+- Plots should be saved to `PNG` whenever possible.    
+- Underscores instead of `-` just so we don't have to think about it.
+- No camel case (except for packages/functions where it is already in use!)
+
+##### Chunk naming  
+
+Chunks preferably shouldn't be named.
+If we do end up using [bookdown](https://bookdown.org/yihui/bookdown/) at some point, repetitive chunk names like `import data` will cause havoc.
+Plus its just another thing to have to keep track of.
+
+##### Code Style
+
+These analyses follow the [Google R Style Guide](https://google.github.io/styleguide/Rguide.html) which is based on the tidyverse style guide.
+
+Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
+This will help fix some spacing and formatting issues automatically.
+
+##### No manual section numbering  
+
+Numbering will be done automatically in rendering; so no numbers should be put on the sections.
+
+##### Paragraph formatting  
+
+Each sentence should be on its own line.
+
+##### Session Info
+
+`sessionInfo()` should always be printed out at the end.
+(It is included in the `.Rmd` template)
+
+#### Citing sources in text
 
 From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/rmarkdown-cookbook/bibliography.html):
 > Items can be cited directly within the documentation using the syntax @key where key is the citation key in the first line of the entry, e.g., @R-base. To put citations in parentheses, use [@key]. To cite multiple entries, separate the keys by semicolons, e.g., [@key-1; @key-2; @key-3]. To suppress the mention of the author, add a minus sign before @, e.g., [-@R-base].
@@ -214,7 +208,7 @@ From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/
 - Links to other notebooks in `refinebio-examples` should always go to the online version of the book (to maintain the self-contained functionality).
 - Links to sections within the same notebook can still be done like: `#how-to-use-data`.
 
-### Adding new sources to the `references.bib`
+#### Adding new sources to the `references.bib`
 
 You can obtain formatted `LaTeX` reference entry following the instructions below and copying and pasting the whole thing in `reference.bib`.
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
@@ -242,7 +236,7 @@ For example the tidyverse citation starts like this:
 
 This allows you to reference it by `@tidyverse` as [mentioned in the section above](#citing-sources-in-text)
 
-## How to spell check
+#### How to spell check
 
 In R, run the following:
 ```
