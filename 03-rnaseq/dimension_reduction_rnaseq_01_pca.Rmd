@@ -13,7 +13,7 @@ output:
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
-This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio to perform Principal Component Analysis and plot the scores using ggplot2. 
+This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
 
 # How to run this example
 
@@ -238,8 +238,8 @@ metadata$disease <- as.factor(metadata$refinebio_disease)
 
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df, # This is the data.frame with the counts values for all replicates in our dataset
-  colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
+  countData = df, # This is the data frame with the counts values for all replicates in our dataset
+  colData = metadata, # This is the data frame with the annotation data for the replicates in the counts data frame
   design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
 )
 ```
