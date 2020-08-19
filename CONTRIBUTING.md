@@ -4,31 +4,31 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Contributing guidelines](#contributing-guidelines)
-  - [Docker for refinebio-examples](#docker-for-refinebio-examples)
-    - [Setting up the docker container](#setting-up-the-docker-container)
-  - [Download the datasets](#download-the-datasets)
-  - [Rendering notebooks](#rendering-notebooks)
-    - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
-    - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
-    - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
-  - [Adding a new analysis](#adding-a-new-analysis)
-    - [File naming conventions](#file-naming-conventions)
-    - [How to use the template.Rmd](#how-to-use-the-templatermd)
-    - [Docker image management](#docker-image-management)
-    - [General guidelines for analyses notebooks](#general-guidelines-for-analyses-notebooks)
-      - [Inputs](#inputs)
-      - [Outputs](#outputs)
-      - [Chunk naming](#chunk-naming)
-      - [Citation](#citation)
-      - [No manual section numbering](#no-manual-section-numbering)
-      - [Paragraph formatting](#paragraph-formatting)
-      - [Session Info](#session-info)
-  - [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
-  - [Citing sources in text](#citing-sources-in-text)
-    - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
-  - [How to spell check](#how-to-spell-check)
-  - [Code Style](#code-style)
+- [Docker for refinebio-examples](#docker-for-refinebio-examples)
+  - [Setting up the docker container](#setting-up-the-docker-container)
+- [Download the datasets](#download-the-datasets)
+- [Rendering notebooks](#rendering-notebooks)
+  - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
+  - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+  - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+- [Adding a new analysis](#adding-a-new-analysis)
+  - [File naming conventions](#file-naming-conventions)
+  - [How to use the template.Rmd](#how-to-use-the-templatermd)
+  - [Docker image management](#docker-image-management)
+  - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
+  - [General guidelines for analyses notebooks](#general-guidelines-for-analyses-notebooks)
+    - [Inputs](#inputs)
+    - [Outputs](#outputs)
+    - [Chunk naming](#chunk-naming)
+    - [Citation](#citation)
+    - [No manual section numbering](#no-manual-section-numbering)
+    - [Paragraph formatting](#paragraph-formatting)
+    - [Session Info](#session-info)
+- [Formatting of typical words/items:](#formatting-of-typical-wordsitems)
+- [Citing sources in text](#citing-sources-in-text)
+  - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
+- [How to spell check](#how-to-spell-check)
+- [Code Style](#code-style)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -115,9 +115,10 @@ To start a new analysis, copy and paste the `template/template_example.Rmd` file
 
 ### File naming conventions
 
-Rename the template file according to what the new analysis' content will be and what analysis group it will belong to.
-In other words, `.Rmd` files are named like `<analysis_module>_<section/tech>_<notebook#>_<name_of_analysis>.Rmd`
-For example: `dimension_reduction_microarray_01_pca.Rmd` is the first notebook in the dimension reduction group and is in the `02-microarray` section/folder.
+Rename the template file according to the module group, section, and analysis name following the following format: `<analysis-module>_<section/tech>_<notebook#>_<name-of-analysis>.Rmd`.
+Separate multi-word phrases within a section with hyphens.
+
+For example: `dimension-reduction_microarray_01_pca.Rmd` is the first notebook in the dimension reduction group and is in the `02-microarray` section/folder.
 Notebooks numbers should be kept in relative order of `least background knowledge/simple implementation` -> `most background knowledge needed/most complex`.
 
 If the analysis you are adding doesn't fit with any of the existing groups, try to carefully label it with a new group name.
