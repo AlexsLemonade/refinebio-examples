@@ -82,72 +82,6 @@ For development purposes, you can download all the datasets for the example note
 scripts/download-data.sh
 ```
 
-## Rendering notebooks
-
-This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
-`snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
-
-### How to re-render the notebooks
-
-**Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
-
-**Step 2)** Make sure any newly added analyses are [added to the Snakefile](#add-new-analyses-to-the-snakefile) and [added to the navbar](#add-new-analyses-to-the-navbar).
-
-**Step 3)** Run the thing!
-Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
-Run it!
-```
-snakemake --cores 1
-```
-If `snakemake` ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
-Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
-
-### Run snakemake without queueing up a web browser for the Docker container
-
-Navigate to the `refinebio-examples` repository.
-If you already have the `refinebio-examples` docker image:
-```
-docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 1
-```
-### About the render-notebooks.R script
-
-The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
-
-**Options:**
-- `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
-- `--bib_file`: File path for the  `bibliography:` header option.
-Default is the `references.bib` script at the top of the repository.  
-- `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
-
-### Add new analyses to the Snakefile
-
-Any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
-Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
-```
-rule target:
-    input:
-        "01-getting-started/getting-started.html",
-        "a-directory/the-name-of-the-new-rmd.html"
-```
-File paths should be relative to the `Snakefile`.
-
-### Add new analyses to the navbar
-
-Follow these steps to add the `.html` link to the navigation bar upon rendering.
-
-1) Open up the `components/_navbar.html` file with a text editor of your choice.  
-2) Look for the corresponding dropdown section (look for this kind of thing: `<!-- RNA-Seq dropdown -->`) according to which section you are adding the new analysis for.  
-3) See the part where it says `<!-- Individual _____ pages go in this list -->`.  
-4) Use this kind of structure to add in the new line:
-```
-<li><a href="../tech-section/analysis_file_name.html">Brief Analysis Name</a></li>
-```
-5) Replace `Brief Analysis Name` with the brief name for the analysis that will show up as the button.  
-6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
-7) Save the file!  
-8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
-
 ## Add a new analysis
 
 Here are the summarized steps for adding a new analysis.
@@ -310,5 +244,75 @@ This allows you to reference it by `@tidyverse` as [mentioned in the section abo
 
 ## How to spell check
 
-In RStudio, go to `Edit` > `Check Spelling`.
-Unfortunately, it will also spell check your code and urls. ¯\\_(ツ)_/¯
+In R, run the following:
+```
+dictionary <- readLines(file.path("components", "dictionary.txt"))
+spelling::spell_check_files("<tech-section>_<file_name>.Rmd",
+                            ignore = dictionary)
+```
+
+## Rendering notebooks
+
+This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
+The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+`snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
+
+### How to re-render the notebooks
+
+**Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
+
+**Step 2)** Make sure any newly added analyses are [added to the Snakefile](#add-new-analyses-to-the-snakefile) and [added to the navbar](#add-new-analyses-to-the-navbar).
+
+**Step 3)** Run the thing!
+Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
+Run it!
+```
+snakemake --cores 1
+```
+If `snakemake` ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
+Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
+
+### Run snakemake without queueing up a web browser for the Docker container
+
+Navigate to the `refinebio-examples` repository.
+If you already have the `refinebio-examples` docker image:
+```
+docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 1
+```
+### About the render-notebooks.R script
+
+The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+
+**Options:**
+- `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
+- `--bib_file`: File path for the  `bibliography:` header option.
+Default is the `references.bib` script at the top of the repository.  
+- `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
+
+### Add new analyses to the Snakefile
+
+Any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
+Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
+```
+rule target:
+    input:
+        "01-getting-started/getting-started.html",
+        "a-directory/the-name-of-the-new-rmd.html"
+```
+File paths should be relative to the `Snakefile`.
+
+### Add new analyses to the navbar
+
+Follow these steps to add the `.html` link to the navigation bar upon rendering.
+
+1) Open up the `components/_navbar.html` file with a text editor of your choice.  
+2) Look for the corresponding dropdown section (look for this kind of thing: `<!-- RNA-Seq dropdown -->`) according to which section you are adding the new analysis for.  
+3) See the part where it says `<!-- Individual _____ pages go in this list -->`.  
+4) Use this kind of structure to add in the new line:
+```
+<li><a href="../tech-section/analysis_file_name.html">Brief Analysis Name</a></li>
+```
+5) Replace `Brief Analysis Name` with the brief name for the analysis that will show up as the button.  
+6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
+7) Save the file!  
+8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
