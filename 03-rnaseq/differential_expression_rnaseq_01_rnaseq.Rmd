@@ -115,7 +115,7 @@ Copy and paste the `<experiment_accession_id>` folder into your newly created `d
 
 Your new analysis folder should contain: 
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `<experiment_accession_id>` folder which contains:
     - The gene expression  
