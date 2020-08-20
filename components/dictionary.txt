@@ -1,0 +1,11 @@
+al.
+dataset
+dataset's
+DESeq
+DESeq2
+et.
+PNG
+`.Rmd`
+RStudio
+tidyverse
+TSV
