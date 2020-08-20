@@ -93,7 +93,7 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [acute myeloid leukemia dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol]
 
-Micol, _et_ _al._, performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+@Micol performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -108,7 +108,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+Copy and paste the `SRP078441` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -116,9 +116,11 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `<experiment_accession_id>` folder which contains:
+  - The `SRP078441` folder which contains:
     - The gene expression  
     - The metadata TSV  
+- A folder for `plots` (currently empty)
+- A folder for `results` (currently empty)
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
