@@ -1669,10 +1669,10 @@ div.tocify {
 </div>
 <div id="how-to-run-this-example" class="section level1">
 <h1><span class="header-section-number">2</span> How to run this example</h1>
-<p>For general information about our tutorials, and for the basic software packages you will need; see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
+<p>For general information about our tutorials and the basic software packages you will need, please see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
 <div id="obtain-the-.rmd-file-of-this-analysis" class="section level2">
 <h2><span class="header-section-number">2.1</span> Obtain the <code>.Rmd</code> file of this analysis</h2>
-<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/clustering/clustering_rnaseq_01_heatmap.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>. You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files). Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
+<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/clustering/clustering_rnaseq_01_heatmap.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>. You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there. (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files.) Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
 </div>
 <div id="set-up-your-analysis-folders" class="section level2">
 <h2><span class="header-section-number">2.2</span> Set up your analysis folders</h2>
@@ -1760,7 +1760,7 @@ file.exists(file.path(data_dir, &quot;metadata_SRP070849.tsv&quot;))</code></pre
 <h1><span class="header-section-number">4</span> Clustering Heatmap - RNA-seq</h1>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
-<p>See our getting started with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
+<p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
 <p>In this analysis, we will be using the R package <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"><code>DESeq2</code></a> <span class="citation">(Love, Huber, and Anders 2014)</span> for normalization and the R package <code>pheatmap</code> <span class="citation">(Kolde 2019)</span> for clustering and creating a heatmap.</p>
 <pre class="r"><code>if (!(&quot;pheatmap&quot; %in% installed.packages())) {
   # Install pheatmap
@@ -2126,10 +2126,11 @@ sessionInfo()</code></pre>
 ## [52] rlang_0.4.7            grid_4.0.2             RCurl_1.98-1.2        
 ## [55] rstudioapi_0.11        labeling_0.3           bitops_1.0-6          
 ## [58] rmarkdown_2.3          gtable_0.3.0           DBI_1.1.0             
-## [61] R6_2.4.1               knitr_1.29             dplyr_1.0.0           
-## [64] utf8_1.1.4             bit_1.1-15.2           readr_1.3.1           
-## [67] stringi_1.4.6          Rcpp_1.0.5             vctrs_0.3.2           
-## [70] geneplotter_1.66.0     tidyselect_1.1.0       xfun_0.16</code></pre>
+## [61] rematch2_2.1.2         R6_2.4.1               knitr_1.29            
+## [64] dplyr_1.0.0            utf8_1.1.4             bit_1.1-15.2          
+## [67] readr_1.3.1            stringi_1.4.6          Rcpp_1.0.5            
+## [70] vctrs_0.3.2            geneplotter_1.66.0     tidyselect_1.1.0      
+## [73] xfun_0.16</code></pre>
 <div id="refs" class="references">
 <div id="ref-make-complex-heatmaps">
 <p>Gu, Zuguang. 2020. <em>ComplexHeatmap Complete Reference</em>. <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">https://jokergoo.github.io/ComplexHeatmap-reference/book/</a>.</p>

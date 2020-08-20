@@ -15,14 +15,14 @@ output:
 
 # How to run this example
 
-For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file of this analysis
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
@@ -151,7 +151,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ## Install libraries
 
-See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using {{PACKAGE}} [{{CITATION}}].
 
@@ -162,7 +162,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 }
 ```
 
-Attach the {{PACKAGE}}:
+Attach the packages we need for this analysis:
 
 ```{r}
 # Attach the library
@@ -188,8 +188,7 @@ metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your meta
 # Read in data TSV file
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
                                 {{DATA_ACCESSION FILENAME}} # Replace with the name of your data file
-                                )) %>%
-  tibble::column_to_rownames('Gene')
+                                ))
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 

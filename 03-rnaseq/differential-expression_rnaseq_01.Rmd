@@ -13,18 +13,18 @@ output:
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
-This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes based on an experimental groups. 
+This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes between experimental groups. 
 
 # How to run this example
 
-For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file of this analysis
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
@@ -93,8 +93,7 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [acute myeloid leukemia dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol]
 
-Micol _et._ _al_, performed RNA-seq on primary peripheral blood and bone marrow
-samples from AML patients with and without _ASXL1/2_ mutations. 
+Micol, _et_ _al._, performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -152,7 +151,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ## Install libraries
 
-See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using DESeq2 [@DESeq2].
 
@@ -163,7 +162,7 @@ if (!("DESeq2" %in% installed.packages())) {
 }
 ```
 
-Attach the DESeq2:
+Attach the libraries we need for this analysis:
 
 ```{r}
 # Attach the DESeq2 library
@@ -248,7 +247,7 @@ str(metadata$asxl_mutation_status)
 ```
 
 Currently, `asxl_mutation_status` is a character.
-To make sure its set how we want, let's mutate it to a factor so we can explicitly set the levels. 
+To make sure it is set how we want, let's mutate it to a factor so we can explicitly set the levels. 
 
 ```{r}
 # Make asxl_mutation_status a factor and set the levels appropriately
@@ -273,11 +272,8 @@ We will be using the `DESeq2` package for normalization and differential express
 First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
 
 ```{r}
-df <- df %>%
-  # Bring the "Gene" column back from the rownames
-  tibble::rownames_to_column("Gene") %>%
-  # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, round)
+# We are making our data frame into a matrix and rounding the numbers
+gene_matrix <- round(as.matrix(df))
 ```
 
 Now we need to create `DESeqDataSet` from our expression dataset. 
@@ -286,8 +282,7 @@ to model the presence/absence of _ASXL1/2_ mutation.
 
 ```{r}
 ddset <- DESeqDataSetFromMatrix(
-  countData = df,
-  tidy = TRUE,
+  countData = gene_matrix,
   colData = metadata,
   design = ~asxl_mutation_status
 )
@@ -319,20 +314,20 @@ ddset_norm <- rlog(ddset)
 
 We'll use the wrapper function `DESeq()` to do our differential expression analysis.
 
-```{r DESeq}
+```{r}
 deseq_object <- DESeq(ddset)
 ```
 
 Let's take a look at the results table.
 
-```{r deseq_results}
+```{r}
 deseq_results <- results(deseq_object)
 deseq_results
 ```
 
 Sort and filter the results. 
 
-```{r arrange-deseq_results}
+```{r}
 # this is of class DESeqResults -- we want a data frame
 deseq_df <- deseq_results %>%
   # make into data.frame
@@ -346,11 +341,12 @@ deseq_df <- deseq_results %>%
   dplyr::arrange(dplyr::desc(stat))
 ```
 
-Let's print out the top results are. 
+Let's print out what the top results are. 
 
 ```{r}
 head(deseq_df)
 ```
+
 ### Check results by plotting one gene
 
 To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function. 
@@ -364,12 +360,12 @@ The `mutation` group samples have higher expression of this gene than the contro
 
 Write the results table to file.
 
-```{r  Write results}
+```{r}
 readr::write_tsv(
   deseq_df,
   file.path(
     results_dir,
-    "SRP078441_limma_results.tsv" # Replace with a relevant output file name
+    "SRP078441_differential_expression_results.tsv" # Replace with a relevant output file name
   )
 )
 ```
@@ -404,7 +400,7 @@ You can take your results from this example and make a heatmap following our hea
 
 # Further learning resources about this analysis
 
-- [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#data-transformations-and-visualization)
+- [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
 - [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love]
 - [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
 
