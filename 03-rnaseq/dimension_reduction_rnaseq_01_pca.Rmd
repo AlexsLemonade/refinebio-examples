@@ -9,22 +9,22 @@ output:
     number_sections: true
 ---
 
-# Purpose of the analysis:
+# Purpose of the analysis
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
-This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
+This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
 
 # How to run this example
 
-For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file of this analysis
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/dimension_reduction_rnaseq_01_pca.Rmd).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
@@ -84,7 +84,7 @@ We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -95,7 +95,8 @@ For this example analysis, we will use this [prostate cancer dataset](https://ww
 
 <!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
-The data that we downloaded from refine.bio for this analysis has 175 samples (obtained from 20 patients with prostate cancer), containing RNA-sequencing results for samples that have been treated with ADT obtained via radical prostatectomy and that have not been treated with ADT obtained via biopsy (this was done for each patient).
+The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
+Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 
 ## Place the dataset in your new `data/` folder
 
@@ -110,7 +111,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+Copy and paste the `SRP133573` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -118,13 +119,14 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `<experiment_accession_id>` folder which contains:
+  - The `SRP133573` folder which contains:
     - The gene expression  
     - The metadata TSV  
-
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -153,7 +155,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ## Install libraries
 
-See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization and production of PCA values and the R package [`ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@ggplot2] for plotting the PCA values.
 
@@ -215,7 +217,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to look at the differential expression of our pre-ADT and post-ADT samples.
 
-## Prepare data for `DESeq2`
+### Prepare data for `DESeq2`
 
 We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
 
@@ -226,7 +228,7 @@ df <- df %>%
   dplyr::mutate_if(is.numeric, round)
 ```
 
-## Prepare metadata for `DESEq2`
+### Prepare metadata for `DESEq2`
 
 We need to make sure all of the metadata column variables, that we would like to use to annotate our plot, are converted into factors.
 
@@ -290,12 +292,12 @@ plotPCA(dds_norm,
 
 In this chunk, we are going to add a variable to our plot for annotation.
 
-The variables `refinebio_treatment` and `refinebio_disease` are given to the `plotPCA()`
+We are plotting PCA using the variables `refinebio_treatment` and `refinebio_disease` for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer]
 due to the hypothesis of the experiment that states that differences in the tumor transcriptional platforms may also show differences in response to the androgen deprivation therapy (ADT) as noted in the associated [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
 
 ```{r}
 plotPCA(dds_norm,
-  intgroup = c("refinebio_treatment", "refinebio_disease") # Note that we are able to add another variable to the intgroup argument here using the `c()` function
+  intgroup = c("refinebio_treatment", "refinebio_disease") # Note that we are able to add another variable to the intgroup argument here by providing a vector of the variable names with  `c()` function
 )
 ```
 
@@ -315,15 +317,15 @@ pcaData <-
   )
 ```
 
-Now let's plot using `ggplot2` functionality.
+Now let's plot our `pcaData` using `ggplot2` functionality.
 
 ```{r}
 # Plot using `ggplot()` function
 ggplot(pcaData, aes(
   x = PC1,
   y = PC2,
-  color = refinebio_treatment, # Here we are giving `refinebio_treatment` to the color argument
-  shape = refinebio_disease # Here we are giving `refinebio_disease` to the shape argument
+  color = refinebio_treatment, # This will label points with different colorsr for each `refinebio_disease` group
+  shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
 ))
 ```
 
@@ -344,7 +346,7 @@ ggsave(file.path(plots_dir, "SRP133573_pca_plot.png"), # Replace with name relev
 - [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@dimension-reduction-guidelines]  
 - [A nice explanation and comparison of many different dimenstionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@dimension-reduction-explained]
 
-# Print session info:
+# Print session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
