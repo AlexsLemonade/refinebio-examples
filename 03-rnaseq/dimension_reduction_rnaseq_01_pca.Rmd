@@ -72,11 +72,11 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-email.png" width=500>  
 
 <!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
 
@@ -215,7 +215,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 <!--ALL THE ANALYSIS STEPS HERE -->
 
-Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to look at the differential expression of our pre-ADT and post-ADT samples.
+Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to perform and visualize the results of the Principal Component Analysis (PCA) dimension reduction technique on our pre-ADT and post-ADT samples.
 
 ### Prepare data for `DESeq2`
 
@@ -282,7 +282,7 @@ dds_norm <- vst(dds)
 
 ## Create PCA plot using DESeq2
 
-In this code chunk, the variable `refinebio_treatment` is given to the `plotPCA()` function as part of the goal of the experiment is to analyze the differential responses to androgen deprivation therapy (ADT).
+In this code chunk, the variable `refinebio_treatment` is given to the `plotPCA()` function as part of the goal of the experiment is to analyze the sample transcriptional responses to androgen deprivation therapy (ADT).
 
 ```{r}
 plotPCA(dds_norm,
@@ -290,10 +290,9 @@ plotPCA(dds_norm,
 )
 ```
 
-In this chunk, we are going to add a variable to our plot for annotation.
+In this chunk, we are going to add another variable to our plot for annotation.
 
-We are plotting PCA using the variables `refinebio_treatment` and `refinebio_disease` for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer]
-due to the hypothesis of the experiment that states that differences in the tumor transcriptional platforms may also show differences in response to the androgen deprivation therapy (ADT) as noted in the associated [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
+We are plotting PCA using the variables `refinebio_treatment` and `refinebio_disease` for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
 
 ```{r}
 plotPCA(dds_norm,
@@ -301,9 +300,9 @@ plotPCA(dds_norm,
 )
 ```
 
-It's hard to distinguish the different `refinebio_treatment` versus `refinebio_disease` in the plot above.
+In the plot above, it is hard to distinguish the different `refinebio_treatment` values which contain the data on whether or not samples have been treated with ADT versus the `refinebio_disease` values which refer to the method by which the samples were obtained from patients.
 
-Let's use the `ggplot2` package functionality to customize our plot further.
+Let's use the `ggplot2` package functionality to customize our plot further and make the annotation labels better distinguishable.
 
 First let's use `plotPCA()` to receive and store the PCA values for plotting.
 
@@ -321,12 +320,16 @@ Now let's plot our `pcaData` using `ggplot2` functionality.
 
 ```{r}
 # Plot using `ggplot()` function
-ggplot(pcaData, aes(
-  x = PC1,
-  y = PC2,
-  color = refinebio_treatment, # This will label points with different colorsr for each `refinebio_disease` group
-  shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
-))
+annotated_pca_plot <- ggplot(
+  pcaData,
+  aes(
+    x = PC1,
+    y = PC2,
+    color = refinebio_treatment,
+    # This will label points with different colors for each `refinebio_disease` group
+    shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
+  )
+)
 ```
 
 ## Save annotated PCA plot as a PNG
@@ -336,7 +339,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 ```{r}
 # Save plot using `ggsave()` function
 ggsave(file.path(plots_dir, "SRP133573_pca_plot.png"), # Replace with name relevant your plotted data
-  plot = last_plot() # This tells R to save the last plot that was modified or created
+  plot = annotated_pca_plot # Here we are giving the function the plot object that we want saved to file
 )
 ```
 
