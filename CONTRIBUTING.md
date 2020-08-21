@@ -269,7 +269,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 Make sure you are running this from a `ccdl/refinebio-examples` Docker container.
 Run it!
 ```
-snakemake --cores 1
+snakemake --cores 4 # using 4 cores for some parallelism. Modify as appropriate.
 ```
 If `snakemake` ran successfully, it will spit out a log and all the `.html` output files will have nicely rendered citations.
 Note that all `.nb.html` files are `.gitignore`'d because we want users to be able to render `html_notebook`s, but here we are using `html_document`s.
@@ -279,7 +279,7 @@ Note that all `.nb.html` files are `.gitignore`'d because we want users to be ab
 Navigate to the `refinebio-examples` repository.
 If you already have the `refinebio-examples` docker image:
 ```
-docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 1
+docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
 ### About the render-notebooks.R script
 
