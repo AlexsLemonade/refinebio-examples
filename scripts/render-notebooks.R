@@ -68,7 +68,7 @@ if (!file.exists(opt$bib_file)) {
 # Check for a citation style
 if (!is.null(opt$cite_style)){
   if (!file.exists(opt$cite_style)) {
-    stop("File specified for --bib_style option is not at the specified file path.")
+    stop("File specified for --cite_style option is not at the specified file path.")
   } else {
     header_line <- paste0(header_line, "\n", "csl: ", normalizePath(opt$cite_style))
   }
