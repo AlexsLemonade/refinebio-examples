@@ -37,7 +37,7 @@ If you have trouble running this chunk, see our [introduction to using Rmds](htt
 
 ```{r}
 # Define the file path to the plots directory
-plots_dir <- file.path("plots", "SRP070849") # Can replace with path to desired output plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
 
 # Create the data folder if it doesn't exist
 if (!dir.exists("data")) {
