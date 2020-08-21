@@ -29,6 +29,13 @@ option_list <- list(
     metavar = "character"
   ),
   make_option(
+    opt_str = c("--cite_style"),
+    type = "character",
+    default = NULL,
+    help = "File name of the citation style file, csl format. Will be normalized with normalizePath().",
+    metavar = "character"
+  ),
+  make_option(
     opt_str = c("-o", "--html"), type = "character",
     default = NULL,
     help = "Desired filename for rendered output html file",
@@ -57,6 +64,14 @@ if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
   header_line <- paste("bibliography:", normalizePath(opt$bib_file))
+}
+# Check for a citation style
+if (!is.null(opt$cite_style)){
+  if (!file.exists(opt$cite_style)) {
+    stop("File specified for --bib_style option is not at the specified file path.")
+  } else {
+    header_line <- paste0(header_line, "\n", "csl: ", normalizePath(opt$cite_style))
+  }
 }
 
 # If no output html filename specification, make one from the original filename

@@ -11,12 +11,14 @@ rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
         nav = "{basedir}/_navbar.html",
-        bib = "references.bib"
-    output: 
+        bib = "references.bib",
+        csl = "components/genetics.csl"
+    output:
        "{basedir}/{basename}.html"
     shell:
         "Rscript scripts/render-notebooks.R"
         " --rmd {input.rmd}"
         " --bib_file {input.bib}"
+        " --cite_style {input.csl}"
         " --html {output}"
         " --style"
