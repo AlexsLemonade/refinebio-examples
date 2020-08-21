@@ -104,7 +104,7 @@ Refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
@@ -292,7 +292,7 @@ plotPCA(dds_norm,
 
 In this chunk, we are going to add another variable to our plot for annotation.
 
-We are plotting PCA using the variables `refinebio_treatment` and `refinebio_disease` for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
+Now we'll plot the PCA using both `refinebio_treatment` and `refinebio_disease` variables for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
 
 ```{r}
 plotPCA(dds_norm,
@@ -325,8 +325,7 @@ annotated_pca_plot <- ggplot(
   aes(
     x = PC1,
     y = PC2,
-    color = refinebio_treatment,
-    # This will label points with different colors for each `refinebio_disease` group
+    color = refinebio_treatment, # This will label points with different colors for each `refinebio_disease` group
     shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
   )
 )
