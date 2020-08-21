@@ -300,7 +300,7 @@ plotPCA(dds_norm,
 )
 ```
 
-In the plot above, it is hard to distinguish the different `refinebio_treatment` values which contain the data on whether or not samples have been treated with ADT versus the `refinebio_disease` values which refer to the method by which the samples were obtained from patients.
+In the plot above, it is hard to distinguish the different `refinebio_treatment` values which contain the data on whether or not samples have been treated with ADT versus the `refinebio_disease` values which refer to the method by which the samples were obtained from patients (i.e. biopsy).
 
 Let's use the `ggplot2` package functionality to customize our plot further and make the annotation labels better distinguishable.
 
