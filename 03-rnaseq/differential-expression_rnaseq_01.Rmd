@@ -37,9 +37,6 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the data directory
-data_dir <- file.path("data", "SRP078441") # Replace with path to desired data directory
-
 # Create the data folder if it doesn't exist
 if (!dir.exists("data")) {
   dir.create("data")
@@ -130,6 +127,9 @@ In order for our example here to run without a hitch, we need these files to be 
 Run this chunk to double check that your files are in the right place. 
 
 ```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP078441")
+
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
 file.exists(file.path(data_dir, "SRP078441.tsv"))
 
