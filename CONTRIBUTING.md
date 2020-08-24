@@ -234,13 +234,26 @@ Copy and paste the output to the `references.bib` file.
 ```
 
 After you copy and paste the LaTeX formatted reference to the `reference.bib` file (see instructions by source type below), you need to add a key in the first line, after the `{` and before the `,`.
+
+##### Key naming
+
+Whenever possible, tags for all types of references should follow this format: `LastnameoffirstauthorYear` so `Love2014`.
+
 For example the tidyverse citation starts like this:
 
 ```
-@Article{tidyverse,
+@Article{Wickham2019,
 ```
 
-This allows you to reference it by `@tidyverse` as [mentioned in the section above](#citing-sources-in-text)
+This allows you to reference it by `@Wickham2019` as [mentioned in the section above](#citing-sources-in-text)
+
+If there is no author name or no year associated with the reference, then turn to key words, all lower case with `-` in between. 
+
+For example:
+```
+@Website{pca-visually-explained,
+```
+Had no year associated with it, so it has keywords for its tag `pca-visually-explained`.
 
 #### How to spell check
 
