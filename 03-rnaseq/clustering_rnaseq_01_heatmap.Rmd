@@ -246,27 +246,6 @@ We are going to do some pre-filtering to keep only genes with 10 or more reads t
 Note that rows represent gene data and the columns represent sample data in our dataset.
 
 ```{r}
-# Let's take a look at the distribution of counts first
-
-# Sum up the counts for each gene -- which means we want the sum of counts for each row as the rows represent gene data and the columns represent sample data in our dataset
-count_sums <- data.frame(count = rowSums(counts(dds)))
-
-# Create a density plot using the sums
-ggplot2::ggplot(count_sums, ggplot2::aes(x = count)) +
-  ggplot2::geom_density() +
-  ggplot2::geom_vline(ggplot2::aes(xintercept = 10), # This line represents the current cutoff of 10
-    color = "blue",
-    linetype = "solid"
-  ) +
-  ggplot2::geom_vline(ggplot2::aes(xintercept = mean(count)), # This line represents the mean count value
-    color = "red",
-    linetype = "dashed"
-  )
-```
-
-It appears that our arbitrary cutoff of 10 (the solid blue line) is a decent cutoff to make here as it seems to be just about inline with the mean counts value (the red dashed line) and retains the data points that are not in the majority and therefore may hold significance.
-
-```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
 # only rows that have counts above the cutoff
 genes_to_keep <- rowSums(counts(dds)) >= 10
