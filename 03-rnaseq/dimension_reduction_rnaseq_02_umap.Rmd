@@ -95,7 +95,8 @@ For this example analysis, we will use this [prostate cancer dataset](https://ww
 
 <!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
-The data that we downloaded from refine.bio for this analysis has 175 samples (obtained from 20 patients with prostate cancer), containing RNA-sequencing results for samples that have been treated with ADT obtained via radical prostatectomy and that have not been treated with ADT obtained via biopsy (this was done for each patient).
+The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
+Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 
 ## Place the dataset in your new `data/` folder
 
@@ -110,7 +111,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+Copy and paste the `SRP133573` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -118,7 +119,7 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `<experiment_accession_id>` folder which contains:
+  - The `SRP133573` folder which contains:
     - The gene expression  
     - The metadata TSV  
 
@@ -221,7 +222,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 <!--ALL THE ANALYSIS STEPS HERE -->
 
-Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to look at the differential expression of our pre-ADT and post-ADT samples.
+Now we are going to use a combination of functions from the `DESeq2`, `umap`, and `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation and Projection (UMAP) dimension reduction technique on our pre-ADT and post-ADT samples.
 
 ## Prepare data for `DESeq2`
 
@@ -316,13 +317,15 @@ umap_plot_df <- data.frame(umap_results$layout) %>%
 
 ## Create UMAP plot
 
+In this chunk, we are are going to use the `ggplot` function to plot our normalized UMAP scores.
+
 ```{r}
 # Plot using `ggplot()` function
 ggplot(umap_plot_df, aes(x = X1, y = X2)) +
   geom_point() # This tells R that we want a scatterplot
 ```
 
-In this chunk, we are going to add a variable to our plot for annotation.
+Now we are going to add a variable to our plot for annotation.
 
 In this code chunk, the variable `refinebio_treatment` is given to the `ggplot()` function as part of the goal of the experiment is to analyze the differential responses to androgen deprivation therapy (ADT).
 
@@ -345,7 +348,7 @@ Now let's plot using `ggplot2` functionality.
 
 ```{r}
 # Plot using `ggplot()` function
-final_annotatated_umap_plot <- ggplot(
+final_annotated_umap_plot <- ggplot(
   umap_plot_df,
   aes(
     x = X1,
@@ -357,8 +360,8 @@ final_annotatated_umap_plot <- ggplot(
 ) +
   geom_point() # This tells R that we want a scatterplot
 
-# Display the plot that we saved about
-final_annotatated_umap_plot
+# Display the plot that we saved above
+final_annotated_umap_plot
 ```
 
 
@@ -369,14 +372,15 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 ```{r}
 # Save plot using `ggsave()` function
 ggsave(file.path(plots_dir, "SRP133573_umap_plot.png"), # Replace with name relevant your plotted data
-  plot = final_annotatated_umap_plot
+  plot = final_annotated_umap_plot
 )
 ```
 
 # Resources for further learning
 
+
 - [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@dimension-reduction-guidelines]  
-- [A nice explanation and comparison of many different dimenstionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@dimension-reduction-explained]
+- [A nice explanation and comparison of many different dimensionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@dimension-reduction-explained]
 
 # Print session info:
 
