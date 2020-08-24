@@ -88,9 +88,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute myeloid leukemia dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol]
+For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
 
-@Micol performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
 
 ## Place the dataset in your new `data/` folder
 
