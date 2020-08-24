@@ -1764,7 +1764,7 @@ file.exists(file.path(data_dir, &quot;metadata_SRP070849.tsv&quot;))</code></pre
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the R package <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"><code>DESeq2</code></a> <span class="citation">(Love, Huber, and Anders 2014)</span> for normalization and the R package <code>pheatmap</code> <span class="citation">(Kolde 2019)</span> for clustering and creating a heatmap.</p>
+<p>In this analysis, we will be using the R package <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html"><code>DESeq2</code></a> <span class="citation">(Love <em>et al.</em> 2014)</span> for normalization and the R package <code>pheatmap</code> <span class="citation">(Kolde 2019)</span> for clustering and creating a heatmap.</p>
 <pre class="r"><code>if (!(&quot;pheatmap&quot; %in% installed.packages())) {
   # Install pheatmap
   install.packages(&quot;pheatmap&quot;, update = FALSE)
@@ -1903,7 +1903,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 </div>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.3</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love, Huber, and Anders 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
+<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <pre class="r"><code># The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
 df &lt;- df %&gt;%
   # Mutate numeric variables to be integers
@@ -2005,7 +2005,7 @@ dev.off()</code></pre>
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.8</span> Prepare metadata for annotation</h2>
-<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/28193779/">paper</a>, we know that the mice with <code>IDH2</code> mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with <code>TET2</code> mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). <span class="citation">(Shih et al. 2017)</span> We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/28193779/">paper</a>, we know that the mice with <code>IDH2</code> mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with <code>TET2</code> mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). <span class="citation">(Shih <em>et al.</em> 2017)</span> We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.</p>
 <pre class="r"><code># Let&#39;s prepare the annotation data.frame for the uncollapsed `DESeqData` set object which will be used to create the technical replicates heatmap
 annotation_df &lt;- metadata %&gt;%
   # Create a variable to store the cancer type information
@@ -2136,19 +2136,19 @@ sessionInfo()</code></pre>
 ## [73] xfun_0.16</code></pre>
 <div id="refs" class="references">
 <div id="ref-make-complex-heatmaps">
-<p>Gu, Zuguang. 2020. <em>ComplexHeatmap Complete Reference</em>. <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">https://jokergoo.github.io/ComplexHeatmap-reference/book/</a>.</p>
+<p>Gu Z., 2020 <em>ComplexHeatmap complete reference</em>.</p>
 </div>
 <div id="ref-pheatmap">
-<p>Kolde, Raivo. 2019. <em>Pheatmap: Pretty Heatmaps</em>. <a href="https://CRAN.R-project.org/package=pheatmap">https://CRAN.R-project.org/package=pheatmap</a>.</p>
+<p>Kolde R., 2019 <em>Pheatmap: Pretty heatmaps</em>.</p>
 </div>
 <div id="ref-DESeq2">
-<p>Love, Michael I, Wolfgang Huber, and Simon Anders. 2014. “Moderated Estimation of Fold Change and Dispersion for Rna-Seq Data with Deseq2.” <em>Genome Biology</em> 15 (550). <a href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a>.</p>
+<p>Love M. I., W. Huber, and S. Anders, 2014 Moderated estimation of fold change and dispersion for rna-seq data with deseq2. Genome Biology 15. <a href="https://doi.org/10.1186/s13059-014-0550-8">https://doi.org/10.1186/s13059-014-0550-8</a></p>
 </div>
 <div id="ref-AML">
-<p>Shih, Alan H, Cem Meydan, Kaitlyn Shank, Francine E Garrett-Bakelman, Patrick S Ward, Andrew M Intlekofer, Abbas Nazir, et al. 2017. “Combination Targeted Therapy to Disrupt Aberrant Oncogenic Signaling and Reverse Epigenetic Dysfunction in Idh2- and Tet2-Mutant Acute Myeloid Leukemia.” <em>Cancer Discovery</em> 7 (5). <a href="https://doi.org/10.1158/2159-8290.CD-16-1049">https://doi.org/10.1158/2159-8290.CD-16-1049</a>.</p>
+<p>Shih A. H., C. Meydan, K. Shank, F. E. Garrett-Bakelman, and P. S. Ward <em>et al.</em>, 2017 Combination targeted therapy to disrupt aberrant oncogenic signaling and reverse epigenetic dysfunction in idh2- and tet2-mutant acute myeloid leukemia. Cancer Discovery 7. <a href="https://doi.org/10.1158/2159-8290.CD-16-1049">https://doi.org/10.1158/2159-8290.CD-16-1049</a></p>
 </div>
 <div id="ref-make-heatmaps">
-<p>Slowikowski, Kamil. 2017. “Make Heatmaps in R with Pheatmap.” <a href="https://slowkow.com/notes/pheatmap-tutorial/">https://slowkow.com/notes/pheatmap-tutorial/</a>.</p>
+<p>Slowikowski K., 2017 Make heatmaps in r with pheatmap</p>
 </div>
 </div>
 </div>
