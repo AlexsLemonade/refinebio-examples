@@ -1657,7 +1657,7 @@ div.tocify {
 
 
 <div id="purpose-of-this-analysis" class="section level1">
-<h1><span class="header-section-number">1</span> Purpose of this analysis:</h1>
+<h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 <p>This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Uniform Manifold Approximation and Projection (UMAP) and plot the scores using <code>ggplot2</code>.</p>
 </div>
@@ -1942,7 +1942,7 @@ dds_norm &lt;- vst(dds)</code></pre>
 </div>
 <div id="perform-umap" class="section level2">
 <h2><span class="header-section-number">4.8</span> Perform UMAP</h2>
-<p>Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique proposed by <span class="citation">McInnes <em>et al.</em> (2018)</span> (<a href="https://arxiv.org/abs/1802.03426">See associated paper</a>). While PCA assumes that the variation we care about has a particular distribution (normal, broadly speaking), UMAP allows more complicated distributions that it learns from the data. The advantage of this feature is that UMAP can do a better job separating clusters, especially when some of those clusters may be more similar to each other than others <span class="citation">(Team 2020)</span>.</p>
+<p>Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique proposed by <span class="citation">McInnes <em>et al.</em> (2018)</span> (<a href="https://arxiv.org/abs/1802.03426">See associated paper</a>). While PCA assumes that the variation we care about has a particular distribution (normal, broadly speaking), UMAP allows more complicated distributions that it learns from the data. The advantage of this feature is that UMAP can do a better job separating clusters, especially when some of those clusters may be more similar to each other than others <span class="citation">(CCDL 2020)</span>.</p>
 <p>In this code chunk, we are going to extract the normalized counts data from the <code>DESeqDataSet</code> object and perform UMAP on the normalized data using <code>umap()</code> from the <code>umap</code> package. We are using the default parameters when we run the <code>umap::umap()</code> function. Here’s some <a href="https://cran.r-project.org/web/packages/umap/vignettes/umap.html#tuning-umap">guidance about choosing parameters</a> when executing <code>umap::umap()</code> <span class="citation">(R CRAN Team 2019)</span>. You can also run the following in the RStudio console to get more information on the function and its default parameters: <code>?umap::umap</code> or <code>?umap::umap.defaults</code>.</p>
 <pre class="r"><code># First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
 normalized_counts &lt;- assay(dds_norm) %&gt;%
@@ -2014,7 +2014,7 @@ final_annotated_umap_plot</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>Playing with the parameters so you can fine-tune them is a good way to give you more information about a particular analysis as well as the data itself. Feel free to try playing with the parameters on your own in the code chunks above!</li>
 </ol>
-<p>In summary, a good rule of thumb to remember is: if the results of an analysis can be completely changed by changing its parameters, you should be very cautious when it comes to the conclusions you draw from it as well as having good rationale for the parameters you choose <span class="citation">(Team 2020)</span>.</p>
+<p>In summary, a good rule of thumb to remember is: if the results of an analysis can be completely changed by changing its parameters, you should be very cautious when it comes to the conclusions you draw from it as well as having good rationale for the parameters you choose (<em>adapted from <span class="citation">CCDL (2020)</span> training materials</em>).</p>
 </div>
 </div>
 <div id="save-annotated-umap-plot-as-a-png" class="section level2">
@@ -2037,7 +2037,7 @@ ggsave(file.path(plots_dir, &quot;SRP133573_umap_plot.png&quot;), # Replace with
 </ul>
 </div>
 <div id="print-session-info" class="section level1">
-<h1><span class="header-section-number">6</span> Print session info:</h1>
+<h1><span class="header-section-number">6</span> Print session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
@@ -2097,6 +2097,9 @@ sessionInfo()</code></pre>
 ## [82] AnnotationDbi_1.47.0   memoise_1.1.0          cluster_2.1.0         
 ## [85] ellipsis_0.3.1</code></pre>
 <div id="refs" class="references">
+<div id="ref-CCDL2020">
+<p>CCDL, 2020 <em>ScRNA-seq dimension reduction</em>.</p>
+</div>
 <div id="ref-Freytag2019">
 <p>Freytag S., 2019 Workshop: Dimension reduction with r</p>
 </div>
@@ -2120,9 +2123,6 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Sharma2018">
 <p>Sharma N. V., K. L. Pellegrini, V. Ouellet, F. O. Giuste, and S. Ramalingam <em>et al.</em>, 2018 Identification of the transcription factor relationships associated with androgen deprivation therapy response and metastatic progression in prostate cancer. Cancers 10. <a href="https://doi.org/10.3390/cancers10100379">https://doi.org/10.3390/cancers10100379</a></p>
-</div>
-<div id="ref-CCDL2020">
-<p>Team C., 2020 <em>ScRNA-seq dimension reduction</em>.</p>
 </div>
 </div>
 </div>
