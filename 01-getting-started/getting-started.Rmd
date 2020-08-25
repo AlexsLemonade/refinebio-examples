@@ -50,7 +50,7 @@ These requirements can be installed by following the instructions at these links
 We recommend installing `devtools` from CRAN (e.g. running `install.packages("devtools")` in R). 
 
 ### Required software:
-* [**R**](https://cran.r-project.org/)  [@Rbase]  
+* [**R**](https://cran.r-project.org/)  [@R-base]  
 * [**RStudio**](https://www.rstudio.com/products/RStudio/) an [integrated development environment](https://en.wikipedia.org/wiki/Integrated_development_environment) for working with R and [R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html) [@RStudio].    
 * [**Bioconductor**](https://bioconductor.org/install/) for installing packages from this package repository [@Huber2015].    
 * [**tidyverse**](https://www.tidyverse.org/) - we opt for using tidyverse packages for handling and cleaning the data [@Wickham2019].    

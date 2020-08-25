@@ -345,7 +345,7 @@ ggsave(file.path(plots_dir, "SRP133573_pca_plot.png"), # Replace with name relev
 # Resources for further learning
 
 - [Principle Component Analysis (PCA) Explained Visually](http://setosa.io/ev/principal-component-analysis/) [@pca-visually-explained]
-- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@dNguyen2019]  
+- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@Nguyen2019]  
 - [A nice explanation and comparison of many different dimenstionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@Freytag2019]
 
 # Print session info

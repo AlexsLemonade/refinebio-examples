@@ -247,7 +247,7 @@ For example the tidyverse citation starts like this:
 
 This allows you to reference it by `@Wickham2019` as [mentioned in the section above](#citing-sources-in-text)
 
-If there is no author name or no year associated with the reference, then turn to key words, all lower case with `-` in between. 
+If there is no author name or no year associated with the reference, then turn to key words, all lower case with `-` in between (unless there is an obvious name: aka `RStudio`).
 
 For example:
 ```
