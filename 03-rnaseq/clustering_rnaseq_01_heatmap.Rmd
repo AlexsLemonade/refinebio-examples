@@ -146,7 +146,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
 
-In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization and the R package `pheatmap` [@pheatmap] for clustering and creating a heatmap.
+In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@Love2014] for normalization and the R package `pheatmap` [@Slowikowski2017] for clustering and creating a heatmap.
 
 ```{r}
 if (!("pheatmap" %in% installed.packages())) {
@@ -220,7 +220,7 @@ Now we are going to use a combination of functions from the `DESeq2` and `pheatm
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@DESeq2].
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
 In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
@@ -279,7 +279,7 @@ df_by_var <- data.frame(assay(dds_norm)) %>%
 
 ## Create a heatmap
 
-To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/) [@make-heatmaps].
+To further customize the heatmap, see a vignette for a guide at this [link](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017].
 
 ```{r}
 # Create and store the heatmap object
@@ -326,7 +326,7 @@ Now, let's add some annotation bars to our heatmap.
 
 ## Prepare metadata for annotation
 
-From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). [@AML]
+From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). [@Shih2017]
 We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.
 
 ```{r}
@@ -399,8 +399,8 @@ dev.off()
 
 # Further learning resources about this analysis
 
-- [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@make-heatmaps]
-- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@make-complex-heatmaps]
+- [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
+- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
 
 # Print session info:
 

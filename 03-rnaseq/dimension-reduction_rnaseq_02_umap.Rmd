@@ -18,7 +18,7 @@ This notebook illustrates one way that you can use RNA-seq data from refine.bio 
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
 
 ## Obtain the `.Rmd` file of this analysis
 
@@ -37,12 +37,9 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the data directory
-data_dir <- file.path("data", "SRP133573") # Replace with path to desired data directory
-
 # Create the data folder if it doesn't exist
-if (!dir.exists(data_dir)) {
-  dir.create(data_dir)
+if (!dir.exists("data")) {
+  dir.create("data")
 }
 
 # Define the file path to the plots directory
@@ -121,16 +118,21 @@ Your new analysis folder should contain:
 - A folder called "data" which contains:
   - The `SRP133573` folder which contains:
     - The gene expression  
-    - The metadata TSV  
+    - The metadata TSV
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
 
 ```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP133573")
+
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
 file.exists(file.path(data_dir, "SRP133573.tsv"))
 
@@ -156,7 +158,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@DESeq2] for normalization, the R package [`umap`](https://www.rdocumentation.org/packages/umapr/versions/0.0.0.9001/topics/umap) [@UMAP] for the production of UMAP dimension reduction values and the R package , and the R package [`ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@ggplot2] for plotting the UMAP values.
+In this analysis, we will be using the R package [`DESeq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@Love2014] for normalization, the R package [`umap`](https://www.rdocumentation.org/packages/umapr/versions/0.0.0.9001/topics/umap) [@Konopka2020] for the production of UMAP dimension reduction values and the R package , and the R package [`ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016] for plotting the UMAP values.
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -214,7 +216,8 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+df <- df %>%
+  dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)
@@ -256,7 +259,7 @@ metadata <- metadata %>%
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@DESeq2].
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
 In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
@@ -293,13 +296,13 @@ dds_norm <- vst(dds)
 
 ## Perform UMAP
 
-Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique proposed by McInnes, Healy, & Melville as it isdescribed in the [associated paper](https://arxiv.org/abs/1802.03426) [@umap-paper].
+Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique proposed by @McInnes2018 ([See associated paper](https://arxiv.org/abs/1802.03426)).
 While PCA assumes that the variation we care about has a particular distribution (normal, broadly speaking), UMAP allows more complicated distributions that it learns from the data. 
-The advantage of this feature is that UMAP can do a better job separating clusters, especially when some of those clusters may be more similar to each other than others.  
+The advantage of this feature is that UMAP can do a better job separating clusters, especially when some of those clusters may be more similar to each other than others [@CCDL2020].  
 
 In this code chunk, we are going to extract the normalized counts data from the `DESeqDataSet` object and perform UMAP on the normalized data using `umap()` from the `umap` package.
 We are using the default parameters when we run the `umap::umap()` function.
-Take a look at the `Tuning UMAP` section at [this link](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) for more on parameters that can be configured when executing `umap::umap()` [@umap-parameters].
+Here's some [guidance about choosing parameters](https://cran.r-project.org/web/packages/umap/vignettes/umap.html#tuning-umap) when executing `umap::umap()` [@umap-vignette].
 You can also run the following in the RStudio console to get more information on the function and its default parameters: `?umap::umap` or `?umap::umap.defaults`.
 
 ```{r}
@@ -316,7 +319,7 @@ umap_results <- umap::umap(normalized_counts)
 Now that we have the results from UMAP, we need to extract the counts data from the `umap_results` object and merge the variables from the metadata that we will use for annotating our plot.
 
 ```{r}
-# We need to tell R to create a data frame with the umap counts and annotation data in preparation for plotting with `ggplot2`
+# We need to tell R to create a data frame with the umap values and annotation data in preparation for plotting with `ggplot2`
 umap_plot_df <- data.frame(umap_results$layout) %>%
   tibble::rownames_to_column("refinebio_accession_code") %>% # Let's get the rownames into a column so we can merge the annotation data
   dplyr::inner_join(metadata, by = "refinebio_accession_code") # Let's merge the annotation data using the `refinebio_accession_code` column
@@ -324,17 +327,23 @@ umap_plot_df <- data.frame(umap_results$layout) %>%
 
 ## Create UMAP plot
 
-Now we can use the `ggplot` function to plot our normalized UMAP scores.
+Now we can use the `ggplot()` function to plot our normalized UMAP scores.
 
 ```{r}
 # Plot using `ggplot()` function
-ggplot(umap_plot_df, aes(x = X1, y = X2)) +
+ggplot(
+  umap_plot_df,
+  aes(
+    x = X1,
+    y = X2
+  )
+) +
   geom_point() # This tells R that we want a scatterplot
 ```
 
 Let's try adding a variable to our plot for annotation.
 
-In this code chunk, the variable `refinebio_treatment` is given to the `ggplot()` function as part of the goal of the experiment is to analyze the sample transcriptional responses to androgen deprivation therapy (ADT).
+In this code chunk, the variable `refinebio_treatment` is given to the `ggplot()` function so we can label by androgen deprivation therapy (ADT) status.
 
 ```{r}
 # Plot using `ggplot()` function
@@ -343,7 +352,7 @@ ggplot(
   aes(
     x = X1,
     y = X2,
-    color = refinebio_treatment # Here we are giving `refinebio_treatment` to the color argument
+    color = refinebio_treatment # This will label points with different colors for each `refinebio_treatment` group
   )
 ) +
   geom_point() # This tells R that we want a scatterplot
@@ -351,7 +360,7 @@ ggplot(
 
 In the next code chunk, we are going to add another variable to our plot for annotation.
 
-We'll plot using both `refinebio_treatment` and `refinebio_disease` variables for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@ADT-Prostate-Cancer].
+We'll plot using both `refinebio_treatment` and `refinebio_disease` variables for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@Sharma2018].
 
 ```{r}
 # Plot using `ggplot()` function
@@ -360,9 +369,8 @@ final_annotated_umap_plot <- ggplot(
   aes(
     x = X1,
     y = X2,
-    color = refinebio_treatment,
-    # Here we are giving `refinebio_treatment` to the color argument
-    shape = refinebio_disease # Here we are giving `refinebio_disease` to the shape argument
+    color = refinebio_treatment, # This will label points with different colors for each `refinebio_treatment` group
+    shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
   )
 ) +
   geom_point() # This tells R that we want a scatterplot
@@ -371,12 +379,11 @@ final_annotated_umap_plot <- ggplot(
 final_annotated_umap_plot
 ```
 
-The plot above is more informative than the first plot we created but is still not as informative as one may home as there are no clear clusters represented.
 Although it does appear that majority of the pre-ADT and post-ADT appear to cluster together, there are still questions remaining as we look at outliers.
 
 ### Interpretation of UMAP plot and results
 
-1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters. 
+1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters  (Also why setting the seed is important). 
 This means that you should not rely too heavily on the exact values of UMAP's output. 
 
   - One particular limitation of UMAP is that while observed clusters have some meaning, the distance *between* clusters usually does not (nor does cluster density). The fact that two clusters are near each other should NOT be interpreted to mean that they are more related to each other than to more distant clusters. (There is some disagreement about whether UMAP distances have more meaning, but it is also probably safer to assume they don't.)
@@ -384,7 +391,7 @@ This means that you should not rely too heavily on the exact values of UMAP's ou
 2. Playing with the parameters so you can fine-tune them is a good way to give you more information about a particular analysis as well as the data itself.
 Feel free to try playing with the parameters on your own in the code chunks above!
    
-In summary, a good rule of thumb to remember is: if the results of an analysis can be completely changed by changing its parameters, you should be very cautious when it comes to the conclusions you draw from it as well as having good rationale for the parameters you choose.
+In summary, a good rule of thumb to remember is: if the results of an analysis can be completely changed by changing its parameters, you should be very cautious when it comes to the conclusions you draw from it as well as having good rationale for the parameters you choose [@CCDL2020].
 
 ## Save annotated UMAP plot as a PNG
 
@@ -399,9 +406,9 @@ ggsave(file.path(plots_dir, "SRP133573_umap_plot.png"), # Replace with name rele
 
 # Resources for further learning
 
-- [More on UMAP and its parameters](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) [@umap-parameters]
-- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@dimension-reduction-guidelines]  
-- [A nice explanation and comparison of many different dimensionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@dimension-reduction-explained]
+- [More on UMAP and its parameters](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) [@umap-vignette]
+- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@Nguyen2019]  
+- [A nice explanation and comparison of many different dimensionality reduction techniques that you may encounter](https://rpubs.com/Saskia/520216) [@Freytag2019]
 
 # Print session info:
 
