@@ -9,20 +9,20 @@ output:
     number_sections: true
 ---
 
-# Purpose
+# Purpose of this analysis
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
 # How to run this example
 
-For general information about our tutorials, and for the basic software packages you will need; see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files).
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
@@ -35,9 +35,6 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the data directory
-data_dir <- file.path("data", {{experiment_accession}}) # Replace with path to desired data directory
-
 # Create the data folder if it doesn't exist
 if (!dir.exists("data")) {
   dir.create("data")
@@ -70,11 +67,11 @@ Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
 <!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
 
@@ -83,7 +80,7 @@ We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
 {{DELETE THIS LINE}}
 
 It may take a few minutes for the dataset to process.
@@ -101,14 +98,14 @@ refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `<experiment_accession_id>` folder into your newly created `data/` folder.
+Copy and paste the {{EXPERIMENT_ACCESSION_ID}} folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -116,18 +113,23 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `<experiment_accession_id>` folder which contains:
+  - The `{{EXPERIMENT_ACCESSION_ID}}` folder which contains:
     - The gene expression  
     - The metadata TSV  
-
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+    
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/b78046845763272d0aa65a077b6a3e46977d5342/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
 
 ```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", {{experiment_accession}})
+
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
 file.exists(file.path(data_dir, {{DATA_ACCESSION FILENAME}}))
 
@@ -151,7 +153,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 ## Install libraries
 
-See our getting started with [package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources. 
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using {{PACKAGE}} [{{CITATION}}].
 
@@ -162,7 +164,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 }
 ```
 
-Attach the {{PACKAGE}}.
+Attach the packages we need for this analysis:
 
 ```{r}
 # Attach the library
@@ -189,14 +191,16 @@ metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your meta
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
                                 {{DATA_ACCESSION FILENAME}} # Replace with the name of your data file
                                 )) %>%
-  tibble::column_to_rownames('Gene')
+  # Tuck away the Gene id column as rownames
+  tibble::column_to_rownames("Gene")
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$geo_accession)
+df <- df %>% 
+  dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
