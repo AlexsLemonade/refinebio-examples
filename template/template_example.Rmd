@@ -190,14 +190,17 @@ metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your meta
 # Read in data TSV file
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
                                 {{DATA_ACCESSION FILENAME}} # Replace with the name of your data file
-                                ))
+                                )) %>%
+  # Tuck away the Gene id column as rownames
+  tibble::column_to_rownames("Gene")
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$geo_accession)
+df <- df %>% 
+  dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
