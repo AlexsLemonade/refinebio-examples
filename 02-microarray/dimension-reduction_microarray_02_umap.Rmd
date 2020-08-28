@@ -11,8 +11,6 @@ output:
 
 # Purpose of this analysis
 
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
-
 This notebook illustrates one way that you can use microarray data from refine.bio to perform Uniform Manifold Approximation (UMAP) and plot the coordinates using `ggplot2`.
 
 # How to run this example
@@ -81,8 +79,6 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [medulloblastoma dataset](https://www.refine.bio/experiments/GSE37382).
-
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
 The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
 The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
@@ -211,8 +207,6 @@ df <- df %>%
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
-
-<!--ALL THE ANALYSIS STEPS HERE -->
 
 Now we are going to use a combination of functions from the `umap` and the `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation (UMAP) dimension reduction technique on our medulloblastoma samples.
 

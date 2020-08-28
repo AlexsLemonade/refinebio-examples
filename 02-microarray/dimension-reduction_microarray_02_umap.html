@@ -1659,7 +1659,6 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 <p>This notebook illustrates one way that you can use microarray data from refine.bio to perform Uniform Manifold Approximation (UMAP) and plot the coordinates using <code>ggplot2</code>.</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1709,7 +1708,6 @@ if (!dir.exists(results_dir)) {
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
 <p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE37382">medulloblastoma dataset</a>.</p>
-<!--BRIEFLY SUMMARIZE THIS DATASET-->
 <p>The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma. The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.</p>
 </div>
 <div id="place-the-dataset-in-your-new-data-folder" class="section level2">
@@ -1836,7 +1834,6 @@ df &lt;- df %&gt;%
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<!--ALL THE ANALYSIS STEPS HERE -->
 <p>Now we are going to use a combination of functions from the <code>umap</code> and the <code>ggplot2</code> packages to perform and visualize the results of the Uniform Manifold Approximation (UMAP) dimension reduction technique on our medulloblastoma samples.</p>
 </div>
 <div id="perform-uniform-manifold-approximation-umap" class="section level2">
