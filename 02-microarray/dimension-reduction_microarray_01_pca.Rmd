@@ -202,7 +202,8 @@ Now we are going to use a combination of functions from base R and the `ggplot2`
 
 ## Perform Principal Components Analysis
 
-In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the 
+In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
+We are using the base R [`prcomp()`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp) function to perform Principal Component Analysis (PCA) here [@prcomp-function].
 
 ```{r}
 # Perform Principal Component Analysis (PCA)
@@ -212,7 +213,7 @@ pca <- prcomp(t(df)) # We have to transpose our data frame to meet the `prcomp()
 pca_df <- data.frame(pca$x[, 1:2]) %>%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
-  # Bring only the variables that we want from the metadata into this data frame; match by sample ids
+  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
   dplyr::inner_join(dplyr::select(
     metadata, refinebio_accession_code,
     histology, subgroup
@@ -232,8 +233,8 @@ pca_plot <- ggplot(
     y = PC2
   )
 ) +
-  geom_point() +
-  theme_classic()
+  geom_point() + # This tells R that we want a scatterplot
+  theme_classic() # This tells R to return a classic-looking plot with no gridlines
 
 # Print out plot here
 pca_plot
@@ -251,7 +252,7 @@ pca_plot <- ggplot(
     color = subgroup # This will label points with different colors for each `subgroup`
   )
 ) +
-  geom_point() + # This tells R that we want a scatterplot
+  geom_point() +
   theme_classic()
 
 # Print out plot here
@@ -295,9 +296,10 @@ plot = pca_plot # Here we are giving the function the plot object that we want s
 
 # Resources for further learning
 
-- [More on `ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016]
-- [Overall Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c) [@Brems2017] 
+- [Overall PCA Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c) [@Brems2017] 
 - [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/) [@pca-visually-explained]
+- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@Nguyen2019]
+- [More on `ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016]
 
 # Session info
 

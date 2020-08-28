@@ -1610,6 +1610,7 @@ div.tocify {
           <ul class="dropdown-menu">
             <!-- Individual microarray pages go in this list -->
             <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
+            <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
 
           </ul>
         </li> <!--/microarray dropdown-->
@@ -1621,6 +1622,8 @@ div.tocify {
             <!-- Individual RNA-Seq pages go in this list -->
             <li><a href="../03-rnaseq/00-intro-to-rnaseq.html">Introduction</a></li>
             <li><a href="../03-rnaseq/clustering_rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
+            <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
+            <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -1831,7 +1834,7 @@ all.equal(colnames(df), metadata$geo_accession)</code></pre>
 </div>
 <div id="perform-principal-components-analysis" class="section level2">
 <h2><span class="header-section-number">4.3</span> Perform Principal Components Analysis</h2>
-<p>In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the</p>
+<p>In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later. We are using the base R <a href="https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp"><code>prcomp()</code></a> function to perform Principal Component Analysis (PCA) here <span class="citation">(R Core Team)</span>.</p>
 <pre class="r"><code># Perform Principal Component Analysis (PCA)
 pca &lt;- prcomp(t(df)) # We have to transpose our data frame to meet the `prcomp()` function requirements
 
@@ -1839,7 +1842,7 @@ pca &lt;- prcomp(t(df)) # We have to transpose our data frame to meet the `prcom
 pca_df &lt;- data.frame(pca$x[, 1:2]) %&gt;%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column(&quot;refinebio_accession_code&quot;) %&gt;%
-  # Bring only the variables that we want from the metadata into this data frame; match by sample ids
+  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
   dplyr::inner_join(dplyr::select(
     metadata, refinebio_accession_code,
     histology, subgroup
@@ -1855,8 +1858,8 @@ pca_plot &lt;- ggplot(
     y = PC2
   )
 ) +
-  geom_point() +
-  theme_classic()
+  geom_point() + # This tells R that we want a scatterplot
+  theme_classic() # This tells R to return a classic-looking plot with no gridlines
 
 # Print out plot here
 pca_plot</code></pre>
@@ -1871,7 +1874,7 @@ pca_plot &lt;- ggplot(
     color = subgroup # This will label points with different colors for each `subgroup`
   )
 ) +
-  geom_point() + # This tells R that we want a scatterplot
+  geom_point() +
   theme_classic()
 
 # Print out plot here
@@ -1911,9 +1914,10 @@ plot = pca_plot # Here we are giving the function the plot object that we want s
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">More on <code>ggplot2</code></a> <span class="citation">(Prabhakaran)</span></li>
-<li><a href="https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c">Overall Explanation by Matt Brems</a> <span class="citation">(Brems 2017)</span></li>
+<li><a href="https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c">Overall PCA Explanation by Matt Brems</a> <span class="citation">(Brems 2017)</span></li>
 <li><a href="http://setosa.io/ev/principal-component-analysis/">A visual explanation of PCA</a> <span class="citation">(Powell and Lehe)</span></li>
+<li><a href="https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&amp;type=printable">Guidelines on choosing dimension reduction methods</a> <span class="citation">(Nguyen and Holmes 2019)</span></li>
+<li><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">More on <code>ggplot2</code></a> <span class="citation">(Prabhakaran)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -1954,6 +1958,9 @@ sessionInfo()</code></pre>
 <div id="ref-Brems2017">
 <p>Brems M., 2017 A one-stop shop for principal component analysis</p>
 </div>
+<div id="ref-Nguyen2019">
+<p>Nguyen L. H., and S. Holmes, 2019 Ten quick tips for effective dimensionality reduction. PLOS Computational Biology 15. <a href="https://doi.org/10.1371/journal.pcbi.1006907">https://doi.org/10.1371/journal.pcbi.1006907</a></p>
+</div>
 <div id="ref-Northcott2012">
 <p>Northcott P. A., D. J. Shih, J. Peacock, L. Garzia, and S. Morrissy <em>et al.</em>, 2012 Subgroup specific structural variation across 1,000 medulloblastoma genomes. Nature 488. <a href="https://doi.org/10.1038/nature11327">https://doi.org/10.1038/nature11327</a></p>
 </div>
@@ -1962,6 +1969,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Prabhakaran2016">
 <p>Prabhakaran S., <em>The complete ggplot2 tutorial</em>.</p>
+</div>
+<div id="ref-prcomp-function">
+<p>R Core Team, Principal components analysis</p>
 </div>
 </div>
 </div>
