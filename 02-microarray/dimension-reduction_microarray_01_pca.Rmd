@@ -199,7 +199,7 @@ We are using the base R `prcomp()` function to perform Principal Component Analy
 ```{r}
 # Perform Principal Component Analysis (PCA)
 pca <- prcomp(t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
-  scale = TRUE # This tells R
+  scale = TRUE # This tells R that we want the variables scaled to have unit variance
 )
 
 # Make the first 10 principal components into a data frame for plotting with `ggplot2`
