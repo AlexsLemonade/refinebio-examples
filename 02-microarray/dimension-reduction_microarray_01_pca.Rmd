@@ -11,8 +11,6 @@ output:
 
 # Purpose of this analysis
 
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
-
 This notebook illustrates one way that you can use microarray data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
 
 # How to run this example
@@ -81,8 +79,6 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [medulloblastoma dataset](https://www.refine.bio/experiments/GSE37382).
-
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
 The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
 The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
@@ -158,9 +154,6 @@ library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
-
-# Set the seed so our results are reproducible:
-set.seed(12345)
 ```
 
 ## Import and set up data
@@ -196,21 +189,21 @@ all.equal(colnames(df), metadata$geo_accession)
 ```
 
 
-<!--ALL THE ANALYSIS STEPS HERE -->
-
 Now we are going to use a combination of functions from base R and the `ggplot2` package to perform and visualize the results of the Principal Component Analysis (PCA) dimension reduction technique on our medulloblastoma samples.
 
 ## Perform Principal Components Analysis
 
 In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
-We are using the base R [`prcomp()`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/prcomp) function to perform Principal Component Analysis (PCA) here [@prcomp-function].
+We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here [@prcomp-function].
 
 ```{r}
 # Perform Principal Component Analysis (PCA)
-pca <- prcomp(t(df)) # We have to transpose our data frame to meet the `prcomp()` function requirements
+pca <- prcomp(t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
+  scale = TRUE # This tells R
+)
 
-# Make into data frame for plotting PC1 and PC2 with `ggplot2`
-pca_df <- data.frame(pca$x[, 1:2]) %>%
+# Make the first 10 principal components into a data frame for plotting with `ggplot2`
+pca_df <- data.frame(pca$x[, 1:10]) %>%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
@@ -222,28 +215,30 @@ pca_df <- data.frame(pca$x[, 1:2]) %>%
   )
 ```
 
-Let's plot the PC scores for the first two principal components.
+Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component.
+For example, if PC1 explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
+On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned [@CCDL2020-cluster-validation].
+
+The `summary()` function reports the proportion of variance explained by each principal component.
+By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `<summary results>$importance`, we can use indexing to only look at the first `n` PCs.
+
+```{r}
+# Save the summary of the PCA results using the `summary()` function
+pca_summary <- summary(pca)
+
+# Now access and store the importance information for the first 10 PCs
+pca_importance <- pca_summary$importance[, 1:10]
+
+# Let's take a look at the importance information
+pca_importance
+```
+
+Now that we've seen the proportion of variance for the first ten PCs, let's plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+
+Let's also label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3683624/#SD1) [@Northcott2012].
 
 ```{r}
 # Make a scatterplot using `ggplot2` functionality
-pca_plot <- ggplot(
-  pca_df,
-  aes(
-    x = PC1,
-    y = PC2
-  )
-) +
-  geom_point() + # This tells R that we want a scatterplot
-  theme_classic() # This tells R to return a classic-looking plot with no gridlines
-
-# Print out plot here
-pca_plot
-```
-
-Now, let's label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3683624/#SD1) [@Northcott2012].
-
-```{r}
-# Make a scatterplot with ggplot2
 pca_plot <- ggplot(
   pca_df,
   aes(
@@ -252,8 +247,8 @@ pca_plot <- ggplot(
     color = subgroup # This will label points with different colors for each `subgroup`
   )
 ) +
-  geom_point() +
-  theme_classic()
+  geom_point() + # This tells R that we want a scatterplot
+  theme_classic() # This tells R to return a classic-looking plot with no gridlines
 
 # Print out plot here
 pca_plot
