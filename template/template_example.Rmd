@@ -67,11 +67,11 @@ Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
 <!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
 
@@ -80,7 +80,7 @@ We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
 {{DELETE THIS LINE}}
 
 It may take a few minutes for the dataset to process.
@@ -98,7 +98,7 @@ refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
@@ -121,7 +121,7 @@ Your new analysis folder should contain:
     
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -190,14 +190,17 @@ metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your meta
 # Read in data TSV file
 df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
                                 {{DATA_ACCESSION FILENAME}} # Replace with the name of your data file
-                                ))
+                                )) %>%
+  # Tuck away the Gene id column as rownames
+  tibble::column_to_rownames("Gene")
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$geo_accession)
+df <- df %>% 
+  dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
