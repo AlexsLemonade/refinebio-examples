@@ -34,7 +34,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -155,7 +155,8 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using DESeq2 [@DESeq2] for the differential expression test and `EnhancedVolcano` for plotting. 
+In this analysis, we will be using `DESeq2` [@Love2014] for the differential expression testing.
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates  in the results table [@Blighe2020, @Zhu2018]
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -165,6 +166,10 @@ if (!("DESeq2" %in% installed.packages())) {
 if (!("EnhancedVolcano" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("EnhancedVolcano", update = FALSE)
+}
+if (!("apeglm" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("apeglm", update = FALSE)
 }
 ```
 
@@ -321,13 +326,30 @@ Because of this, the `DESeq` function will use groups defined by `asxl_mutation_
 deseq_object <- DESeq(ddset)
 ```
 
-Let's take a look at the results table.
+Let's extract the results table from the `DESeq` object. 
 
 ```{r}
 deseq_results <- results(deseq_object)
-deseq_results
 ```
 
+Here we will use `lfcShrink()` function to obtain "shrunk" log fold change estimates based on negative binomial distribution. 
+This will add the estimates to your results table. 
+Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed)
+
+```{r}
+deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object with DESeq() already having been ran
+  coef = 2, # This is based on what log fold change coefficient was used in DESeq(), the default is 2.
+  res = deseq_results # This needs to be the DESeq results table
+)
+```
+
+Now let's take a peak at what our results table looks like. 
+
+```{r}
+head(deseq_results)
+```
+
+Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file. 
 Sort and filter the results. 
 
 ```{r}
@@ -341,7 +363,7 @@ deseq_df <- deseq_results %>%
   dplyr::mutate(threshold = padj < 0.05) %>%
   # let's sort by statistic -- the highest values should be what is up in the
   # ASXL mutated samples
-  dplyr::arrange(dplyr::desc(stat))
+  dplyr::arrange(dplyr::desc(log2FoldChange))
 ```
 
 Let's print out what the top results are. 
@@ -405,7 +427,7 @@ You can take your results from this example and make a heatmap following our hea
 # Further learning resources about this analysis
 
 - [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
-- [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love]
+- [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love2014]
 - [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
 
 # Session info

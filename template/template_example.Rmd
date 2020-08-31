@@ -32,7 +32,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
