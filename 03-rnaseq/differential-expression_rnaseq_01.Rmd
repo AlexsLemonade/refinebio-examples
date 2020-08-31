@@ -9,7 +9,7 @@ output:
     number_sections: true
 ---
 
-# Purpose of the analysis:
+# Purpose of the analysis
 
 <!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
 
@@ -224,13 +224,13 @@ We'll use some tidyverse functionality to extract this information into its own 
 
 ```{r}
 metadata <- metadata %>%
-  # the last bit of the title, separated by "-" contains the mutation
+  # The last bit of the title, separated by "-" contains the mutation
   # information that we want to extract
   dplyr::mutate(asxl_mutation_status = stringr::word(refinebio_title,
     -1,
     sep = "-"
   )) %>%
-  # now let's make this simpler
+  # Now let's summarized the ASXL1 mutation status from this variable
   dplyr::mutate(asxl_mutation_status = dplyr::case_when(
     grepl("ASXL1|ASXL2", asxl_mutation_status) ~ "asxl_mutation",
     grepl("ASXLwt", asxl_mutation_status) ~ "no_mutation"
@@ -247,13 +247,15 @@ head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
 
 Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
 We always want our "control" to to be set as the first level in the variable we provide as our experimental variable. 
+Here we will use the `str()` function to print out a preview of the **str**ucture of our variable
 
 ```{r}
+# Print out a preview of `asxl_mutation_status`
 str(metadata$asxl_mutation_status)
 ```
 
 Currently, `asxl_mutation_status` is a character.
-To make sure it is set how we want, let's mutate it to a factor so we can explicitly set the levels. 
+To make sure it is set how we want for the `DESeq` object and subsequent testing, let's mutate it to a factor so we can explicitly set the levels. 
 
 ```{r}
 # Make asxl_mutation_status a factor and set the levels appropriately
@@ -274,7 +276,7 @@ Yes! `no_mutation` is the first level as we want it to be. We're all set and rea
 
 ## Create a DESeq2Dataset
 
-We will be using the `DESeq2` package for normalization and differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
+We will be using the `DESeq2` package for differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
 First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
 
 ```{r}
@@ -296,7 +298,8 @@ ddset <- DESeqDataSetFromMatrix(
 
 ## Define a minimum counts cutoff
 
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and perform differential expression. 
+We want to filter out the genes that have not been expressed or that have low expression counts, since these do not have high enough counts to yield reliable differential expression results.
+Removing these genes saves on memory usage during the tests. 
 We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
 
 ```{r}
@@ -309,6 +312,8 @@ ddset <- ddset[genes_to_keep, ]
 ## Run differential expression analysis
 
 We'll use the wrapper function `DESeq()` to do our differential expression analysis.
+In our `DESeq2` object we designated our `asxl_mutation_status` variable as the `model` argument. 
+Because of this, the `DESeq` function will use groups defined by `asxl_mutation_status` to test for differential expression. 
 
 ```{r}
 deseq_object <- DESeq(ddset)
@@ -333,7 +338,7 @@ deseq_df <- deseq_results %>%
   tibble::rownames_to_column("Gene") %>%
   dplyr::mutate(threshold = padj < 0.05) %>%
   # let's sort by statistic -- the highest values should be what is up in the
-  # ASX mutated samples
+  # ASXL mutated samples
   dplyr::arrange(dplyr::desc(stat))
 ```
 
@@ -373,11 +378,11 @@ We'll use the `EnhancedVolcano` package's main function to plot our data.
 
 ```{r}
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
-  deseq_df, 
+  deseq_df,
   lab = rownames(deseq_df),
-  x = 'log2FoldChange',
-  y = 'pvalue'
-  )
+  x = "log2FoldChange",
+  y = "pvalue"
+)
 
 # Print out plot here
 volcano_plot
@@ -401,7 +406,7 @@ You can take your results from this example and make a heatmap following our hea
 - [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love]
 - [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
 
-# Print session info:
+# Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
