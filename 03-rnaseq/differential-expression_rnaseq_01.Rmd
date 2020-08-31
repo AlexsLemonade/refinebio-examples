@@ -220,7 +220,9 @@ head(metadata$refinebio_title)
 
 ## Set up metadata
 
-We'll use some tidyverse functionality to extract this information into its own column to make it easier to use.
+This dataset includes data from patients with and without ASXL gene mutations. 
+The authors of this data have ASXL mutation status along with other information is stored all in one string (this is not very convenient for us). 
+We need to extract the mutation status information into its own column to make it easier to use.
 
 ```{r}
 metadata <- metadata %>%
