@@ -249,7 +249,7 @@ head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
 ```
 
 Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
-We always want our "control" to to be set as the first level in the variable we provide as our experimental variable. 
+We want our "control" to to be set as the first level in the variable we provide as our experimental variable. 
 Here we will use the `str()` function to print out a preview of the **str**ucture of our variable
 
 ```{r}
@@ -328,9 +328,9 @@ Let's extract the results table from the `DESeq` object.
 deseq_results <- results(deseq_object)
 ```
 
-Here we will use `lfcShrink()` function to obtain "shrunk" log fold change estimates based on negative binomial distribution. 
+Here we will use `lfcShrink()` function to obtain shrunken log fold change estimates based on negative binomial distribution. 
 This will add the estimates to your results table. 
-Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed)
+Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed).
 
 ```{r}
 deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object with DESeq() already having been ran
@@ -339,7 +339,7 @@ deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object wi
 )
 ```
 
-Now let's take a peak at what our results table looks like. 
+Now let's take a peek at what our results table looks like. 
 
 ```{r}
 head(deseq_results)
@@ -394,14 +394,16 @@ readr::write_tsv(
 
 ## Create a volcano plot
 
-We'll use the `EnhancedVolcano` package's main function to plot our data. 
+We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+Here we are plotting the `log2FoldChange` (which was estimated by `lfcShrink` step) on the x axis and `padj` on the y axis.
+The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the default from the `results()` step).
 
 ```{r}
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
   deseq_df,
   lab = rownames(deseq_df),
-  x = "log2FoldChange",
-  y = "pvalue"
+  x = "log2FoldChange", # The variable in deseq_df you want to be plotted on the x axis.
+  y = "padj" # The variable in deseq_df you want to be plotted on the y axis.
 )
 
 # Print out plot here
