@@ -11,7 +11,7 @@ output:
 
 # Purpose of the analysis:
 
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
+
 
 This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio in downstream analyses, specifically in plotting clustered heatmaps.
 
