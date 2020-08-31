@@ -155,12 +155,16 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using DESeq2 [@DESeq2].
+In this analysis, we will be using DESeq2 [@DESeq2] for the differential expression test and `EnhancedVolcano` for plotting. 
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("DESeq2", update = FALSE)
+}
+if (!("EnhancedVolcano" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("EnhancedVolcano", update = FALSE)
 }
 ```
 
@@ -302,16 +306,6 @@ genes_to_keep <- rowSums(counts(ddset)) >= 10
 ddset <- ddset[genes_to_keep, ]
 ```
 
-## Perform DESeq2 normalization
-
-We are going to use the `rlog()` function from the `DESeq2` package to normalize the data.
-TODO: Add a note/link to section in documentation on why we use `rlog` vs `vst` and `normTransform`.
-
-```{r}
-# Normalize the data in the `DESeqDataSet` object using the `rlog()` function from the `DESEq2` R package
-ddset_norm <- rlog(ddset)
-```
-
 ## Run differential expression analysis
 
 We'll use the wrapper function `DESeq()` to do our differential expression analysis.
@@ -351,11 +345,12 @@ head(deseq_df)
 
 ### Check results by plotting one gene
 
-To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function. 
+To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function.
 
 ```{r}
 plotCounts(ddset, gene = "ENSG00000196074", intgroup = "asxl_mutation_status")
 ```
+
 The `mutation` group samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
 
 ## Save results to TSV 
@@ -374,15 +369,15 @@ readr::write_tsv(
 
 ## Create a volcano plot
 
+We'll use the `EnhancedVolcano` package's main function to plot our data. 
+
 ```{r}
-volcano_plot <- ggplot(deseq_df, aes(x = log2FoldChange, y = -log10(padj), color = threshold)) +
-  geom_point() +
-  theme_classic() +
-  xlab("log2 fold change") +
-  ylab("-log10 adjusted p-value") +
-  ggtitle("Volcano plot for mutation status") +
-  scale_color_manual(values = c("lightgray", "navy")) +
-  theme(legend.position = "none")
+volcano_plot <- EnhancedVolcano::EnhancedVolcano(
+  deseq_df, 
+  lab = rownames(deseq_df),
+  x = 'log2FoldChange',
+  y = 'pvalue'
+  )
 
 # Print out plot here
 volcano_plot
