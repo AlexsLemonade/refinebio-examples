@@ -11,8 +11,6 @@ output:
 
 # Purpose of the analysis:
 
-
-
 This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio in downstream analyses, specifically in plotting clustered heatmaps.
 
 # How to run this example
@@ -20,14 +18,15 @@ This notebook illustrates one way that you can use harmonized RNA-seq data from 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
 We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
-## Obtain the `.Rmd` file of this analysis
+## Obtain the `.Rmd` file
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/clustering/clustering_rnaseq_01_heatmap.Rmd). 
+
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
-## Set up your analysis folders
+## Set up your analysis folders 
 
 Good file organization is helpful for keeping your data analysis project on track!
 We have set up some code that will automatically set up a folder structure for you. 
@@ -36,17 +35,25 @@ Run this next chunk to set up your folders!
 If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-# Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
-
 # Create the data folder if it doesn't exist
 if (!dir.exists("data")) {
   dir.create("data")
 }
 
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir, recursive = TRUE)
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
 }
 ```
 
@@ -60,19 +67,17 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-email.png" width=500>  
-
-<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA-->
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
 We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -80,8 +85,6 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute myeloid leukemia sample dataset](https://www.refine.bio/experiments/SRP070849).
-
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
 
 The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mice with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.
 
@@ -91,7 +94,7 @@ Refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8f1332ce8c5deb0dd93edf6c84b93bae676d9f3b/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).
 
@@ -114,7 +117,7 @@ Your new analysis folder should contain:
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -214,8 +217,6 @@ df <- df %>% dplyr::select(metadata$refinebio_accession_code)
 # Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)
 ```
-
-<!--ALL THE ANALYSIS STEPS HERE -->
 
 Now we are going to use a combination of functions from the `DESeq2` and `pheatmap` packages to look at how are samples and genes are clustering.
 
