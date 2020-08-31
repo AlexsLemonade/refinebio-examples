@@ -164,7 +164,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 }
 ```
 
-Attach the packages we need for this analysis:
+Attach the packages we need for this analysis.
 
 ```{r}
 # Attach the library
