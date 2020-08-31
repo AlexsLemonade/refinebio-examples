@@ -45,7 +45,7 @@ RUN install2.r --error --deps TRUE \
 
 ##########################
 # Install bioconductor packages
-RUN R -e "BiocManager::install(c('affy', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'limma', 'marray'), \
+RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray'), \
     update = FALSE)"
 
 # Installs packages needed for plottings
