@@ -32,7 +32,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -150,7 +150,7 @@ for your dataset.
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the R package [`umap`](https://www.rdocumentation.org/packages/umapr/versions/0.0.0.9001/topics/umap) [@Konopka2020] for the production of UMAP dimension reduction values and the R package [`ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016] for plotting the UMAP values.
+In this analysis, we will be using the R package `umap` [@Konopka2020] for the production of UMAP dimension reduction values and the R package `ggplot2` [@Prabhakaran2016] for plotting the UMAP values.
 
 ```{r}
 if (!("umap" %in% installed.packages())) {
@@ -223,12 +223,15 @@ umap_df <- data.frame(umap_data$layout) %>%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring only the variables that we want from the metadata into this data frame; match by sample ids
-  dplyr::inner_join(dplyr::select(
-    metadata, refinebio_accession_code,
-    histology, subgroup
-  ),
-  by = "refinebio_accession_code"
+  dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
+    by = "refinebio_accession_code"
   )
+```
+
+Let's take a preview at the data frame we created in the chunk above.
+
+```{r}
+head(umap_df)
 ```
 
 Now, let's plot the UMAP scores.
@@ -249,7 +252,9 @@ umap_plot <- ggplot(
 umap_plot
 ```
 
-Now, let's label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3683624/#SD1) [@Northcott2012].
+It's hard to interpret our UMAP results without some metadata labels on our plot.
+
+Let's label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the original paper [@Northcott2012].
 
 ```{r}
 # Make a scatterplot with ggplot2
@@ -297,8 +302,8 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 # Save plot using `ggsave()` function
 ggsave(file.path(
   plots_dir,
-  "GSE37382_umap_scatterplot.png"
-), # Replace with name relevant your plotted data
+  "GSE37382_umap_scatterplot.png" # Replace with name relevant your plotted data
+),
 plot = umap_plot # Here we are giving the function the plot object that we want saved to file
 )
 ```
@@ -307,8 +312,7 @@ plot = umap_plot # Here we are giving the function the plot object that we want 
 
 - [How UMAP works with visuals](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html) [@McInnes2018-how-umap-works]
 - [More on UMAP and its parameters](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) [@umap-vignette]
-- [Original paper on UMAP](https://arxiv.org/abs/1802.03426) by McInnes, Healy & Melville
-[@McInnes2018]
+- [Original paper on UMAP](https://arxiv.org/abs/1802.03426) [@McInnes2018]
 
 # Session info
 

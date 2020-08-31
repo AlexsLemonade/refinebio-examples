@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
+
 
 # How to run this example
 
@@ -32,7 +32,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -73,7 +73,7 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
-<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
+
 
 {{DELETE THIS LINE}}
 We are going to use non-quantile normalized data for this analysis.
@@ -164,7 +164,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 }
 ```
 
-Attach the packages we need for this analysis:
+Attach the packages we need for this analysis.
 
 ```{r}
 # Attach the library

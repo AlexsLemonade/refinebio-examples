@@ -1,0 +1,439 @@
+---
+title: "Differential Expression - RNA-seq"
+author: "CCDL for ALSF"
+date: "`r format(Sys.time(), '%B %Y')`"
+output:   
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes between experimental groups. 
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd).
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
+
+@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+
+## Place the dataset in your new `data/` folder
+
+refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `SRP078441` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called "data" which contains:
+  - The `SRP078441` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)
+- A folder for `results` (currently empty)
+
+Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+Run this chunk to double check that your files are in the right place. 
+
+```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP078441")
+
+# Check if the gene expression matrix file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "SRP078441.tsv"))
+
+# Check if the metadata file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "metadata_SRP078441.tsv"))
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences.
+
+***
+
+# Differential Expression
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using `DESeq2` [@Love2014] for the differential expression testing.
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates  in the results table [@Blighe2020, @Zhu2018]
+
+```{r}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+if (!("EnhancedVolcano" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("EnhancedVolcano", update = FALSE)
+}
+if (!("apeglm" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("apeglm", update = FALSE)
+}
+```
+
+Attach the libraries we need for this analysis:
+
+```{r}
+# Attach the DESeq2 library
+library(DESeq2)
+
+# Attach the ggplot2 library for plotting
+library(ggplot2)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import data and metadata
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your metadata file
+  "metadata_SRP078441.tsv" # Replace with the name of your metadata file
+))
+
+# Read in data TSV file
+df <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your data file
+  "SRP078441.tsv" # Replace with the name of your data file
+)) %>%
+  tibble::column_to_rownames("Gene")
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>%
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+```
+
+The information we need to make the comparison is in the `refinebio_title` column of the metadata data.frame.
+
+```{r}
+head(metadata$refinebio_title)
+```
+
+## Set up metadata
+
+This dataset includes data from patients with and without ASXL gene mutations. 
+The authors of this data have ASXL mutation status along with other information is stored all in one string (this is not very convenient for us). 
+We need to extract the mutation status information into its own column to make it easier to use.
+
+```{r}
+metadata <- metadata %>%
+  # The last bit of the title, separated by "-" contains the mutation
+  # information that we want to extract
+  dplyr::mutate(asxl_mutation_status = stringr::word(refinebio_title,
+    -1,
+    sep = "-"
+  )) %>%
+  # Now let's summarized the ASXL1 mutation status from this variable
+  dplyr::mutate(asxl_mutation_status = dplyr::case_when(
+    grepl("ASXL1|ASXL2", asxl_mutation_status) ~ "asxl_mutation",
+    grepl("ASXLwt", asxl_mutation_status) ~ "no_mutation"
+  ))
+```
+
+Let's take a look at `metadata_df` to see if this worked.
+
+```{r}
+# looking at the first 6 rows of the metadata_df and only at the columns that
+# contain the title and the mutation status we extracted from the title
+head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
+```
+
+Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
+We want our "control" to to be set as the first level in the variable we provide as our experimental variable. 
+Here we will use the `str()` function to print out a preview of the **str**ucture of our variable
+
+```{r}
+# Print out a preview of `asxl_mutation_status`
+str(metadata$asxl_mutation_status)
+```
+
+Currently, `asxl_mutation_status` is a character.
+To make sure it is set how we want for the `DESeq` object and subsequent testing, let's mutate it to a factor so we can explicitly set the levels. 
+
+```{r}
+# Make asxl_mutation_status a factor and set the levels appropriately
+metadata <- metadata %>%
+  dplyr::mutate(
+    # Here we will set up the factor aspect of our new variable.
+    asxl_mutation_status = factor(asxl_mutation_status, levels = c("no_mutation", "asxl_mutation"))
+  )
+```
+
+Let's double check if the levels are what we want using the `levels()` function. 
+
+```{r}
+levels(metadata$asxl_mutation_status)
+```
+
+Yes! `no_mutation` is the first level as we want it to be. We're all set and ready to move on to making our `DESeq2Dataset` object. 
+
+## Create a DESeq2Dataset
+
+We will be using the `DESeq2` package for differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
+First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
+
+```{r}
+# We are making our data frame into a matrix and rounding the numbers
+gene_matrix <- round(as.matrix(df))
+```
+
+Now we need to create `DESeqDataSet` from our expression dataset. 
+We use the `asxl_mutation_status` variable we created in the design formula because that will allow us
+to model the presence/absence of _ASXL1/2_ mutation.
+
+```{r}
+ddset <- DESeqDataSetFromMatrix(
+  countData = gene_matrix,
+  colData = metadata,
+  design = ~asxl_mutation_status
+)
+```
+
+## Define a minimum counts cutoff
+
+We want to filter out the genes that have not been expressed or that have low expression counts, since these do not have high enough counts to yield reliable differential expression results.
+Removing these genes saves on memory usage during the tests. 
+We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
+
+```{r}
+# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
+# only rows that have counts above the cutoff
+genes_to_keep <- rowSums(counts(ddset)) >= 10
+ddset <- ddset[genes_to_keep, ]
+```
+
+## Run differential expression analysis
+
+We'll use the wrapper function `DESeq()` to do our differential expression analysis.
+In our `DESeq2` object we designated our `asxl_mutation_status` variable as the `model` argument. 
+Because of this, the `DESeq` function will use groups defined by `asxl_mutation_status` to test for differential expression. 
+
+```{r}
+deseq_object <- DESeq(ddset)
+```
+
+Let's extract the results table from the `DESeq` object. 
+
+```{r}
+deseq_results <- results(deseq_object)
+```
+
+Here we will use `lfcShrink()` function to obtain shrunken log fold change estimates based on negative binomial distribution. 
+This will add the estimates to your results table. 
+Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed).
+
+```{r}
+deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object with DESeq() already having been ran
+  coef = 2, # This is based on what log fold change coefficient was used in DESeq(), the default is 2.
+  res = deseq_results # This needs to be the DESeq results table
+)
+```
+
+Now let's take a peek at what our results table looks like. 
+
+```{r}
+head(deseq_results)
+```
+
+Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file. 
+Sort and filter the results. 
+
+```{r}
+# this is of class DESeqResults -- we want a data frame
+deseq_df <- deseq_results %>%
+  # make into data.frame
+  as.data.frame() %>%
+  # the gene names are rownames -- let's make this it's own column for easy
+  # display
+  tibble::rownames_to_column("Gene") %>%
+  dplyr::mutate(threshold = padj < 0.05) %>%
+  # let's sort by statistic -- the highest values should be what is up in the
+  # ASXL mutated samples
+  dplyr::arrange(dplyr::desc(log2FoldChange))
+```
+
+Let's print out what the top results are. 
+
+```{r}
+head(deseq_df)
+```
+
+### Check results by plotting one gene
+
+To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function.
+
+```{r}
+plotCounts(ddset, gene = "ENSG00000196074", intgroup = "asxl_mutation_status")
+```
+
+The `mutation` group samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
+
+## Save results to TSV 
+
+Write the results table to file.
+
+```{r}
+readr::write_tsv(
+  deseq_df,
+  file.path(
+    results_dir,
+    "SRP078441_differential_expression_results.tsv" # Replace with a relevant output file name
+  )
+)
+```
+
+## Create a volcano plot
+
+We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+Here we are plotting the `log2FoldChange` (which was estimated by `lfcShrink` step) on the x axis and `padj` on the y axis.
+The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the default from the `results()` step).
+
+```{r}
+volcano_plot <- EnhancedVolcano::EnhancedVolcano(
+  deseq_df,
+  lab = rownames(deseq_df),
+  x = "log2FoldChange", # The variable in deseq_df you want to be plotted on the x axis.
+  y = "padj" # The variable in deseq_df you want to be plotted on the y axis.
+)
+
+# Print out plot here
+volcano_plot
+```
+
+Save the plot to a PNG. 
+
+```{r}
+ggsave(
+  plot = volcano_plot,
+  file.path(plots_dir, "SRP078441_volcano_plot.png")
+) # Replace with a plot name relevant to your data
+```
+
+Heatmaps are also a pretty common way to show differential expression results. 
+You can take your results from this example and make a heatmap following our heatmap module: TODO: link here. 
+
+# Further learning resources about this analysis
+
+- [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
+- [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love2014]
+- [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+
+```{r}
+# Print session info
+sessionInfo()
+```

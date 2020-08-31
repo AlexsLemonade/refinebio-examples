@@ -17,7 +17,7 @@ output:
   - [Required software](#required-software)
 - [How to get the data for these examples](#how-to-get-the-data-for-these-examples)
 - [How to use R Markdown Documents](#how-to-use-r-markdown-documents)
-- [An important note about file paths and Rmds](#an-important-note-about-file-paths-and-rmds)
+- [An important note about file paths and `.Rmd`s](#an-important-note-about-file-paths-and-rmds)
 - [Resources for learning R](#resources-for-learning-r)
 - [Additional resources from the CCDL:](#additional-resources-from-the-ccdl)
 
