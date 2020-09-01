@@ -82,6 +82,9 @@ For this example analysis, we will use this [medulloblastoma dataset](https://ww
 
 The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
 The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
+We will use the `subgroup` and `histology` variables from our metadata to annotate our plot later.
+These variables hold the information on the one of the defined subgroups of medulloblastoma to which it sample belongs to and the molecular histology of each sample, respectively.
+
 
 ## Place the dataset in your new `data/` folder
 
@@ -194,7 +197,7 @@ Now we are going to use a combination of functions from base R and the `ggplot2`
 ## Perform Principal Components Analysis
 
 In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
-We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here [@prcomp-function].
+We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here.
 
 ```{r}
 # Perform Principal Component Analysis (PCA) using the `prcomp()` function
@@ -215,8 +218,8 @@ We can see that we now have 285 principal component values for each of our sampl
 
 ## Explore Variance in PCA Results
 
-The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset.
 Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component.
+The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset.
 If the largest variance component, PC1, explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
 On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned [@CCDL2020-cluster-validation].
 
@@ -310,8 +313,8 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 # Save plot using `ggsave()` function
 ggsave(file.path(
   plots_dir,
-  "GSE37382_pca_scatterplot.png"
-), # Replace with name relevant your plotted data
+  "GSE37382_pca_scatterplot.png" # Replace with name relevant your plotted data
+),
 plot = pca_plot # Here we are giving the function the plot object that we want saved to file
 )
 ```
