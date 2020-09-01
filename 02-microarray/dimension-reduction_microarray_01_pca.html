@@ -1831,7 +1831,7 @@ all.equal(colnames(df), metadata$geo_accession)</code></pre>
 <p>In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later. We are using the base R <code>prcomp()</code> function to perform Principal Component Analysis (PCA) here.</p>
 <pre class="r"><code># Perform Principal Component Analysis (PCA) using the `prcomp()` function
 pca &lt;- prcomp(
-  t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
+  t(df), # We have to transpose our data frame so we are obtaining PCA scores for samples instead of genes
   scale = TRUE # This tells R that we want the variables scaled to have unit variance
 )</code></pre>
 <p>Let’s take a preview at the PCA results.</p>
