@@ -197,8 +197,9 @@ In this code chunk, we are going to perform Principal Component Analysis (PCA) o
 We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here [@prcomp-function].
 
 ```{r}
-# Perform Principal Component Analysis (PCA)
-pca <- prcomp(t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
+# Perform Principal Component Analysis (PCA) using the `prcomp()` function
+pca <- prcomp(
+  t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
   scale = TRUE # This tells R that we want the variables scaled to have unit variance
 )
 ```
