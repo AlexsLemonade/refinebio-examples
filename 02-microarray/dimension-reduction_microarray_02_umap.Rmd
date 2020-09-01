@@ -215,8 +215,10 @@ Now we are going to use a combination of functions from the `umap` and the `ggpl
 In this code chunk, we are going to perform Uniform Manifold Approximation (UMAP) on our data and create a data frame using the UMAP scores and the variables from our metadata that we are going to use to annotate our plot later.
 
 ```{r}
-# Perform Uniform Manifold Approximation (UMAP)
-umap_data <- umap::umap(t(df)) # We have to transpose our data frame to meet the `umap::umap()` function requirements
+# Perform Uniform Manifold Approximation (UMAP) using the `umap::umap()` function
+umap_data <- umap::umap(
+  t(df) # We have to transpose our data frame to meet the `umap::umap()` function requirements
+)
 
 # Make into data frame for plotting with `ggplot2`
 umap_df <- data.frame(umap_data$layout) %>%
@@ -273,7 +275,9 @@ umap_plot <- ggplot(
 umap_plot
 ```
 
-We can add another label to our plot.
+It looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to also be clustering with Group 4.
+
+We can add another label to our plot to get more information on the clustering behavior of our data.
 Let's also label the data points based on the histological subtype that each sample belongs to.
 
 ```{r}
@@ -293,6 +297,10 @@ umap_plot <- ggplot(
 # Print out plot here
 umap_plot
 ```
+
+It looks like adding the histological subtype label to our plot made our plot more informative, but was not helpful in distinguishing a better cluster behavior for Group 3.
+cluster behavior for Group 3.
+One may continue to add various annotation labels to get a further understanding of the cluster behavior of each subgroup.
 
 ## Save annotated UMAP plot as a PNG
 
