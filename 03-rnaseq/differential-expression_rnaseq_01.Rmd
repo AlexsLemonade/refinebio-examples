@@ -13,6 +13,8 @@ output:
 
 This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes between experimental groups. 
 
+⬇️ [**Jump to the analysis code**](#differential-expression) ⬇️
+
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
