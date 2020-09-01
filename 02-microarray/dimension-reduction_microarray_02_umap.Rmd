@@ -82,6 +82,8 @@ For this example analysis, we will use this [medulloblastoma dataset](https://ww
 
 The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
 The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
+We will use the `subgroup` and `histology` variables from our metadata to annotate our plot later.
+These variables hold the information on the one of the defined subgroups of medulloblastoma to which it sample belongs to and the molecular histology of each sample, respectively.
 
 ## Place the dataset in your new `data/` folder
 
@@ -170,7 +172,11 @@ library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
+```
 
+The UMAP algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.
+
+```{r}
 # Set the seed so our results are reproducible:
 set.seed(12345)
 ```
@@ -207,10 +213,9 @@ df <- df %>%
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
+## Perform Uniform Manifold Approximation (UMAP)
 
 Now we are going to use a combination of functions from the `umap` and the `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation (UMAP) dimension reduction technique on our medulloblastoma samples.
-
-## Perform Uniform Manifold Approximation (UMAP)
 
 In this code chunk, we are going to perform Uniform Manifold Approximation (UMAP) on our data and create a data frame using the UMAP scores and the variables from our metadata that we are going to use to annotate our plot later.
 
