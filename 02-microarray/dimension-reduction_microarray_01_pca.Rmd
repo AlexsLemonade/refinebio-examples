@@ -217,7 +217,7 @@ We can see that we now have 285 principal component values for each of our sampl
 
 The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset.
 Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component.
-For example, if PC1 explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
+If the largest variance component, PC1, explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
 On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned [@CCDL2020-cluster-validation].
 
 The `summary()` function reports the proportion of variance explained by each principal component.
@@ -297,8 +297,8 @@ pca_plot <- ggplot(
 pca_plot
 ```
 
-Adding the histological subtype label to our plot made our plot more informative, but was not helpful in distinguishing a better cluster behavior for Group 3.
-One may continue to add annotation labels to get a further understanding of the cluster behavior of each subgroup.
+Adding the histological subtype label to our plot made our plot more informative, but the diffuse Group 3 data doesn't appear to be related to a histology subtype.
+We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
 
 ## Save annotated PCA plot as a PNG
 
