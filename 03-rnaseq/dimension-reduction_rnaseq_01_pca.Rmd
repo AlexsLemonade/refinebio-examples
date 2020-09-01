@@ -11,7 +11,7 @@ output:
 
 # Purpose of the analysis
 
-<!--WHAT DOES THIS ANALYSIS DO AND WHEN WOULD YOU USE IT?-->
+
 
 This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
 
@@ -34,7 +34,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Define the file path to the data directory
@@ -78,7 +78,7 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-email.png" width=500>  
 
-<!--DELETE THIS SECTION IF YOU DO WANT QUANTILE NORMALIZED DATA--> 
+
 
 We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".

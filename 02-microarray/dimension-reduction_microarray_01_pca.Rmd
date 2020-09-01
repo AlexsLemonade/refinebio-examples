@@ -32,7 +32,7 @@ Good file organization is helpful for keeping your data analysis project on trac
 We have set up some code that will automatically set up a folder structure for you. 
 Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using Rmds](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -201,41 +201,60 @@ We are using the base R `prcomp()` function to perform Principal Component Analy
 pca <- prcomp(t(df), # We have to transpose our data frame to meet the `prcomp()` function requirements
   scale = TRUE # This tells R that we want the variables scaled to have unit variance
 )
-
-# Make the first 10 principal components into a data frame for plotting with `ggplot2`
-pca_df <- data.frame(pca$x[, 1:10]) %>%
-  # Turn samples_ids stored as rownames into column
-  tibble::rownames_to_column("refinebio_accession_code") %>%
-  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
-  dplyr::inner_join(dplyr::select(
-    metadata, refinebio_accession_code,
-    histology, subgroup
-  ),
-  by = "refinebio_accession_code"
-  )
 ```
 
+Let's take a preview at the PCA results.
+
+```{r}
+# We can access the results from our `pca` object using `$x`
+head(pca$x)
+```
+
+We can see that we now have 285 principal component values for each of our samples.
+
+## Explore Variance in PCA Results
+
+The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset.
 Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component.
 For example, if PC1 explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
 On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned [@CCDL2020-cluster-validation].
 
 The `summary()` function reports the proportion of variance explained by each principal component.
-By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `<summary results>$importance`, we can use indexing to only look at the first `n` PCs.
 
 ```{r}
 # Save the summary of the PCA results using the `summary()` function
 pca_summary <- summary(pca)
-
-# Now access and store the importance information for the first 10 PCs
-pca_importance <- pca_summary$importance[, 1:10]
-
-# Let's take a look at the importance information
-pca_importance
 ```
 
-Now that we've seen the proportion of variance for the first ten PCs, let's plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
 
-Let's also label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3683624/#SD1) [@Northcott2012].
+```{r}
+# Now access the importance information for the first 10 PCs -- we can access this information `pca_summary$importance`
+pca_summary$importance[, 1:10]
+```
+
+Now that we've seen the proportion of variance for the first ten PCs, let's prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+
+## Prepare a final data frame with PCA results for plotting
+
+In the next chunk, we are going to extract the first two principal components from our `pca` object to prepare a data frame for plotting.
+
+```{r}
+# Make the first two principal components into a data frame for plotting with `ggplot2`
+pca_df <- data.frame(pca$x[, 1:2]) %>%
+  # Turn samples_ids stored as rownames into column
+  tibble::rownames_to_column("refinebio_accession_code") %>%
+  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
+  dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
+    by = "refinebio_accession_code"
+  )
+```
+
+## Plot PCA Results
+
+Now let's plot the PC scores for the first two principal components since we know that they are responsible for the most explained proportion of variance in our dataset. 
+
+Let's also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles [@Northcott2012].
 
 ```{r}
 # Make a scatterplot using `ggplot2` functionality
@@ -254,7 +273,9 @@ pca_plot <- ggplot(
 pca_plot
 ```
 
-We can add another label to our plot.
+Looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to be less distinct as there are some samples clustering with Group 4 as well.
+
+We can add another label to our plot to get more information about our dataset.
 Let's also label the data points based on the histological subtype that each sample belongs to.
 
 ```{r}
@@ -275,7 +296,12 @@ pca_plot <- ggplot(
 pca_plot
 ```
 
+Adding the histological subtype label to our plot made our plot more informative, but was not helpful in distinguishing a better cluster behavior for Group 3.
+One may continue to add annotation labels to get a further understanding of the cluster behavior of each subgroup.
+
 ## Save annotated PCA plot as a PNG
+
+Now that we have an annotated PCA plot, let's save it!
 
 You can easily switch this to save to a JPEG or TIFF by changing the file name within the `ggsave()` function to the respective file suffix.
 
