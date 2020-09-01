@@ -298,9 +298,9 @@ umap_plot <- ggplot(
 umap_plot
 ```
 
-It looks like adding the histological subtype label to our plot made our plot more informative, but was not helpful in distinguishing a better cluster behavior for Group 3.
+Our histological subtype groups don't appear to be clustering in a discernible pattern but it can be good to try.
 cluster behavior for Group 3.
-One may continue to add various annotation labels to get a further understanding of the cluster behavior of each subgroup.
+We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
 
 ## Save annotated UMAP plot as a PNG
 
