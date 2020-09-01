@@ -1,5 +1,5 @@
 ---
-title: "UMAP Visualization - Microarray"
+title: "PCA Visualization - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-This notebook illustrates one way that you can use microarray data from refine.bio to perform Uniform Manifold Approximation (UMAP) and plot the coordinates using `ggplot2`.
+This notebook illustrates one way that you can use microarray data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
 
 # How to run this example
 
@@ -20,7 +20,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/dimension-reduction_microarray_02_umap.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/dimension-reduction_microarray_01_pca.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -85,6 +85,7 @@ The purpose of the experiment is to identify the predominant regions with somati
 We will use the `subgroup` and `histology` variables from our metadata to annotate our plot later.
 These variables hold the information on the one of the defined subgroups of medulloblastoma to which it sample belongs to and the molecular histology of each sample, respectively.
 
+
 ## Place the dataset in your new `data/` folder
 
 refine.bio will send you a download button in the email when it is ready. 
@@ -138,47 +139,24 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences.
-
-Note that UMAP does require more dimensions than PCA, though, so if you have a smaller 
-dataset (less than 20) and you obtain errors, you may not be able to run UMAP 
-for your dataset.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 ***
 
-# UMAP Visualization - Microarray
+# PCA Visualization - Microarray
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the R package `umap` [@Konopka2020] for the production of UMAP dimension reduction values and the R package `ggplot2` [@Prabhakaran2016] for plotting the UMAP values.
-
-```{r}
-if (!("umap" %in% installed.packages())) {
-  # Install umap package
-  BiocManager::install("umap", update = FALSE)
-}
-```
-
 Attach the packages we need for this analysis:
 
 ```{r}
-# Attach the `umap` library
-library(umap)
-
-# Attach the `ggplot2` library
+# Attach the library
 library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
-```
-
-The UMAP algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.
-
-```{r}
-# Set the seed so our results are reproducible:
-set.seed(12345)
 ```
 
 ## Import and set up data
@@ -213,85 +191,104 @@ df <- df %>%
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
-## Perform Uniform Manifold Approximation (UMAP)
 
-Now we are going to use a combination of functions from the `umap` and the `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation (UMAP) dimension reduction technique on our medulloblastoma samples.
+Now we are going to use a combination of functions from base R and the `ggplot2` package to perform and visualize the results of the Principal Component Analysis (PCA) dimension reduction technique on our medulloblastoma samples.
 
-In this code chunk, we are going to perform Uniform Manifold Approximation (UMAP) on our data and create a data frame using the UMAP scores and the variables from our metadata that we are going to use to annotate our plot later.
+## Perform Principal Components Analysis
+
+In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
+We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here.
 
 ```{r}
-# Perform Uniform Manifold Approximation (UMAP) using the `umap::umap()` function
-umap_data <- umap::umap(
-  t(df) # We have to transpose our data frame so we are obtaining UMAP scores for samples instead of genes
+# Perform Principal Component Analysis (PCA) using the `prcomp()` function
+pca <- prcomp(
+  t(df), # We have to transpose our data frame so we are obtaining PCA scores for samples instead of genes
+  scale = TRUE # This tells R that we want the variables scaled to have unit variance
 )
+```
 
-# Make into data frame for plotting with `ggplot2`
-umap_df <- data.frame(umap_data$layout) %>%
+Let's take a preview at the PCA results.
+
+```{r}
+# We can access the results from our `pca` object using `$x`
+head(pca$x)
+```
+
+We can see that we now have 285 principal component values for each of our samples.
+
+## Explore Variance in PCA Results
+
+Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component.
+The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset.
+If the largest variance component, PC1, explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset!
+On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned [@CCDL2020-cluster-validation].
+
+The `summary()` function reports the proportion of variance explained by each principal component.
+
+```{r}
+# Save the summary of the PCA results using the `summary()` function
+pca_summary <- summary(pca)
+```
+
+By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
+
+```{r}
+# Now access the importance information for the first 10 PCs -- we can access this information `pca_summary$importance`
+pca_summary$importance[, 1:10]
+```
+
+Now that we've seen the proportion of variance for the first ten PCs, let's prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+
+## Prepare a final data frame with PCA results for plotting
+
+In the next chunk, we are going to extract the first two principal components from our `pca` object to prepare a data frame for plotting.
+
+```{r}
+# Make the first two principal components into a data frame for plotting with `ggplot2`
+pca_df <- data.frame(pca$x[, 1:2]) %>%
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
-  # Bring only the variables that we want from the metadata into this data frame; match by sample ids
+  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
   dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
     by = "refinebio_accession_code"
   )
 ```
 
-Let's take a preview at the data frame we created in the chunk above.
+## Plot PCA Results
 
-```{r}
-head(umap_df)
-```
+Now let's plot the PC scores for the first two principal components since we know that they are responsible for the most explained proportion of variance in our dataset. 
 
-Now, let's plot the UMAP scores.
+Let's also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles [@Northcott2012].
 
 ```{r}
 # Make a scatterplot using `ggplot2` functionality
-umap_plot <- ggplot(
-  umap_df,
+pca_plot <- ggplot(
+  pca_df,
   aes(
-    x = X1,
-    y = X2
+    x = PC1,
+    y = PC2,
+    color = subgroup # This will label points with different colors for each `subgroup`
   )
 ) +
   geom_point() + # This tells R that we want a scatterplot
   theme_classic() # This tells R to return a classic-looking plot with no gridlines
 
 # Print out plot here
-umap_plot
+pca_plot
 ```
 
-It's hard to interpret our UMAP results without some metadata labels on our plot.
+Looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to be less distinct as there are some samples clustering with Group 4 as well.
 
-Let's label the data points based on their genotype subgroup since this is central to the subgroup specific based hypothesis in the original paper [@Northcott2012].
-
-```{r}
-# Make a scatterplot with ggplot2
-umap_plot <- ggplot(
-  umap_df,
-  aes(
-    x = X1,
-    y = X2,
-    color = subgroup # This will label points with different colors for each `subgroup`
-  )
-) +
-  geom_point() +
-  theme_classic()
-
-# Print out plot here
-umap_plot
-```
-
-It looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to also be clustering with Group 4.
-
-We can add another label to our plot to get more information on the clustering behavior of our data.
+We can add another label to our plot to get more information about our dataset.
 Let's also label the data points based on the histological subtype that each sample belongs to.
 
 ```{r}
 # Make a scatterplot with ggplot2
-umap_plot <- ggplot(
-  umap_df,
+pca_plot <- ggplot(
+  pca_df,
   aes(
-    x = X1,
-    y = X2,
+    x = PC1,
+    y = PC2,
     color = subgroup, # This will label points with different colors for each `subgroup`
     shape = histology # This will label points with different colors for each `histology` group
   )
@@ -300,14 +297,15 @@ umap_plot <- ggplot(
   theme_classic()
 
 # Print out plot here
-umap_plot
+pca_plot
 ```
 
-Our histological subtype groups don't appear to be clustering in a discernible pattern but it can be good to try.
-cluster behavior for Group 3.
+Adding the histological subtype label to our plot made our plot more informative, but the diffuse Group 3 data doesn't appear to be related to a histology subtype.
 We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
 
-## Save annotated UMAP plot as a PNG
+## Save annotated PCA plot as a PNG
+
+Now that we have an annotated PCA plot, let's save it!
 
 You can easily switch this to save to a JPEG or TIFF by changing the file name within the `ggsave()` function to the respective file suffix.
 
@@ -315,17 +313,18 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 # Save plot using `ggsave()` function
 ggsave(file.path(
   plots_dir,
-  "GSE37382_umap_scatterplot.png" # Replace with name relevant your plotted data
+  "GSE37382_pca_scatterplot.png" # Replace with name relevant your plotted data
 ),
-plot = umap_plot # Here we are giving the function the plot object that we want saved to file
+plot = pca_plot # Here we are giving the function the plot object that we want saved to file
 )
 ```
 
 # Resources for further learning
 
-- [How UMAP works with visuals](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html) [@McInnes2018-how-umap-works]
-- [More on UMAP and its parameters](https://cran.r-project.org/web/packages/umap/vignettes/umap.html) [@umap-vignette]
-- [Original paper on UMAP](https://arxiv.org/abs/1802.03426) [@McInnes2018]
+- [Overall PCA Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c) [@Brems2017] 
+- [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/) [@pca-visually-explained]
+- [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@Nguyen2019]
+- [More on `ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016]
 
 # Session info
 

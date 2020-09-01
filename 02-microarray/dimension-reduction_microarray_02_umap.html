@@ -1610,6 +1610,7 @@ div.tocify {
           <ul class="dropdown-menu">
             <!-- Individual microarray pages go in this list -->
             <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
+            <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
 
           </ul>
@@ -1843,7 +1844,7 @@ all.equal(colnames(df), metadata$geo_accession)</code></pre>
 <p>In this code chunk, we are going to perform Uniform Manifold Approximation (UMAP) on our data and create a data frame using the UMAP scores and the variables from our metadata that we are going to use to annotate our plot later.</p>
 <pre class="r"><code># Perform Uniform Manifold Approximation (UMAP) using the `umap::umap()` function
 umap_data &lt;- umap::umap(
-  t(df) # We have to transpose our data frame to meet the `umap::umap()` function requirements
+  t(df) # We have to transpose our data frame so we are obtaining UMAP scores for samples instead of genes
 )
 
 # Make into data frame for plotting with `ggplot2`
