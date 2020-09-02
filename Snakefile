@@ -3,6 +3,7 @@ rule target:
         "01-getting-started/getting-started.html",
         "02-microarray/00-intro-to-microarray.html",
         "02-microarray/dimension-reduction_microarray_01_pca.html",
+        "02-microarray/dimension-reduction_microarray_02_umap.html",
         "03-rnaseq/clustering_rnaseq_01_heatmap.html",
         "03-rnaseq/differential-expression_rnaseq_01.html",
         "03-rnaseq/00-intro-to-rnaseq.html",
