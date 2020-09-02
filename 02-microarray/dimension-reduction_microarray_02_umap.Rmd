@@ -226,7 +226,7 @@ umap_data <- umap::umap(
 )
 
 # Make into data frame for plotting with `ggplot2`
-umap_df <- data.frame(umap_data$layout) %>%
+umap_df <- data.frame(umap_data$layout) %>% # The umap values we need for plotting are stored in this `layout` element
   # Turn samples_ids stored as rownames into column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring only the variables that we want from the metadata into this data frame; match by sample ids
@@ -282,7 +282,7 @@ umap_plot
 
 It looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to also be clustering with Group 4.
 
-We can add another label to our plot to get more information on the clustering behavior of our data.
+We can add another label to our plot to potentially gain insight on the clustering behavior of our data.
 Let's also label the data points based on the histological subtype that each sample belongs to.
 
 ```{r}
@@ -303,8 +303,7 @@ umap_plot <- ggplot(
 umap_plot
 ```
 
-Our histological subtype groups don't appear to be clustering in a discernible pattern but it can be good to try.
-cluster behavior for Group 3.
+Our histological subtype groups don't appear to be clustering in a discernible pattern. 
 We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
 
 ## Save annotated UMAP plot as a PNG
