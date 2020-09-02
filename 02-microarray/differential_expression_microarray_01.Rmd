@@ -1,5 +1,5 @@
 ---
-title: "{{NAME OF ANALYSIS}} - {{SECTION NAME}}"
+title: "Differential Expression - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -13,6 +13,7 @@ output:
 
 This notebook takes data and metadata from refine.bio and identifies differentially expressed genes. 
 
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
@@ -21,7 +22,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_01.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -64,7 +65,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -79,9 +80,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [{{BRIEF DATASET NAME}}]({{REFINEBIO DATASET PAGE LINK}})..
-
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+For this example analysis, we will use this [creb overexpression zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+@Trenago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+In this analysis, we will test differential expression between the control and CREB-overexpressing groups.
 
 ## Place the dataset in your new `data/` folder
 
@@ -96,7 +97,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the {{EXPERIMENT_ACCESSION_ID}} folder into your newly created `data/` folder.
+Copy and paste the `GSE71270` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -104,7 +105,7 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `{{EXPERIMENT_ACCESSION_ID}}` folder which contains:
+  - The `GSE71270` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
@@ -140,13 +141,15 @@ From here you can customize this analysis example to fit your own scientific que
 
 ***
 
-# {{NAME OF example}}
+<!-- Do not delete this line --> <a name="analysis"></a>
+
+# Differential Expression - Microarray
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using "limma" [@].
+In this analysis, we will be using "limma" [@Ritchie2015].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
@@ -195,14 +198,83 @@ df <- df %>%
 all.equal(colnames(df), metadata$geo_accession)
 ```
 
+## Set up design matrix
 
-<!--ALL THE ANALYSIS STEPS HERE -->
+`limma` needs a numeric design matrix to signify which are CREB and control samples. 
+Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
+Note that the metadata variables that signify the treatment groups might be different in across datasets and might not always be underneath the  category.
 
+```{r Set up design matrix}
+# Create the design matrix from the genotype information
+des_mat <- model.matrix(~metadata$`genotype/variation`) 
+```
+
+## Apply linear model
+
+After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction. 
+The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument.
+
+```{r Apply linear model}
+# Apply linear model to data
+fit <- lmFit(df, design = des_mat)
+
+# Apply empirical Bayes to smooth standard errors
+fit <- eBayes(fit)
+
+# Apply multiple testing correction and obtain stats
+stats <- topTable(fit, number = nrow(df)) %>% 
+  tibble::rownames_to_column("Gene")
+```
+
+## Make a Q-Q plot
+
+Here we will use two different plots that can be used to assess the quality of your model. 
+
+```{r  Explore model, warning=FALSE}
+# Create Q-Q plot
+qq_plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
+
+# Save plot to png
+png(file.path(plots_dir,
+              "GSE71270_qqplot.png" # Replace file name with a relevant output plot name
+              ))
+qqt(fit$t, pch = 16, cex = 0.2); abline(0,1) # Print out the same thing we did previously
+dev.off()
+```
+
+## Make a volcano plot
+
+Make a volcano plot and save to png
+
+```{r}
+# Create volcano plot 
+voc_plot <- volcanoplot(fit, main = "Volcano Plot")
+
+# Save plot to png
+png(file.path(plots_dir,
+              "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
+              ))
+
+volcanoplot(fit, main = "Volcano Plot") # Print out the same thing we did above. 
+
+dev.off()
+```
+
+## Write results to file
+
+This will be saved to our results directory. 
+
+```{r}
+readr::write_tsv(stats, file.path(results_dir,
+                                  "GSE71270_limma_results.tsv" # Replace with a relevant output name
+                                  ))
+```
 
 # Resources for further learning
 
-- [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions forr different experimental models.
-
+- [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
+- [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
+- [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018]
 
 # Session info
 
@@ -214,146 +286,3 @@ This helps make your code more reproducible by recording what versions of softwa
 sessionInfo()
 ```
 
-
-```{r Install limma}
-if (!("limma" %in% installed.packages())) {
-  # Install limma
-  BiocManager::install("limma", update = FALSE)
-}
-```
-
-Attach the `limma` library:
-
-```{r}
-# Magrittr pipe
-`%>%` <- dplyr::`%>%`
-
-# Attach library
-library(limma)
-```
-
-Create output folders.
-
-```{r}
-# Define the file path to the results directory
-results_dir <- "results" # Replace with path to desired output results directory
-
-# Create the results folder if it doesn't exist
-if (!dir.exists(results_dir)) {
-  dir.create(results_dir)
-}
-
-# Define the file path to the results directory
-plots_dir <- "plots" # Replace with path to desired output plots directory
-
-# Create the plots folder if it doesn't exist
-if (!dir.exists(plots_dir)) {
-  dir.create(plots_dir)
-}
-```
-
-## 2) Import and set up data
-Data downloaded from refine.bio include a metadata tab separated values ("tsv")
-file and a data tsv file. This chunk of code will read the both tsv files and 
-add them as data.frames to your environment. 
-
-```{r Import data from .tsv files}
-# Read in metadata tsv file
-metadata <- readr::read_tsv(file.path("data", # Replace with path to your metadata file
-                                      "metadata_GSE71270.tsv")) # Replace with the name of your metadata file
-
-# Read in data tsv file
-df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                "GSE71270.tsv" # Replace with the name of your data file
-                                )) %>% 
-  tibble::column_to_rownames("Gene") # Store gene names as the rownames for now
-```
-
-Let's ensure that the metadata and data are in the same sample order. 
-
-```{r}
-# Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$geo_accession)
-
-# Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
-```
-
-## 3) Set up design matrix
-limma needs a numeric design matrix to signify which are treatment and control
-samples. 
-Here we are using the treatments supplied in the metadata to create
-a design matrix where the "none" samples are assigned `0` and the "amputated"
-samples are assigned `1`.
-Note that the metadata variables that signify the treatment groups might be
-different in across datasets and might not always be underneath the "treatment"
-category.
-
-```{r Set up design matrix}
-# Create the design matrix from the genotype information
-des.mat <- model.matrix(~metadata$`genotype/variation`)
-```
-
-## 4) Apply linear model
-After applying our data to linear model, in this example we apply empirical Bayes
-smoothing and Benjamini-Hochberg multiple testing correction. 
-The `topTable` function default is to use Benjamini Hochberg but this can be
-changed to a different method using the `adjust.method` argument.
-
-```{r Apply linear model}
-# Apply linear model to data
-fit <- lmFit(df, design = des.mat)
-
-# Apply empirical Bayes to smooth standard errors
-fit <- eBayes(fit)
-
-# Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(df)) %>% 
-  tibble::rownames_to_column("Gene")
-```
-
-## 5) Explore fitness of model
-Here we will use two different plots that can be used to assess the quality of
-your model. A guide to the interpretation of these plots and other statistics for 
-gene expression data can be found [here](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf).
-
-```{r  Explore model, warning=FALSE}
-# Create Q-Q plot
-qq.plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
-
-# Save plot to png
-png(file.path(plots_dir,
-              "GSE71270_qqplot.png" # Replace file name with a relevant output plot name
-              ))
-qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
-dev.off()
-```
-
-Make a volcano plot and save to png
-
-```{r}
-# Create volcano plot 
-voc.plot <- volcanoplot(fit, main = "Volcano Plot")
-
-# Save plot to png
-png(file.path(plots_dir,
-              "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
-              ))
-volcanoplot(fit, main = "Volcano Plot")
-dev.off()
-```
-
-## 6) Write statistics to output results file
-
-```{r  Write results}
-readr::write_tsv(stats, file.path(results_dir,
-                                  "GSE71270_limma_results.tsv" # Replace with a relevant output name
-                                  ))
-```
-
-Print session info:
-
-```{r}
-# Print session info 
-sessionInfo()
-```
