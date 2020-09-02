@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-This notebook illustrates one way that you can use microarry data from refine.bio in downstream analyses, specifically in plotting clustered and annotated heatmaps.
+This notebook illustrates one way that you can use microarray data from refine.bio in downstream analyses, specifically in plotting clustered and annotated heatmaps.
 
 # How to run this example
 
@@ -247,7 +247,7 @@ We've created a heatmap but although our genes and samples are clustered, there 
 
 First let's save our clustered heatmap.
 
-### Save heatmap as a png
+### Save heatmap as a PNG
 
 You can easily switch this to save to a jpeg or tiff by changing the function and file name within the function to the respective file suffix.
 
@@ -313,7 +313,7 @@ Now that we have annotation bars on our heatmap, we have a better idea of the ce
 
 Let's save our annotated heatmap.
 
-### Save annotated heatmap as a png
+### Save annotated heatmap as a PNG
 
 You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
 
