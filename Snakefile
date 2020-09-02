@@ -2,6 +2,7 @@ rule target:
     input:
         "01-getting-started/getting-started.html",
         "02-microarray/00-intro-to-microarray.html",
+        "02-microarray/clustering_microarray_01_heatmap.html",
         "02-microarray/dimension-reduction_microarray_01_pca.html",
         "03-rnaseq/clustering_rnaseq_01_heatmap.html",
         "03-rnaseq/differential-expression_rnaseq_01.html",
