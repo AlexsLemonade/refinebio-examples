@@ -11,8 +11,7 @@ output:
 
 # Purpose of this analysis
 
-*Purpose*: This notebook illustrates one way that you can use harmonized data 
-from refine.bio in downstream analyses.
+This notebook illustrates one way that you can use microarry data from refine.bio in downstream analyses, specifically in plotting clustered and annotated heatmaps.
 
 # How to run this example
 
@@ -21,7 +20,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/clustering_microarray_01_heatmap.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -64,7 +63,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE24862).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -79,9 +78,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [diffuse large B-cell lymphoma dataset](https://www.refine.bio/experiments/GSE45495).
+For this example analysis, we will use this [melanoma cell line dataset](https://www.refine.bio/experiments/GSE24862).
 
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+The data that we downloaded from refine.bio for this analysis has 21 microarray samples obtained from three PLX4032-sensitive parental and three PLX4032-resistant sub-lines of melanoma cell lines that were treated or not treated with the RAF-selective inhibitor, PLX4032.
 
 ## Place the dataset in your new `data/` folder
 
@@ -96,7 +95,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `GSE45495` folder into your newly created `data/` folder.
+Copy and paste the `GSE24862` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -104,7 +103,7 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `GSE45495` folder which contains:
+  - The `GSE24862` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
@@ -119,13 +118,13 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE45495")
+data_dir <- file.path("data", "GSE24862")
 
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "GSE45495.tsv"))
+file.exists(file.path(data_dir, "GSE24862.tsv"))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "metadata_GSE45495.tsv"))
+file.exists(file.path(data_dir, "metadata_GSE24862.tsv"))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -163,9 +162,6 @@ library(pheatmap)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
-
-# Set the seed so our results are reproducible:
-set.seed(12345)
 ```
 
 ## Import and set up data
@@ -177,13 +173,13 @@ This chunk of code will read in both TSV files and add them as data frames to yo
 # Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your metadata file
-  "metadata_GSE45495.tsv" # Replace with the name of your metadata file
+  "metadata_GSE24862.tsv" # Replace with the name of your metadata file
 ))
 
 # Read in data TSV file
 df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
-  "GSE45495.tsv" # Replace with the name of your data file
+  "GSE24862.tsv" # Replace with the name of your data file
 )) %>%
   # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
@@ -259,7 +255,7 @@ You can easily switch this to save to a jpeg or tiff by changing the function an
 # Open a png file
 png(file.path(
   plots_dir,
-  "heatmap_GSE45495_non_annotated.png" # Replace file name with a relevant output plot name
+  "heatmap_GSE24862_non_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
@@ -273,8 +269,8 @@ Now, let's add some annotation bars to our heatmap.
 
 ## Prepare metadata for annotation
 
-From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/23840064/), we know that the some samples were treated with PTEN cDNA for varied durations of time and others were not treated with PTEN cDNA.
-We are going to annotate our heatmap with the variables that hold the treatment data and the recorded duration of time for the specified treatment for each sample.
+From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/21107323/) [@Nazarian2010], we know that three PLX4032-sensitive parental (P) cell lines (M229, M238 and M249) and three derived PLX4032-resistant (R) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032.
+We are going to annotate our heatmap with the variables that hold the `refinebio_cell_line` and `refinebio_treatment` data.
 
 ```{r}
 # Let's prepare an annotation data frame for plotting
@@ -282,7 +278,7 @@ annotation_df <- metadata %>%
   # We want to select the variables that we want for annotating the heatmap
   dplyr::select(
     refinebio_accession_code,
-    `duration in hours`,
+    refinebio_cell_line,
     refinebio_treatment
   ) %>%
   # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our dataset object
@@ -313,7 +309,7 @@ pheatmap_annotated <-
   )
 ```
 
-Now that we have annotation bars on our heatmap, we have a better idea of the sample variable groups that appear to cluster together.
+Now that we have annotation bars on our heatmap, we have a better idea of the cell line and treatment groups that appear to cluster together.
 
 Let's save our annotated heatmap.
 
@@ -325,7 +321,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "heatmap_GSE45495_annotated.png" # Replace file name with a relevant output plot name
+  "heatmap_GSE24862_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
@@ -340,7 +336,7 @@ dev.off()
 - [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
 - To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
 
-# Print session info:
+# Print session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
