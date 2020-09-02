@@ -1666,7 +1666,7 @@ div.tocify {
 
 
 <div id="purpose-of-the-analysis" class="section level1">
-<h1><span class="header-section-number">1</span> Purpose of the analysis:</h1>
+<h1><span class="header-section-number">1</span> Purpose of the analysis</h1>
 <p>This notebook illustrates one way that you can use harmonized RNA-seq data from refine.bio in downstream analyses, specifically in plotting clustered heatmaps.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
@@ -1702,7 +1702,7 @@ results_dir &lt;- &quot;results&quot; # Can replace with path to desired output 
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
 }</code></pre>
-<p>In the same place you put this <code>.Rmd</code> file, you should now have two new empty folders called <code>data</code> and <code>plots</code>!</p>
+<p>In the same place you put this <code>.Rmd</code> file, you should now have three new empty folders called <code>data</code>, <code>plots</code>, and <code>results</code>!</p>
 </div>
 <div id="obtain-the-dataset-from-refine.bio" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the dataset from refine.bio</h2>
@@ -2068,8 +2068,8 @@ dev.off()</code></pre>
 <li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> 2016)</span></li>
 </ul>
 </div>
-<div id="print-session-info" class="section level1">
-<h1><span class="header-section-number">6</span> Print session info:</h1>
+<div id="session-info" class="section level1">
+<h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
