@@ -140,9 +140,7 @@ If you'd like to adapt an example analysis to use a different dataset from [refi
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.
 
-Note that UMAP does require more dimensions than PCA, though, so if you have a smaller 
-dataset (less than 20) and you obtain errors, you may not be able to run UMAP 
-for your dataset.
+Note that UMAP does require more dimensions than PCA, though, so if you have a smaller dataset (less than 20) and you obtain errors, you may not be able to run UMAP for your dataset.
 
 ***
 
