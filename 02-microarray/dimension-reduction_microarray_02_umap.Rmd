@@ -146,7 +146,7 @@ Note that UMAP does require more dimensions than PCA, though, so if you have a s
 
 ***
 
-+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
 
 # UMAP Visualization - Microarray
