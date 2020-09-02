@@ -175,14 +175,16 @@ This chunk of code will read the both TSV files and add them as data frames to y
 
 ```{r}
 # Read in metadata TSV file
-metadata <- readr::read_tsv(file.path(data_dir, # Replace with path to your metadata file
-                                      "metadata_GSE71270.tsv" # Replace with the name of your metadata file
-                                      ))
+metadata <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your metadata file
+  "metadata_GSE71270.tsv" # Replace with the name of your metadata file
+))
 
 # Read in data TSV file
-df <- readr::read_tsv(file.path(data_dir, # Replace with path to your data file
-                                "GSE71270.tsv" # Replace with the name of your data file
-                                )) %>%
+df <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your data file
+  "GSE71270.tsv" # Replace with the name of your data file
+)) %>%
   # Tuck away the Gene id column as rownames
   tibble::column_to_rownames("Gene")
 ```
@@ -191,7 +193,7 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% 
+df <- df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
@@ -206,7 +208,7 @@ Note that the metadata variables that signify the treatment groups might be diff
 
 ```{r Set up design matrix}
 # Create the design matrix from the genotype information
-des_mat <- model.matrix(~metadata$`genotype/variation`) 
+des_mat <- model.matrix(~ metadata$`genotype/variation`)
 ```
 
 ## Apply linear model
@@ -222,7 +224,7 @@ fit <- lmFit(df, design = des_mat)
 fit <- eBayes(fit)
 
 # Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(df)) %>% 
+stats <- topTable(fit, number = nrow(df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
@@ -232,13 +234,16 @@ Here we will use two different plots that can be used to assess the quality of y
 
 ```{r  Explore model, warning=FALSE}
 # Create Q-Q plot
-qq_plot <- qqt(fit$t, pch = 16, cex = 0.2); abline(0,1)
+qq_plot <- qqt(fit$t, pch = 16, cex = 0.2)
+abline(0, 1)
 
 # Save plot to png
-png(file.path(plots_dir,
-              "GSE71270_qqplot.png" # Replace file name with a relevant output plot name
-              ))
-qqt(fit$t, pch = 16, cex = 0.2); abline(0,1) # Print out the same thing we did previously
+png(file.path(
+  plots_dir,
+  "GSE71270_qqplot.png" # Replace file name with a relevant output plot name
+))
+qqt(fit$t, pch = 16, cex = 0.2)
+abline(0, 1) # Print out the same thing we did previously
 dev.off()
 ```
 
@@ -247,15 +252,16 @@ dev.off()
 Make a volcano plot and save to png
 
 ```{r}
-# Create volcano plot 
+# Create volcano plot
 voc_plot <- volcanoplot(fit, main = "Volcano Plot")
 
 # Save plot to png
-png(file.path(plots_dir,
-              "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
-              ))
+png(file.path(
+  plots_dir,
+  "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
+))
 
-volcanoplot(fit, main = "Volcano Plot") # Print out the same thing we did above. 
+volcanoplot(fit, main = "Volcano Plot") # Print out the same thing we did above.
 
 dev.off()
 ```
@@ -265,9 +271,10 @@ dev.off()
 This will be saved to our results directory. 
 
 ```{r}
-readr::write_tsv(stats, file.path(results_dir,
-                                  "GSE71270_limma_results.tsv" # Replace with a relevant output name
-                                  ))
+readr::write_tsv(stats, file.path(
+  results_dir,
+  "GSE71270_limma_results.tsv" # Replace with a relevant output name
+))
 ```
 
 # Resources for further learning
@@ -282,7 +289,7 @@ At the end of every analysis, before saving your notebook, we recommend printing
 This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
 
 ```{r}
-# Print session info 
+# Print session info
 sessionInfo()
 ```
 
