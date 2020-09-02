@@ -11,9 +11,9 @@ output:
 
 # Purpose of this analysis
 
-
-
 This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Uniform Manifold Approximation and Projection (UMAP) and plot the scores using `ggplot2`.
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
@@ -151,6 +151,8 @@ We suggest saving plots to the `plots/` and `results/` directories, respectively
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 ***
+
+<!-- Do not delete this line --> <a name="analysis"></a>
 
 # UMAP Visualization - RNA-seq
 

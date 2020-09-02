@@ -11,9 +11,9 @@ output:
 
 # Purpose of the analysis
 
-
-
 This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
@@ -77,8 +77,6 @@ Click the "Download Now" button on the right side of this screen.
 Fill out the pop up window with your email and our Terms and Conditions:  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-email.png" width=500>  
-
-
 
 We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
@@ -150,6 +148,8 @@ We suggest saving plots to the `plots/` and `results/` directories, respectively
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 ***
+
+<!-- Do not delete this line --> <a name="analysis"></a>
 
 # PCA Visualization - RNA-seq
 
