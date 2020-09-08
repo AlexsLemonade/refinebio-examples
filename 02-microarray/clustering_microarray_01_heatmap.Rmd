@@ -242,8 +242,7 @@ heatmap <-
       "deepskyblue",
       "black",
       "yellow"
-    ))(25
-    ),
+    ))(25),
     scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
@@ -254,7 +253,7 @@ First let's save our clustered heatmap.
 
 ### Save heatmap as a PNG
 
-You can easily switch this to save to a jpeg or tiff by changing the function and file name within the function to the respective file suffix.
+You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
 # Open a png file
@@ -286,6 +285,14 @@ annotation_df <- metadata %>%
     refinebio_cell_line,
     refinebio_treatment
   ) %>%
+  # Let's create a variable that specifically distinguishes whether the cell line is parental or resistant -- since this is a key aspect of the experimental design
+  dplyr::mutate(
+    cell_line_type =
+      dplyr::case_when(
+        stringr::str_detect(refinebio_cell_line, "_r") ~ "resistant",
+        TRUE ~ "parental"
+      )
+  ) %>%
   # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our dataset object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
@@ -308,13 +315,13 @@ heatmap_annotated <-
       "deepskyblue",
       "black",
       "yellow"
-    ))(25
-    ),
+    ))(25),
     scale = "row" # Scale values in the direction of genes (rows)
   )
 ```
 
 Now that we have annotation bars on our heatmap, we have a better idea of the cell line and treatment groups that appear to cluster together.
+More specifically, we can see that the samples seem to cluster by their cell lines of origin, but not necessarily as much by whether or not they received the `PLX4302` treatment.
 
 Let's save our annotated heatmap.
 
