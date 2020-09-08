@@ -13,6 +13,8 @@ output:
 
 This notebook illustrates one way that you can use microarray data from refine.bio in downstream analyses, specifically in plotting clustered and annotated heatmaps.
 
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
@@ -139,13 +141,15 @@ From here you can customize this analysis example to fit your own scientific que
 
 ***
 
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
 # Clustering Heatmap - Microarray
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the R package `pheatmap` [@Slowikowski2017] for clustering and creating a heatmap.
+In this analysis, we will be using the R package `pheatmap` for clustering and creating a heatmap  [@Slowikowski2017].
 
 ```{r}
 if (!("pheatmap" %in% installed.packages())) {
@@ -226,7 +230,7 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r}
 # Create and store the heatmap object
-pheatmap <-
+heatmap <-
   pheatmap(
     df_by_var,
     cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
@@ -255,11 +259,11 @@ You can easily switch this to save to a jpeg or tiff by changing the function an
 # Open a png file
 png(file.path(
   plots_dir,
-  "heatmap_GSE24862_non_annotated.png" # Replace file name with a relevant output plot name
+  "GSE24862_heatmap_non_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
-pheatmap
+heatmap
 
 # Close the png file:
 dev.off()
@@ -269,7 +273,7 @@ Now, let's add some annotation bars to our heatmap.
 
 ## Prepare metadata for annotation
 
-From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/21107323/) [@Nazarian2010], we know that three PLX4032-sensitive parental (P) cell lines (M229, M238 and M249) and three derived PLX4032-resistant (R) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032.
+From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/21107323/), we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 [@Nazarian2010].
 We are going to annotate our heatmap with the variables that hold the `refinebio_cell_line` and `refinebio_treatment` data.
 
 ```{r}
@@ -291,7 +295,7 @@ You can create an annotated heatmap by providing our annotation object to the `a
 
 ```{r}
 # Create and store the annotated heatmap object
-pheatmap_annotated <-
+heatmap_annotated <-
   pheatmap(
     df_by_var,
     cluster_rows = TRUE,
@@ -321,11 +325,11 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "heatmap_GSE24862_annotated.png" # Replace file name with a relevant output plot name
+  "GSE24862_heatmap_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
-pheatmap_annotated
+heatmap_annotated
 
 # Close the png file:
 dev.off()
