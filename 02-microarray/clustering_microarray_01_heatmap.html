@@ -1664,6 +1664,7 @@ div.tocify {
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This notebook illustrates one way that you can use microarray data from refine.bio in downstream analyses, specifically in plotting clustered and annotated heatmaps.</p>
+<p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
 <h1><span class="header-section-number">2</span> How to run this example</h1>
@@ -1712,7 +1713,7 @@ if (!dir.exists(results_dir)) {
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
 <p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE24862">melanoma cell line dataset</a>.</p>
-<p>The data that we downloaded from refine.bio for this analysis has 21 microarray samples obtained from three PLX4032-sensitive parental and three PLX4032-resistant sub-lines of melanoma cell lines that were treated or not treated with the RAF-selective inhibitor, PLX4032.</p>
+<p>The data that we downloaded from refine.bio for this analysis has 21 microarray samples. The samples were obtained from three PLX4032-sensitive parental and three PLX4032-resistant sub-lines of melanoma cell lines that were either treated or not treated with the RAF-selective inhibitor, PLX4032.</p>
 </div>
 <div id="place-the-dataset-in-your-new-data-folder" class="section level2">
 <h2><span class="header-section-number">2.5</span> Place the dataset in your new <code>data/</code> folder</h2>
@@ -1762,13 +1763,15 @@ file.exists(file.path(data_dir, &quot;metadata_GSE24862.tsv&quot;))</code></pre>
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
 <hr />
+<!-- Do not delete this line -->
+<p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
 </div>
 <div id="clustering-heatmap---microarray" class="section level1">
 <h1><span class="header-section-number">4</span> Clustering Heatmap - Microarray</h1>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the R package <code>pheatmap</code> <span class="citation">(Slowikowski 2017)</span> for clustering and creating a heatmap.</p>
+<p>In this analysis, we will be using the R package <code>pheatmap</code> for clustering and creating a heatmap <span class="citation">(Slowikowski 2017)</span>.</p>
 <pre class="r"><code>if (!(&quot;pheatmap&quot; %in% installed.packages())) {
   # Install pheatmap
   install.packages(&quot;pheatmap&quot;, update = FALSE)
@@ -1877,7 +1880,7 @@ df_by_var &lt;- data.frame(df) %&gt;%
 <h2><span class="header-section-number">4.4</span> Create a heatmap</h2>
 <p>To further customize the heatmap, see a vignette for a guide at this <a href="https://slowkow.com/notes/pheatmap-tutorial/">link</a> <span class="citation">(Slowikowski 2017)</span>.</p>
 <pre class="r"><code># Create and store the heatmap object
-pheatmap &lt;-
+heatmap &lt;-
   pheatmap(
     df_by_var,
     cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
@@ -1901,11 +1904,11 @@ pheatmap &lt;-
 <pre class="r"><code># Open a png file
 png(file.path(
   plots_dir,
-  &quot;heatmap_GSE24862_non_annotated.png&quot; # Replace file name with a relevant output plot name
+  &quot;GSE24862_heatmap_non_annotated.png&quot; # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
-pheatmap
+heatmap
 
 # Close the png file:
 dev.off()</code></pre>
@@ -1916,7 +1919,7 @@ dev.off()</code></pre>
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Prepare metadata for annotation</h2>
-<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a> <span class="citation">(Nazarian <em>et al.</em> 2010)</span>, we know that three PLX4032-sensitive parental (P) cell lines (M229, M238 and M249) and three derived PLX4032-resistant (R) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> 2010)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data.</p>
 <pre class="r"><code># Let&#39;s prepare an annotation data frame for plotting
 annotation_df &lt;- metadata %&gt;%
   # We want to select the variables that we want for annotating the heatmap
@@ -1931,7 +1934,7 @@ annotation_df &lt;- metadata %&gt;%
 <h3><span class="header-section-number">4.5.1</span> Create annotated heatmap</h3>
 <p>You can create an annotated heatmap by providing our annotation object to the <code>annotation_col</code> argument of the <code>pheatmap()</code> function.</p>
 <pre class="r"><code># Create and store the annotated heatmap object
-pheatmap_annotated &lt;-
+heatmap_annotated &lt;-
   pheatmap(
     df_by_var,
     cluster_rows = TRUE,
@@ -1957,11 +1960,11 @@ pheatmap_annotated &lt;-
 <pre class="r"><code># Open a PNG file
 png(file.path(
   plots_dir,
-  &quot;heatmap_GSE24862_annotated.png&quot; # Replace file name with a relevant output plot name
+  &quot;GSE24862_heatmap_annotated.png&quot; # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
-pheatmap_annotated
+heatmap_annotated
 
 # Close the png file:
 dev.off()</code></pre>

@@ -82,7 +82,8 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [melanoma cell line dataset](https://www.refine.bio/experiments/GSE24862).
 
-The data that we downloaded from refine.bio for this analysis has 21 microarray samples obtained from three PLX4032-sensitive parental and three PLX4032-resistant sub-lines of melanoma cell lines that were treated or not treated with the RAF-selective inhibitor, PLX4032.
+The data that we downloaded from refine.bio for this analysis has 21 microarray samples.
+The samples were obtained from three PLX4032-sensitive parental and three PLX4032-resistant sub-lines of melanoma cell lines that were either treated or not treated with the RAF-selective inhibitor, PLX4032.
 
 ## Place the dataset in your new `data/` folder
 
