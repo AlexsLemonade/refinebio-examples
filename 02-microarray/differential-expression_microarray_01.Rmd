@@ -149,12 +149,21 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using "limma" [@Ritchie2015].
+In this analysis, we will be using `limma` for differential expression [@Ritchie2015].
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020, @Zhu2018].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("limma", update = FALSE)
+}
+if (!("EnhancedVolcano" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("EnhancedVolcano", update = FALSE)
+}
+if (!("apeglm" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("apeglm", update = FALSE)
 }
 ```
 
@@ -166,6 +175,9 @@ library(limma)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
+
+# We'll use this for plotting
+library(ggplot2)
 ```
 
 ## Import and set up data
@@ -206,9 +218,20 @@ all.equal(colnames(df), metadata$geo_accession)
 Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
 Note that the metadata variables that signify the treatment groups might be different in across datasets and might not always be underneath the  category.
 
+The `genotype/variation` column contains group information we will be using for differential expression. 
+But the `/` it contains in its column name makes it more annoying to access.  
+Accessing variable that have names with special characters like `/`, or spaces, require extra work-arounds to ignore R's normal interpretations of these characters.
+
+```{r}
+metadata <- metadata %>%
+  dplyr::rename("genotype" = `genotype/variation`) # This step will not be the same (or might not be needed at all) with a different dataset
+```
+
+Now we will create a model matrix based on our newly renamed `genotype` variable. 
+
 ```{r}
 # Create the design matrix from the genotype information
-des_mat <- model.matrix(~ metadata$`genotype/variation`)
+des_mat <- model.matrix(~ metadata$genotype)
 ```
 
 ## Apply linear model
@@ -224,57 +247,88 @@ fit <- lmFit(df, design = des_mat)
 fit <- eBayes(fit)
 
 # Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(df)) %>%
+stats_df <- topTable(fit, number = nrow(df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-## Make a Q-Q plot
-
-Here we will use two different plots that can be used to assess the quality of your model. 
+Let's take a peek at what our results table looks like. 
 
 ```{r}
-# Create Q-Q plot
-qq_plot <- qqt(fit$t, pch = 16, cex = 0.2)
-abline(0, 1)
-
-# Save plot to png
-png(file.path(
-  plots_dir,
-  "GSE71270_qqplot.png" # Replace file name with a relevant output plot name
-))
-qqt(fit$t, pch = 16, cex = 0.2)
-abline(0, 1) # Print out the same thing we did previously
-dev.off()
+stats_df
 ```
 
-## Make a volcano plot
+By default, results are ordered by largest `B` (the log odds value) to the smallest, which means your most differentially expressed genes should be toward the top. 
 
-Make a volcano plot and save to png
+See the help page by using `?topTable` for more information and options for this table. 
+
+## Check results by plotting one gene
+
+To test if these results make sense, we can make a plot of one of top genes. 
+Let's try `ENSDARG00000104315`. 
 
 ```{r}
-# Create volcano plot
-voc_plot <- volcanoplot(fit, main = "Volcano Plot")
-
-# Save plot to png
-png(file.path(
-  plots_dir,
-  "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
-))
-
-volcanoplot(fit, main = "Volcano Plot") # Print out the same thing we did above.
-
-dev.off()
+top_gene_df <- df %>%
+  # Extract this gene from `df`
+  dplyr::filter(rownames(.) == "ENSDARG00000104315") %>%
+  # Transpose so the gene is a column
+  t() %>%
+  # Transpose made this a matrix, let's make it back into a data.frame like before
+  data.frame() %>%
+  # Store the sample ids as their own column instead of being row names
+  tibble::rownames_to_column("refinebio_accession_code") %>%
+  # Join on the selected columns from metadata
+  dplyr::inner_join(dplyr::select(
+    metadata,
+    refinebio_accession_code,
+    genotype
+  ))
 ```
+
+```{r}
+ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
+  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  theme_classic() # This makes some aesthetic changes
+```
+
+These results make sense.
+The overexpressing CREB group samples are have much higher expression values for ENSDARG00000104315 than the control samples do. 
+
 
 ## Write results to file
 
 This will be saved to our results directory. 
 
 ```{r}
-readr::write_tsv(stats, file.path(
+readr::write_tsv(stats_df, file.path(
   results_dir,
   "GSE71270_limma_results.tsv" # Replace with a relevant output name
 ))
+```
+
+## Make a volcano plot
+
+We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+
+```{r}
+volcano_plot <- EnhancedVolcano::EnhancedVolcano(stats_df,
+  lab = "Gene",
+  x = "logFC",
+  y = "adj.P.Val"
+)
+```
+
+Let's save this to a PNG file. 
+
+```{r}
+# Save plot to png
+png(file.path(
+  plots_dir,
+  "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
+))
+
+volcano_plot # Print out the same thing we did above.
+
+dev.off()
 ```
 
 # Resources for further learning
