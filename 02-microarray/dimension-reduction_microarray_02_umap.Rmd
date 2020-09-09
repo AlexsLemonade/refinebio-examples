@@ -13,6 +13,8 @@ output:
 
 This notebook illustrates one way that you can use microarray data from refine.bio to perform Uniform Manifold Approximation (UMAP) and plot the coordinates using `ggplot2`.
 
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
@@ -71,7 +73,7 @@ Click the "Download Now" button on the right side of this screen.
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>   
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready.
@@ -143,6 +145,9 @@ From here you can customize this analysis example to fit your own scientific que
 Note that UMAP does require more dimensions than PCA, though, so if you have a smaller dataset (less than 20) and you obtain errors, you may not be able to run UMAP for your dataset.
 
 ***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
 
 # UMAP Visualization - Microarray
 
