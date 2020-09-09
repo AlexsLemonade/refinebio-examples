@@ -1918,7 +1918,7 @@ dev.off()</code></pre>
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Prepare metadata for annotation</h2>
-<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> 2010)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> 2010)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data. We are also going to create a new column variable from our existing metadata called <code>cell_line_type</code>, that will distinguish whether the <code>refinebio_cell_line</code> is parental or resistant – since this is also a key aspect of the experimental design.</p>
 <pre class="r"><code># Let&#39;s prepare an annotation data frame for plotting
 annotation_df &lt;- metadata %&gt;%
   # We want to select the variables that we want for annotating the heatmap
