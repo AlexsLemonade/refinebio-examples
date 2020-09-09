@@ -320,7 +320,7 @@ You can easily switch this to save to a jpeg or tiff by changing the function an
 # Open a png file
 png(file.path(
   plots_dir,
-  "heatmap_SRP070849_non_annotated.png" # Replace file name with a relevant output plot name
+  "SRP070849_heatmap_non_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
@@ -395,7 +395,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "heatmap_SRP070849_annotated.png" # Replace file name with a relevant output plot name
+  "SRP070849_heatmap_annotated.png" # Replace file name with a relevant output plot name
 ))
 
 # Print your heatmap
