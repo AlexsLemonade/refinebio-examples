@@ -276,6 +276,7 @@ Now, let's add some annotation bars to our heatmap.
 From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/21107323/), we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 [@Nazarian2010].
 We are going to annotate our heatmap with the variables that hold the `refinebio_cell_line` and `refinebio_treatment` data.
 We are also going to create a new column variable from our existing metadata called `cell_line_type`, that will distinguish whether the `refinebio_cell_line` is parental or resistant -- since this is also a key aspect of the experimental design.
+Note that this step is very specific to our metadata, you may find that you also need to tailor the metadata for your own needs.
 
 ```{r}
 # Let's prepare an annotation data frame for plotting
