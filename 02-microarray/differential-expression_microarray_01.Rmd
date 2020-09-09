@@ -329,7 +329,7 @@ In this plot, green points represent genes that meet the log2 fold change, by de
 But there are no genes that meet the p value cutoff, which by default is `1e-05`. 
 We used the adjusted p values for our plot above, so you may want to adjust this with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
 
-Plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values. 
+Let's make the same plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values, and this time we will assign the plot to our environment as `volcano_plot`. 
 
 ```{r}
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(stats_df,
@@ -346,15 +346,10 @@ volcano_plot
 Let's save this plot to a PNG file. 
 
 ```{r}
-# Save plot to png
-png(file.path(
-  plots_dir,
-  "GSE71270_volcano_plot.png" # Replace with a relevant output plot name
-))
-
-volcano_plot # Print out the same thing we did above
-
-dev.off()
+ggsave(
+  plot = volcano_plot,
+  file.path(plots_dir, "GSE71270_volcano_plot.png")
+) # Replace with a plot name relevant to your data
 ```
 
 # Resources for further learning

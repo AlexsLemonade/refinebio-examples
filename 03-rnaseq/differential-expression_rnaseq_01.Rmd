@@ -411,7 +411,7 @@ Here the red point is the gene that meets both the default p value and log2 fold
 
 We used the adjusted p values for our plot above, so you may want to loosen this cutoff with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
 
-Plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values and save to our environment as `volcano_plot`. 
+Let's make the same plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values and this time we will assign the plot to our environment as `volcano_plot`. 
 
 ```{r}
 # We'll assign this as `volcano_plot` this time
