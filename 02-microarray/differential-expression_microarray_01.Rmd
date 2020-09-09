@@ -234,7 +234,7 @@ Now we will create a model matrix based on our newly renamed `genotype` variable
 des_mat <- model.matrix(~ metadata$genotype)
 ```
 
-## Apply linear model
+## Perform differential expression
 
 After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction. 
 The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
@@ -264,7 +264,7 @@ See the help page by using `?topTable` for more information and options for this
 ## Check results by plotting one gene
 
 To test if these results make sense, we can make a plot of one of top genes. 
-Let's try `ENSDARG00000104315`. 
+Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes. 
 
 ```{r}
 top_gene_df <- df %>%
@@ -290,7 +290,7 @@ Let's take a sneak peek at what our `top_gene_df` looks like.
 top_gene_df
 ```
 
-Now let's plot the data for ENSDARG00000104315 using our `top_gene_df`.
+Now let's plot the data for `ENSDARG00000104315` using our `top_gene_df`.
 
 ```{r}
 ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
@@ -300,7 +300,6 @@ ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype))
 
 These results make sense.
 The overexpressing CREB group samples have much higher expression values for ENSDARG00000104315 than the control samples do. 
-
 
 ## Write results to file
 

@@ -196,6 +196,9 @@ This will help fix some spacing and formatting issues automatically.
   - **Variable names**: Variable names, like those that are stored as column names in a data frame
   should be kept in backticks: `refinebio_treatment` when referenced in a paragraph.
 
+- **Gene names**: When being referenced as a variable name, as in "let's extract the `ENSG0000000123` data", backticks should be used.
+But if the gene is being referred to more as a concept or something that is not specifically referring to code, the backticks can/should be dropped.
+
 #### No manual section numbering  
 
 Numbering will be done automatically in rendering; so no numbers should be put on the sections.
