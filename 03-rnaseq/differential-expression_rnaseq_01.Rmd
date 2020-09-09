@@ -399,18 +399,36 @@ Here we are plotting the `log2FoldChange` (which was estimated by `lfcShrink` st
 The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the default from the `results()` step).
 
 ```{r}
+EnhancedVolcano::EnhancedVolcano(
+  deseq_df,
+  lab = deseq_df$Gene, # A vector that contains our gene names
+  x = "log2FoldChange", # The variable in `deseq_df` you want to be plotted on the x axis
+  y = "padj" # The variable in `deseq_df` you want to be plotted on the y axis
+)
+```
+
+Here the red point is the gene that meets both the default p value and log2 fold change cutoff (which are 10e-6 and 1 respectively). 
+
+We used the adjusted p values for our plot above, so you may want to loosen this cutoff with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
+
+Plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values and save to our environment as `volcano_plot`. 
+
+```{r}
+# We'll assign this as `volcano_plot` this time
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
   deseq_df,
-  lab = rownames(deseq_df),
-  x = "log2FoldChange", # The variable in deseq_df you want to be plotted on the x axis.
-  y = "padj" # The variable in deseq_df you want to be plotted on the y axis.
+  lab = deseq_df$Gene,
+  x = "log2FoldChange",
+  y = "padj",
+  pCutoff = 0.01 # Loosen the cutoff since we supplied corrected p-values
 )
 
 # Print out plot here
 volcano_plot
 ```
 
-Save the plot to a PNG. 
+This looks pretty good. 
+Let's save it to a PNG. 
 
 ```{r}
 ggsave(
@@ -427,6 +445,7 @@ You can take your results from this example and make a heatmap following our hea
 - [`DESeq2` vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html)
 - [DESeq2 paper](https://doi.org/10.1186/s13059-014-0550-8) [@Love2014]
 - [StatQuest Video: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU)
+- [The `EnhancedVolcano` vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/EnhancedVolcano/inst/doc/EnhancedVolcano.html) has more examples on how to tailor your volcano plot [@Blighe2020].
 
 # Session info
 

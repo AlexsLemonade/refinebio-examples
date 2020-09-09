@@ -1,4 +1,6 @@
 ---
+bibliography: /home/rstudio/kitematic/refinebio-examples/references.bib
+csl: /home/rstudio/kitematic/refinebio-examples/components/genetics.csl
 title: "Differential Expression - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
