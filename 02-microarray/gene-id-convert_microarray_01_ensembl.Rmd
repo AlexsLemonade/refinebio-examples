@@ -65,7 +65,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio]({{REFINEBIO DATASET PAGE LINK}}).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE13490/cancer-stem-cells-are-enriched-in-the-side-population-cells-in-a-mouse-model-of-glioma).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -75,15 +75,6 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
-
-{{DELETE THIS LINE}}
-We are going to use non-quantile normalized data for this analysis.
-To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
-Note that this option will only be available for RNA-seq datasets.
-
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
-{{DELETE THIS LINE}}
-
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
 
@@ -91,7 +82,8 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [mouse glioma stem cells dataset](https://www.refine.bio/experiments/GSE13490/cancer-stem-cells-are-enriched-in-the-side-population-cells-in-a-mouse-model-of-glioma).
 
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+The data that we downloaded from refine.bio for this analysis has 15 microarray mouse glioma model samples.
+The samples were obtained from parental biological replicates and from resistant sub-line biological replicates that were transplanted into recipient mice.
 
 ## Place the dataset in your new `data/` folder
 
@@ -153,16 +145,16 @@ From here you can customize this analysis example to fit your own scientific que
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
 
-# {{NAME OF example}}
+# Obtaining Annotation for Ensembl IDs - Microarray
 
 Ensembl IDs can be used to obtain various different annotations at the 
 gene/transcript level.
-Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>),
+Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>),
 to obtain gene symbols this script can be easily converted for use with different 
 species or annotation types <i>eg</i> protein IDs, gene ontology, accession 
 numbers. 
 
-<b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is 
+<b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is 
 written, it must be replaced with the respective species abbreviation <i>eg</i>
 for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
 A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).
@@ -245,6 +237,41 @@ mapped_df <-
     df
   )
 ```
+
+## Explore mapped data frame
+
+```{r}
+# First, let's use the `head()` function to take a preview at our mapped data frame
+head(mapped_df)
+```
+
+Now let's get a summary of the symbols returned in our mapped data frame.
+
+```{r}
+summary(mapped_df$Symbols)
+```
+
+There are 998 NA's in our data frame, which means that 998 of the Ensembl IDs did not map to gene symbols.
+
+Now let's check to see if we have any genes that were mapped to multiple symbols.
+
+```{r}
+multi_mapped <- mapped_df %>%
+  # Let's isolate our `Symbols` and `Gene` columns
+  dplyr::select(Symbols, Gene) %>%
+  # Now we are going to group by the Ensembl ID's in the `Gene` column
+  dplyr::group_by(Gene) %>%
+  # Create a new variable containing the number of symbols mapped to each ID
+  dplyr::mutate(gene_symbol_count = n()) %>%
+  # Arrange by the genes with the highest number of symbols mapped
+  dplyr::arrange(gene_symbol_count)
+
+# Let's look at the first 6 rows of our `multi_mapped` object
+head(multi_mapped)
+```
+
+Looks like we do not have any cases of genes with multiple mappings in this particular dataset.
+This is not the case for every dataset, this step is good practice when mapping to symbols use gene identifiers.
 
 ## Write to file
 
