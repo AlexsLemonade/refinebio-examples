@@ -42,7 +42,7 @@ The nature of RNA sequencing steps introduce several different kinds of biases:
 - [Library size or sequencing depth] - the total number of reads is not always equivalent between samples.
 - [Gene length] - longer genes are more likely to be observed. 
 
-[Refine.bio's processing steps](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines) and use of Salmon's algorithms attempt to mitigate these biases, but these biases can never be fully negated.
+Most normalization methods, including [refine.bio's processing methods](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines), attempt to mitigate these biases, but these biases can never be fully negated.
 
 ## About quantile normalization
 
@@ -50,12 +50,12 @@ Refine.bio data is available for you [quantile normalized](https://en.wikipedia.
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
 
+
+
 See here for more about the [quantile normalization process in refine.bio](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization)
 
 ### Further reading about RNA-seq data and 
 
-Perform quality control checks with FastQC (Andrews.)
-Perform FASTQ preprocessing with fastp (Chen et al. Bioinformatics. 2018.)
 Quantify transcripts with Salmon (Patro et al. Nature Methods. 2017.)
 Summarize estimates to the gene-level with tximport (Soneson et al. F1000Research. 2015.)
 Perform exploratory data analysis with DESeq2 (Love et al. Genome Biology. 2014.)
@@ -74,6 +74,7 @@ https://doi.org/10.1093/nar/gkq224
 
 ## About DESeq2
 
+
 ### Why we use DESeq2
 - Plays nicely with tximport which refinebio uses
 - It includes a lot of functions that can perform all your basic differential expression needs. 
@@ -81,7 +82,19 @@ https://doi.org/10.1093/nar/gkq224
 ### DESeq2 normalization 
 - Compare and contrast the normalization methods (QN'ed by us vs VST vs rlog vs ???)
 - How did we choose which normalization method to use in each tutorial example? 
-          
+
 ### Further reading about DESeq2
 
 https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
+https://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf
+https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
+
+### FAQs about RNA-seq data: 
+
+- Why doesn't the gene I care about show up in this dataset?
+
+- Why do these examples use DESeq2 and not EdgeR or ____
+
+- What if I care about isoforms?
+
+## References
