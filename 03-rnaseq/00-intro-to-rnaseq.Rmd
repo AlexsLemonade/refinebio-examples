@@ -22,7 +22,55 @@ output:
 
 ## Introduction to RNA-seq technology
 
-### Further reading about RNA-seq technologies 
+Data analyses are generally not "one size fits all"; this is particularly true as we are working with different technologies. 
+This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
+
+As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions. 
+
+#### RNA-seq data **strengths**:
+
+- RNA-seq can collect data on more transcripts (it is less bound to a pre-determined set of probes like microarray is). 
+- It's values are considered more dynamic than microarray values which are constrained to the number of probes.
+- You can collect information about isoforms, but note that refine.bio's pipeline summarizes to the gene-level so if you are concerned with isoforms, at this time, refine.bio may not be helpful for you. 
+
+#### RNA-seq data **limitations**:
+
+The nature of RNA sequencing steps introduce several different kinds of biases: 
+- [GC bias] - higher GC content sequences are less likely to be observed.
+- [3' bias] - for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.
+- [Complexity bias] - some sequences are easier to be bound and amplified than others. 
+- [Library size or sequencing depth] - the total number of reads is not always equivalent between samples.
+- [Gene length] - longer genes are more likely to be observed. 
+
+[Refine.bio's processing steps](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines) and use of Salmon's algorithms attempt to mitigate these biases, but these biases can never be fully negated.
+
+## About quantile normalization
+
+Refine.bio data is available for you [quantile normalized](https://en.wikipedia.org/wiki/Quantile_normalization), but more often than not, our example modules will recommend using the option for downloading non-quantile normalized data (note that this is RNA-seq specific, and microarray data does not have this download option). 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+
+See here for more about the [quantile normalization process in refine.bio](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization)
+
+### Further reading about RNA-seq data and 
+
+Perform quality control checks with FastQC (Andrews.)
+Perform FASTQ preprocessing with fastp (Chen et al. Bioinformatics. 2018.)
+Quantify transcripts with Salmon (Patro et al. Nature Methods. 2017.)
+Summarize estimates to the gene-level with tximport (Soneson et al. F1000Research. 2015.)
+Perform exploratory data analysis with DESeq2 (Love et al. Genome Biology. 2014.)
+
+Getting Started with Salmon
+Importing transcript abundance datasets with tximport
+Analyzing RNA-seq data with DESeq2
+
+https://www.youtube.com/watch?v=tlf6wYJrwKY
+https://www.youtube.com/watch?v=TTUrtCY2k-w
+https://www.youtube.com/watch?v=UFB993xufUU
+
+https://doi.org/10.1093/nar/gkq224
+
+- [A general background on the wet lab methods of RNA-seq](https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/)
 
 ## About DESeq2
 
@@ -31,9 +79,9 @@ output:
 - It includes a lot of functions that can perform all your basic differential expression needs. 
 
 ### DESeq2 normalization 
-- How do we get QN'ed vs non-QN'ed from refinebio
 - Compare and contrast the normalization methods (QN'ed by us vs VST vs rlog vs ???)
 - How did we choose which normalization method to use in each tutorial example? 
           
 ### Further reading about DESeq2
 
+https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
