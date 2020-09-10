@@ -6,3 +6,34 @@ output:
     toc: true
     toc_float: true
 ---
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Introduction to RNA-seq technology](#introduction-to-rna-seq-technology)
+  - [Further reading about RNA-seq technologies](#further-reading-about-rna-seq-technologies)
+- [About DESeq2](#about-deseq2)
+  - [What is DESeq2 and why it is handy?](#what-is-deseq2-and-why-it-is-handy)
+  - [DESeq2 normalization vs refinebio QN](#deseq2-normalization-vs-refinebio-qn)
+  - [Further reading about DESeq2](#further-reading-about-deseq2)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Introduction to RNA-seq technology
+
+### Further reading about RNA-seq technologies 
+
+## About DESeq2
+
+### Why we use DESeq2
+- Plays nicely with tximport which refinebio uses
+- It includes a lot of functions that can perform all your basic differential expression needs. 
+
+### DESeq2 normalization 
+- How do we get QN'ed vs non-QN'ed from refinebio
+- Compare and contrast the normalization methods (QN'ed by us vs VST vs rlog vs ???)
+- How did we choose which normalization method to use in each tutorial example? 
+          
+### Further reading about DESeq2
+
