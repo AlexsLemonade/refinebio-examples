@@ -281,7 +281,7 @@ head(multi_mapped)
 ```
 
 Looks like we do not have any cases of genes with multiple mappings in this particular dataset.
-This is not the case for every dataset, this step is good practice when mapping between gene identifiers.
+This is not the case for every dataset, therefore this step is good practice when mapping between gene identifiers.
 
 ## Write mapped results to file
 
