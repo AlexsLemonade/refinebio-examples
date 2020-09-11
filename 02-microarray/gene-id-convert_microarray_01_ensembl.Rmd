@@ -283,7 +283,7 @@ head(multi_mapped)
 Looks like we do not have any cases of genes with multiple mappings in this particular dataset.
 This is not the case for every dataset, this step is good practice when mapping between gene identifiers.
 
-## Write to file
+## Write mapped results to file
 
 ```{r Write to file}
 # Write mapped and annotated data frame to output file
@@ -297,6 +297,7 @@ readr::write_tsv(mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020]
+- [More on Annotation mapping functions](https://www.bioconductor.org/packages/release/bioc/vignettes/AnnotationFuncs/inst/doc/AnnotationFuncsUserguide.pdf) [@Edwards2020]
 
 # Session info
 

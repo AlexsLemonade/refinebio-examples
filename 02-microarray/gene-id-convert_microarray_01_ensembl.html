@@ -2011,8 +2011,8 @@ head(multi_mapped)</code></pre>
 ## 6 Apoh    ENSMUSG00000000049                 1</code></pre>
 <p>Looks like we do not have any cases of genes with multiple mappings in this particular dataset. This is not the case for every dataset, this step is good practice when mapping between gene identifiers.</p>
 </div>
-<div id="write-to-file" class="section level2">
-<h2><span class="header-section-number">4.5</span> Write to file</h2>
+<div id="write-mapped-results-to-file" class="section level2">
+<h2><span class="header-section-number">4.5</span> Write mapped results to file</h2>
 <pre class="r"><code># Write mapped and annotated data frame to output file
 readr::write_tsv(mapped_df, file.path(
   results_dir,
@@ -2024,6 +2024,7 @@ readr::write_tsv(mapped_df, file.path(
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020)</span></li>
+<li><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/AnnotationFuncs/inst/doc/AnnotationFuncsUserguide.pdf">More on Annotation mapping functions</a> <span class="citation">(Edwards 2020)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2069,6 +2070,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Carlson2020">
 <p>Carlson M., 2020 AnnotationDbi: Introduction to bioconductor annotation packages</p>
+</div>
+<div id="ref-Edwards2020">
+<p>Edwards S. M., 2020 <em>Annotation mapping functions</em>.</p>
 </div>
 <div id="ref-annotation-packages">
 <p>R Bioconductor Team, 2003 Packages found under annotationdata</p>
