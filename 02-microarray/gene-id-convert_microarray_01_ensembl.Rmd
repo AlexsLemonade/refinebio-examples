@@ -104,7 +104,7 @@ Copy and paste the `GSE13490` folder into your newly created `data/` folder.
 
 Your new analysis folder should contain: 
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `GSE13490` folder which contains:
     - The gene expression  
@@ -157,13 +157,13 @@ numbers.
 <b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is 
 written, it must be replaced with the respective species abbreviation <i>eg</i>
 for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
-A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf).
+A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2020].
+In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2019].
 
 ```{r}
 # Install the mouse package
@@ -222,17 +222,21 @@ df <- df %>%
 
 ## Map Ensembl IDs to gene symbols
 
-This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect since genes and transcripts do not have a 1:1 relationship.
+This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect in most cases since genes and transcripts do not have a 1:1 relationship.
+The `mapIDs()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
+The default behavior is to return just the first mapped value.
+Use `?mapIds` to see more options.
+
 
 ```{r}
 # Map ensembl IDs to their associated gene symbols
 mapped_df <-
   data.frame(
     "Symbols" = mapIds(
-      org.Mm.eg.db,
+      org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
       keys = df$Gene,
       column = "SYMBOL",
-      keytype = "ENSEMBL"
+      keytype = "ENSEMBL" # Replace with the type of gene identifiers in your data
     ),
     df
   )
@@ -240,18 +244,24 @@ mapped_df <-
 
 ## Explore mapped data frame
 
+Now, let's take a look at our mapped data.
+
 ```{r}
-# First, let's use the `head()` function to take a preview at our mapped data frame
+# Let's use the `head()` function to take a preview at our mapped data frame
 head(mapped_df)
 ```
 
-Now let's get a summary of the symbols returned in our mapped data frame.
+We can see that our data frame has a new column `Symbols`.
+Let's get a summary of the values returned in the `Symbols` column of our mapped data frame.
 
 ```{r}
+# We can use the `summary()` function to get a better idea of the distribution of values in the `Symbols` column
 summary(mapped_df$Symbols)
 ```
 
-There are 998 NA's in our data frame, which means that 998 of the Ensembl IDs did not map to gene symbols.
+There are 998 NA's in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
+If nothing is mapping to your gene identifier, it is possible that the function was executed incorrectly or a different gene identifier should be used.
+In some cases, this behavior is expected, but it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
 Now let's check to see if we have any genes that were mapped to multiple symbols.
 
@@ -271,7 +281,7 @@ head(multi_mapped)
 ```
 
 Looks like we do not have any cases of genes with multiple mappings in this particular dataset.
-This is not the case for every dataset, this step is good practice when mapping to symbols use gene identifiers.
+This is not the case for every dataset, this step is good practice when mapping between gene identifiers.
 
 ## Write to file
 
@@ -286,7 +296,7 @@ readr::write_tsv(mapped_df, file.path(
 
 # Resources for further learning
 
-- [{{HELPFUL RESOURCE NAME}}]({{LINK TO HELPFUL RESOURCE}}) [{{CITATION}}]
+- Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020]
 
 # Session info
 

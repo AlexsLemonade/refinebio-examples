@@ -1730,7 +1730,7 @@ if (!dir.exists(results_dir)) {
 <h2><span class="header-section-number">2.6</span> Check out our file structure!</h2>
 <p>Your new analysis folder should contain:</p>
 <ul>
-<li>The example analysis Rmd you downloaded<br />
+<li>The example analysis <code>.Rmd</code> you downloaded<br />
 </li>
 <li>A folder called “data” which contains:
 <ul>
@@ -1772,11 +1772,11 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <div id="obtaining-annotation-for-ensembl-ids---microarray" class="section level1">
 <h1><span class="header-section-number">4</span> Obtaining Annotation for Ensembl IDs - Microarray</h1>
 <p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">link</a>.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson)</span>.</p>
+<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson 2019)</span>.</p>
 <pre class="r"><code># Install the mouse package
 if (!(&quot;org.Mm.eg.db&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
@@ -1894,15 +1894,15 @@ df &lt;- df %&gt;%
 </div>
 <div id="map-ensembl-ids-to-gene-symbols" class="section level2">
 <h2><span class="header-section-number">4.3</span> Map Ensembl IDs to gene symbols</h2>
-<p>This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect since genes and transcripts do not have a 1:1 relationship.</p>
+<p>This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect in most cases since genes and transcripts do not have a 1:1 relationship. The <code>mapIDs()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. Use <code>?mapIds</code> to see more options.</p>
 <pre class="r"><code># Map ensembl IDs to their associated gene symbols
 mapped_df &lt;-
   data.frame(
     &quot;Symbols&quot; = mapIds(
-      org.Mm.eg.db,
+      org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
       keys = df$Gene,
       column = &quot;SYMBOL&quot;,
-      keytype = &quot;ENSEMBL&quot;
+      keytype = &quot;ENSEMBL&quot; # Replace with the type of gene identifiers in your data
     ),
     df
   )</code></pre>
@@ -1910,7 +1910,8 @@ mapped_df &lt;-
 </div>
 <div id="explore-mapped-data-frame" class="section level2">
 <h2><span class="header-section-number">4.4</span> Explore mapped data frame</h2>
-<pre class="r"><code># First, let&#39;s use the `head()` function to take a preview at our mapped data frame
+<p>Now, let’s take a look at our mapped data.</p>
+<pre class="r"><code># Let&#39;s use the `head()` function to take a preview at our mapped data frame
 head(mapped_df)</code></pre>
 <pre><code>##                    Symbols               Gene GSM340068   GSM340072   GSM340071
 ## ENSMUSG00000000001   Gnai3 ENSMUSG00000000001 9.0936148  7.99950284  8.95697104
@@ -1940,8 +1941,9 @@ head(mapped_df)</code></pre>
 ## ENSMUSG00000000031 3.2268280 0.80851073
 ## ENSMUSG00000000037 1.4112563 1.74052445
 ## ENSMUSG00000000049 0.5473140 0.08018819</code></pre>
-<p>Now let’s get a summary of the symbols returned in our mapped data frame.</p>
-<pre class="r"><code>summary(mapped_df$Symbols)</code></pre>
+<p>We can see that our data frame has a new column <code>Symbols</code>. Let’s get a summary of the values returned in the <code>Symbols</code> column of our mapped data frame.</p>
+<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of values in the `Symbols` column
+summary(mapped_df$Symbols)</code></pre>
 <pre><code>##          Pms2 0610005C13Rik 0610009B22Rik 0610009L18Rik 0610010F05Rik 
 ##             2             1             1             1             1 
 ## 0610012G03Rik 0610030E20Rik 0610038B21Rik 0610039K10Rik 0610040B10Rik 
@@ -1982,7 +1984,7 @@ head(mapped_df)</code></pre>
 ##             1             1             1             1             1 
 ## 1700016H13Rik 1700016K19Rik 1700016P04Rik       (Other)          NA&#39;s 
 ##             1             1             1         16821           998</code></pre>
-<p>There are 998 NA’s in our data frame, which means that 998 of the Ensembl IDs did not map to gene symbols.</p>
+<p>There are 998 NA’s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. If nothing is mapping to your gene identifier, it is possible that the function was executed incorrectly or a different gene identifier should be used. In some cases, this behavior is expected, but it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
 <pre class="r"><code>multi_mapped &lt;- mapped_df %&gt;%
   # Let&#39;s isolate our `Symbols` and `Gene` columns
@@ -2007,7 +2009,7 @@ head(multi_mapped)</code></pre>
 ## 4 H19     ENSMUSG00000000031                 1
 ## 5 Scml2   ENSMUSG00000000037                 1
 ## 6 Apoh    ENSMUSG00000000049                 1</code></pre>
-<p>Looks like we do not have any cases of genes with multiple mappings in this particular dataset. This is not the case for every dataset, this step is good practice when mapping to symbols use gene identifiers.</p>
+<p>Looks like we do not have any cases of genes with multiple mappings in this particular dataset. This is not the case for every dataset, this step is good practice when mapping between gene identifiers.</p>
 </div>
 <div id="write-to-file" class="section level2">
 <h2><span class="header-section-number">4.5</span> Write to file</h2>
@@ -2021,7 +2023,7 @@ readr::write_tsv(mapped_df, file.path(
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="%7B%7BLINK%20TO%20HELPFUL%20RESOURCE%7D%7D">{{HELPFUL RESOURCE NAME}}</a> [{{CITATION}}]</li>
+<li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2062,8 +2064,14 @@ sessionInfo()</code></pre>
 ## [37] backports_1.1.7  ellipsis_0.3.1   htmltools_0.3.6  assertthat_0.2.1
 ## [41] utf8_1.1.4       stringi_1.4.6    crayon_1.3.4</code></pre>
 <div id="refs" class="references">
+<div id="ref-Carlson2019">
+<p>Carlson M., 2019 Genome wide annotation for mouse</p>
+</div>
 <div id="ref-Carlson2020">
-<p>Carlson M., Genome wide annotation for mouse</p>
+<p>Carlson M., 2020 AnnotationDbi: Introduction to bioconductor annotation packages</p>
+</div>
+<div id="ref-annotation-packages">
+<p>R Bioconductor Team, 2003 Packages found under annotationdata</p>
 </div>
 </div>
 </div>
