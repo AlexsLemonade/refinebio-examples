@@ -225,7 +225,8 @@ df <- df %>%
 This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect in most cases since genes and transcripts do not have a 1:1 relationship.
 The `mapIDs()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
 The default behavior is to return just the first mapped value.
-Use `?mapIds` to see more options.
+We will use the default behavior in the next chunk, but it is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. 
+Use `?mapIds` to see more options or strategies.
 
 
 ```{r}
@@ -244,7 +245,7 @@ mapped_df <-
 
 ## Explore mapped data frame
 
-Now, let's take a look at our mapped data.
+Now, let's take a look at our mapped data frame to see how the mapping went.
 
 ```{r}
 # Let's use the `head()` function to take a preview at our mapped data frame
