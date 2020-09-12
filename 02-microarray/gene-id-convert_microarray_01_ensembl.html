@@ -1771,7 +1771,7 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 </div>
 <div id="obtaining-annotation-for-ensembl-ids---microarray" class="section level1">
 <h1><span class="header-section-number">4</span> Obtaining Annotation for Ensembl IDs - Microarray</h1>
-<p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level and are the gene identifiers used by refine.bio. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
 <p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
@@ -1901,7 +1901,7 @@ mapped_df &lt;-
     &quot;Symbols&quot; = mapIds(
       org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
       keys = df$Gene,
-      column = &quot;SYMBOL&quot;,
+      column = &quot;SYMBOL&quot;, # Replace with the type of gene identifiers you would like to map to
       keytype = &quot;ENSEMBL&quot; # Replace with the type of gene identifiers in your data
     ),
     df
