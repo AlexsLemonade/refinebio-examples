@@ -180,10 +180,10 @@ test.probe <- author.df %>%
 # Make a dataframe with the group information
 box.plot <- data.frame(test.probe, subgroup) %>%
 # Use ggplot2 to make a boxplot from this info
-ggplot2::ggplot(., ggplot2::aes(x = subgroup, y = test.probe)) + 
-  ggplot2::geom_boxplot() + 
-  ggplot2::theme_classic() +
-  ggplot2::ggtitle(paste("Probe ID:", stats$affy_probe_ids[32]))
+ggplot(., aes(x = subgroup, y = test.probe)) + 
+  geom_boxplot() + 
+  theme_classic() +
+  ggtitle(paste("Probe ID:", stats$affy_probe_ids[32]))
 
 # Print the plot here
 box.plot

@@ -175,10 +175,10 @@ exprs_long_df <- expression_df %>%
 
 ```{r}
 exprs_long_df %>%
-  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
-  ggplot2::geom_density(alpha = 0.2) +
-  ggplot2::theme_bw() +
-  ggplot2::labs(title = "Before quantile normalization",
+  ggplot(aes(x = value, fill = Sample)) +
+  geom_density(alpha = 0.2) +
+  theme_bw() +
+  labs(title = "Before quantile normalization",
                 x = "expression value")
 ```
 
@@ -197,10 +197,10 @@ qn_long_df <- qn_df %>%
 
 ```{r}
 qn_p <- qn_long_df %>%
-  ggplot2::ggplot(ggplot2::aes(x = value, fill = Sample)) +
-  ggplot2::geom_density(alpha = 0.2) +
-  ggplot2::theme_bw() +
-  ggplot2::labs(title = "After quantile normalization",
+  ggplot(aes(x = value, fill = Sample)) +
+  geom_density(alpha = 0.2) +
+  theme_bw() +
+  labs(title = "After quantile normalization",
                 x = "expression value")
 qn_p
 ```
@@ -210,10 +210,10 @@ We can use `facet_wrap` to get a better look.
 
 ```{r}
 qn_p +
-  ggplot2::facet_wrap(~ Sample, ncol = 4) +
-  ggplot2::theme(legend.position = "none",
-                 strip.background = ggplot2::element_blank(),
-                 strip.text = ggplot2::element_blank())
+  facet_wrap(~ Sample, ncol = 4) +
+  theme(legend.position = "none",
+                 strip.background = element_blank(),
+                 strip.text = element_blank())
 ```
 
 Quantile normalization was successful.
