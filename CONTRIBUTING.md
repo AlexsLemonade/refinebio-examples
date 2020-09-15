@@ -199,8 +199,10 @@ This will help fix some spacing and formatting issues automatically.
 - **Gene names**: When being referenced as a variable name, as in "let's extract the `ENSG0000000123` data", backticks should be used.
 But if the gene is being referred to more as a concept or something that is not specifically referring to code, the backticks can/should be dropped.
 
-- `::` or `library()` - for most packages there is no stipulations on which strategy to use. We like to be able to show both strategies.
-However, for ggplot2, we always use `library(ggplot2)` to avoid the repetition needed for making a plot that could lead to troubleshooting problems for users that may be trying to modify plots. See [issue #211](https://github.com/AlexsLemonade/refinebio-examples/issues/211).
+- `::` or `library()` - for most packages there is no stipulations on which strategy to use.
+We like to be able to show both strategies.
+However, for ggplot2, we always use `library(ggplot2)` to avoid the repetition needed for making a plot that could lead to troubleshooting problems for users that may be trying to modify plots.
+See [issue #211](https://github.com/AlexsLemonade/refinebio-examples/issues/211).
 
 #### No manual section numbering  
 
