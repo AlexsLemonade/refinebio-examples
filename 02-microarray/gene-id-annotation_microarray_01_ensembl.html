@@ -2014,6 +2014,23 @@ filtered_mapped_df &lt;- mapIds(
   # Now let&#39;s give the `value` column a name that is more relevant to the values it holds
   dplyr::rename(&quot;Symbol&quot; = &quot;value&quot;)</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<p>Let’s copy the same code we used above to see if we have any multi mappings in our new data frame.</p>
+<pre class="r"><code>filtered_mapped_df %&gt;%
+  # First, we need to grab the Ensembl IDs from the rownames
+  tibble::rownames_to_column(&quot;Gene&quot;) %&gt;%
+  # Let&#39;s group by the Ensembl ID&#39;s in the `L1` column
+  dplyr::group_by(Gene) %&gt;%
+  # Create a new variable containing the number of symbols mapped to each ID
+  dplyr::mutate(gene_symbol_count = dplyr::n()) %&gt;%
+  # Arrange by the genes with the highest number of symbols mapped
+  dplyr::arrange(desc(gene_symbol_count)) %&gt;%
+  # Filter to include only the rows with multi mappings
+  dplyr::filter(gene_symbol_count &gt; 1)</code></pre>
+<pre><code>## # A tibble: 0 x 3
+## # Groups:   Gene [0]
+## # … with 3 variables: Gene &lt;chr&gt;, Symbol &lt;fct&gt;, gene_symbol_count &lt;int&gt;</code></pre>
+<p>This new new <code>filtered_mapped_df</code> object is empty, as expected, since it has been filtered to include only 1:1 mappings.</p>
+<p>Now, let’s write our filtered and mapped results to file!</p>
 </div>
 <div id="write-mapped-results-to-file" class="section level2">
 <h2><span class="header-section-number">4.6</span> Write mapped results to file</h2>

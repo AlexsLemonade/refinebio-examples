@@ -320,6 +320,26 @@ filtered_mapped_df <- mapIds(
   dplyr::rename("Symbol" = "value")
 ```
 
+Let's copy the same code we used above to see if we have any multi mappings in our new data frame.
+
+```{r}
+filtered_mapped_df %>%
+  # First, we need to grab the Ensembl IDs from the rownames
+  tibble::rownames_to_column("Gene") %>%
+  # Let's group by the Ensembl ID's in the `L1` column
+  dplyr::group_by(Gene) %>%
+  # Create a new variable containing the number of symbols mapped to each ID
+  dplyr::mutate(gene_symbol_count = dplyr::n()) %>%
+  # Arrange by the genes with the highest number of symbols mapped
+  dplyr::arrange(desc(gene_symbol_count)) %>%
+  # Filter to include only the rows with multi mappings
+  dplyr::filter(gene_symbol_count > 1)
+```
+
+This new new `filtered_mapped_df` object is empty, as expected, since it has been filtered to include only 1:1 mappings.
+
+Now, let's write our filtered and mapped results to file!
+
 ## Write mapped results to file
 
 ```{r Write to file}
