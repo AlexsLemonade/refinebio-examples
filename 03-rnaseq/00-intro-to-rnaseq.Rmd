@@ -14,13 +14,15 @@ output:
 - [Introduction to RNA-seq technology](#introduction-to-rna-seq-technology)
   - [RNA-seq data **strengths**:](#rna-seq-data-strengths)
   - [RNA-seq data **limitations**:](#rna-seq-data-limitations)
-- [About quantile normalization](#about-quantile-normalization)
-  - [Recommended reading on RNA-seq technology:](#recommended-reading-on-rna-seq-technology)
+  - [About quantile normalization](#about-quantile-normalization)
+  - [More resources on RNA-seq technology:](#more-resources-on-rna-seq-technology)
 - [About DESeq2](#about-deseq2)
   - [DESeq2 objects](#deseq2-objects)
   - [DESeq2 normalization methods](#deseq2-normalization-methods)
   - [Further resources for DESeq2](#further-resources-for-deseq2)
-- [FAQs about RNA-seq data:](#faqs-about-rna-seq-data)
+    - [Why doesn't the gene I care about show up in this dataset?](#why-doesnt-the-gene-i-care-about-show-up-in-this-dataset)
+    - [Why do these examples use DESeq2 and not EdgeR or ____](#why-do-these-examples-use-deseq2-and-not-edger-or-____)
+    - [What if I care about isoforms?](#what-if-i-care-about-isoforms)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -32,30 +34,29 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 
 As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions. 
 
-### RNA-seq data **strengths**:
+### RNA-seq data **strengths**:  
 
 - RNA-seq can collect data on more transcripts (it is less bound to a pre-determined set of probes like microarray is). 
 - It's values are considered more dynamic than microarray values which are constrained to the number of probes.
-- You can collect information about isoforms, but note that refine.bio's pipeline summarizes to the gene-level so if you are concerned with isoforms, at this time, refine.bio may not be helpful for you. 
 
-### RNA-seq data **limitations**:
+### RNA-seq data **limitations**:  
 
 The nature of RNA sequencing steps introduce several different kinds of biases: 
-- GC bias: higher GC content sequences are less likely to be observed.
-- 3' bias: for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.
-- Complexity bias: some sequences are easier to be bound and amplified than others. 
-- Library size or sequencing depth: the total number of reads is not always equivalent between samples.
-- Gene length; longer genes are more likely to be observed. 
+- **GC bias**: higher GC content sequences are less likely to be observed.  
+- **3' bias**: for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.  
+- **Complexity bias**: some sequences are easier to be bound and amplified than others.   
+- **Library size or sequencing depth**: the total number of reads is not always equivalent between samples.  
+- **Gene length**: longer genes are more likely to be observed.   
 
-This figure from @Love2016 briefly summarizes these biases. 
-
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8e31eed8a70f6653dd263fc689bc230050a2b22d/components/figures/Love2016-fig1.png" width=500>
+This figure from @Love2016 briefly summarizes these biases.   
+  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8e31eed8a70f6653dd263fc689bc230050a2b22d/components/figures/Love2016-fig1.png" width=700>
 
 Most normalization methods, including [refine.bio's processing methods](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines), attempt to mitigate these biases, but these biases can never be fully negated.
 Some of these biases have been addressed to the extent that they can by our refine.bio processing methods so you don't have to worry too much about them.
 In brief, refine.bio data is quantified by Salmon using their correction algorithms: [`--seqbias`](https://salmon.readthedocs.io/en/latest/salmon.html#seqbias) , [`--gcbias`](https://salmon.readthedocs.io/en/latest/salmon.html#gcbias), and [`--posBias`](https://salmon.readthedocs.io/en/latest/salmon.html#posbias).
 
-## About quantile normalization
+### About quantile normalization
 
 Refine.bio data is available for you [quantile normalized](https://en.wikipedia.org/wiki/Quantile_normalization), which can address some library size biases.
 But more often than not, our example modules will recommend using the option for downloading non-quantile normalized data (note that this is RNA-seq specific, and microarray data does not have this download option). 
@@ -64,7 +65,7 @@ But more often than not, our example modules will recommend using the option for
 
 See here for more about the [quantile normalization process in refine.bio](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization)
 
-### Recommended reading on RNA-seq technology: 
+### More resources on RNA-seq technology: 
 
 - [StatsQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY) [@Starmer2017-rnaseq].
 - [A general background on the wet lab methods of RNA-seq](https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/) [@Hadfield2016].
@@ -101,8 +102,6 @@ For more about DESeq2 normalization, we highly recommend this [StatsQuest video]
 - [DESeq2 vignette: Analyzing RNA-seq data with DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@Love2014].
 - [Beginner's guide to DESeq2](Bhttps://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf) [@Love2014-guide].
 - [Introduction to DGE - using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html)
-
-## FAQs about RNA-seq data: 
 
 #### Why doesn't the gene I care about show up in this dataset?
 
