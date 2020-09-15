@@ -27,6 +27,10 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 
 As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions. 
 
+Here's some recommended reading on RNA-seq technology: 
+- [StatsQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY)
+- [A general background on the wet lab methods of RNA-seq](https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/)
+
 #### RNA-seq data **strengths**:
 
 - RNA-seq can collect data on more transcripts (it is less bound to a pre-determined set of probes like microarray is). 
@@ -36,11 +40,21 @@ As with all experimental methods, RNA-seq has strengths and limitations that you
 #### RNA-seq data **limitations**:
 
 The nature of RNA sequencing steps introduce several different kinds of biases: 
-- [GC bias] - higher GC content sequences are less likely to be observed.
-- [3' bias] - for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.
-- [Complexity bias] - some sequences are easier to be bound and amplified than others. 
-- [Library size or sequencing depth] - the total number of reads is not always equivalent between samples.
-- [Gene length] - longer genes are more likely to be observed. 
+- GC bias - higher GC content sequences are less likely to be observed.
+- 3' bias - for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.
+- Complexity bias - some sequences are easier to be bound and amplified than others. 
+- Library size or sequencing depth - the total number of reads is not always equivalent between samples.
+- Gene length - longer genes are more likely to be observed. 
+
+This figure from @Love2016 briefly summarizes these biases. 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+
+Here's some recommended reading regarding these biases:   
+- [Modeling of RNA-seq fragment sequence bias reduces systematic errors in transcript abundance estimation](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5143225/) @Love2016.
+- [Biases in Illumina transcriptome sequencing caused by random hexamer priming](https://pdfs.semanticscholar.org/9d16/997f5de72d6c606fef3d673db70e5d1d8e1e.pdf?_ga=2.131436679.965169313.1600175795-124991789.1600175795) @Hansen2010.
+- [Computation for RNA-seq and ChIP-seq studies](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4121056/) @Pepke2009.
+- [StatsQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY) @Starmer2017-rnaseq.
 
 Most normalization methods, including [refine.bio's processing methods](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines), attempt to mitigate these biases, but these biases can never be fully negated.
 
@@ -50,8 +64,6 @@ Refine.bio data is available for you [quantile normalized](https://en.wikipedia.
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
 
-
-
 See here for more about the [quantile normalization process in refine.bio](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization)
 
 ### Further reading about RNA-seq data and 
@@ -59,21 +71,6 @@ See here for more about the [quantile normalization process in refine.bio](http:
 Quantify transcripts with Salmon (Patro et al. Nature Methods. 2017.)
 Summarize estimates to the gene-level with tximport (Soneson et al. F1000Research. 2015.)
 Perform exploratory data analysis with DESeq2 (Love et al. Genome Biology. 2014.)
-
-Getting Started with Salmon
-Importing transcript abundance datasets with tximport
-Analyzing RNA-seq data with DESeq2
-
-https://www.youtube.com/watch?v=tlf6wYJrwKY
-https://www.youtube.com/watch?v=TTUrtCY2k-w
-https://www.youtube.com/watch?v=UFB993xufUU
-
-https://doi.org/10.1093/nar/gkq224
-
-- [A general background on the wet lab methods of RNA-seq](https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/)
-
-## About DESeq2
-
 
 ### Why we use DESeq2
 - Plays nicely with tximport which refinebio uses
@@ -83,18 +80,37 @@ https://doi.org/10.1093/nar/gkq224
 - Compare and contrast the normalization methods (QN'ed by us vs VST vs rlog vs ???)
 - How did we choose which normalization method to use in each tutorial example? 
 
-### Further reading about DESeq2
+### Further resources for DESeq2
 
-https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
-https://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf
-https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html
+- [StatsQuest: RPKM, FPKM and TPM, Clearly Explained!!!](https://www.youtube.com/watch?v=TTUrtCY2k-w) @Starmer2015.
+- [StatsQuest: StatQuest: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU) @Starmer2017-deseq2.
+- [DESeq2 vignette: Analyzing RNA-seq data with DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) @Love2014
+- [Beginner's guide to DESeq2](Bhttps://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf) @Love2014-guide
+- [Introduction to DGE - using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html)
 
 ### FAQs about RNA-seq data: 
 
 - Why doesn't the gene I care about show up in this dataset?
 
+There can be a lot of reasons a particular gene might not show up in your refine.bio RNA-seq dataset. 
+- The gene was not actually expressed in the cells in the first place.  
+- The gene was not expressed at high enough levels to be detectable.
+- The gene does not have an Ensembl ID according to the [version of the annotation]() we used. 
+
 - Why do these examples use DESeq2 and not EdgeR or ____
 
+In short, both EdgeR and DESeq2 are good options and we at the CCDL just went with one of our preferences! 
+[See this blog that summarizes these - by one of the creators of DESeq2](https://mikelove.wordpress.com/2016/09/28/deseq2-or-edger/), he agrees EdgeR is also great. 
+But we needed to pick something, and our [refine.bio data is processed by tximport](http://docs.refine.bio/en/latest/main_text.html#processing-information), another package by the same creators of DESeq2, the creators of both these packages designed these packages to all play well together, and [we also really like their documentation and tutorials](#further-resources-for-deseq2). 
+But in the end, we are human and have our own preferences. 
+
+If you have strong preferences for EdgeR, you can definitely use your refine.bio data with it, but we currently do not have examples of that. 
+In this case, we'd refer you to [EdgeR's users guide](http://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf) and wish you the best of luck on your data adventures! 
+
 - What if I care about isoforms?
+
+Unfortunately at this time, all refine.bio data is summarized to the gene-level, and there's no great way to examine isoforms with this data. 
+If your research needs to know transcript isoform information, you may need to look elsewhere. 
+This [paper discusses some tools for these kinds of questions](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-017-4002-1) @Zhang2017.
 
 ## References
