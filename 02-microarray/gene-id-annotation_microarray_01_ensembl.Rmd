@@ -305,7 +305,6 @@ The next code chunk will rerun the `mapIds()` function, this time supplying the 
 This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping.
 Use `?mapIds` to see more options or strategies.
 
-
 ```{r}
 # Map ensembl IDs to their associated gene symbols
 filtered_mapped_df <- mapIds(
