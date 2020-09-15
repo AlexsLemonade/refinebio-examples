@@ -1666,7 +1666,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>The purpose of this notebook is to provide an example of mapping gene ids for microarray data obtained from refine.bio using <code>AnnotationDbi</code> packages.</p>
+<p>The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using <code>AnnotationDbi</code> packages.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1765,7 +1765,7 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
-<p>Refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
 <p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-convert_rnaseq_01_ensembl.Rmd">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
@@ -1907,8 +1907,8 @@ mapped_list &lt;- mapIds(
 )</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 </div>
-<div id="explore-mapped-object" class="section level2">
-<h2><span class="header-section-number">4.4</span> Explore mapped object</h2>
+<div id="explore-gene-id-conversion" class="section level2">
+<h2><span class="header-section-number">4.4</span> Explore gene ID conversion</h2>
 <p>Now, let’s take a look at our mapped object to see how the mapping went.</p>
 <pre class="r"><code># Let&#39;s use the `head()` function to take a preview at our mapped list
 head(mapped_list)</code></pre>
@@ -1971,20 +1971,20 @@ summary(mapped_df$value)</code></pre>
 ##        1        1        1        1        1        1        1        1 
 ##    Gpa33  Zfp385a  (Other)     NA&#39;s 
 ##        1        1    16885      998</code></pre>
-<p>There are 998 NA’s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. If nothing is mapping to your gene identifier, it is possible that the function was executed incorrectly or a different gene identifier should be used. In some cases, this behavior is expected, but it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
+<p>There are 998 NA’s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
+<p>However, if you have almost all NA’s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
 <pre class="r"><code>multi_mapped &lt;- mapped_df %&gt;%
   # Let&#39;s group by the Ensembl ID&#39;s in the `L1` column
   dplyr::group_by(L1) %&gt;%
   # Create a new variable containing the number of symbols mapped to each ID
-  dplyr::mutate(gene_symbol_count = n()) %&gt;%
+  dplyr::mutate(gene_symbol_count = dplyr::n()) %&gt;%
   # Arrange by the genes with the highest number of symbols mapped
   dplyr::arrange(desc(gene_symbol_count)) %&gt;%
   # Filter to include only the rows with multi mappings
-  dplyr::filter(gene_symbol_count &gt; 1)</code></pre>
-<pre><code>## Warning: Calling `n()` without importing or prefixing it is deprecated, use `dplyr::n()`.
-## This warning is displayed once per session.</code></pre>
-<pre class="r"><code># Let&#39;s look at the first 6 rows of our `multi_mapped` object
+  dplyr::filter(gene_symbol_count &gt; 1)
+
+# Let&#39;s look at the first 6 rows of our `multi_mapped` object
 head(multi_mapped)</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ## # Groups:   L1 [2]
