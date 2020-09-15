@@ -49,7 +49,7 @@ The nature of RNA sequencing steps introduce several different kinds of biases:
 
 This figure from @Love2016 briefly summarizes these biases. 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8e31eed8a70f6653dd263fc689bc230050a2b22d/components/figures/Love2016-fig1.png" width=500>
 
 Most normalization methods, including [refine.bio's processing methods](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines), attempt to mitigate these biases, but these biases can never be fully negated.
 Some of these biases have been addressed to the extent that they can by our refine.bio processing methods so you don't have to worry too much about them.
@@ -104,14 +104,14 @@ For more about DESeq2 normalization, we highly recommend this [StatsQuest video]
 
 ## FAQs about RNA-seq data: 
 
-- Why doesn't the gene I care about show up in this dataset?
+#### Why doesn't the gene I care about show up in this dataset?
 
 There can be a lot of reasons a particular gene might not show up in your refine.bio RNA-seq dataset, here are just a few reasons:  
   - The gene was not actually expressed in the cells in the first place.  
   - The gene was not expressed at high enough levels to be detectable.
   - The gene does not have an Ensembl ID according to the [version of the annotation]() we used. 
 
-- Why do these examples use DESeq2 and not EdgeR or ____
+#### Why do these examples use DESeq2 and not EdgeR or ____
 
 In short, both EdgeR and DESeq2 are good options and we at the CCDL just went with one of our preferences! 
 [See this blog that summarizes these - by one of the creators of DESeq2](https://mikelove.wordpress.com/2016/09/28/deseq2-or-edger/), he agrees EdgeR is also great. 
@@ -121,7 +121,7 @@ But in the end, we are human and have our own preferences.
 If you have strong preferences for EdgeR, you can definitely use your refine.bio data with it, but we currently do not have examples of that. 
 In this case, we'd refer you to [EdgeR's users guide](http://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf) and wish you the best of luck on your data adventures! 
 
-- What if I care about isoforms?
+#### What if I care about isoforms?
 
 Unfortunately at this time, all refine.bio data is summarized to the gene-level, and there's no great way to examine isoforms with this data. 
 If your research needs to know transcript isoform information, you may need to look elsewhere. 
