@@ -41,9 +41,10 @@ As with all experimental methods, RNA-seq has strengths and limitations that you
 
 ### RNA-seq data **limitations**:  
 
-The nature of RNA sequencing steps introduce several different kinds of biases: 
+The nature of RNA sequencing steps introduce several different kinds of biases:
+
 - **GC bias**: higher GC content sequences are less likely to be observed.  
-- **3' bias**: for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.  
+- **3' bias (positional bias)**: for most sequencing methods, the 3 prime end of transcripts are more likely to be observed.  
 - **Complexity bias**: some sequences are easier to be bound and amplified than others.   
 - **Library size or sequencing depth**: the total number of reads is not always equivalent between samples.  
 - **Gene length**: longer genes are more likely to be observed.   
@@ -72,11 +73,10 @@ See here for more about the [quantile normalization process in refine.bio](http:
 - [Modeling of RNA-seq fragment sequence bias reduces systematic errors in transcript abundance estimation](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5143225/) [@Love2016].
 - [Biases in Illumina transcriptome sequencing caused by random hexamer priming](https://pdfs.semanticscholar.org/9d16/997f5de72d6c606fef3d673db70e5d1d8e1e.pdf?_ga=2.131436679.965169313.1600175795-124991789.1600175795) [@Hansen2010].
 - [Computation for RNA-seq and ChIP-seq studies](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4121056/) [@Pepke2009].
-- [StatsQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY) [@Starmer2017-rnaseq].
 
 ## About DESeq2
 
-DESeq2 is an R package that can normalize and handle RNA-seq data. @Love2014.
+DESeq2 is an R package that can normalize and handle RNA-seq data @Love2014.
 Our refine.bio data is summarized to the gene-level with tximport before you download it @Soneson2015. 
 In general, our examples suggest you download the data [non-quantile normalized](#about-quantile-normalization) so you can instead normalize the data with DESeq2, which requires you provide counts and *not* a normalized or corrected value like [TPMs](https://www.youtube.com/watch?v=TTUrtCY2k-w).
 
@@ -101,14 +101,15 @@ For more about DESeq2 normalization, we highly recommend this [StatsQuest video]
 - [StatsQuest: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU) [@Starmer2017-deseq2].
 - [DESeq2 vignette: Analyzing RNA-seq data with DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@Love2014].
 - [Beginner's guide to DESeq2](Bhttps://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf) [@Love2014-guide].
-- [Introduction to DGE - using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html)
+- [Introduction to DGE - using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) [@dge-workshop].
 
 #### Why doesn't the gene I care about show up in this dataset?
 
 There can be a lot of reasons a particular gene might not show up in your refine.bio RNA-seq dataset, here are just a few reasons:  
-  - The gene was not actually expressed in the cells in the first place.  
-  - The gene was not expressed at high enough levels to be detectable.
-  - The gene does not have an Ensembl ID according to the [version of the annotation]() we used. 
+
+  - The gene was not actually expressed in the cells in the first place.    
+  - The gene was not expressed at high enough levels to be detectable.  
+  - The gene does not have an Ensembl ID according to the [version of the annotation](TODO: Put link to refine.bio docs FAQ) we used.   
 
 #### Why do these examples use DESeq2 and not EdgeR or ____
 
