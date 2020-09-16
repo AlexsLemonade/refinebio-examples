@@ -49,7 +49,7 @@ The nature of RNA sequencing steps introduce several different kinds of biases:
 - **Library size or sequencing depth**: the total number of reads is not always equivalent between samples.  
 - **Gene length**: longer genes are more likely to be observed.   
 
-This figure from @Love2016 briefly summarizes these biases.   
+This figure from @Love2016 briefly summarizes some of these biases.   
   
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/8e31eed8a70f6653dd263fc689bc230050a2b22d/components/figures/Love2016-fig1.png" width=700>
 
