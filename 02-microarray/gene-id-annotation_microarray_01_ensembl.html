@@ -1625,7 +1625,7 @@ div.tocify {
           <ul class="dropdown-menu">
             <!-- Individual RNA-Seq pages go in this list -->
             <li><a href="../03-rnaseq/00-intro-to-rnaseq.html">Introduction</a></li>
-            <li><a href="../03-rnaseq/clustering-rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
+            <li><a href="../03-rnaseq/clustering_rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
             <li><a href="../03-rnaseq/differential-expression_rnaseq_01.html">Differential Expression</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
@@ -1765,8 +1765,8 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
-<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-convert_rnaseq_01_ensembl.Rmd">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
+<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -1777,7 +1777,7 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson 2019)</span>.</p>
+<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson 2019)</span>. <a href="#using-a-different-refinebio-dataset-with-this-analysis">Other species can be used</a>.</p>
 <pre class="r"><code># Install the mouse package
 if (!(&quot;org.Mm.eg.db&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
@@ -1895,7 +1895,7 @@ df &lt;- df %&gt;%
 </div>
 <div id="map-ensembl-ids-to-gene-symbols" class="section level2">
 <h2><span class="header-section-number">4.3</span> Map Ensembl IDs to gene symbols</h2>
-<p>This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect in most cases since genes and transcripts do not have a 1:1 relationship. The <code>mapIds()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. Use <code>?mapIds</code> to see more options or strategies.</p>
+<p>The <code>mapIds()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. Use <code>?mapIds</code> to see more options or strategies.</p>
 <p>In the next chunk, we will run the <code>mapIds()</code> function and supply the <code>multiVals</code> argument with the <code>&quot;list&quot;</code> option in order to get a large list with all the mapped values found for each gene identifier.</p>
 <pre class="r"><code># Map ensembl IDs to their associated gene symbols
 mapped_list &lt;- mapIds(
@@ -1932,19 +1932,20 @@ head(mapped_list)</code></pre>
 <p>It looks like we have gene symbols that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
 <pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
 mapped_df &lt;- mapped_list %&gt;%
-  reshape2::melt()</code></pre>
+  reshape2::melt(value.name = &quot;Symbol&quot;) %&gt;%
+  dplyr::rename(&quot;Ensembl&quot; = &quot;L1&quot;) # Here we are renaming the column holding the Ensembl IDs as good practice</code></pre>
 <p>Now let’s take a peek at our data frame.</p>
 <pre class="r"><code>head(mapped_df)</code></pre>
-<pre><code>##   value                 L1
-## 1 Gnai3 ENSMUSG00000000001
-## 2  Pbsn ENSMUSG00000000003
-## 3 Cdc45 ENSMUSG00000000028
-## 4   H19 ENSMUSG00000000031
-## 5 Scml2 ENSMUSG00000000037
-## 6  Apoh ENSMUSG00000000049</code></pre>
-<p>We can see that our data frame has a new column <code>value</code>. Let’s get a summary of the gene symbols returned in the <code>value</code> column of our mapped data frame.</p>
-<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of symbols in the `value` column
-summary(mapped_df$value)</code></pre>
+<pre><code>##   Symbol            Ensembl
+## 1  Gnai3 ENSMUSG00000000001
+## 2   Pbsn ENSMUSG00000000003
+## 3  Cdc45 ENSMUSG00000000028
+## 4    H19 ENSMUSG00000000031
+## 5  Scml2 ENSMUSG00000000037
+## 6   Apoh ENSMUSG00000000049</code></pre>
+<p>We can see that our data frame has a new column <code>Symbol</code>. Let’s get a summary of the gene symbols returned in the <code>Symbol</code> column of our mapped data frame.</p>
+<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
+summary(mapped_df$Symbol)</code></pre>
 <pre><code>##  Gm13023   Nudt10     Pms2    Gnai3     Pbsn    Cdc45      H19    Scml2 
 ##        2        2        2        1        1        1        1        1 
 ##     Apoh     Narf     Cav2     Klf6    Scmh1    Cox5a     Tbx2     Tbx4 
@@ -1975,8 +1976,8 @@ summary(mapped_df$value)</code></pre>
 <p>However, if you have almost all NA’s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
 <pre class="r"><code>multi_mapped &lt;- mapped_df %&gt;%
-  # Let&#39;s group by the Ensembl ID&#39;s in the `L1` column
-  dplyr::group_by(L1) %&gt;%
+  # Let&#39;s group by the Ensembl IDs in the `Ensembl` column
+  dplyr::group_by(Ensembl) %&gt;%
   # Create a new variable containing the number of symbols mapped to each ID
   dplyr::mutate(gene_symbol_count = dplyr::n()) %&gt;%
   # Arrange by the genes with the highest number of symbols mapped
@@ -1987,8 +1988,8 @@ summary(mapped_df$value)</code></pre>
 # Let&#39;s look at the first 6 rows of our `multi_mapped` object
 head(multi_mapped)</code></pre>
 <pre><code>## # A tibble: 6 x 3
-## # Groups:   L1 [2]
-##   value        L1                 gene_symbol_count
+## # Groups:   Ensembl [2]
+##   Symbol       Ensembl            gene_symbol_count
 ##   &lt;fct&gt;        &lt;chr&gt;                          &lt;int&gt;
 ## 1 Rpl23        ENSMUSG00000071415                 3
 ## 2 LOC100044627 ENSMUSG00000071415                 3
@@ -1996,40 +1997,22 @@ head(multi_mapped)</code></pre>
 ## 4 Ppp2r3d      ENSMUSG00000093803                 3
 ## 5 LOC108167320 ENSMUSG00000093803                 3
 ## 6 LOC108167694 ENSMUSG00000093803                 3</code></pre>
-<p>Looks like we have some cases where 3 gene symbols mapped to a single Ensembl ID. We have a total of 130 out of 17984 Ensembl IDs with multiple mappings to gene symbols. We are not too worried about the 130 IDs with multiple mappings, so we will filter them out for the purpose of having 1:1 mappings for our downstream analysis.</p>
+<p>Looks like we have some cases where 3 gene symbols mapped to a single Ensembl ID. We have a total of 130 out of 17984 Ensembl IDs with multiple mappings to gene symbols. If we are not too worried about the 130 IDs with multiple mappings, we can filter them out for the purpose of having 1:1 mappings for our downstream analysis.</p>
 </div>
 <div id="map-ensembl-ids-to-gene-symbols-filtering-out-multi-mappings" class="section level2">
 <h2><span class="header-section-number">4.5</span> Map Ensembl IDs to gene symbols – filtering out multi mappings</h2>
-<p>The next code chunk will rerun the <code>mapIds()</code> function, this time supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument. This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping. Use <code>?mapIds</code> to see more options or strategies.</p>
+<p>The next code we chunk we will rerun the <code>mapIds()</code> function, this time supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument. This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping. Use <code>?mapIds</code> to see more options or strategies.</p>
 <pre class="r"><code># Map ensembl IDs to their associated gene symbols
-filtered_mapped_df &lt;- mapIds(
-  org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
-  keys = df$Gene,
-  column = &quot;SYMBOL&quot;, # Replace with the type of gene identifiers you would like to map to
-  keytype = &quot;ENSEMBL&quot;, # Replace with the type of gene identifiers in your data
-  multiVals = &quot;filter&quot;
-) %&gt;%
-  # Turn our list into a data frame
-  reshape2::melt() %&gt;%
-  # Now let&#39;s give the `value` column a name that is more relevant to the values it holds
-  dplyr::rename(&quot;Symbol&quot; = &quot;value&quot;)</code></pre>
+filtered_mapped_df &lt;- data.frame(
+  &quot;Symbol&quot; = mapIds(
+    org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
+    keys = df$Gene,
+    column = &quot;SYMBOL&quot;, # Replace with the type of gene identifiers you would like to map to
+    keytype = &quot;ENSEMBL&quot;, # Replace with the type of gene identifiers in your data
+    multiVals = &quot;filter&quot;
+  )
+)</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<p>Let’s copy the same code we used above to see if we have any multi mappings in our new data frame.</p>
-<pre class="r"><code>filtered_mapped_df %&gt;%
-  # First, we need to grab the Ensembl IDs from the rownames
-  tibble::rownames_to_column(&quot;Gene&quot;) %&gt;%
-  # Let&#39;s group by the Ensembl ID&#39;s in the `L1` column
-  dplyr::group_by(Gene) %&gt;%
-  # Create a new variable containing the number of symbols mapped to each ID
-  dplyr::mutate(gene_symbol_count = dplyr::n()) %&gt;%
-  # Arrange by the genes with the highest number of symbols mapped
-  dplyr::arrange(desc(gene_symbol_count)) %&gt;%
-  # Filter to include only the rows with multi mappings
-  dplyr::filter(gene_symbol_count &gt; 1)</code></pre>
-<pre><code>## # A tibble: 0 x 3
-## # Groups:   Gene [0]
-## # … with 3 variables: Gene &lt;chr&gt;, Symbol &lt;fct&gt;, gene_symbol_count &lt;int&gt;</code></pre>
-<p>This new new <code>filtered_mapped_df</code> object is empty, as expected, since it has been filtered to include only 1:1 mappings.</p>
 <p>Now, let’s write our filtered and mapped results to file!</p>
 </div>
 <div id="write-mapped-results-to-file" class="section level2">
@@ -2045,8 +2028,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020)</span></li>
-<li><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/AnnotationFuncs/inst/doc/AnnotationFuncsUserguide.pdf">More on Annotation mapping functions</a> <span class="citation">(Edwards 2020)</span></li>
-<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-convert_rnaseq_01_ensembl.Rmd">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
+<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2096,9 +2078,6 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-gene-id-annotation-rna-seq">
 <p>CCDL, 2020 <em>Obtaining annotation for ensembl ids - rna-seq</em>.</p>
-</div>
-<div id="ref-Edwards2020">
-<p>Edwards S. M., 2020 <em>Annotation mapping functions</em>.</p>
 </div>
 <div id="ref-annotation-packages">
 <p>R Bioconductor Team, 2003 Packages found under annotationdata</p>
