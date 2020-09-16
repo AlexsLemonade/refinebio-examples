@@ -41,7 +41,8 @@ RUN install2.r --error --deps TRUE \
     RColorBrewer \
     rprojroot \
     viridis \
-    styler
+    styler \
+    WebGestaltR
 
 ##########################
 # Install bioconductor packages

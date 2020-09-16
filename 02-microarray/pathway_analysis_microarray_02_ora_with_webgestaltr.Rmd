@@ -1,85 +1,138 @@
 ---
-title: "Over-representation analysis with WebGestaltR"
-output: 
+title: "Over-representation analysis - Microarray"
+author: "CCDL for ALSF"
+date: "`r format(Sys.time(), '%B %Y')`"
+output:   
   html_notebook:
-    toc: TRUE
-    toc_float: TRUE
-author: J. Taroni for ALSF CCDL
-date: 2019
+    toc: true
+    toc_float: true
+    number_sections: true
 ---
 
-## Background
+# Purpose of this analysis
 
-Over-representation analysis (ORA) is a method of pathway or gene set analysis
-where one can ask if a set of genes (e.g., those differentially expressed
-using some cutoff) shares more or less genes with gene sets/pathways than
-we would expect at random.
-The other methodologies introduced throughout this module such as QuSAGE and
-GSEA can require more samples than a different expression analysis. 
-For instance, the sample label permutation step of GSEA is reported to
-perform poorly with 7 samples or less in each group 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
-It is not uncommon to have n ~ 3 for each group in a treatment-control 
-transcriptomic study, at which point identifying differentially expressed genes
-is possible.
-If you are interested in performing pathway analysis on a small study, ORA may
-be your best bet.
-There are some limitations to ORA methods to be aware such as ignoring 
-gene-gene correlation.
-See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) 
-to learn more about the different types of pathway analysis and their 
-limitations.
 
-## Data
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
-In this example, we will use a table of differential expression analysis results
-from another one of the example modules 
-([`validate-differential-expression`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/validate-differential-expression)).
-Genes were tested for differential expression between the SHH and Groups 3 and
-4 subgroups of medulloblastoma in refine.bio-processed data from
-[Robinson et al. _Nature_. 2012.](https://doi.org/10.1038/nature11213)
-([`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma)).
-We will read in these results from GitHub.
+# How to run this example
 
-## Set up
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
-#### Package installation and loading
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/ {{RELATIVE PATH TO THIS ANALYSIS FROM REFINEBIO-EXAMPLES}}).
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
-if (!("WebGestaltR" %in% installed.packages())) {
-  install.packages("WebGestaltR")
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
 }
-```
 
-```{r}
-`%>%` <- dplyr::`%>%`
-```
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
 
-```{r}
-library(WebGestaltR)
-```
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
 
-#### Directories
-
-```{r}
 # Define the file path to the results directory
-results_dir <- "results"  # Replace with path to desired output results directory
+results_dir <- "results" # Can replace with path to desired output results directory
 
-# Make a results directory if it isn't created yet
+# Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
 }
 ```
 
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+These results are from a two group comparison we completed in the [microarray differential expression analysis]() using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@limma].
+The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+## About the dataset we are using for this example
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+
+For this example analysis, we will use this [CREB overexpressed zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+
+<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis Rmd you downloaded  
+- A folder called "data" which contains:
+  - The `{{EXPERIMENT_ACCESSION_ID}}` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+    
+Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
 ## Over-Representation Analysis with `WebGestaltR`
 
-### Differentially expressed genes from Robinson et al.
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using `WebGestaltR` [@Wang2020].
+
+```{r}
+if (!("WebGestaltR" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("WebGestaltR")
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library("WebGestaltR")
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+### Import data 
 
 We will read in the differential expression results from GitHub.
-These results are from a two group comparison using 
-[`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html).
-The table contains Ensembl gene IDs, log fold-change, and adjusted p-values
-(FDR in this case).
+These results are from a two group comparison we completed in the [microarray differential expression analysis]() using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
 We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
 
@@ -171,12 +224,70 @@ translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are
 not independent, so it's important to keep in mind that many of these gene sets 
 could be telling us the same thing.
-For more information about WebGestalt output or advanced options, 
-please see the [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
-and the [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
 
-## Session info
+# Resources for further learning
+
+- [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
+- [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
 
 ```{r}
+# Print session info 
 sessionInfo()
 ```
+
+## Background
+
+Over-representation analysis (ORA) is a method of pathway or gene set analysis
+where one can ask if a set of genes (e.g., those differentially expressed
+using some cutoff) shares more or less genes with gene sets/pathways than
+we would expect at random.
+The other methodologies introduced throughout this module such as QuSAGE and
+GSEA can require more samples than a different expression analysis. 
+For instance, the sample label permutation step of GSEA is reported to
+perform poorly with 7 samples or less in each group 
+([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
+It is not uncommon to have n ~ 3 for each group in a treatment-control 
+transcriptomic study, at which point identifying differentially expressed genes
+is possible.
+If you are interested in performing pathway analysis on a small study, ORA may
+be your best bet.
+There are some limitations to ORA methods to be aware such as ignoring 
+gene-gene correlation.
+See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) 
+to learn more about the different types of pathway analysis and their 
+limitations.
+
+## Data
+
+In this example, we will use a table of differential expression analysis results
+from another one of the example modules 
+([`validate-differential-expression`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/validate-differential-expression)).
+Genes were tested for differential expression between the SHH and Groups 3 and
+4 subgroups of medulloblastoma in refine.bio-processed data from
+[Robinson et al. _Nature_. 2012.](https://doi.org/10.1038/nature11213)
+([`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma)).
+We will read in these results from GitHub.
+
+## Set up
+
+#### Package installation and loading
+
+```{r}
+if (!("WebGestaltR" %in% installed.packages())) {
+  install.packages("WebGestaltR")
+}
+```
+
+```{r}
+`%>%` <- dplyr::`%>%`
+```
+
+```{r}
+library(WebGestaltR)
+```
+
