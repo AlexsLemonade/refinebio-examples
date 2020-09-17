@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages.
+The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages [@Carlson2020-package].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -338,7 +338,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 
 # Resources for further learning
 
-- Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020]
+- Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
 - See our [RNA-seq gene ID conversion notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-rna-seq].
 
 # Session info
