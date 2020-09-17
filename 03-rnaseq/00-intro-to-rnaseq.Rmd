@@ -91,11 +91,13 @@ For DESeq2, before we can use a lot the special functions, we need to get our da
 
 From our refine.bio datasets, we will use a function `DESeqDataSetFromMatrix()` to create our [`DESeqDataSet` objects](https://www.rdocumentation.org/packages/DESeq2/versions/1.12.3/topics/DESeqDataSet-class). 
 
-### DESeq2 normalization methods
+### DESeq2 transformation methods
 
-Although DESeq2 has multiple normalization methods, we generally stick to `vst()` (Variance Stablizing Transformation) or `rlog()`. 
-[Both methods are very similar](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog), and correct for library size differences but `rlog()` sometimes takes a bit longer to run [@Love2019].
-If you end up using a larger dataset and `rlog()` normalization takes a bit too long, you can switch to using `vst()` with confidence since previous data shows they yield similar results given the dataset is large enough [@Love2019]. 
+Although DESeq2 has multiple transformation methods, we generally stick to `vst()` (Variance Stablizing Transformation) or `rlog()`. 
+[Both methods are very similar](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog).
+Both _normalize_ your data by correcting for library size differences but they also _transform_ your data by altering their distributions.
+Comparing `rlog()` and `vst()`, `rlog()` sometimes takes a bit longer to run [@Love2019].
+If you end up using a larger dataset and `rlog()` transformation takes a bit too long, you can switch to using `vst()` with confidence since previous data shows they yield similar results given the dataset is large enough [@Love2019]. 
 For more about DESeq2 normalization, we highly recommend this [StatsQuest video]((https://www.youtube.com/watch?v=UFB993xufUU)) which explains it quite nicely [@Starmer2017-deseq2].
 
 ### Further resources for DESeq2
