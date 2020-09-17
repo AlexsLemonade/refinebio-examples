@@ -1666,7 +1666,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using <code>AnnotationDbi</code> packages.</p>
+<p>The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using <code>AnnotationDbi</code> packages <span class="citation">(Carlson 2020a)</span>.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1747,6 +1747,7 @@ if (!dir.exists(results_dir)) {
 <p>In order for our example here to run without a hitch, we need these files to be in these locations so we’ve constructed a test to check before we get started with the analysis. Run this chunk to double check that your files are in the right place.</p>
 <pre class="r"><code># Define the file path to the data directory
 data_dir &lt;- file.path(&quot;data&quot;, &quot;SRP056136&quot;)
+
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
 file.exists(file.path(data_dir, &quot;SRP056136.tsv&quot;))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
@@ -1760,7 +1761,7 @@ file.exists(file.path(data_dir, &quot;metadata_SRP056136.tsv&quot;))</code></pre
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
-<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Uniprot IDs this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
+<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
 <p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>, a Mouse (<i>Mus musculus</i>) dataset is used, meaning <code>org.Mm.eg.db</code> or <code>Mm</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(<span class="citeproc-not-found" data-reference-id="annotation-packages"><strong>???</strong></span>)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
@@ -1768,7 +1769,7 @@ file.exists(file.path(data_dir, &quot;metadata_SRP056136.tsv&quot;))</code></pre
 </div>
 <div id="obtaining-annotation-for-ensembl-ids---rna-seq" class="section level1">
 <h1><span class="header-section-number">4</span> Obtaining Annotation for Ensembl IDs - RNA-seq</h1>
-<p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Let’s get ready to use the Ensembl IDs from our mouse dataset to obtain the associated Uniprot IDs.</p>
+<p>Ensembl IDs can be used to obtain various different annotations at the gene/transcript level. Let’s get ready to use the Ensembl IDs from our mouse dataset to obtain the associated Entrez IDs.</p>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
@@ -1866,15 +1867,15 @@ all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 df &lt;- df %&gt;%
   tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
 </div>
-<div id="map-ensembl-ids-to-uniprot-ids" class="section level2">
-<h2><span class="header-section-number">4.3</span> Map Ensembl IDs to Uniprot IDs</h2>
+<div id="map-ensembl-ids-to-entrez-ids" class="section level2">
+<h2><span class="header-section-number">4.3</span> Map Ensembl IDs to Entrez IDs</h2>
 <p>The <code>mapIds()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. Use <code>?mapIds</code> to see more options or strategies.</p>
 <p>In the next chunk, we will run the <code>mapIds()</code> function and supply the <code>multiVals</code> argument with the <code>&quot;list&quot;</code> option in order to get a large list with all the mapped values found for each gene identifier.</p>
-<pre class="r"><code># Map Ensembl IDs to their associated Uniprot IDs
+<pre class="r"><code># Map Ensembl IDs to their associated Entrez IDs
 mapped_list &lt;- mapIds(
   org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
   keys = df$Gene,
-  column = &quot;UNIPROT&quot;, # Replace with the type of gene identifiers you would like to map to
+  column = &quot;ENTREZID&quot;, # Replace with the type of gene identifiers you would like to map to
   keytype = &quot;ENSEMBL&quot;, # Replace with the type of gene identifiers in your data
   multiVals = &quot;list&quot;
 )</code></pre>
@@ -1886,78 +1887,74 @@ mapped_list &lt;- mapIds(
 <pre class="r"><code># Let&#39;s use the `head()` function to take a preview at our mapped list
 head(mapped_list)</code></pre>
 <pre><code>## $ENSDARG00000000001
-## [1] &quot;Q90X48&quot;
+## [1] &quot;368418&quot;
 ## 
 ## $ENSDARG00000000002
-## [1] &quot;B7SDQ7&quot; &quot;Q90X49&quot;
+## [1] &quot;368419&quot;
 ## 
 ## $ENSDARG00000000018
-## [1] &quot;Q90X44&quot;
+## [1] &quot;64604&quot;
 ## 
 ## $ENSDARG00000000019
-## [1] &quot;Q7ZUF3&quot;
+## [1] &quot;368425&quot;
 ## 
 ## $ENSDARG00000000068
-## [1] &quot;Q6P2U7&quot; &quot;Q7ZVX1&quot;
+## [1] &quot;327272&quot;
 ## 
 ## $ENSDARG00000000069
-## [1] &quot;Q9I9N1&quot;</code></pre>
-<p>It looks like we have Uniprot IDs that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
+## [1] &quot;58093&quot;</code></pre>
+<p>It looks like we have Entrez IDs that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
 <pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
 mapped_df &lt;- mapped_list %&gt;%
-  reshape2::melt(value.name = &quot;Uniprot&quot;) %&gt;%
+  reshape2::melt(value.name = &quot;Entrez&quot;) %&gt;%
   dplyr::rename(&quot;Ensembl&quot; = &quot;L1&quot;) # Here we are renaming the column holding the Ensembl IDs as good practice</code></pre>
 <p>Now let’s take a peek at our data frame.</p>
 <pre class="r"><code>head(mapped_df)</code></pre>
-<pre><code>##   Uniprot            Ensembl
-## 1  Q90X48 ENSDARG00000000001
-## 2  B7SDQ7 ENSDARG00000000002
-## 3  Q90X49 ENSDARG00000000002
-## 4  Q90X44 ENSDARG00000000018
-## 5  Q7ZUF3 ENSDARG00000000019
-## 6  Q6P2U7 ENSDARG00000000068</code></pre>
-<p>We can see that our data frame has a new column <code>Uniprot</code>. Let’s get a summary of the values returned in the <code>Uniprot</code> column of our mapped data frame.</p>
-<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of values in the `Uniprot` column
-summary(mapped_df$Uniprot)</code></pre>
-<pre><code>##     A3KPR4     A4VAK6     Q6P2V0     Q05AK8     A8KBJ5     Q561S9     B2GQW3 
-##         29         28         14         11          7          7          6 
-##     Q6PI52     Q4FZZ7     A7MCA7     Q5BJA5     Q4QRF4     B2GSF5     Q6PI20 
-##          6          6          6          6          6          5          5 
-##     F1QTL1     E7EXD7     Q1LVW4 A0A140LG17     Q6NTI0     R4GE15     O93548 
-##          5          5          4          3          3          3          3 
-##     Q7ZT21 A0A0R4IAU7     B0V1H3     A8DZ97     D3X469     Q5BL99     Q1LVY8 
-##          3          3          2          2          2          2          2 
-##     E7FC80     X1WG38     F1QSM6     F1Q5H6     Q6T938     Q801U3     Q08BX3 
-##          2          2          2          2          2          2          2 
-##     Q6T937     B0UXR9     B0UXS6     Q6PC28     Q5BKV9     Q6DRM3     F1QAT3 
-##          2          2          2          2          2          2          2 
-##     Q5BJ19     B0S664 A0A0G2KTT4     B8QSI4     Q6IQR3     Q6P5J7 A0A0R4ICV1 
-##          2          2          2          2          2          2          2 
-##     F1QYR6     E9QE15     B2GSA5     Q561X9     Q6P2U5     Q6NZZ2     B1WB55 
-##          2          2          2          2          2          2          2 
-##     Q7T3J0     F1Q880     Q7T3D2     Q567G5     A9UL52     A8WHX5     E7FF16 
-##          2          2          2          2          2          2          2 
-##     B8JK16     B8JK17     A5WUN5     D2K289     Q1LWV7     Q5RG00     A6H8Q4 
-##          2          2          2          2          2          2          2 
-## A0A0R4IZN4     Q7SXU6     Q5RKP8     F1RDW8     Q6PWU7     A9JT61     Q1LXF5 
-##          2          2          2          2          2          2          2 
-## A0A286YB42     B3DLJ6     B8JHX2     F1R8F2     F6PCI7     B8JI22     A9JTF6 
-##          2          2          2          2          2          2          2 
-##     B3DHT3 A0A0R4IX90     A9JRB2 A0A0R4ICR0 A0A0R4IP02     A5D8S9     F1REQ9 
-##          2          2          2          2          2          2          2 
-## A0A0R4IK86     F1Q4X7     Q9I9N0     Q08BJ9     A7MC04     F1REK5     Q15I85 
-##          2          2          2          2          2          2          2 
-##    (Other)       NA&#39;s 
-##      21994      13121</code></pre>
-<p>There are 13121 NA’s in our data frame, which means that 13121 out of the 31882 Ensembl IDs did not map to Uniprot IDs. This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
+<pre><code>##   Entrez            Ensembl
+## 1 368418 ENSDARG00000000001
+## 2 368419 ENSDARG00000000002
+## 3  64604 ENSDARG00000000018
+## 4 368425 ENSDARG00000000019
+## 5 327272 ENSDARG00000000068
+## 6  58093 ENSDARG00000000069</code></pre>
+<p>We can see that our data frame has a new column <code>Entrez</code>. Let’s get a summary of the values returned in the <code>Entrez</code> column of our mapped data frame.</p>
+<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column
+summary(mapped_df$Entrez)</code></pre>
+<pre><code>## 100126027 100150038 100331412    794549    554097    794406 100536331 100329290 
+##        28        28        28        28        11         7         6         5 
+## 100334559 100148591    393541 100333446    562179    795394 100170660 100422734 
+##         5         5         3         3         3         3         2         2 
+##    571364    393135 100124612    405787    368925    767728 100126123    336702 
+##         2         2         2         2         2         2         2         2 
+##    541321    566190 110438456 100006972     84040    796632 100005482    550507 
+##         2         2         2         2         2         2         2         2 
+## 100151764    393320    550342    563398 100150195    449796    565190    561678 
+##         2         2         2         2         2         2         2         2 
+##    569452    323832     57924    553461    415097 100034531 100170822 100002647 
+##         2         2         2         2         2         2         2         2 
+## 110437953 100334824    563587    793726 100007836    323951     57929    768165 
+##         2         2         2         2         2         2         2         2 
+## 101887190    573653    572729 100004335 110438889    566030 100191016    767689 
+##         2         2         2         2         2         2         2         2 
+## 100535828 108182725 100536566 100334190 103909414    798758 100330579    569865 
+##         2         2         2         2         2         2         2         2 
+## 100037365 100002312 100330526 100007523    777726    445235 100002917 108191539 
+##         2         2         2         2         2         2         2         2 
+##    794762 100150193    553501 108182861 110439798    393518 100537891    327020 
+##         2         2         2         2         2         2         2         2 
+## 100144555    798974    564790 103908654 108190101 100002012 103908643    559771 
+##         2         2         2         2         2         2         2         2 
+##     30459    798067   (Other)      NA&#39;s 
+##         2         2     22790      9088</code></pre>
+<p>There are 9088 NA’s in our data frame, which means that 9088 out of the 31882 Ensembl IDs did not map to Entrez IDs. This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <pre class="r"><code>multi_mapped_df &lt;- mapped_df %&gt;%
   # Let&#39;s group by the Ensembl ID&#39;s in the `Ensembl` column
   dplyr::group_by(Ensembl) %&gt;%
-  # Create a new variable containing the number of uniprot IDs mapped to each ID
-  dplyr::mutate(uniprot_count = dplyr::n()) %&gt;%
-  # Arrange by the genes with the highest number of uniprot IDs mapped
-  dplyr::arrange(desc(uniprot_count)) %&gt;%
+  # Create a new variable containing the number of Entrez IDs mapped to each ID
+  dplyr::mutate(entrez_id_count = dplyr::n()) %&gt;%
+  # Arrange by the genes with the highest number of Entrez IDs mapped
+  dplyr::arrange(desc(entrez_id_count)) %&gt;%
   # Join the remaining data from `df` using the Ensembl IDs
   dplyr::inner_join(df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))
 
@@ -1965,30 +1962,30 @@ summary(mapped_df$Uniprot)</code></pre>
 head(multi_mapped_df)</code></pre>
 <pre><code>## # A tibble: 6 x 7
 ## # Groups:   Ensembl [1]
-##   Uniprot Ensembl      uniprot_count SRR1914395 SRR1914393 SRR1914394 SRR1914392
+##   Entrez  Ensembl    entrez_id_count SRR1914395 SRR1914393 SRR1914394 SRR1914392
 ##   &lt;fct&gt;   &lt;chr&gt;                &lt;int&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 I3ITP3  ENSDARG0000…             8       5.13       5.59       20.4       7.48
-## 2 F8W3M5  ENSDARG0000…             8       5.13       5.59       20.4       7.48
-## 3 F8W3W8  ENSDARG0000…             8       5.13       5.59       20.4       7.48
-## 4 F8W3V8  ENSDARG0000…             8       5.13       5.59       20.4       7.48
-## 5 E7F0U0  ENSDARG0000…             8       5.13       5.59       20.4       7.48
-## 6 F8W2M5  ENSDARG0000…             8       5.13       5.59       20.4       7.48</code></pre>
-<p>Looks like we have some cases where 8 Uniprot IDs mapped to a single Ensembl ID. We have a total of 6732 out of 31882 Ensembl IDs with multiple mappings to Uniprot IDs. We may want to keep this information for our downstream analyses.</p>
-<p>Let’s write our mapped results and data to file!</p>
+## 1 406731  ENSDARG00…               7       334.       135.       694.       196.
+## 2 641488  ENSDARG00…               7       334.       135.       694.       196.
+## 3 100379… ENSDARG00…               7       334.       135.       694.       196.
+## 4 100384… ENSDARG00…               7       334.       135.       694.       196.
+## 5 100384… ENSDARG00…               7       334.       135.       694.       196.
+## 6 100384… ENSDARG00…               7       334.       135.       694.       196.</code></pre>
+<p>Looks like we have some cases where 7 Entrez IDs mapped to a single Ensembl ID. We have a total of 542 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs. With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument og <code>mapIds()</code>, like we did in the <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>.</p>
+<p>However, we may also want to keep the multi-mapped information for our downstream analyses so let’s go ahead and write our mapped results and data to file!</p>
 </div>
 <div id="write-mapped-results-to-file" class="section level2">
 <h2><span class="header-section-number">4.5</span> Write mapped results to file</h2>
 <pre class="r"><code># Write mapped and annotated data frame to output file
 readr::write_tsv(multi_mapped_df, file.path(
   results_dir,
-  &quot;SRP056136_Uniprot_IDs.tsv&quot; # Replace with a relevant output file name
+  &quot;SRP056136_Entrez_IDs.tsv&quot; # Replace with a relevant output file name
 ))</code></pre>
 </div>
 </div>
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020)</span></li>
+<li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020b)</span></li>
 <li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
 </ul>
 </div>
@@ -2034,8 +2031,11 @@ sessionInfo()</code></pre>
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish</p>
 </div>
-<div id="ref-Carlson2020">
-<p>Carlson M., 2020 AnnotationDbi: Introduction to bioconductor annotation packages</p>
+<div id="ref-Carlson2020-package">
+<p>Carlson M., 2020a AnnotationDbi</p>
+</div>
+<div id="ref-Carlson2020-vignette">
+<p>Carlson M., 2020b AnnotationDbi: Introduction to bioconductor annotation packages</p>
 </div>
 <div id="ref-gene-id-annotation-microarray">
 <p>CCDL, 2020 <em>Obtaining annotation for ensembl ids - microarray</em>.</p>
