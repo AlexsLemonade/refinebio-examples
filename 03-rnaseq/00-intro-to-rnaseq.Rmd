@@ -12,16 +12,16 @@ output:
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Introduction to RNA-seq technology](#introduction-to-rna-seq-technology)
-  - [RNA-seq data **strengths**:](#rna-seq-data-strengths)
-  - [RNA-seq data **limitations**:](#rna-seq-data-limitations)
+  - [RNA-seq data **strengths**](#rna-seq-data-strengths)
+  - [RNA-seq data **limitations/biases**](#rna-seq-data-limitationsbiases)
   - [About quantile normalization](#about-quantile-normalization)
-  - [More resources on RNA-seq technology:](#more-resources-on-rna-seq-technology)
+  - [More resources on RNA-seq technology](#more-resources-on-rna-seq-technology)
 - [About DESeq2](#about-deseq2)
   - [DESeq2 objects](#deseq2-objects)
-  - [DESeq2 normalization methods](#deseq2-normalization-methods)
+  - [DESeq2 transformation methods](#deseq2-transformation-methods)
   - [Further resources for DESeq2](#further-resources-for-deseq2)
-    - [Why doesn't the gene I care about show up in this dataset?](#why-doesnt-the-gene-i-care-about-show-up-in-this-dataset)
-    - [Why do these examples use DESeq2 and not edgeR or ____](#why-do-these-examples-use-deseq2-and-not-edger-or-____)
+    - [Why isn't the gene I care about in a refine.bio dataset?](#why-isnt-the-gene-i-care-about-in-a-refinebio-dataset)
+    - [What about edgeR?](#what-about-edger)
     - [What if I care about isoforms?](#what-if-i-care-about-isoforms)
 - [References](#references)
 

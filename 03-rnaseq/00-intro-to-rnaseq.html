@@ -1673,19 +1673,19 @@ div.tocify {
 <ul>
 <li><a href="#introduction-to-rna-seq-technology">Introduction to RNA-seq technology</a>
 <ul>
-<li><a href="#rna-seq-data-strengths">RNA-seq data <strong>strengths</strong>:</a></li>
-<li><a href="#rna-seq-data-limitations">RNA-seq data <strong>limitations</strong>:</a></li>
+<li><a href="#rna-seq-data-strengths">RNA-seq data <strong>strengths</strong></a></li>
+<li><a href="#rna-seq-data-limitationsbiases">RNA-seq data <strong>limitations/biases</strong></a></li>
 <li><a href="#about-quantile-normalization">About quantile normalization</a></li>
-<li><a href="#more-resources-on-rna-seq-technology">More resources on RNA-seq technology:</a></li>
+<li><a href="#more-resources-on-rna-seq-technology">More resources on RNA-seq technology</a></li>
 </ul></li>
 <li><a href="#about-deseq2">About DESeq2</a>
 <ul>
 <li><a href="#deseq2-objects">DESeq2 objects</a></li>
-<li><a href="#deseq2-normalization-methods">DESeq2 normalization methods</a></li>
+<li><a href="#deseq2-transformation-methods">DESeq2 transformation methods</a></li>
 <li><a href="#further-resources-for-deseq2">Further resources for DESeq2</a>
 <ul>
-<li><a href="#why-doesnt-the-gene-i-care-about-show-up-in-this-dataset">Why doesn’t the gene I care about show up in this dataset?</a></li>
-<li><a href="#why-do-these-examples-use-deseq2-and-not-edger-or-____">Why do these examples use DESeq2 and not edgeR or ____</a></li>
+<li><a href="#why-isnt-the-gene-i-care-about-in-a-refinebio-dataset">Why isn’t the gene I care about in a refine.bio dataset?</a></li>
+<li><a href="#what-about-edger">What about edgeR?</a></li>
 <li><a href="#what-if-i-care-about-isoforms">What if I care about isoforms?</a></li>
 </ul></li>
 </ul></li>
@@ -1748,9 +1748,9 @@ div.tocify {
 <p>Many R Bioconductor packages have specialized object types they want your data to be formatted as. For DESeq2, before we can use a lot the special functions, we need to get our data into a <a href="https://www.rdocumentation.org/packages/DESeq2/versions/1.12.3/topics/DESeqDataSet-class"><code>DESeqDataSet</code> object</a>. <code>DESeqDataSet</code> objects not only store your data, but additional transformations of your data, model information, etc.</p>
 <p>From our refine.bio datasets, we will use a function <code>DESeqDataSetFromMatrix()</code> to create our <a href="https://www.rdocumentation.org/packages/DESeq2/versions/1.12.3/topics/DESeqDataSet-class"><code>DESeqDataSet</code> objects</a>.</p>
 </div>
-<div id="deseq2-normalization-methods" class="section level3">
-<h3><span class="header-section-number">0.2.2</span> DESeq2 normalization methods</h3>
-<p>Although DESeq2 has multiple normalization methods, we generally stick to <code>vst()</code> (Variance Stablizing Transformation) or <code>rlog()</code>. <a href="http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog">Both methods are very similar</a>, and correct for library size differences but <code>rlog()</code> sometimes takes a bit longer to run <span class="citation">(Michael I. Love and Huber 2019)</span>. If you end up using a larger dataset and <code>rlog()</code> normalization takes a bit too long, you can switch to using <code>vst()</code> with confidence since previous data shows they yield similar results given the dataset is large enough <span class="citation">(Michael I. Love and Huber 2019)</span>. For more about DESeq2 normalization, we highly recommend this <a href="(https://www.youtube.com/watch?v=UFB993xufUU)">StatsQuest video</a> which explains it quite nicely <span class="citation">(Josh Starmer 2017b)</span>.</p>
+<div id="deseq2-transformation-methods" class="section level3">
+<h3><span class="header-section-number">0.2.2</span> DESeq2 transformation methods</h3>
+<p>Although DESeq2 has multiple transformation methods, we generally stick to <code>vst()</code> (Variance Stablizing Transformation) or <code>rlog()</code>. <a href="http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog">Both methods are very similar</a>. Both <em>normalize</em> your data by correcting for library size differences but they also <em>transform</em> your data by altering their distributions. Comparing <code>rlog()</code> and <code>vst()</code>, <code>rlog()</code> sometimes takes a bit longer to run <span class="citation">(Michael I. Love and Huber 2019)</span>. If you end up using a larger dataset and <code>rlog()</code> transformation takes a bit too long, you can switch to using <code>vst()</code> with confidence since previous data shows they yield similar results given the dataset is large enough <span class="citation">(Michael I. Love and Huber 2019)</span>. For more about DESeq2 normalization, we highly recommend this <a href="(https://www.youtube.com/watch?v=UFB993xufUU)">StatsQuest video</a> which explains it quite nicely <span class="citation">(Josh Starmer 2017b)</span>.</p>
 </div>
 <div id="further-resources-for-deseq2" class="section level3">
 <h3><span class="header-section-number">0.2.3</span> Further resources for DESeq2</h3>
