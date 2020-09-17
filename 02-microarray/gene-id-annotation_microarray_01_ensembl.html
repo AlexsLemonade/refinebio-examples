@@ -2001,7 +2001,7 @@ head(multi_mapped)</code></pre>
 </div>
 <div id="map-ensembl-ids-to-gene-symbols-filtering-out-multi-mappings" class="section level2">
 <h2><span class="header-section-number">4.5</span> Map Ensembl IDs to gene symbols – filtering out multi mappings</h2>
-<p>The next code we chunk we will rerun the <code>mapIds()</code> function, this time supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument. This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping. Use <code>?mapIds</code> to see more options or strategies.</p>
+<p>The next code chunk we will rerun the <code>mapIds()</code> function, this time supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument. This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping. Use <code>?mapIds</code> to see more options or strategies.</p>
 <pre class="r"><code># Map ensembl IDs to their associated gene symbols
 filtered_mapped_df &lt;- data.frame(
   &quot;Symbol&quot; = mapIds(
@@ -2011,7 +2011,11 @@ filtered_mapped_df &lt;- data.frame(
     keytype = &quot;ENSEMBL&quot;, # Replace with the type of gene identifiers in your data
     multiVals = &quot;filter&quot;
   )
-)</code></pre>
+) %&gt;%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column(&quot;Ensembl&quot;) %&gt;%
+  # Join the remaining data from `df` using the Ensembl IDs
+  dplyr::inner_join(df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>Now, let’s write our filtered and mapped results to file!</p>
 </div>

@@ -302,7 +302,7 @@ If we are not too worried about the 130 IDs with multiple mappings, we can filte
 
 ## Map Ensembl IDs to gene symbols -- filtering out multi mappings
 
-The next code we chunk we will rerun the `mapIds()` function, this time supplying the `"filter"` option to the `multiVals` argument.
+The next code chunk we will rerun the `mapIds()` function, this time supplying the `"filter"` option to the `multiVals` argument.
 This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping.
 Use `?mapIds` to see more options or strategies.
 
@@ -316,7 +316,11 @@ filtered_mapped_df <- data.frame(
     keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
     multiVals = "filter"
   )
-)
+) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Join the remaining data from `df` using the Ensembl IDs
+  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
 ```
 
 Now, let's write our filtered and mapped results to file!
