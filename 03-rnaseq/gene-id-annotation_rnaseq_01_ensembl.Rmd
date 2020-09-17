@@ -134,10 +134,10 @@ We suggest saving plots and results to `plots/` and `results/` directories, resp
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 refine.bio data comes with gene level data with Ensembl IDs. 
-Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain gene symbols this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.
+Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Uniprot IDs this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.
 
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
-In the case of our [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.Rmd), a Mouse (<i>Mus musculus</i>) dataset is used, meaning `org.Mm.eg.db` or `Mm` would also need to be used there.
+In the case of our [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html), a Mouse (<i>Mus musculus</i>) dataset is used, meaning `org.Mm.eg.db` or `Mm` would also need to be used there.
 A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
 
 ***
@@ -147,13 +147,13 @@ A full list of the annotation R packages from Bioconductor is at this [link](htt
 # Obtaining Annotation for Ensembl IDs - RNA-seq
 
 Ensembl IDs can be used to obtain various different annotations at the gene/transcript level.
-Let's get ready to use the Ensembl IDs from our mouse dataset to obtain the associated gene symbols.
+Let's get ready to use the Ensembl IDs from our mouse dataset to obtain the associated Uniprot IDs.
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the `org.Dr.eg.db` R package [@Carlson2019].
+In this analysis, we will be using the `org.Dr.eg.db` R package [@Carlson2019-zebrafish].
 
 ```{r}
 # Install the Zebrafish package
@@ -208,9 +208,8 @@ df <- df %>%
 ```
 
 
-## Map Ensembl IDs to gene symbols
+## Map Ensembl IDs to Uniprot IDs
 
-This code chunk will return a message that indicates that there are many mappings between our keys and columns but this is okay and is what we expect in most cases since genes and transcripts do not have a 1:1 relationship.
 The `mapIds()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
 The default behavior is to return just the first mapped value.
 It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. 
@@ -245,7 +244,8 @@ We are going to turn our list object into a data frame object in the next chunk.
 ```{r}
 # Let's make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
 mapped_df <- mapped_list %>%
-  reshape2::melt()
+  reshape2::melt(value.name = "Uniprot") %>%
+  dplyr::rename("Ensembl" = "L1") # Here we are renaming the column holding the Ensembl IDs as good practice
 ```
 
 Now let's take a peek at our data frame.
@@ -254,44 +254,46 @@ Now let's take a peek at our data frame.
 head(mapped_df)
 ```
 
-We can see that our data frame has a new column `value`.
-Let's get a summary of the gene symbols returned in the `value` column of our mapped data frame.
+We can see that our data frame has a new column `Uniprot`.
+Let's get a summary of the values returned in the `Uniprot` column of our mapped data frame.
 
 ```{r}
-# We can use the `summary()` function to get a better idea of the distribution of symbols in the `value` column
-summary(mapped_df$value)
+# We can use the `summary()` function to get a better idea of the distribution of values in the `Uniprot` column
+summary(mapped_df$Uniprot)
 ```
 
-There are 13121 NA's in our data frame, which means that 13121 out of the 31882 Ensembl IDs did not map to gene symbols.
-This is not the best rate, which means that it may be wise to try a different gene identifier type that may have a better mapping rate.
+There are 13121 NA's in our data frame, which means that 13121 out of the 31882 Ensembl IDs did not map to Uniprot IDs.
+This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
-Now let's check to see if we have any genes that were mapped to multiple symbols.
+Now let's check to see how many genes we have that were mapped to multiple IDs.
 
 ```{r}
-multi_mapped <- mapped_df %>%
-  # Let's group by the Ensembl ID's in the `L1` column
-  dplyr::group_by(L1) %>%
+multi_mapped_df <- mapped_df %>%
+  # Let's group by the Ensembl ID's in the `Ensembl` column
+  dplyr::group_by(Ensembl) %>%
   # Create a new variable containing the number of uniprot IDs mapped to each ID
   dplyr::mutate(uniprot_count = dplyr::n()) %>%
   # Arrange by the genes with the highest number of uniprot IDs mapped
   dplyr::arrange(desc(uniprot_count)) %>%
-  # Filter to include only the rows with multi mappings
-  dplyr::filter(uniprot_count > 1)
+  # Join the remaining data from `df` using the Ensembl IDs
+  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+
 # Let's look at the first 6 rows of our `multi_mapped` object
-head(multi_mapped)
+head(multi_mapped_df)
 ```
 
 Looks like we have some cases where 8 Uniprot IDs mapped to a single Ensembl ID.
 We have a total of 6732 out of 31882 Ensembl IDs with multiple mappings to Uniprot IDs.
+We may want to keep this information for our downstream analyses.
 
-Now, let's write our mapped results to file!
+Let's write our mapped results and data to file!
 
 ## Write mapped results to file
 
-```{r Write to file}
+```{r}
 # Write mapped and annotated data frame to output file
-readr::write_tsv(mapped_df, file.path(
+readr::write_tsv(multi_mapped_df, file.path(
   results_dir,
   "SRP056136_Uniprot_IDs.tsv" # Replace with a relevant output file name
 ))
@@ -301,8 +303,7 @@ readr::write_tsv(mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020]
-- [More on Annotation mapping functions](https://www.bioconductor.org/packages/release/bioc/vignettes/AnnotationFuncs/inst/doc/AnnotationFuncsUserguide.pdf) [@Edwards2020]
-- See our [microarray gene ID conversion notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.Rmd) as another applicable example, since the steps for this workflow do not change with technology [].
+- See our [microarray gene ID conversion notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-microarray].
 
 # Session info
 
