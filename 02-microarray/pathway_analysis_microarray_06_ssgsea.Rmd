@@ -321,24 +321,24 @@ comp_coag_df <- metadata_df %>%
 
 ```{r fig.height=11, fig.width=8.5}
 comp_coag_df %>% 
-  ggplot2::ggplot(ggplot2::aes(x = condition, 
+  ggplot(aes(x = condition, 
                                y = ssgsea_score)) +
-  ggplot2::geom_boxplot() +
-  ggplot2::facet_grid(strain ~ refinebio_specimen_part) +
-  ggplot2::labs(y = "KEGG Complement and Coagulation Cascades") +
-  ggplot2::theme_bw() +
+  geom_boxplot() +
+  facet_grid(strain ~ refinebio_specimen_part) +
+  labs(y = "KEGG Complement and Coagulation Cascades") +
+  theme_bw() +
   # x-axis text at a 45 degree angle to increase readability
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
-                 text = ggplot2::element_text(size = 15))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+                 text = element_text(size = 15))
 ```
 
 ```{r}
 # saving to file
-ggplot2::ggsave(file.path(plots_dir,
+ggsave(file.path(plots_dir,
                           "GSE75574_ssgsea_comp_coag_facet.pdf" # Replace with relevant output plot name
                           ),
-                plot = ggplot2::last_plot() + 
-                  ggplot2::theme( text = ggplot2::element_text(size = 10)))
+                plot = last_plot() + 
+                  theme( text = element_text(size = 10)))
 ```
 
 Looks like there may be some differences between tissues in this pathway, with
@@ -400,13 +400,13 @@ random_long_df <- as.data.frame(random_ssgsea_results) %>%
 
 # violin plot comparing no. genes / gene set size
 random_long_df %>%
-  ggplot2::ggplot(ggplot2::aes(x = gene_set_size, y = ssgsea_score)) +
-  ggplot2::geom_violin() +
-  ggplot2::coord_flip() +
-  ggplot2::labs(title = "Random gene set scores",
+  ggplot(aes(x = gene_set_size, y = ssgsea_score)) +
+  geom_violin() +
+  coord_flip() +
+  labs(title = "Random gene set scores",
                 x = "gene set size",
                 y = "ssGSEA score") +
-  ggplot2::theme_bw()
+  theme_bw()
 ```
 
 Note how a smaller gene set results in a larger range of scores.
