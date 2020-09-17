@@ -65,7 +65,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -80,8 +80,8 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpression zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-@Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+For this example analysis, we will use this [medulloblastoma samples](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma).
+@Robinson2012 measured microarray gene expression of 71 medulloblastoma tumor samples. 
 In this analysis, we will test differential expression between the control and CREB-overexpressing groups.
 
 ## Place the dataset in your new `data/` folder
@@ -97,7 +97,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `GSE71270` folder into your newly created `data/` folder.
+Copy and paste the `GSE37418` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -105,7 +105,7 @@ Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
-  - The `GSE71270` folder which contains:
+  - The `GSE37418` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
@@ -120,13 +120,13 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE71270")
+data_dir <- file.path("data", "GSE37418")
 
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "GSE71270.tsv"))
+file.exists(file.path(data_dir, "GSE37418.tsv"))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "metadata_GSE71270.tsv"))
+file.exists(file.path(data_dir, "metadata_GSE37418.tsv"))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -189,13 +189,13 @@ This chunk of code will read the both TSV files and add them as data frames to y
 # Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your metadata file
-  "metadata_GSE71270.tsv" # Replace with the name of your metadata file
+  "metadata_GSE37418.tsv" # Replace with the name of your metadata file
 ))
 
 # Read in data TSV file
 df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
-  "GSE71270.tsv" # Replace with the name of your data file
+  "GSE37418.tsv" # Replace with the name of your data file
 )) %>%
   # Tuck away the Gene id column as rownames
   tibble::column_to_rownames("Gene")
@@ -214,24 +214,42 @@ all.equal(colnames(df), metadata$geo_accession)
 
 ## Set up design matrix
 
-`limma` needs a numeric design matrix to signify which are CREB and control samples. 
+`limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma. 
 Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
 Note that the metadata variables that signify the treatment groups might be different across datasets and might not always be underneath the category.
 
-The `genotype/variation` column contains group information we will be using for differential expression. 
-But the `/` it contains in its column name makes it more annoying to access.  
-Accessing variable that have names with special characters like `/`, or spaces, require extra work-arounds to ignore R's normal interpretations of these characters.
-
-```{r}
+```{r Set up design matrix}
+# Set up group names in the `subgroup` column
 metadata <- metadata %>%
-  dplyr::rename("genotype" = `genotype/variation`) # This step will not be the same (or might not be needed at all) with a different dataset
+  dplyr::mutate(subgroup = as.factor(gsub("Group 3|Group 4", "NonSHH", subgroup)))
 ```
 
-Now we will create a model matrix based on our newly renamed `genotype` variable. 
+Let's take a look at how many sample of each subgroup we have. 
 
 ```{r}
-# Create the design matrix from the genotype information
-des_mat <- model.matrix(~ metadata$genotype)
+summary(subgroup)
+```
+
+## Remove groups that are too small
+
+```{r}
+filtered_metadata <- metadata %>%
+  dplyr::group_by(subgroup) %>%
+  dplyr::filter(dplyr::n() > 7)
+```
+
+Now we will create a model matrix based on our newly renamed `subtype` vector. 
+
+```{r}
+# Create the design matrix
+des_mat <- model.matrix(~subgroup)
+```
+
+The design matrix doesn't have super helpful column names, so we will rename them. 
+
+```{r}
+# Make the column name more informative
+colnames(des_mat)[2] <- paste0(levels(subgroup), collapse = "vs")
 ```
 
 ## Perform differential expression
@@ -264,12 +282,12 @@ See the help page by using `?topTable` for more information and options for this
 ## Check results by plotting one gene
 
 To test if these results make sense, we can make a plot of one of top genes. 
-Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes. 
+Let's try extracting the data for `ENSG00000012223` and set up its own data frame for plotting purposes. 
 
 ```{r}
 top_gene_df <- df %>%
   # Extract this gene from `df`
-  dplyr::filter(rownames(.) == "ENSDARG00000104315") %>%
+  dplyr::filter(rownames(.) == "ENSG00000012223") %>%
   # Transpose so the gene is a column
   t() %>%
   # Transpose made this a matrix, let's make it back into a data.frame like before
@@ -280,7 +298,7 @@ top_gene_df <- df %>%
   dplyr::inner_join(dplyr::select(
     metadata,
     refinebio_accession_code,
-    genotype
+    subgroup
   ))
 ```
 
@@ -290,10 +308,10 @@ Let's take a sneak peek at what our `top_gene_df` looks like.
 top_gene_df
 ```
 
-Now let's plot the data for `ENSDARG00000104315` using our `top_gene_df`.
+Now let's plot the data for `ENSG00000012223` using our `top_gene_df`.
 
 ```{r}
-ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
+ggplot(top_gene_df, aes(x = subgroup, y = ENSG00000012223, color = subgroup)) +
   geom_jitter(width = 0.2) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
@@ -308,7 +326,7 @@ The results in `stats_df` will be saved to our `results/` directory.
 ```{r}
 readr::write_tsv(stats_df, file.path(
   results_dir,
-  "GSE71270_limma_results.tsv" # Replace with a relevant output name
+  "GSE37418_limma_results.tsv" # Replace with a relevant output name
 ))
 ```
 
@@ -347,7 +365,7 @@ Let's save this plot to a PNG file.
 ```{r}
 ggsave(
   plot = volcano_plot,
-  file.path(plots_dir, "GSE71270_volcano_plot.png")
+  file.path(plots_dir, "GSE37418_volcano_plot.png")
 ) # Replace with a plot name relevant to your data
 ```
 
