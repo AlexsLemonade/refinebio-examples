@@ -37,7 +37,7 @@ As with all experimental methods, RNA-seq has strengths and limitations that you
 ### RNA-seq data **strengths**  
 
 - RNA-seq can assay unknown transcripts, as it is not bound to a pre-determined set of probes like microarrays [@Zhong2009].
-- It's values are considered more dynamic than microarray values which are constrained to the number of probes [@Zhong2009].
+- Its values are considered more dynamic than microarray values which are constrained to the number of probes [@Zhong2009].
 
 ### RNA-seq data **limitations/biases**  
 
@@ -49,7 +49,7 @@ The nature of sequencing introduces several different kinds of biases:
 - **Library size or sequencing depth**: the total number of reads is not always equivalent between samples.  
 - **Gene length**: longer genes are more likely to be observed.   
 
-This figure from @Love2016 briefly summarizes some of these biases which he discusses in this [nice blog post](https://mikelove.wordpress.com/2016/09/26/rna-seq-fragment-sequence-bias/) [@bias-blog]. 
+@bias-blog discusses these biases in this [blog post](https://mikelove.wordpress.com/2016/09/26/rna-seq-fragment-sequence-bias/) which includes this handy figure. 
   
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/c93c3c94edcb42b20f73f37fd20d00e91e4b1ab7/components/figures/Love2016-fig1.png" width=700>
 
@@ -116,12 +116,11 @@ If you end up using a larger dataset and `rlog()` transformation takes a bit too
 #### Why isn't the gene I care about in a refine.bio dataset?
 
 If a gene is not detected in any of the samples in a set through our processing, it is still kept in the `Gene` column, but it will be reported as `0`.
-But if the gene you are interested in does not have an Ensembl ID according to the [version of the annotation](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed) we used.   
+But if the gene you are interested in does not have an Ensembl ID according to the [version of the annotation we ](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed) we used, it will not be reported in any refine.bio download.   
 
 #### What about edgeR?
 
-In short, both edgeR and DESeq2 are good options and we at the CCDL just went with one of our preferences! 
-[See this blog that summarizes these – by one of the creators of DESeq2](https://mikelove.wordpress.com/2016/09/28/deseq2-or-edger/) – he agrees EdgeR is also great. 
+In short, both edgeR and DESeq2 are good options and we at the CCDL just went with one of our preferences! [See this blog that summarizes these – by one of the creators of DESeq2](https://mikelove.wordpress.com/2016/09/28/deseq2-or-edger/) – he agrees edgeR is also great. 
 But in the end, we are human and have our own preferences. 
 
 If you have strong preferences for edgeR, you can definitely use your refine.bio data with it, but we currently do not have examples of that. 
@@ -129,7 +128,7 @@ In this case, we'd refer you to [edgeR's section of this example analysis](https
 
 #### What if I care about isoforms?
 
-Unfortunately at this time, all refine.bio data is summarized to the gene-level, and there's no great way to examine isoforms with this data. 
+Unfortunately at this time, all download-ready refine.bio data is summarized to the gene level, and there's no great way to examine isoforms with this data. 
 If your research needs to know transcript isoform information, you may need to look elsewhere. 
 This [paper discusses some tools for these kinds of questions](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-017-4002-1) @Zhang2017.
 
