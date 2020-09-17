@@ -241,7 +241,7 @@ mapped_list <- mapIds(
 
 ## Explore gene ID conversion
 
-Now, let's take a look at our mapped object to see how the mapping went.
+Now, let's take a look at our `mapped_list` to see how the mapping went.
 
 ```{r}
 # Let's use the `head()` function to take a preview at our mapped list
@@ -314,7 +314,7 @@ filtered_mapped_df <- data.frame(
     keys = df$Gene,
     column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
     keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "filter"
+    multiVals = "filter" # This will drop any `Gene`s that have multiple matches
   )
 ) %>%
   # Make an `Ensembl` column to store the rownames
