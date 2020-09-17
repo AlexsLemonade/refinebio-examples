@@ -58,8 +58,7 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram \
-    org.Mm.eg.db
+    VennDiagram
 
 ##########################
 # Install packages from github
