@@ -25,6 +25,7 @@
     - [Paragraph formatting](#paragraph-formatting)
     - [Citing sources in text](#citing-sources-in-text)
       - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
+      - [Key naming](#key-naming)
     - [How to spell check](#how-to-spell-check)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
@@ -32,6 +33,7 @@
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
   - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
+- [Pull request status checks](#pull-request-status-checks)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
