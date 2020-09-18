@@ -339,3 +339,9 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
 7) Save the file!  
 8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
+
+## Pull request status checks
+
+To require that branches are up-to-date with `master` before merging, we need to require that a status check passes before merging to `master`.
+Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
+The status check used is a GitHub Action that runs `echo Hello, world!` in a few seconds and does not check that anything can execute.
