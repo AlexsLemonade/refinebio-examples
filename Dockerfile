@@ -51,6 +51,7 @@ RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 
 # Installs packages needed for plottings
 # treemap, interactive plots, and hex plots
 # Rtsne and umap are required for dimension reduction analyses
+# org.Mm.eg.db is required for gene mapping
 RUN install2.r --error --deps TRUE \
     ggfortify \
     ggsignif \
@@ -58,7 +59,8 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram
+    VennDiagram \
+    org.Mm.eg.db
 
 ##########################
 # Install packages from github
