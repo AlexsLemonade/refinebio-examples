@@ -37,7 +37,7 @@ As with all experimental methods, RNA-seq has strengths and limitations that you
 ### RNA-seq data **strengths**  
 
 - RNA-seq can assay unknown transcripts, as it is not bound to a pre-determined set of probes like microarrays [@Zhong2009].
-- Its values are considered more dynamic than microarray values which are constrained to the number of probes [@Zhong2009].
+- Its values are considered more dynamic than microarray values which are constrained to a smaller range based on background signal and probesets being saturated [@Zhong2009].
 
 ### RNA-seq data **limitations/biases**  
 
@@ -55,7 +55,7 @@ The nature of sequencing introduces several different kinds of biases:
 
 Most normalization methods, including [refine.bio's processing methods](http://docs.refine.bio/en/latest/main_text.html#rna-seq-pipelines), attempt to mitigate these biases, but these biases can never be fully negated.
 Some of these biases have been addressed to the extent that they can by our refine.bio processing methods so you don't have to worry too much about them.
-In brief, refine.bio data is quantified by Salmon using their correction algorithms: [`--seqbias`](https://salmon.readthedocs.io/en/latest/salmon.html#seqbias) , [`--gcbias`](https://salmon.readthedocs.io/en/latest/salmon.html#gcbias), and [`--posBias`](https://salmon.readthedocs.io/en/latest/salmon.html#posbias).
+In brief, refine.bio data is quantified by Salmon using their correction algorithms: [`--seqbias`](https://salmon.readthedocs.io/en/latest/salmon.html#seqbias) and  [`--gcbias`](https://salmon.readthedocs.io/en/latest/salmon.html#gcbias).
 
 ### About quantile normalization
 
@@ -98,9 +98,9 @@ You may have heard about or worked with FPKM, TPM, RPKMs; how does DESeq2's norm
 This [handy table from an online Harvard Bioinformatics Core course nicely summarizes and compares these different methods](https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html#common-normalization-methods) [@dge-workshop-deseq2].
 For more about the steps behind DESeq2 normalization, we highly recommend this [StatsQuest video](https://www.youtube.com/watch?v=UFB993xufUU) which explains it quite nicely [@Starmer2017-deseq2]. 
 
-To normalize and transform our data with DESeq2, we generally use `vst()` (Variance Stabilizing Transformation) or `rlog()`. 
-[Both methods are very similar](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog).
-Both _normalize_ your data by correcting for library size differences but they also _transform_ your data by altering their distributions.
+To normalize and transform our data with DESeq2, we generally use `vst()` (variance stabilizing transformation) or `rlog()` (regularized logarithm transformation). 
+[Both methods are very similar](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog). 
+Both _normalize_ your data by correcting for library size differences but they also _transform_ your data [removing the dependence of the variance on the mean](https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations), meaning that low mean genes won't have inflated variance from just one or a few samples having higher values than the rest [@Love2020].
 Of the two methods, `rlog()` takes a bit longer to run [@Love2019].
 If you end up using a larger dataset and `rlog()` transformation takes a bit too long, you can switch to using `vst()` with confidence since they yield similar results given the dataset is large enough [@Love2019]. 
 
