@@ -116,7 +116,7 @@ If you end up using a larger dataset and `rlog()` transformation takes a bit too
 #### Why isn't the gene I care about in a refine.bio dataset?
 
 If a gene is not detected in any of the samples in a set through our processing, it is still kept in the `Gene` column, but it will be reported as `0`.
-But if the gene you are interested in does not have an Ensembl ID according to the [version of the annotation we ](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed) we used, it will not be reported in any refine.bio download.   
+But if the gene you are interested in does not have an Ensembl ID according to the [version of the annotation](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed) we used, it will not be reported in any refine.bio download.  
 
 #### What about edgeR?
 
