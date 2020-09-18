@@ -11,30 +11,30 @@ output:
 
 # Purpose of the analysis
 
-This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`. 
+This notebook illustrates one way that you can use RNA-seq data from refine.bio to perform Principal Component Analysis (PCA) and plot the scores using `ggplot2`.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
 
 ## Obtain the `.Rmd` file of this analysis
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/dimension-reduction_rnaseq_01_pca.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
-Clicking this link will most likely send this to your downloads folder on your computer. 
+Clicking this link will most likely send this to your downloads folder on your computer.
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
 ## Set up your analysis folders
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
-Run this next chunk to set up your folders! 
+We have set up some code that will automatically set up a folder structure for you.
+Run this next chunk to set up your folders!
 
-If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations.
 
 ```{r}
 # Define the file path to the data directory
@@ -85,35 +85,35 @@ Note that this option will only be available for RNA-seq datasets.
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
-You will get an email when it is ready. 
+You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
 
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+<!--BRIEFLY SUMMARIZE THIS DATASET-->
 
 The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
 Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 
 ## Place the dataset in your new `data/` folder
 
-Refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Refine.bio will send you a download button in the email when it is ready.
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-folder-structure.png" width=400>
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
-Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`.
 
 Copy and paste the `SRP133573` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
-Your new analysis folder should contain: 
+Your new analysis folder should contain:
 
 - The example analysis Rmd you downloaded  
 - A folder called "data" which contains:
@@ -122,12 +122,12 @@ Your new analysis folder should contain:
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using):
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
 
-In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
-Run this chunk to double check that your files are in the right place. 
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis.
+Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
@@ -139,13 +139,13 @@ file.exists(file.path(data_dir, "metadata_SRP133573.tsv"))
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots to the `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
+From here you can customize this analysis example to fit your own scientific questions and preferences.
 
 ***
 
@@ -185,7 +185,7 @@ set.seed(12345)
 
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
 This chunk of code will read the both TSV files and add them as data frames to your environment.
 
 ```{r}
@@ -204,7 +204,7 @@ df <- readr::read_tsv(file.path(
   tibble::column_to_rownames("Gene")
 ```
 
-Let's ensure that the metadata and data are in the same sample order. 
+Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
@@ -245,7 +245,7 @@ metadata <- metadata %>%
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for normalization, which requires us to format our data into a `DESeqDataSet` object.
-We turn the data frame (or matrix) into a [`DESeqDataSet` object](TODO: Add link to header section) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2). ) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
 In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
@@ -351,8 +351,8 @@ ggsave(file.path(plots_dir, "SRP133573_pca_plot.png"), # Replace with name relev
 
 # Print session info
 
-At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+At the end of every analysis, before saving your notebook, we recommend printing out your session info.
+This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.
 
 ```{r}
 # Print session info
