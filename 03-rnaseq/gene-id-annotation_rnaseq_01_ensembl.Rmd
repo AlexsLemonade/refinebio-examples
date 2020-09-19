@@ -41,14 +41,18 @@ If you have trouble running this chunk, see our [introduction to using `.Rmd`s](
 if (!dir.exists("data")) {
   dir.create("data")
 }
+
 # Define the file path to the plots directory
 plots_dir <- "plots" # Can replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
+
 # Define the file path to the results directory
 results_dir <- "results" # Can replace with path to desired output results directory
+
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
@@ -70,6 +74,9 @@ Click the "Download Now" button on the right side of this screen.
 Fill out the pop up window with your email and our Terms and Conditions:  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
+
+If you want to use this dataset with other examples you may want to download it non-quantile normalized.
+See the [RNA-seq header section](https://github.com/AlexsLemonade/refinebio-examples/tree/master/03-rnaseq/00-intro-to-rnaseq.html#14About_quantile_normalization) about quantile normalization.
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -171,6 +178,7 @@ Attach the packages we need for this analysis.
 ```{r}
 # Attach the library
 library(org.Dr.eg.db)
+
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```
@@ -186,6 +194,7 @@ metadata <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your metadata file
   "metadata_SRP040561.tsv" # Replace with the name of your metadata file
 ))
+
 # Read in data TSV file
 df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
@@ -262,10 +271,10 @@ Let's get a summary of the values returned in the `Entrez` column of our mapped 
 
 ```{r}
 # We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column
-summary(mapped_df$Entrez)
+summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned
 ```
 
-There are 9088 NA's in our data frame, which means that 9088 out of the 31882 Ensembl IDs did not map to Entrez IDs.
+There are 9102 NA's in our data frame, which means that 9088 out of the 31882 Ensembl IDs did not map to Entrez IDs.
 This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
@@ -278,25 +287,45 @@ multi_mapped_df <- mapped_df %>%
   # Create a new variable containing the number of Entrez IDs mapped to each ID
   dplyr::mutate(entrez_id_count = dplyr::n()) %>%
   # Arrange by the genes with the highest number of Entrez IDs mapped
-  dplyr::arrange(desc(entrez_id_count)) %>%
-  # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  dplyr::arrange(desc(entrez_id_count))
 
 # Let's look at the first 6 rows of our `multi_mapped` object
 head(multi_mapped_df)
 ```
 
-Looks like we have some cases where 7 Entrez IDs mapped to a single Ensembl ID.
-We have a total of 542 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs.
-With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the `"filter"` option to the `multiVals` argument og `mapIds()`, like we did in the [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+Looks like we have some cases where 15 Entrez IDs mapped to a single Ensembl ID.
+We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs.
+With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the `"filter"` option to the `multiVals` argument of `mapIds()`.
+If you want to see an example of a `multiVals = "filter"` strategy see the [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
-However, we may also want to keep the multi-mapped information for our downstream analyses so let's go ahead and write our mapped results and data to file!
+We do not have a particular reason to choose one over the other, so let's just keep the first mapped Entrez ID that comes up.
+We will do that in the next section by re-running the `mapIds()` function with `multiVals = "first"`.
+
+## Map Ensembl IDs to gene symbols -- keeping only the first mapped value
+
+```{r}
+final_mapped_df <- data.frame(
+  "Entrez" = mapIds(
+    org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
+    keys = df$Gene,
+    column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
+    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+  )
+) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Join the remaining data from `df` using the Ensembl IDs
+  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+```
+
+Now let's write our mapped results and data to file!
 
 ## Write mapped results to file
 
 ```{r}
 # Write mapped and annotated data frame to output file
-readr::write_tsv(multi_mapped_df, file.path(
+readr::write_tsv(final_mapped_df, file.path(
   results_dir,
   "SRP040561_Entrez_IDs.tsv" # Replace with a relevant output file name
 ))

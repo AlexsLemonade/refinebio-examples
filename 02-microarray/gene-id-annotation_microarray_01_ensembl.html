@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -1344,7 +1343,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1493,6 +1491,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1521,6 +1520,12 @@ $(document).ready(function () {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -1629,6 +1634,7 @@ div.tocify {
             <li><a href="../03-rnaseq/differential-expression_rnaseq_01.html">Differential Expression</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
+            <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -1783,6 +1789,8 @@ if (!(&quot;org.Mm.eg.db&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
   BiocManager::install(&quot;org.Mm.eg.db&quot;, update = FALSE)
 }</code></pre>
+<pre><code>## Bioconductor version 3.11 (BiocManager 1.30.10), R 4.0.2 (2020-06-22)</code></pre>
+<pre><code>## Installing package(s) &#39;org.Mm.eg.db&#39;</code></pre>
 <p>Attach the packages we need for this analysis.</p>
 <pre class="r"><code># Attach the library
 library(org.Mm.eg.db)</code></pre>
@@ -1884,9 +1892,10 @@ df &lt;- readr::read_tsv(file.path(
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
 <pre class="r"><code># Make the data in the order of the metadata
 df &lt;- df %&gt;%
-  dplyr::select(metadata$geo_accession)
-
-# Check if this is in the same order
+  dplyr::select(metadata$geo_accession)</code></pre>
+<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
+## when loading &#39;dplyr&#39;</code></pre>
+<pre class="r"><code># Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code># Bring back the &quot;Gene&quot; column in preparation for mapping
@@ -1946,32 +1955,8 @@ mapped_df &lt;- mapped_list %&gt;%
 <p>We can see that our data frame has a new column <code>Symbol</code>. Let’s get a summary of the gene symbols returned in the <code>Symbol</code> column of our mapped data frame.</p>
 <pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
 summary(mapped_df$Symbol)</code></pre>
-<pre><code>##  Gm13023   Nudt10     Pms2    Gnai3     Pbsn    Cdc45      H19    Scml2 
-##        2        2        2        1        1        1        1        1 
-##     Apoh     Narf     Cav2     Klf6    Scmh1    Cox5a     Tbx2     Tbx4 
-##        1        1        1        1        1        1        1        1 
-##     Zfy2     Ngfr     Wnt3    Wnt9a      Fer     Xpo6     Tfe3    Axin2 
-##        1        1        1        1        1        1        1        1 
-##    Brat1    Gna12 Slc22a18   Itgb2l    Igsf5   Pih1d2     Dlat     Sdhd 
-##        1        1        1        1        1        1        1        1 
-##    Fgf23     Fgf6    Ccnd2   Gpr107    Nalcn   Btbd17    Slfn4       Th 
-##        1        1        1        1        1        1        1        1 
-##     Ins2   Scnn1g     Drp2  Tspan32     Lhx2   Clec2g     Gmpr    Glra1 
-##        1        1        1        1        1        1        1        1 
-##     Mid2   Trim25     Dgke   Scpep1      Mnt    Itgb2    Hddc2  Tpd52l1 
-##        1        1        1        1        1        1        1        1 
-##     Pemt     Cdh1     Cdh4    Ckmt1    Bcl6b  Clec10a   Alox12    Arvcf 
-##        1        1        1        1        1        1        1        1 
-##     Comt     Rtca      Dbt   Dazap2    Mcts1     Rem1    Rnf17 Trappc10 
-##        1        1        1        1        1        1        1        1 
-##     Ccm2      Wap    Tbrg4  Tmprss2      Mx1      Fap      Gcg   Ndufa9 
-##        1        1        1        1        1        1        1        1 
-##    Egfl6      Lck    Tssk3  Cttnbp2   Galnt1     Myf5    Mkrn2    Pparg 
-##        1        1        1        1        1        1        1        1 
-##     Raf1   Gm4532    Sept1    Pdgfb   Acvrl1    Grasp   Acvr1b   Tom1l2 
-##        1        1        1        1        1        1        1        1 
-##    Gpa33  Zfp385a  (Other)     NA&#39;s 
-##        1        1    16885      998</code></pre>
+<pre><code>##    Length     Class      Mode 
+##     17977 character character</code></pre>
 <p>There are 998 NA’s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
 <p>However, if you have almost all NA’s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
@@ -1990,7 +1975,7 @@ head(multi_mapped)</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ## # Groups:   Ensembl [2]
 ##   Symbol       Ensembl            gene_symbol_count
-##   &lt;fct&gt;        &lt;chr&gt;                          &lt;int&gt;
+##   &lt;chr&gt;        &lt;chr&gt;                          &lt;int&gt;
 ## 1 Rpl23        ENSMUSG00000071415                 3
 ## 2 LOC100044627 ENSMUSG00000071415                 3
 ## 3 LOC100862455 ENSMUSG00000071415                 3
@@ -2032,7 +2017,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020b)</span></li>
-<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
+<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(<span class="citeproc-not-found" data-reference-id="gene-id-annotation-rna-seq"><strong>???</strong></span>)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2040,39 +2025,48 @@ readr::write_tsv(filtered_mapped_df, file.path(
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
-<pre><code>## R version 3.6.1 (2019-07-05)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Mojave 10.14.6
+<pre><code>## R version 4.0.2 (2020-06-22)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 ## 
 ## attached base packages:
 ## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
 ## [8] methods   base     
 ## 
 ## other attached packages:
-## [1] magrittr_1.5         org.Mm.eg.db_3.8.2   AnnotationDbi_1.47.0
-## [4] IRanges_2.19.10      S4Vectors_0.23.23    Biobase_2.45.0      
-## [7] BiocGenerics_0.31.5  optparse_1.6.2      
+## [1] magrittr_1.5         org.Mm.eg.db_3.11.4  AnnotationDbi_1.50.3
+## [4] IRanges_2.22.2       S4Vectors_0.26.1     Biobase_2.48.0      
+## [7] BiocGenerics_0.34.0  optparse_1.6.6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.4.6     plyr_1.8.4       pillar_1.4.4     compiler_3.6.1  
-##  [5] tools_3.6.1      bit_1.1-14       digest_0.6.25    memoise_1.1.0   
-##  [9] RSQLite_2.1.2    evaluate_0.14    lifecycle_0.2.0  tibble_3.0.1    
-## [13] pkgconfig_2.0.3  rlang_0.4.6      DBI_1.0.0        cli_2.0.2       
-## [17] rstudioapi_0.11  yaml_2.2.1       xfun_0.14        dplyr_0.8.3     
-## [21] withr_2.2.0      styler_1.1.1     stringr_1.4.0    knitr_1.28      
-## [25] vctrs_0.3.1      hms_0.5.3        tidyselect_0.2.5 bit64_0.9-7     
-## [29] getopt_1.20.3    glue_1.4.1       R6_2.4.1         fansi_0.4.1     
-## [33] rmarkdown_1.14   reshape2_1.4.3   blob_1.2.0       readr_1.3.1     
-## [37] purrr_0.3.4      rematch2_2.1.0   backports_1.1.7  ellipsis_0.3.1  
-## [41] htmltools_0.3.6  assertthat_0.2.1 utf8_1.1.4       stringi_1.4.6   
-## [45] crayon_1.3.4</code></pre>
+##  [1] Rcpp_1.0.5          plyr_1.8.6          pillar_1.4.6       
+##  [4] compiler_4.0.2      BiocManager_1.30.10 R.methodsS3_1.8.1  
+##  [7] R.utils_2.10.1      tools_4.0.2         bit_1.1-15.2       
+## [10] digest_0.6.25       memoise_1.1.0       RSQLite_2.2.0      
+## [13] evaluate_0.14       lifecycle_0.2.0     tibble_3.0.3       
+## [16] R.cache_0.14.0      pkgconfig_2.0.3     rlang_0.4.7        
+## [19] DBI_1.1.0           cli_2.0.2           rstudioapi_0.11    
+## [22] yaml_2.2.1          xfun_0.17           dplyr_1.0.0        
+## [25] styler_1.3.2        stringr_1.4.0       knitr_1.29         
+## [28] generics_0.0.2      vctrs_0.3.4         hms_0.5.3          
+## [31] tidyselect_1.1.0    bit64_0.9-7.1       getopt_1.20.3      
+## [34] glue_1.4.2          R6_2.4.1            fansi_0.4.1        
+## [37] rmarkdown_2.3       reshape2_1.4.4      blob_1.2.1         
+## [40] purrr_0.3.4         readr_1.3.1         rematch2_2.1.2     
+## [43] backports_1.1.10    ellipsis_0.3.1      htmltools_0.5.0    
+## [46] assertthat_0.2.1    utf8_1.1.4          stringi_1.5.3      
+## [49] crayon_1.3.4        R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019">
 <p>Carlson M., 2019 Genome wide annotation for mouse</p>
@@ -2082,9 +2076,6 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Carlson2020-vignette">
 <p>Carlson M., 2020b AnnotationDbi: Introduction to bioconductor annotation packages</p>
-</div>
-<div id="ref-gene-id-annotation-rna-seq">
-<p>CCDL, 2020 <em>Obtaining annotation for ensembl ids - rna-seq</em>.</p>
 </div>
 <div id="ref-annotation-packages">
 <p>R Bioconductor Team, 2003 Packages found under annotationdata</p>
@@ -2142,7 +2133,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0

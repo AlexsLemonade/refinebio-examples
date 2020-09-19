@@ -60,7 +60,7 @@ RUN install2.r --error --deps TRUE \
     Rtsne \
     umap  \
     VennDiagram \
-    org.Mm.eg.db
+    reshape2
 
 ##########################
 # Install packages from github
