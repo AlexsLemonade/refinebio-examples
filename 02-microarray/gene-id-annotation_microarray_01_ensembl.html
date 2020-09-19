@@ -1789,8 +1789,6 @@ if (!(&quot;org.Mm.eg.db&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
   BiocManager::install(&quot;org.Mm.eg.db&quot;, update = FALSE)
 }</code></pre>
-<pre><code>## Bioconductor version 3.11 (BiocManager 1.30.10), R 4.0.2 (2020-06-22)</code></pre>
-<pre><code>## Installing package(s) &#39;org.Mm.eg.db&#39;</code></pre>
 <p>Attach the packages we need for this analysis.</p>
 <pre class="r"><code># Attach the library
 library(org.Mm.eg.db)</code></pre>
@@ -2017,7 +2015,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020b)</span></li>
-<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(<span class="citeproc-not-found" data-reference-id="gene-id-annotation-rna-seq"><strong>???</strong></span>)</span>.</li>
+<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2050,23 +2048,19 @@ sessionInfo()</code></pre>
 ## [7] BiocGenerics_0.34.0  optparse_1.6.6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5          plyr_1.8.6          pillar_1.4.6       
-##  [4] compiler_4.0.2      BiocManager_1.30.10 R.methodsS3_1.8.1  
-##  [7] R.utils_2.10.1      tools_4.0.2         bit_1.1-15.2       
-## [10] digest_0.6.25       memoise_1.1.0       RSQLite_2.2.0      
-## [13] evaluate_0.14       lifecycle_0.2.0     tibble_3.0.3       
-## [16] R.cache_0.14.0      pkgconfig_2.0.3     rlang_0.4.7        
-## [19] DBI_1.1.0           cli_2.0.2           rstudioapi_0.11    
-## [22] yaml_2.2.1          xfun_0.17           dplyr_1.0.0        
-## [25] styler_1.3.2        stringr_1.4.0       knitr_1.29         
-## [28] generics_0.0.2      vctrs_0.3.4         hms_0.5.3          
-## [31] tidyselect_1.1.0    bit64_0.9-7.1       getopt_1.20.3      
-## [34] glue_1.4.2          R6_2.4.1            fansi_0.4.1        
-## [37] rmarkdown_2.3       reshape2_1.4.4      blob_1.2.1         
-## [40] purrr_0.3.4         readr_1.3.1         rematch2_2.1.2     
-## [43] backports_1.1.9     ellipsis_0.3.1      htmltools_0.5.0    
-## [46] assertthat_0.2.1    utf8_1.1.4          stringi_1.5.3      
-## [49] crayon_1.3.4        R.oo_1.24.0</code></pre>
+##  [1] Rcpp_1.0.5        plyr_1.8.6        pillar_1.4.6      compiler_4.0.2   
+##  [5] R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.2       bit_1.1-15.2     
+##  [9] digest_0.6.25     memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14    
+## [13] lifecycle_0.2.0   tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3  
+## [17] rlang_0.4.7       DBI_1.1.0         cli_2.0.2         rstudioapi_0.11  
+## [21] yaml_2.2.1        xfun_0.17         dplyr_1.0.0       styler_1.3.2     
+## [25] stringr_1.4.0     knitr_1.29        generics_0.0.2    vctrs_0.3.4      
+## [29] hms_0.5.3         tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3    
+## [33] glue_1.4.2        R6_2.4.1          fansi_0.4.1       rmarkdown_2.3    
+## [37] reshape2_1.4.4    blob_1.2.1        purrr_0.3.4       readr_1.3.1      
+## [41] rematch2_2.1.2    backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0  
+## [45] assertthat_0.2.1  utf8_1.1.4        stringi_1.5.3     crayon_1.3.4     
+## [49] R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019">
 <p>Carlson M., 2019 Genome wide annotation for mouse</p>
@@ -2076,6 +2070,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Carlson2020-vignette">
 <p>Carlson M., 2020b AnnotationDbi: Introduction to bioconductor annotation packages</p>
+</div>
+<div id="ref-gene-id-annotation-rna-seq">
+<p>CCDL, 2020 <em>Obtaining annotation for ensembl ids - rna-seq</em>.</p>
 </div>
 <div id="ref-annotation-packages">
 <p>R Bioconductor Team, 2003 Packages found under annotationdata</p>
