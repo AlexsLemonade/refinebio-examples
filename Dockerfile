@@ -59,8 +59,7 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram \
-    reshape2
+    VennDiagram
 
 ##########################
 # Install packages from github

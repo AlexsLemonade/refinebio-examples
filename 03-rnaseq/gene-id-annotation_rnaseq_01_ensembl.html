@@ -1914,19 +1914,23 @@ head(mapped_list)</code></pre>
 ## $ENSDARG00000000069
 ## [1] &quot;58093&quot;</code></pre>
 <p>It looks like we have Entrez IDs that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
-<pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
+<pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df &lt;- mapped_list %&gt;%
-  reshape2::melt(value.name = &quot;Entrez&quot;) %&gt;%
-  dplyr::rename(&quot;Ensembl&quot; = &quot;L1&quot;) # Here we are renaming the column holding the Ensembl IDs as good practice</code></pre>
+  tibble::enframe(name = &quot;Ensembl&quot;, value = &quot;Entrez&quot;) %&gt;%
+  tidyr::unnest() # enframe makes a `list` column, so here we are converting that to simpler format</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(Entrez)`</code></pre>
 <p>Now let’s take a peek at our data frame.</p>
 <pre class="r"><code>head(mapped_df)</code></pre>
-<pre><code>##   Entrez            Ensembl
-## 1 368418 ENSDARG00000000001
-## 2 368419 ENSDARG00000000002
-## 3  64604 ENSDARG00000000018
-## 4 368425 ENSDARG00000000019
-## 5 327272 ENSDARG00000000068
-## 6  58093 ENSDARG00000000069</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   Ensembl            Entrez
+##   &lt;chr&gt;              &lt;chr&gt; 
+## 1 ENSDARG00000000001 368418
+## 2 ENSDARG00000000002 368419
+## 3 ENSDARG00000000018 64604 
+## 4 ENSDARG00000000019 368425
+## 5 ENSDARG00000000068 327272
+## 6 ENSDARG00000000069 58093</code></pre>
 <p>We can see that our data frame has a new column <code>Entrez</code>. Let’s get a summary of the values returned in the <code>Entrez</code> column of our mapped data frame.</p>
 <pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column
 summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned</code></pre>
@@ -1959,1461 +1963,81 @@ summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function
 <p>There are 9102 NA’s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <pre class="r"><code>multi_mapped_df &lt;- mapped_df %&gt;%
-  # Let&#39;s group by the Ensembl ID&#39;s in the `Ensembl` column
-  dplyr::group_by(Ensembl) %&gt;%
-  # Create a new variable containing the number of Entrez IDs mapped to each ID
-  dplyr::mutate(entrez_id_count = dplyr::n()) %&gt;%
+  # Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column
+  dplyr::count(Ensembl, name = &quot;entrez_id_count&quot;) %&gt;%
   # Arrange by the genes with the highest number of Entrez IDs mapped
   dplyr::arrange(desc(entrez_id_count))
 
 # Let&#39;s look at the first 6 rows of our `multi_mapped` object
 head(multi_mapped_df)</code></pre>
-<pre><code>## # A tibble: 6 x 3
-## # Groups:   Ensembl [1]
-##   Entrez    Ensembl            entrez_id_count
-##   &lt;chr&gt;     &lt;chr&gt;                        &lt;int&gt;
-## 1 101882917 ENSDARG00000097337              15
-## 2 101884510 ENSDARG00000097337              15
-## 3 101886305 ENSDARG00000097337              15
-## 4 103908678 ENSDARG00000097337              15
-## 5 103908767 ENSDARG00000097337              15
-## 6 103909143 ENSDARG00000097337              15</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   Ensembl            entrez_id_count
+##   &lt;chr&gt;                        &lt;int&gt;
+## 1 ENSDARG00000097337              15
+## 2 ENSDARG00000006220               7
+## 3 ENSDARG00000092636               7
+## 4 ENSDARG00000061547               5
+## 5 ENSDARG00000095051               5
+## 6 ENSDARG00000098788               5</code></pre>
 <p>Looks like we have some cases where 15 Entrez IDs mapped to a single Ensembl ID. We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs. With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument of <code>mapIds()</code>. If you want to see an example of a <code>multiVals = &quot;filter&quot;</code> strategy see the <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>.</p>
+<div id="store-all-mapped-values" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Store all mapped values</h3>
 <p>We are not sure which Entrez ID is relevant as yet, but we could store all of the mapped information for future use. In the next chunk, we show how we can collapse all the Entrez IDs into one column where we store them all for each unique Ensembl ID.</p>
-<pre class="r"><code>all_mapped_df &lt;- df %&gt;%
+<pre class="r"><code>final_mapped_df &lt;- df %&gt;%
   # Collapse the mapped values in `mapped_list` into one column named `entrez_ids`
-  dplyr::mutate(entrez_ids = sapply(mapped_list, paste, collapse = &quot;-&quot;)) %&gt;%
+  dplyr::mutate(entrez_ids = sapply(mapped_list, paste, collapse = &quot;;&quot;)) %&gt;%
   # Select the `entrez_ids` column first, then everything else in the data frame
   dplyr::select(entrez_ids, dplyr::everything()) %&gt;%
   # Now arrange by the new `entrez_ids` column
   dplyr::arrange(entrez_ids)</code></pre>
-<p>Let’s take a look at our new collapsed <code>entrez_ids</code> column in the <code>all_mapped_df</code> object.</p>
-<pre class="r"><code>all_mapped_df %&gt;%
-  # Filter `all_mapped_df` to include only the rows where `entrez_ids` values include the &quot;-&quot; character -- we know that these are the rows with multiple mapped values
-  dplyr::filter(stringr::str_detect(entrez_ids, &quot;-&quot;))</code></pre>
-<pre><code>##                                                                                                                                                entrez_ids
-## 1                                                                                                                                     100000783-100536331
-## 2                                                                                                                                     100001242-108183696
-## 3                                                                                                                                     100002012-100331458
-## 4                                                                                                                           100002234-100191016-103910704
-## 5                                                                                                                                     100002320-100126121
-## 6                                                                                                                                     100002917-110439293
-## 7                                                                                                                                     100003428-100137109
-## 8                                                                                                                           100004335-100537805-110438889
-## 9                                                                                                                                     100004361-108180184
-## 10                                                                                                                                    100004401-103911757
-## 11                                                                                                                                    100004662-100005207
-## 12                                                                                                                                    100005220-100005266
-## 13                                                                                                                                    100006331-100536331
-## 14                                                                                                                                    100007383-106699573
-## 15                                                                                                                                    100007492-100009639
-## 16                                                                                                                                    100008037-110439520
-## 17                                                                                                                          100008088-100148225-100536860
-## 18                                                                                                                                    100033463-100033464
-## 19                                                                                                                                    100033477-100033484
-## 20                                                                                                                100033490-100033499-100033500-100033501
-## 21                                                                                                                                    100033508-100033520
-## 22                                                                                                                                    100034523-100536999
-## 23                                                                                                                                    100034531-100151570
-## 24                                                                                                                                    100037329-101883783
-## 25                                                                                                                                    100101643-110437745
-## 26                                                                                                                                    100124612-103908665
-## 27                                                                                                                          100126107-100329290-100334559
-## 28                                                                                                                                    100126123-100535101
-## 29                                                                                                                                    100147946-103908650
-## 30                                                                                                                                    100148591-100334934
-## 31                                                                                                                                    100150635-110439186
-## 32                                                                                                                                    100170792-100170814
-## 33                                                                                                                                    100216314-100332947
-## 34                                                                                                                          100318255-101886997-110437858
-## 35                                                                                                                          100318255-101887034-110437859
-## 36                                                                                                                          100329290-100329560-100334559
-## 37                                                                                                                          100329290-100334559-100334869
-## 38                                                                                                                                    100330882-103909414
-## 39                                                                                                                                    100333163-100884132
-## 40                                                                                                                                    100334221-103910514
-## 41                                                                                                                                    100334621-100536331
-## 42                                                                                                                                    100384895-100384898
-## 43                                                                                                                                    100535070-110437953
-## 44                                                                                                                                    100535828-108182725
-## 45                                                                                                                                    100535828-108182725
-## 46                                                                                                                                    100535857-101886259
-## 47                                                                                                                                    100536270-101884591
-## 48                                                                                                                                    100536331-103908687
-## 49                                                                                                                                    100536789-101882714
-## 50                                                                                                                          100536797-101883197-110438050
-## 51                                                                                                                                    100537891-110437725
-## 52                                                                                                                          101882184-110439061-110439062
-## 53                                                                                                                                    101882305-110438025
-## 54  101882917-101884510-101886305-103908678-103908767-103909143-103911880-108180799-108190662-108191473-110439188-110439279-110439926-110440088-110440146
-## 55                                                                                                                                    101883724-101886765
-## 56                                                                                                                                    101884010-101887121
-## 57                                                                                                                          101884444-110440013-110440223
-## 58                                                                                                                          101884533-101884994-101887119
-## 59                                                                                                                                    101884792-101885415
-## 60                                                                                                                          101885111-101885118-101885541
-## 61                                                                                  101885111-101885157-101885541-101885772-101886760-103909625-110438847
-## 62                                                                                                                                    101885906-101886469
-## 63                                                                                                                                    101886021-108183670
-## 64                                                                                                                                    101886471-103912018
-## 65                                                                                                                                    101887034-110437858
-## 66                                                                                                                                    103909014-106144554
-## 67                                                                                                                                    103909906-108183702
-## 68                                                                                                                          103911588-108183708-108183935
-## 69                                                                                                                                    103911725-110437854
-## 70                                                                                                                                    103911809-110439267
-## 71                                                                                                                                    105665598-105665604
-## 72                                                                                                                          108179662-110439842-110440105
-## 73                                                                                                                                    108181760-108183931
-## 74                                                                                                                                    108183423-108184070
-## 75                                                                                                                                    108191494-110438861
-## 76                                                                                                                                    108192014-110438949
-## 77                                                                                                                                    110437990-110439470
-## 78                                                                                                                          110439267-110439291-110440092
-## 79                                                                                                                                          170968-170970
-## 80                                                                                                                                           30167-692260
-## 81                                                                                                                                           30597-572729
-## 82                                                                                                                                           30620-571540
-## 83                                                                                                                                    30762-368877-654336
-## 84                                                                                                                                           30763-368844
-## 85                                                                                                                                       322603-110437705
-## 86                                                                                                                                       323482-101884357
-## 87                                                                                                                                          326722-554097
-## 88                                                                                                                                          334010-556326
-## 89                                                                                                                                          334070-799470
-## 90                                                                                                                                       334588-101885540
-## 91                                                                                                                                       334973-100334190
-## 92                                                                                                                                          335370-563160
-## 93                                                                                                                                       336260-110437857
-## 94                                                                                                                                       336702-100037336
-## 95                                                                                                                                          337696-792137
-## 96                                                                                                                                       347743-100302659
-## 97                                                                                                                                       368827-110631416
-## 98                                                                                                                                       393293-100006793
-## 99                                                                                                                                       393758-110437775
-## 100                                                                                                                                      393772-108190639
-## 101                                                                                                                                      393970-103909643
-## 102                                                                                                                                         394242-554962
-## 103                                                                                                                                         402866-407619
-## 104                                                                                                                                      402956-110438456
-## 105                                                                                                                                         405767-791840
-## 106                                                                                                                                         405787-572703
-## 107                                                                                       406731-641488-100379286-100384891-100384896-100384897-100384901
-## 108                                                                                                                                      436635-100003048
-## 109                                                                                                                                      436639-103911473
-## 110                                                                                                                                      436854-100124618
-## 111                                                                                                                                      445020-100334622
-## 112                                                                                                                                         445068-563088
-## 113                                                                                                                                      447883-100002706
-## 114                                                                                                                                         449533-641579
-## 115                                                                                                                                      449943-110440113
-## 116                                                                                                                                         492622-797861
-## 117                                                                                                                                         493592-493593
-## 118                                                                                                                                         493594-493597
-## 119                                                                                                                                         493595-493599
-## 120                                                                                                                                         494088-572950
-## 121                                                                                                                                         497129-735300
-## 122                                                                                                                                         503751-797125
-## 123                                                                                                                                      541321-100142635
-## 124                                                                                                                            541335-100329290-100334559
-## 125                                                                                                                                      541478-101885672
-## 126                                                                                                                                         541512-794484
-## 127                                                                                                                                      544664-100149258
-## 128                                                                                                                                      550133-101886311
-## 129                                                                                                                                         550342-777608
-## 130                                                                                                                                      550375-100150082
-## 131                                                                                                                                         550507-571064
-## 132                                                                                                                                         553483-562339
-## 133                                                                                                                     553952-791613-100006320-100384900
-## 134                                                                                                                    554060-554063-554064-554075-554076
-## 135                                                                                                                                      554094-100536331
-## 136                                                                                                                                      554097-100000857
-## 137                                                                                                                                      554097-100004810
-## 138                                                                                                                                      554097-100126106
-## 139                                                                                                                                      554097-100330556
-## 140                                                                                                                                      554097-100333322
-## 141                                                                                                                                      554097-100538106
-## 142                                                                                                                                      554097-101884412
-## 143                                                                                                                                      554097-103911340
-## 144                                                                                                                                         554097-564421
-## 145                                                                                                                                         554097-564549
-## 146                                                                                                                                      555875-110437729
-## 147                                                                                                                                      556363-108187081
-## 148                                                                                                                            558317-101884879-108183587
-## 149                                                                                                                                      559001-100318317
-## 150                                                                                                                                      559062-110439322
-## 151                                                                                                                                      559585-100330919
-## 152                                                                                                                                      559771-108179204
-## 153                                                                                                           560380-794549-100126027-100150038-100331412
-## 154                                                                                                                                      560527-100148591
-## 155                                                                                                                                      561187-100148591
-## 156                                                                                                                            561322-100329290-100334559
-## 157                                                                                                                                         561678-561747
-## 158                                                                                                                                         562139-692313
-## 159                                                                                                                            562179-100333446-108191494
-## 160                                                                                                                            562179-100333446-110438861
-## 161                                                                                                                        562179-793500-794008-100333446
-## 162                                                                                                                                      562636-100303756
-## 163                                                                                                           562770-794549-100126027-100150038-100331412
-## 164                                                                                                                                      562898-108190369
-## 165                                                                                                                                      563177-100148591
-## 166                                                                                                                                      564539-103909705
-## 167                                                                                                                                         564840-565233
-## 168                                                                                                                               566030-569452-100000880
-## 169                                                                                                                                      566194-100149459
-## 170                                                                                                                                      566646-103908620
-## 171                                                                                                                                      567658-108179210
-## 172                                                                                                                                         568138-793439
-## 173                                                                                                                                      568326-100000034
-## 174                                                                                                                                  568680-795526-795594
-## 175                                                                                                                                      570033-101883455
-## 176                                                                                                                                      570115-100148591
-## 177                                                                                                                                      571043-100332770
-## 178                                                                                                                                      571162-100144555
-## 179                                                                                                                                      571638-100149441
-## 180                                                                                                                                         573653-793447
-## 181                                                                                                                                       57924-100331917
-## 182                                                                                                                                           58049-58050
-## 183                                                                                                                                          60659-171006
-## 184                                                                                                                                      606720-100536331
-## 185                                                                                                        641487-100003901-101882661-110438202-110438631
-## 186                                                                                                                                      678590-100126125
-## 187                                                                                                                                      751595-100537597
-## 188                                                                                                           767650-794549-100126027-100150038-100331412
-## 189                                                                                                           767782-794549-100126027-100150038-100331412
-## 190                                                                                                                                      792189-100126109
-## 191                                                                                                                                      792787-100536819
-## 192                                                                                                                                      792792-110437761
-## 193                                                                                                                            793500-108191539-110438859
-## 194                                                                                                                                      793570-100151764
-## 195                                                                                                                     794008-798902-110438958-110438962
-## 196                                                                                                                                      794221-100049175
-## 197                                                                                                                                      794406-103909889
-## 198                                                                                                                                      794406-103911341
-## 199                                                                                                                                      794406-108190746
-## 200                                                                                                                                      794406-108190747
-## 201                                                                                                        794549-100004171-100126027-100150038-100331412
-## 202                                                                                                        794549-100004395-100126027-100150038-100331412
-## 203                                                                                                        794549-100005308-100126027-100150038-100331412
-## 204                                                                                                        794549-100038789-100126027-100150038-100331412
-## 205                                                                                                        794549-100126027-100150038-100329358-100331412
-## 206                                                                                                                  794549-100126027-100150038-100331412
-## 207                                                                                                                  794549-100126027-100150038-100331412
-## 208                                                                                                                  794549-100126027-100150038-100331412
-## 209                                                                                                                  794549-100126027-100150038-100331412
-## 210                                                                                                                  794549-100126027-100150038-100331412
-## 211                                                                                                                  794549-100126027-100150038-100331412
-## 212                                                                                                                  794549-100126027-100150038-100331412
-## 213                                                                                                                  794549-100126027-100150038-100331412
-## 214                                                                                                                  794549-100126027-100150038-100331412
-## 215                                                                                                                  794549-100126027-100150038-100331412
-## 216                                                                                                                  794549-100126027-100150038-100331412
-## 217                                                                                                                  794549-100126027-100150038-100331412
-## 218                                                                                                                  794549-100126027-100150038-100331412
-## 219                                                                                                        794549-100126027-100150038-100331412-100332668
-## 220                                                                                                        794549-100126027-100150038-100331412-101882398
-## 221                                                                                                        794549-100126027-100150038-100331412-101886781
-## 222                                                                                                        794549-100126027-100150038-100331412-103908680
-## 223                                                                                                        794549-100126027-100150038-100331412-103908712
-## 224                                                                                                        794549-100126027-100150038-100331412-108181627
-## 225                                                                                                                            795394-100005013-110438898
-## 226                                                                                                                                      795394-110438898
-## 227                                                                                                                            796827-100124620-100332833
-## 228                                                                                                                                         796922-797120
-## 229                                                                                                                                         797194-798758
-## 230                                                                                                                  797278-110438957-110438962-110438964
-## 231                                                                                                                                      798067-100533191
-## 232                                                                                                                                      798252-103909808
-## 233                                                                                                                                      798566-110438964
-## 234                                                                                                                                         798758-799289
-## 235                                                                                                                                          84040-791173
-##                   Gene    SRR1205173   SRR1205166    SRR1205151   SRR1205167
-## 1   ENSDARG00000105400 -0.2202021041 -0.125853177 -6.988958e-02 -0.220596980
-## 2   ENSDARG00000115506  0.3502201918  0.412400459  2.871537e-01  0.282700992
-## 3   ENSDARG00000101883  1.1112261622  0.959568198  9.672851e-01  0.954250734
-## 4   ENSDARG00000090160  0.5110466772  0.437923019  6.049222e-01  0.411720954
-## 5   ENSDARG00000058299  0.0384925857 -0.040995649 -8.457189e-02 -0.033523597
-## 6   ENSDARG00000105403  0.0893131222  0.076718729  1.470438e-01  0.161741270
-## 7   ENSDARG00000111633  0.1632963164  0.074040533  8.801751e-02 -0.002490794
-## 8   ENSDARG00000088552 -0.2202021041 -0.211589439 -1.064681e-01 -0.220596980
-## 9   ENSDARG00000094889  1.2559516563  1.214019256  1.144522e+00  1.085413182
-## 10  ENSDARG00000089477  0.7466297074  0.949060738  1.678443e+00  0.745407998
-## 11  ENSDARG00000110460 -0.0599117817 -0.211589439 -2.226691e-01 -0.220596980
-## 12  ENSDARG00000109271  0.0405093724 -0.211589439 -1.223477e-01 -0.220596980
-## 13  ENSDARG00000099123 -0.1289442663 -0.075805802 -9.707846e-02 -0.121750813
-## 14  ENSDARG00000091993  0.3541766880  0.428612871  3.561989e-01  0.251513626
-## 15  ENSDARG00000100336  0.7861047607  0.744510240  7.800283e-01  0.712690233
-## 16  ENSDARG00000102215 -0.0029773012  0.022145653 -6.375296e-02  0.027344041
-## 17  ENSDARG00000090768  0.0207451322  0.036253269  1.360357e-03 -0.014584697
-## 18  ENSDARG00000110007 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 19  ENSDARG00000109889 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 20  ENSDARG00000110053 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 21  ENSDARG00000114213 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 22  ENSDARG00000041923  0.3720198182  0.368707851  5.483820e-01  0.382835706
-## 23  ENSDARG00000109202  0.4368574793  0.364959701  3.505477e-01  0.413497170
-## 24  ENSDARG00000104311  1.4102809412  1.430627147  1.471326e+00  1.445084509
-## 25  ENSDARG00000103362  0.8962918438  0.788142291  7.190549e-01  0.989133925
-## 26  ENSDARG00000053563  0.0264801394  0.032428030  7.951293e-02  0.019702370
-## 27  ENSDARG00000075482  0.0652374804  0.073618028  9.910728e-02  0.002755189
-## 28  ENSDARG00000092362  0.2671485438  0.658602672  6.141975e-01  0.475898253
-## 29  ENSDARG00000094999 -0.2202021041 -0.211589439 -9.583023e-02 -0.117460034
-## 30  ENSDARG00000115875 -0.0326554501 -0.211589439  9.178579e-05  0.054172326
-## 31  ENSDARG00000105775 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 32  ENSDARG00000105690 -0.0071789667 -0.010804215 -2.979391e-02 -0.024657355
-## 33  ENSDARG00000102945 -0.0267298928 -0.061410354  5.798178e-03 -0.007656077
-## 34  ENSDARG00000100118  0.1146011096  0.015242019  8.474492e-02  0.093189714
-## 35  ENSDARG00000098712  0.1440347694  0.067222653  1.901463e-01  0.105665542
-## 36  ENSDARG00000104501  0.2739760047  0.398616462  5.414528e-01  0.234778334
-## 37  ENSDARG00000114180 -0.0002437487  0.020824351 -2.690875e-02 -0.045450299
-## 38  ENSDARG00000092133 -0.2202021041 -0.211589439 -1.221779e-01 -0.220596980
-## 39  ENSDARG00000076280  1.5261700129  1.479837479  1.865657e+00  1.546460270
-## 40  ENSDARG00000104890  0.2342854915  0.184577348  2.327642e-01  0.275895301
-## 41  ENSDARG00000113399 -0.2202021041 -0.121865630  3.716580e-02 -0.114477179
-## 42  ENSDARG00000093043  0.1591920062  0.204436138  1.282492e-01  0.157301199
-## 43  ENSDARG00000075899  1.4695975590  1.197449548  1.407741e+00  1.431634909
-## 44  ENSDARG00000090501 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 45  ENSDARG00000101453 -0.2202021041 -0.211589439 -1.302504e-01 -0.220596980
-## 46  ENSDARG00000104960  0.0531307909  0.090410760  2.612995e-02  0.015242019
-## 47  ENSDARG00000101222  0.1001976906  0.052961357  1.550249e-01  0.154314862
-## 48  ENSDARG00000105314 -0.2202021041 -0.211589439 -1.258532e-01 -0.220596980
-## 49  ENSDARG00000100501  0.3585123526  0.385909402  1.901953e-01  0.329638575
-## 50  ENSDARG00000096696  0.0501882321  0.085129423  9.945545e-02  0.125216825
-## 51  ENSDARG00000101327  0.1536081702 -0.014656347  6.330373e-02  0.081358572
-## 52  ENSDARG00000071462  0.2194329336  0.299271763  1.975854e-01  0.230599796
-## 53  ENSDARG00000092078  0.2688042799  0.174869204  2.296420e-01  0.259889309
-## 54  ENSDARG00000097337  0.2464515342  0.256808280  2.456434e-01  0.258002212
-## 55  ENSDARG00000097929 -0.2202021041 -0.211589439 -6.080790e-02 -0.220596980
-## 56  ENSDARG00000100491 -0.0051169162  0.014975182  8.674318e-02  0.076762064
-## 57  ENSDARG00000101918  0.2871022256  0.150598274  1.079108e-01  0.086186880
-## 58  ENSDARG00000101275  0.1539363595  0.221676436  2.600963e-01  0.211472504
-## 59  ENSDARG00000097000  0.3391143152  0.378955159  3.225515e-01  0.261592764
-## 60  ENSDARG00000091887  0.1404400840  0.343211517  1.682461e-01  0.247562802
-## 61  ENSDARG00000092636  0.1918462787  0.305110649  3.212033e-01  0.186318937
-## 62  ENSDARG00000098213  0.2489394662  0.163953449  1.745832e-01  0.172072471
-## 63  ENSDARG00000034095  0.0318349148 -0.063881789 -1.614183e-02 -0.046907828
-## 64  ENSDARG00000105526  0.2833330109  0.266891234  3.555378e-01  0.238755713
-## 65  ENSDARG00000102641  0.2667858402  0.233217628  2.191455e-01  0.220087875
-## 66  ENSDARG00000058673  0.0420576475  0.082134987  1.090629e-01  0.041855215
-## 67  ENSDARG00000068161 -0.1182096357 -0.066078931 -8.710620e-02 -0.079296820
-## 68  ENSDARG00000109864  0.0972848023  0.096933482  1.597701e-01  0.109062924
-## 69  ENSDARG00000077202  0.4530476539  0.387793028  3.478419e-01  0.416043157
-## 70  ENSDARG00000116818 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 71  ENSDARG00000099938  0.0238830439  0.076000827 -3.081105e-02  0.024353777
-## 72  ENSDARG00000097963  0.0754890302  0.174632936  3.594634e-02  0.025907605
-## 73  ENSDARG00000103527  0.0601594089  0.101417559  9.623947e-02  0.026441277
-## 74  ENSDARG00000094215  2.7281697705  2.647852869  1.558745e+00  2.060876917
-## 75  ENSDARG00000115302 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 76  ENSDARG00000110833 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 77  ENSDARG00000097553  2.3074277610  2.255876198  2.558862e+00  2.190710014
-## 78  ENSDARG00000112873 -0.2202021041 -0.211589439 -2.226691e-01 -0.155814483
-## 79  ENSDARG00000069773 -0.1203616971 -0.031960801 -5.310780e-02 -0.015960044
-## 80  ENSDARG00000078004  1.1262358830  1.181121035  9.072424e-01  0.871287843
-## 81  ENSDARG00000089475  4.0528435344  3.867650260  3.807019e+00  3.775360064
-## 82  ENSDARG00000060734  0.8302685267  0.920799517  7.697459e-01  0.799550249
-## 83  ENSDARG00000079105  0.3910696983  0.411261600 -5.454574e-02  0.416162243
-## 84  ENSDARG00000088872  0.0291909186 -0.014221817  5.806177e-02 -0.057528992
-## 85  ENSDARG00000079901  0.1041787819  0.082445429  1.304653e-01  0.206972546
-## 86  ENSDARG00000037517  1.5337432361  1.596237966  1.362192e+00  1.463916574
-## 87  ENSDARG00000105507  0.0007635092 -0.101388306  1.185021e-01  0.015508088
-## 88  ENSDARG00000026736  0.3506010286  0.400817476  2.769927e-01  0.381717188
-## 89  ENSDARG00000091869  0.4593042108  0.594991212  7.043740e-01  0.597042234
-## 90  ENSDARG00000041570  1.1199068705  1.058572020  1.134673e+00  1.056242726
-## 91  ENSDARG00000091967  0.4393296040  0.558244169  4.803391e-01  0.506913669
-## 92  ENSDARG00000044521  3.6826386252  3.724158497  3.722246e+00  3.730067354
-## 93  ENSDARG00000019797  1.4504907182  1.448783792  1.322246e+00  1.562895731
-## 94  ENSDARG00000054799  1.5703260150  1.430830085  1.166787e+00  1.627372979
-## 95  ENSDARG00000021149  1.1852219746  0.961957905  1.046624e+00  1.088528638
-## 96  ENSDARG00000093022  1.3607229980  1.359003131  1.348758e+00  1.328656353
-## 97  ENSDARG00000000540  0.9901324488  0.933634816  9.447219e-01  0.970792833
-## 98  ENSDARG00000071377  0.2826496417  0.176449660  1.841981e-01  0.256248613
-## 99  ENSDARG00000102558  3.6997935099  3.732100179  3.688243e+00  3.513984569
-## 100 ENSDARG00000023868  2.1079517072  2.111782452  2.264383e+00  1.896011586
-## 101 ENSDARG00000038475  1.2601257154  1.161839030  1.247627e+00  1.064856545
-## 102 ENSDARG00000102295  0.4855832476  0.453286081  4.414890e-01  0.521181306
-## 103 ENSDARG00000077405  0.3351713247  1.799814065  9.010865e-01  0.254670633
-## 104 ENSDARG00000039268  0.6709632632  0.600815927  7.109521e-01  0.682333289
-## 105 ENSDARG00000099069  0.8641349523  0.792557086  7.284615e-01  0.904573906
-## 106 ENSDARG00000020811  0.7176635878  0.746629707  6.673898e-01  0.736190422
-## 107 ENSDARG00000006220  0.6655282169  0.558507621  3.988464e-01  0.708996399
-## 108 ENSDARG00000029168  0.7526063061  0.764124586  7.320638e-01  0.721847572
-## 109 ENSDARG00000023443  1.3550725712  1.481179121  1.448571e+00  1.376119380
-## 110 ENSDARG00000116164 -0.0812458603 -0.012535691 -8.740186e-02 -0.103150506
-## 111 ENSDARG00000038976  0.7742110703  0.823423383  9.226464e-01  0.772530351
-## 112 ENSDARG00000070847  0.1276449087  0.130005943  1.427120e-01  0.033611001
-## 113 ENSDARG00000045824  0.8632981034  0.819527537  8.333018e-01  0.929933736
-## 114 ENSDARG00000028333  0.1100394794  0.027023394  3.329122e-02  0.135035272
-## 115 ENSDARG00000098666  1.1999515980  1.231848742  1.105240e+00  1.234171476
-## 116 ENSDARG00000058394  0.7458134947  0.704982051  7.484922e-01  0.790556582
-## 117 ENSDARG00000091043  0.4096654373  0.423813647  3.192970e-01  0.359682067
-## 118 ENSDARG00000089874  0.4676839629  0.583510853  5.679539e-01  0.491083139
-## 119 ENSDARG00000101318  2.6523248779  2.665624382  2.567750e+00  2.476462524
-## 120 ENSDARG00000056793  0.2369444107  0.245643355  2.439335e-01  0.270876122
-## 121 ENSDARG00000104598  1.2150962178  1.337292295  1.067467e+00  1.226610010
-## 122 ENSDARG00000088764  0.2490952002  0.117861711  2.384063e-01  0.178825300
-## 123 ENSDARG00000079353  1.3227638584  1.454042628  1.466785e+00  1.241739982
-## 124 ENSDARG00000091728  0.2943074854  0.358621219  4.708891e-01  0.299589033
-## 125 ENSDARG00000037476  0.8020370394  0.797285229  7.352443e-01  0.791860674
-## 126 ENSDARG00000045530  0.1268731363  0.199362678  3.111303e-01  0.065665628
-## 127 ENSDARG00000036993  0.5935581055  0.652884718  5.232027e-01  0.637456481
-## 128 ENSDARG00000010145  0.7058363842  0.739547133  6.601366e-01  0.662091512
-## 129 ENSDARG00000069129  0.9609887084  0.865369142  6.679806e-01  0.854904444
-## 130 ENSDARG00000033949  0.1181828838  0.073450900  4.181344e-02  0.089843687
-## 131 ENSDARG00000052700  1.3535614361  1.155168268  1.144087e+00  1.340732151
-## 132 ENSDARG00000037432  0.6834820073  0.572652268  6.686550e-01  0.529675452
-## 133 ENSDARG00000051940  0.6102519270  0.679012861  6.517919e-01  0.604085227
-## 134 ENSDARG00000098788  3.5230272737  3.493481013  3.390241e+00  3.531850836
-## 135 ENSDARG00000103015 -0.0250088476 -0.026801603 -4.690783e-02 -0.053607382
-## 136 ENSDARG00000105414 -0.1538828014 -0.211589439 -2.154585e-02 -0.130079862
-## 137 ENSDARG00000102806 -0.0331347920 -0.034889634 -6.343682e-02 -0.047302267
-## 138 ENSDARG00000078941 -0.2202021041 -0.211589439 -1.281489e-01 -0.220596980
-## 139 ENSDARG00000105483 -0.2202021041 -0.075003358 -8.734392e-02 -0.140547523
-## 140 ENSDARG00000111934 -0.0093176249 -0.029335984  2.528112e-02 -0.057726206
-## 141 ENSDARG00000105393 -0.1026963097 -0.017863441  1.017032e-03 -0.075594903
-## 142 ENSDARG00000099514 -0.0462163092  0.024848213  2.895656e-02 -0.043114466
-## 143 ENSDARG00000105340 -0.0516197102 -0.073570239 -1.209851e-01 -0.080586448
-## 144 ENSDARG00000105468 -0.0769069940 -0.100692051 -3.805095e-02 -0.121150760
-## 145 ENSDARG00000104588  0.2089902470  0.246255248  3.545009e-01  0.193153323
-## 146 ENSDARG00000076146  0.0660064571  0.087974759  9.079252e-02  0.130145776
-## 147 ENSDARG00000096651  1.3798890896  1.395359924  1.385287e+00  1.380077162
-## 148 ENSDARG00000045837  0.5207566588  0.450319967  3.501085e-01  0.335063081
-## 149 ENSDARG00000087657  3.0670361472  3.292850770  3.555029e+00  3.408341873
-## 150 ENSDARG00000093476 -0.0823810855 -0.052488693 -2.226691e-01 -0.046413879
-## 151 ENSDARG00000094749 -0.0728661034 -0.211589439 -1.242917e-01 -0.092097884
-## 152 ENSDARG00000107425  0.0278899110  0.013334071  2.492464e-02 -0.004155113
-## 153 ENSDARG00000115054 -0.2202021041 -0.211589439 -1.226675e-01 -0.220596980
-## 154 ENSDARG00000111536 -0.1173761243 -0.211589439 -7.761788e-02 -0.102489684
-## 155 ENSDARG00000113707 -0.0549083176 -0.025151125 -1.128096e-01 -0.117316682
-## 156 ENSDARG00000070297 -0.1187009677 -0.124745129 -7.923592e-02 -0.220596980
-## 157 ENSDARG00000068763  1.1374980751  1.056724172  1.140788e+00  1.010972704
-## 158 ENSDARG00000093844  1.5720621306  1.941474469  2.203962e+00  2.057867595
-## 159 ENSDARG00000109890 -0.2202021041 -0.007036340 -2.226691e-01 -0.220596980
-## 160 ENSDARG00000109962 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 161 ENSDARG00000112207 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 162 ENSDARG00000041708  1.0976948502  1.181720390  1.101720e+00  1.204238222
-## 163 ENSDARG00000111619 -0.0782012139 -0.211589439 -9.501056e-03 -0.070014612
-## 164 ENSDARG00000088058 -0.0804042323 -0.037504102 -3.472064e-02 -0.072961341
-## 165 ENSDARG00000113481 -0.1421588601 -0.211589439 -2.226691e-01 -0.220596980
-## 166 ENSDARG00000104936  0.7031996785  0.543352335  7.484091e-01  0.459544981
-## 167 ENSDARG00000068822  2.6109754523  2.560861335  2.603620e+00  2.481766382
-## 168 ENSDARG00000089513  0.0913932540  0.141883514  1.953897e-01  0.117097255
-## 169 ENSDARG00000095312  0.1956864508  0.274754946  3.076711e-01  0.233730961
-## 170 ENSDARG00000099839  1.4825212600  2.203962196  2.396294e+00  1.767418677
-## 171 ENSDARG00000077519  0.1311995022 -0.107402319  9.237172e-03  0.049742853
-## 172 ENSDARG00000054858  1.4607204395  1.348571751  1.521325e+00  1.420222634
-## 173 ENSDARG00000103466  0.0663450168  0.288675047  4.042264e-01  0.110803573
-## 174 ENSDARG00000114493 -0.2202021041 -0.104434735 -7.216169e-02 -0.113544588
-## 175 ENSDARG00000086104  2.2148678592  2.087258932  2.205780e+00  2.179521882
-## 176 ENSDARG00000109926  0.0489226734  0.109279791  1.255748e-01  0.171585484
-## 177 ENSDARG00000063158  0.2205790620  0.315802675  3.061944e-01  0.268401648
-## 178 ENSDARG00000103618  0.1680598003  0.152998718  1.792986e-01  0.195489582
-## 179 ENSDARG00000039752  0.5504165128  0.574924879  4.963109e-01  0.502325399
-## 180 ENSDARG00000115405  4.2879245348  4.263666056  4.253018e+00  4.121931173
-## 181 ENSDARG00000103066  0.0390578217  0.033052635  3.944667e-01  0.165961174
-## 182 ENSDARG00000103862  0.9145209781  0.860849230  7.888222e-01  0.885466584
-## 183 ENSDARG00000057620 -0.1001859437 -0.027433871 -1.004811e-01 -0.048671073
-## 184 ENSDARG00000051736 -0.1317060001 -0.058441052 -9.994340e-02 -0.220596980
-## 185 ENSDARG00000095051  0.3489803956 -0.055172943  3.010284e-01  0.293879339
-## 186 ENSDARG00000068465 -0.0882401902 -0.092036496 -7.734212e-02 -0.100125243
-## 187 ENSDARG00000095281 -0.0655670313 -0.138179467 -1.147082e-01 -0.054577296
-## 188 ENSDARG00000061547 -0.0532398530  0.022548587  9.275431e-02  0.054827523
-## 189 ENSDARG00000105355 -0.0367914068 -0.001841049  7.794776e-03  0.045877923
-## 190 ENSDARG00000040230  0.1255291296  0.143046279  2.550331e-01  0.136376735
-## 191 ENSDARG00000107385  0.6318758017  0.617641773  4.716866e-01  0.653773713
-## 192 ENSDARG00000111894 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 193 ENSDARG00000117202 -0.2202021041 -0.211589439 -2.226691e-01 -0.042474414
-## 194 ENSDARG00000105558  0.0398659374  0.089888553 -2.400113e-02  0.123890855
-## 195 ENSDARG00000113825 -0.2202021041 -0.211589439 -1.618624e-01 -0.115819098
-## 196 ENSDARG00000055271  0.4181950228  0.328657530  2.554444e-01  0.453991294
-## 197 ENSDARG00000111396 -0.0646922909 -0.120702247 -1.012046e-01 -0.083585197
-## 198 ENSDARG00000105345 -0.1036591506 -0.211589439 -1.439069e-01 -0.079786437
-## 199 ENSDARG00000112175 -0.0685510113 -0.026554396  6.998465e-02  0.006925294
-## 200 ENSDARG00000110909 -0.0691580286 -0.037910381  5.109460e-02  0.072827915
-## 201 ENSDARG00000105352 -0.0114505986 -0.066652672  4.035495e-02  0.020804336
-## 202 ENSDARG00000112954 -0.1210686468 -0.095710279 -7.904753e-02 -0.153181801
-## 203 ENSDARG00000111165 -0.0566448793 -0.211589439 -1.204470e-01 -0.065081290
-## 204 ENSDARG00000099920 -0.1111499085 -0.001216589 -1.599303e-02 -0.039894871
-## 205 ENSDARG00000111501 -0.2202021041 -0.073185075 -1.232629e-01 -0.159176295
-## 206 ENSDARG00000101249 -0.1013579670 -0.126312965 -2.245189e-02 -0.061663076
-## 207 ENSDARG00000105318 -0.1054668002 -0.100364621 -1.125168e-01 -0.220596980
-## 208 ENSDARG00000105353 -0.1046652714 -0.063785203 -8.054844e-03 -0.072517323
-## 209 ENSDARG00000105376 -0.2202021041 -0.211589439 -1.450745e-01 -0.137424525
-## 210 ENSDARG00000105382 -0.0873728673 -0.036242439  1.554628e-02  0.008325154
-## 211 ENSDARG00000105409 -0.2202021041 -0.211589439 -8.746080e-02 -0.139169646
-## 212 ENSDARG00000105482 -0.0720639795 -0.098792401 -7.895212e-02 -0.070267937
-## 213 ENSDARG00000110035 -0.1292011322 -0.211589439 -1.263130e-01 -0.132664719
-## 214 ENSDARG00000110152 -0.2202021041 -0.211589439 -1.100597e-01 -0.071871377
-## 215 ENSDARG00000111247 -0.2202021041 -0.211589439 -1.362926e-01 -0.220596980
-## 216 ENSDARG00000111494 -0.2202021041 -0.117286960 -2.226691e-01 -0.220596980
-## 217 ENSDARG00000112528 -0.2202021041 -0.211589439 -8.698087e-02 -0.091463188
-## 218 ENSDARG00000115281 -0.2202021041 -0.211589439 -2.226691e-01 -0.152899977
-## 219 ENSDARG00000114534 -0.1072545177 -0.211589439 -1.219803e-01 -0.138764062
-## 220 ENSDARG00000116781 -0.0922509443 -0.211589439 -1.103845e-01 -0.220596980
-## 221 ENSDARG00000110812 -0.1512283802 -0.126738471 -1.468651e-01 -0.220596980
-## 222 ENSDARG00000115799 -0.1019307020 -0.211589439 -2.226691e-01 -0.220596980
-## 223 ENSDARG00000111753 -0.0339696398  0.035385193  1.166020e-01  0.014104324
-## 224 ENSDARG00000112491 -0.2202021041 -0.211589439 -7.081000e-02 -0.220596980
-## 225 ENSDARG00000114105 -0.2202021041 -0.211589439 -2.226691e-01 -0.137956296
-## 226 ENSDARG00000113889 -0.1214119193 -0.118929142 -2.226691e-01 -0.220596980
-## 227 ENSDARG00000097564  0.2801754712  0.123845859  8.386901e-02  0.146220824
-## 228 ENSDARG00000114843 -0.0932642485 -0.211589439 -2.226691e-01 -0.220596980
-## 229 ENSDARG00000111017 -0.1588355815 -0.211589439 -2.226691e-01 -0.220596980
-## 230 ENSDARG00000112706 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 231 ENSDARG00000103636  0.1458048582  0.237403034  2.477567e-01  0.184337092
-## 232 ENSDARG00000058108  0.5264641681  0.575709756  4.603625e-01  0.540403422
-## 233 ENSDARG00000112789 -0.2202021041 -0.211589439 -2.226691e-01 -0.220596980
-## 234 ENSDARG00000092317 -0.2202021041 -0.211589439 -6.131531e-02 -0.220596980
-## 235 ENSDARG00000062986  1.8314790823  1.646862020  1.806047e+00  1.831854454
-##       SRR1205171   SRR1205168   SRR1205154   SRR1205169   SRR1205163
-## 1   -0.109392578 -0.083524712 -0.223895519 -0.210436907 -0.198793234
-## 2    0.416509762  0.339981388  0.260872350  0.384408857  0.288147791
-## 3    0.923642514  0.946717805  0.976990646  0.983372816  0.992181444
-## 4    0.632381390  0.419805001  0.409998106  0.772113669  0.620859325
-## 5    0.688663929 -0.035202107 -0.002124277  0.583903108  0.467087159
-## 6    0.332313010  0.154268215  0.047243375  0.286632805  0.273305042
-## 7    0.048839064  0.124577091 -0.223895519 -0.030330304  0.067473367
-## 8   -0.080991394 -0.130476116 -0.164123282 -0.210436907 -0.198793234
-## 9    0.664800923  1.168942375  1.108405462  0.772690585  0.714411466
-## 10   0.795033274  1.301279909  1.128128183  0.909183582  0.770000316
-## 11  -0.208500597 -0.102255924 -0.223895519 -0.138285679 -0.198793234
-## 12  -0.208500597 -0.053273562 -0.223895519 -0.142410807  0.104009760
-## 13  -0.208500597 -0.116529673 -0.223895519 -0.102428187 -0.198793234
-## 14   0.066842016  0.366110962  0.404629971  0.072440790  0.013372840
-## 15   0.505852856  0.726692804  0.785094393  0.546617162  0.476862107
-## 16   0.124026107  0.032112001 -0.042012494  0.503831088  0.351417655
-## 17   0.047115564 -0.017437587 -0.010556171  0.051826185  0.127329408
-## 18  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 19  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 20  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 21  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 22   0.030496485  0.297048372  0.707100411  0.032933497  0.110895237
-## 23   0.475660116  0.444622908  0.382168281  0.455799976  0.364697810
-## 24   1.147167482  1.454486881  1.507215425  1.097815720  1.074762395
-## 25   0.595540390  0.957010231  0.744995454  0.556775382  0.623109672
-## 26   0.344996304  0.025043227  0.064538131  0.311504585  0.588862120
-## 27   0.039667313  0.031674048 -0.007178967 -0.101542729  0.028006654
-## 28   0.441430847  0.580337339  0.373315429  0.411435022  1.242389487
-## 29  -0.110173914 -0.220579824 -0.038151736 -0.095323137 -0.095560979
-## 30  -0.208500597  0.060485895 -0.041773330 -0.099442317 -0.057293346
-## 31  -0.098130081 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 32  -0.030365586 -0.001911670 -0.013896208  0.013763613 -0.104175866
-## 33   0.080023425  0.051254192  0.019624528  0.035865143 -0.044667730
-## 34   0.276311091  0.026018823  0.114254187  0.211321801  0.004831060
-## 35   0.088359952  0.084995752  0.150883300  0.135541014  0.104178782
-## 36  -0.039756584  0.349242782  0.097417787 -0.006957496  0.325944350
-## 37  -0.208500597 -0.086672375 -0.076812573 -0.210436907 -0.198793234
-## 38  -0.208500597 -0.073755358 -0.071396464 -0.210436907 -0.198793234
-## 39   1.345274717  1.411447487  1.805332917  1.130423421  1.108405462
-## 40   0.353590488  0.337378799  0.255849640  0.461966883  0.305163309
-## 41  -0.208500597 -0.111704910 -0.076525567 -0.210436907 -0.198793234
-## 42   0.108400296  0.018776074  0.177086158  0.104955101  0.120010704
-## 43   1.391063535  1.338189006  1.380269389  1.417618896  0.948640345
-## 44  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 45  -0.208500597 -0.220579824 -0.152671027 -0.210436907 -0.198793234
-## 46   0.286685009  0.148948380  0.009684096  0.412853698  0.437743604
-## 47   0.326319528  0.170960786  0.139656188  0.232568647  0.169721506
-## 48  -0.113716894 -0.154025667 -0.223895519 -0.210436907 -0.198793234
-## 49   0.466218859  0.290252624  0.229291899  0.347734565  0.424965380
-## 50   0.138166603  0.050394544  0.044326098  0.104407010 -0.198793234
-## 51   0.227990471  0.003306052 -0.003681240  0.097240585  0.121446196
-## 52   0.614809715  0.206719856  0.372579402  0.373258888  0.332204832
-## 53   0.414076707  0.266101621  0.139566441  0.496250426  0.433711367
-## 54   0.130606529  0.168903116  0.226342825  0.099798322  0.190575527
-## 55  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.033204660
-## 56   0.141372521  0.173679587  0.038612691  0.134677006  0.206090222
-## 57   0.136282955  0.147513421  0.112994250  0.281444109  0.042057648
-## 58   0.415463123  0.241386640  0.253289532  0.456710796  0.317497504
-## 59   0.552068497  0.415463123  0.345051882  0.389100439  0.376004127
-## 60   0.220235413  0.190048341  0.113450914  0.398270032  0.365728990
-## 61   0.233424083  0.091393254  0.125394611  0.249971813 -0.096869048
-## 62   0.212819548  0.070110300  0.212868871  0.276570546  0.250945160
-## 63   0.077621948 -0.042177337 -0.027824744  0.277566325  0.198135027
-## 64   0.435032702  0.260562390  0.476497804  0.342994930  0.379911437
-## 65   0.200592225  0.111475675  0.173536782  0.248117208  0.172499216
-## 66  -0.102197680 -0.040418241  0.160896961 -0.210436907 -0.198793234
-## 67   0.066968592 -0.023226231 -0.065403590  0.141788872  0.062966267
-## 68   0.322551506  0.151209679  0.144034769  0.184052747  0.139566441
-## 69   0.673359308  0.371241222  0.380306619  0.562912383  0.487718909
-## 70  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 71  -0.101695328 -0.024375455  0.009646656 -0.210436907 -0.198793234
-## 72   0.146632762 -0.022801591  0.043926504  0.204836856  0.187877411
-## 73   0.253339949  0.031081159  0.113894615  0.252626992  0.042756714
-## 74   0.224906810  2.142470183  1.863369138  0.496129488  0.501132982
-## 75  -0.208500597 -0.220579824 -0.223895519 -0.083054917 -0.198793234
-## 76  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 77   1.406118210  2.383140198  2.251964685  1.775758991  2.022698077
-## 78  -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 79  -0.085448688 -0.136118562 -0.056904365 -0.057986246 -0.198793234
-## 80   0.070532200  1.131516578  0.667243982  0.106833213  0.105754311
-## 81   0.602903687  3.905217807  3.598668726  1.002846460  1.139148082
-## 82   0.897396799  0.874010443  0.908353356  0.933946975  0.853201350
-## 83  -0.030082329  0.374599104 -0.007436611 -0.052779621  0.054746581
-## 84  -0.099710500 -0.023519422  0.081484988 -0.135034618  0.036214320
-## 85   0.084571963  0.009759782 -0.013248433  0.073409320  0.101679869
-## 86   2.644603393  1.548632854  1.598045644  2.599495983  1.996133685
-## 87  -0.069063297 -0.013175934 -0.052878016 -0.085198328 -0.037504102
-## 88   0.987925481  0.372019818  0.270822839  0.775302935  1.025191037
-## 89   0.442379364  0.408634068  0.441960415  0.377432850  0.486745967
-## 90   1.123269350  1.099778079  1.022607994  0.981509434  0.921513116
-## 91   0.634357632  0.570021900  0.486133596  0.516328074  0.597312745
-## 92   3.740287050  3.682638625  3.740287050  3.705404539  3.740287050
-## 93   1.438405082  1.412040280  1.443869383  1.307829300  1.394183200
-## 94   1.339647116  1.375200795  1.489647279  1.345815715  1.476117099
-## 95   1.605754010  1.041126144  1.220605784  1.429577880  1.248784184
-## 96   1.468502876  1.336214830  1.493168107  1.266139678  1.114637044
-## 97   0.894730105  1.035037222  0.906236123  0.736506700  0.920198132
-## 98   0.933946975  0.175061092  0.411720954  1.088916697  0.790556582
-## 99   0.803077987  3.821406419  3.332861222  1.119640682  1.387031241
-## 100  2.454949535  2.077899078  2.049000466  2.253253871  1.894856670
-## 101  1.085413182  1.165917285  1.351147215  1.071331072  0.942942643
-## 102  0.540530480  0.506530732  0.521885738  0.563635174  0.513462942
-## 103  1.726734056  1.834064951  1.505153109  1.700042758  1.591009257
-## 104  0.669852672  0.584100738  0.720807590  0.682714467  0.599187749
-## 105  0.228243852  0.818300847  0.774471337  0.181569461  0.235188029
-## 106  0.702431741  0.771601233  0.826638803  0.785775148  0.767396227
-## 107  0.777392410  0.388474929  0.788822162  0.931047775  0.702966597
-## 108  1.327394320  0.686581835  0.923851533  1.394183200  1.365174078
-## 109  1.947011313  1.231232007  1.631772546  1.977554304  1.869518707
-## 110 -0.208500597 -0.104405602 -0.105021480 -0.210436907 -0.198793234
-## 111  0.555805825  0.859242189  0.704605457  0.537297132  0.642669774
-## 112  0.260404421  0.090622257  0.232216659  0.398846419  0.195241068
-## 113  1.227861744  0.813505975  1.025428160  1.477442636  1.090696347
-## 114 -0.134838983  0.072019650  0.125806084 -0.117026225 -0.079079625
-## 115  1.252326717  1.180387096  1.040148492  1.156176281  1.497893272
-## 116  0.756011309  0.755669786  0.765471499  0.691412518  0.743287128
-## 117  0.043720095  0.436280493  0.247356484  0.119326995  0.049984119
-## 118 -0.023121935  0.707949982  0.378955159  0.030803500  0.104497020
-## 119  0.658892288  2.697979456  2.417744855  0.703670890  0.771424778
-## 120  0.410051889  0.277411448  0.179492154  0.349242782  0.416396517
-## 121  0.327613823  1.343101676  1.039048041  0.353144242  0.426994727
-## 122  0.345939708  0.203212559  0.226497661  0.224508946  0.087091076
-## 123  0.520204810  1.316327892  1.455776729  0.645441254  0.473431472
-## 124  0.122581135  0.311130326  0.192817957  0.017425465  0.117372529
-## 125  1.618927097  0.878245988  0.805364285  1.632589403  1.572062131
-## 126  0.230801249  0.119923297  0.356088509  0.375890323  0.219194373
-## 127  1.016855234  0.553299559  0.635069551  1.149215663  1.215837213
-## 128  1.015584045  0.758433866  0.763953937  0.922750898  0.938193663
-## 129  1.023541515  0.860752396  0.831553327  0.875461658  0.901574416
-## 130  0.234487332  0.047943592  0.009497478  0.151534902  0.259942287
-## 131  0.402740409  1.361460256  1.156313074  0.461610153  0.440952597
-## 132  0.557777676  0.552667608  0.593970747  0.558108926  0.406516890
-## 133  0.883119047  0.672977191  0.627239839  0.731907743  0.849273080
-## 134  2.447346869  3.517680595  3.476336427  2.670089622  2.771116713
-## 135 -0.114008732 -0.068804982 -0.147873518 -0.123262899 -0.086549758
-## 136 -0.114708246 -0.082259051 -0.131818078 -0.129368889 -0.198793234
-## 137  0.194847768 -0.010376521 -0.105825646  0.135723298  0.146539434
-## 138 -0.208500597 -0.134070477 -0.223895519 -0.210436907 -0.198793234
-## 139 -0.208500597 -0.088338546 -0.223895519 -0.119132721 -0.198793234
-## 140 -0.208500597  0.009200615 -0.056709196 -0.210436907 -0.198793234
-## 141 -0.208500597 -0.092189804 -0.104119318 -0.066749338 -0.198793234
-## 142 -0.208500597 -0.067106213 -0.041807034 -0.111963452 -0.083151589
-## 143 -0.208500597 -0.073877983 -0.096510637 -0.085693199 -0.114915548
-## 144 -0.208500597 -0.135893689 -0.145131312 -0.210436907 -0.038117471
-## 145  0.325358494  0.245848983  0.230548774  0.300117228  0.342024443
-## 146  0.500508218  0.139059398  0.122270547  0.895605266  0.695675899
-## 147  1.681098615  1.333117063  1.397737415  1.650435187  1.783861409
-## 148  0.164245852  0.406516890  0.607005796  0.179108941  0.522385368
-## 149  1.779522522  2.803115143  3.361371268  2.171457051  1.719941340
-## 150  0.540204151  0.008172976 -0.017036005  0.989021863  0.712379889
-## 151 -0.012281266 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 152  0.103327505  0.062040181 -0.006198604  0.114340908  0.032231368
-## 153 -0.208500597 -0.112721351 -0.223895519 -0.210436907 -0.198793234
-## 154 -0.208500597 -0.068551011 -0.223895519 -0.137676686 -0.198793234
-## 155 -0.208500597 -0.220579824 -0.103598845 -0.136407384 -0.112721351
-## 156 -0.208500597 -0.136554163 -0.223895519 -0.210436907 -0.198793234
-## 157  0.586382129  1.016973589  1.420641358  0.556453211  0.515713952
-## 158  0.507041954  1.100039991  1.076641442  0.922646437  1.705083606
-## 159 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 160 -0.208500597 -0.220579824 -0.223895519 -0.142158860 -0.198793234
-## 161 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 162  0.997141799  1.084418426  1.101977065  0.955191107  0.898384595
-## 163 -0.208500597 -0.132912275 -0.141423951 -0.135258931 -0.198793234
-## 164  0.031553804  0.011704612 -0.065856277 -0.029620514 -0.198793234
-## 165 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 166  0.551543110  0.592198303  0.539100307  0.425610830  0.601434650
-## 167  1.861843504  2.776558028  2.221674750  1.879024519  1.900369950
-## 168  0.154268215  0.155024907  0.088485450  0.105397288  0.113040079
-## 169  0.400984644  0.295258148  0.238456211  0.378900031  0.648570313
-## 170  0.416853762  2.178950375  2.154187942  0.227398558  0.673203641
-## 171  0.173631985  0.150646028  0.155745826 -0.093994227  0.011359309
-## 172  1.116843421  1.345274717  1.390677206  1.018358740  1.199493066
-## 173 -0.099264709  0.125759498  0.222942266 -0.210436907 -0.198793234
-## 174 -0.047662685 -0.220579824 -0.126515705 -0.057626524 -0.198793234
-## 175  0.830268527  2.278187657  1.854693947  0.906933159  0.958267122
-## 176 -0.101048836  0.318655149  0.004868411 -0.082381086  0.103372599
-## 177 -0.050329621  0.241337944  0.226445921  0.003048622  0.016198985
-## 178  0.341224147  0.050353739  0.226899246  0.324065524  0.367656931
-## 179  0.799294571  0.665094630  0.614740278  0.776622839  0.620998913
-## 180  0.996124189  4.328431534  3.940867321  1.825842431  1.769711777
-## 181  0.270665882  0.084872230  0.026287437  0.203261951  0.132662278
-## 182  0.633505359  0.874106587  0.939564971  0.671331646  0.802990855
-## 183 -0.208500597 -0.055599071 -0.092829654 -0.138093845 -0.094142987
-## 184 -0.208500597 -0.220579824 -0.128232812 -0.210436907 -0.198793234
-## 185  0.401213693  0.553702772  0.283658718  0.468045325  0.495258411
-## 186  0.226747857 -0.134384494 -0.114944697  0.289727225  0.277044386
-## 187 -0.002308888 -0.088240190 -0.092585939 -0.064692291 -0.052812419
-## 188 -0.038869614  0.121260700 -0.091883877 -0.210436907 -0.198793234
-## 189 -0.075745905 -0.017688559 -0.121581128 -0.105767317 -0.198793234
-## 190  0.230250988  0.055604712  0.188885811  0.312527471  0.269163627
-## 191  0.747114484  0.623678783  0.596781504  0.648788312  0.739631124
-## 192 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.118209636
-## 193 -0.208500597 -0.220579824 -0.223895519 -0.210436907  0.027023394
-## 194  0.327446060  0.159335995  0.079767468  0.286203783  0.172791382
-## 195 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 196  0.693705041  0.402914642  0.415179611  0.840125927  0.806145508
-## 197 -0.083585197 -0.050826675 -0.126488487 -0.065242336 -0.198793234
-## 198 -0.208500597 -0.100032279 -0.106437871 -0.210436907 -0.198793234
-## 199 -0.087401863  0.001701121 -0.022207694 -0.120645864  0.011212599
-## 200 -0.208500597  0.104911115 -0.070523919 -0.210436907 -0.198793234
-## 201 -0.208500597 -0.036673959 -0.149595573 -0.210436907 -0.104890180
-## 202 -0.105767317 -0.152699828 -0.083897032 -0.210436907 -0.109364013
-## 203 -0.208500597 -0.112897890 -0.104581098 -0.210436907 -0.098583043
-## 204 -0.208500597 -0.013967028 -0.012749167 -0.093111746 -0.115408163
-## 205 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 206 -0.208500597 -0.112143374 -0.223895519 -0.210436907 -0.198793234
-## 207 -0.114447365 -0.112663747 -0.120219985 -0.210436907 -0.072421648
-## 208 -0.063947391 -0.067939241 -0.129173534 -0.085874628 -0.111933285
-## 209 -0.208500597 -0.133735416 -0.223895519 -0.210436907 -0.198793234
-## 210 -0.208500597 -0.045816117 -0.083768962 -0.210436907 -0.198793234
-## 211 -0.126947936 -0.138369139 -0.159611617 -0.123523228 -0.198793234
-## 212 -0.208500597 -0.102579041 -0.119220249 -0.210436907 -0.198793234
-## 213 -0.208500597 -0.220579824 -0.129593519 -0.210436907 -0.198793234
-## 214 -0.208500597 -0.220579824 -0.125740357 -0.210436907 -0.198793234
-## 215 -0.208500597 -0.220579824 -0.135316207 -0.210436907 -0.198793234
-## 216 -0.208500597 -0.220579824 -0.106321660 -0.210436907 -0.198793234
-## 217 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 218 -0.117432093 -0.154708182 -0.152928083 -0.122839812 -0.198793234
-## 219 -0.208500597 -0.114125050 -0.223895519 -0.210436907 -0.198793234
-## 220 -0.208500597 -0.114240966 -0.141057693 -0.210436907 -0.198793234
-## 221 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 222 -0.208500597 -0.220579824 -0.223895519 -0.129964135 -0.113893160
-## 223 -0.208500597  0.051907125 -0.087706676 -0.210436907 -0.004340541
-## 224 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 225 -0.208500597 -0.220579824 -0.105527676 -0.210436907 -0.198793234
-## 226 -0.208500597 -0.115905413 -0.223895519 -0.210436907 -0.198793234
-## 227 -0.015311006  0.117550103 -0.011058466  0.098490617  0.314301923
-## 228 -0.208500597 -0.220579824 -0.083464584 -0.210436907 -0.198793234
-## 229 -0.208500597 -0.049084606 -0.223895519 -0.083464584 -0.198793234
-## 230 -0.104204728 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 231  0.264093197  0.012494696  0.262362781  0.167292002 -0.008657145
-## 232  0.889218780  0.580538073  0.602337439  0.853563329  0.814935122
-## 233 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 234 -0.208500597 -0.220579824 -0.223895519 -0.210436907 -0.198793234
-## 235  1.912989502  1.858460027  1.871414556  1.838675874  1.810212457
-##       SRR1205172   SRR1205158   SRR1205160    SRR1205152   SRR1205170
-## 1   -0.075286369 -0.088057949 -0.205183527 -0.1092780152 -0.124146981
-## 2    0.382442852  0.301807337  0.403768346  0.3147354959  0.449024130
-## 3    1.064367981  0.766979732  1.007270810  0.9203927267  0.993758968
-## 4    0.640060437  0.771424778  1.059563164  0.4811271298  0.716942234
-## 5    0.032152639  0.331491250  0.716086393  0.0103616910  0.746143834
-## 6    0.026713395  0.330573807  0.143661846  0.0948003256  0.324604227
-## 7    0.169192069  0.223199587  0.131339078 -0.2228794705 -0.205413699
-## 8   -0.214760317 -0.190806033 -0.205183527 -0.1619495903 -0.205413699
-## 9    1.087624229  0.819081784  0.796071472  1.1875764323  0.698347511
-## 10   0.978984647  0.850841972  0.708580368  1.6192040185  0.583968985
-## 11  -0.214760317 -0.190806033  0.018736572 -0.0884312617 -0.107254518
-## 12  -0.214760317 -0.190806033 -0.205183527 -0.2228794705  0.062538415
-## 13  -0.088088993 -0.190806033 -0.113455894 -0.1359221705 -0.205413699
-## 14   0.395078515 -0.012063773  0.034484418  0.3971719891 -0.019236345
-## 15   0.818129524  0.402683061  0.482291101  0.7917730801  0.490303756
-## 16   0.018736572  0.011140373  1.706885317 -0.0209845744  0.200243986
-## 17   0.060571405  0.113177266  0.092841717  0.0688103691  0.072658393
-## 18  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 19  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 20  -0.148080552 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 21  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 22   0.360224626  0.215102611  0.083784529  0.7008850104  0.039667313
-## 23   0.422067677  0.375947225  0.388587516  0.3907415630  0.440604328
-## 24   1.460931102  0.814935122  0.853946841  1.3184027182  1.042797934
-## 25   0.912566455  0.524836893  0.369307147  0.8364904625  0.581751148
-## 26  -0.028504843  0.946073238  0.883119047 -0.0383943155  0.215201404
-## 27   0.024848213  0.010506574 -0.006810406  0.0409660805 -0.042944952
-## 28   0.263528986  0.883999658  0.169721506  0.1868042681  0.629513532
-## 29  -0.214760317  0.053751207 -0.109421144 -0.2228794705 -0.205413699
-## 30  -0.068517876 -0.082689724 -0.112400912 -0.0759582471 -0.205413699
-## 31  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 32   0.064538131 -0.069063297  0.075058062  0.0241187223  0.008399072
-## 33   0.005383446  0.009872071 -0.015892775 -0.0005761559  0.071634711
-## 34   0.155310426  0.269319163  0.153136513  0.0866989207  0.172840342
-## 35   0.125305595  0.044126348  0.264906716  0.2030178025  0.197487506
-## 36   0.218601705 -0.029371730 -0.041740555  0.2875227897 -0.002707905
-## 37  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 38  -0.074378929  0.131930861 -0.004599756 -0.2228794705 -0.205413699
-## 39   1.832229825  1.854329692  1.994281606  1.8767133516  1.140788254
-## 40   0.181136997  0.295798237  0.421200200  0.2168225100  0.358403560
-## 41  -0.060589151 -0.190806033 -0.089498059 -0.2228794705 -0.125118945
-## 42   0.100331906  0.192191846  0.133808019  0.2174577102  0.122313243
-## 43   1.436549241  1.494071130  1.257881117  1.3929857605  1.352998380
-## 44  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 45  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 46   0.058185106  0.246451534  0.257074593  0.1104388903  0.372579402
-## 47   0.153046014  0.112224338  0.370961723  0.1887423789  0.197838935
-## 48  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 49   0.401271566  0.219986290  0.365014199  0.2668912336  0.504981583
-## 50   0.119831817  0.071208212  0.216574596  0.0767187290  0.088611010
-## 51  -0.214760317  0.079046046  0.165732564  0.0169653565  0.190527559
-## 52   0.296217875  0.273145705  0.581552007  0.2409312236  0.515095493
-## 53   0.170578543  0.381998835  0.392575047  0.1983293880  0.440028097
-## 54   0.241032077  0.357686711  0.193925733  0.2600467089  0.281017109
-## 55  -0.214760317  0.044006138  0.002261502 -0.1222909538 -0.055632142
-## 56   0.083517464  0.033571068  0.305930377 -0.0634031897  0.167771644
-## 57   0.313066486  0.135496264  0.150598274  0.1322109789  0.283658718
-## 58   0.323903383  0.234235898  0.389945601  0.2191454866  0.452635137
-## 59   0.351533141  0.692262478  0.481429188  0.4985014279  0.417726556
-## 60   0.330466902  0.164583632  0.281017109  0.1673410725  0.322498257
-## 61   0.161503415  0.126134942  0.314082777  0.2499718133  0.264545666
-## 62   0.151256732  0.375553526  0.281756373  0.2730396131  0.381495878
-## 63  -0.042240905  0.213859318  0.080839983 -0.0437944933  0.315208596
-## 64   0.385137993  0.352091524  0.512149003  0.3508724126  0.380809127
-## 65   0.288199839  0.163953449  0.246708818  0.1707681946  0.230400935
-## 66   0.060780160 -0.102138275 -0.030082329 -0.0173999756 -0.205413699
-## 67  -0.096779070  0.064021674  0.235501013 -0.0988822975  0.161550605
-## 68   0.067555737  0.234925213  0.227545502  0.1077718600  0.106385804
-## 69   0.338465373  0.466525694  0.467683963  0.3415520563  0.434736210
-## 70  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.125568318
-## 71  -0.007981934 -0.190806033 -0.205183527  0.0183415684 -0.205413699
-## 72   0.052877828  0.210124922  0.222996016  0.0610692497  0.195734878
-## 73   0.099107280  0.210075380  0.197087633  0.1025731061  0.205031063
-## 74   2.711043463  0.148444713  0.107726546  1.4259022126  0.412912109
-## 75  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 76  -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 77   2.316499764  2.039878834  1.681098615  2.1854176842  1.627372979
-## 78  -0.146637638 -0.047466029 -0.084297016 -0.0279959129 -0.205413699
-## 79  -0.052652636 -0.027331221 -0.205183527 -0.0674238208 -0.205413699
-## 80   1.198605708 -0.190806033 -0.028100828  0.9381936633  0.065919374
-## 81   3.924161396  0.511774410  0.334249459  3.7072475053  0.927652393
-## 82   0.821907368  0.693401431  0.937364290  0.9450325088  0.979981202
-## 83   0.509179580 -0.190806033 -0.205183527 -0.0171807873 -0.035893014
-## 84  -0.002088625 -0.056517886 -0.037676656  0.1481118483 -0.036176020
-## 85   0.073998615  0.161834946  0.095931425  0.1014175594  0.058144029
-## 86   1.606531054  1.639147926  2.526328121  1.3041917073  2.668979097
-## 87  -0.044977120 -0.015673053 -0.092097884  0.0255948246 -0.047935422
-## 88   0.302553577  0.956248833  0.725112012  0.2390591126  0.890595595
-## 89   0.309411888  0.651502608  0.625679415  0.4365761321  0.589263516
-## 90   1.246495919  0.928466785  0.812870207  0.9977159178  0.929413938
-## 91   0.525092283  0.580133796  0.453991294  0.4365196400  0.496129488
-## 92   3.728034530  3.679097195  3.732100179  3.7462105967  3.690145370
-## 93   1.513374996  1.159995431  1.179534843  1.3582362886  1.247626754
-## 94   1.474149142  0.455452197  1.021353820  1.1323243803  1.124186485
-## 95   1.220149265  1.150480970  1.495397059  1.0379411226  1.424459415
-## 96   1.700338719  1.054039572  1.576312080  1.4061182095  1.149910356
-## 97   0.987264279  1.069939317  0.728461489  0.9511674551  0.927757117
-## 98   0.238556019  1.090443366  1.542539882  0.2691121843  1.079405664
-## 99   3.591736852  0.979868239  0.654873414  3.8365614369  0.620930103
-## 100  2.017456191  2.260561490  2.126476064  2.1547683514  2.406545517
-## 101  1.143947477  0.833574943  1.168227977  1.2291071592  1.154481589
-## 102  0.568622563  0.408119612  0.510985467  0.5560003103  0.521560466
-## 103  1.936467809  1.143537436  1.579051079  1.5959738794  1.639418766
-## 104  0.647398770  0.639988524  0.733446069  0.6997307635  0.624389746
-## 105  0.755752301  0.191557026  0.193975238  0.8286111646  0.168153811
-## 106  0.670002219  0.700419062  0.879766252  0.8220890302  0.811803435
-## 107  0.518288634  0.508490452  0.883405298  0.5844630891  0.893834405
-## 108  0.731522006  1.079283069  1.465904020  0.6512856328  1.256110116
-## 109  1.495625067  1.894091110  2.217329854  1.5983052611  1.912989502
-## 110 -0.131957917 -0.190806033 -0.097049140 -0.1455244191 -0.067747200
-## 111  0.717974277  0.747534614  0.478138509  1.0714631163  0.551672860
-## 112  0.165590026  0.227741999  0.382278819  0.0671389447  0.191162942
-## 113  0.881488674  0.789002548  1.687779388  0.8659457155  1.395359924
-## 114  0.113939100 -0.190806033 -0.205183527  0.0062888228 -0.205413699
-## 115  1.254072098  1.612454866  0.792467202  1.2189065887  1.242551541
-## 116  0.791510375  0.762114465  0.836857123  0.7405872701  0.745079271
-## 117  0.256402317 -0.063980192 -0.042045966  0.3387889733  0.045173072
-## 118  0.389783111 -0.082441876 -0.105109123  0.4074929945  0.008096175
-## 119  2.527278329  0.771513005  0.650770392  2.3532543462  0.825204355
-## 120  0.149707794  0.269691248  0.253289532  0.2389581515  0.377489060
-## 121  1.235751259  0.272833622  0.327232746  1.0222704646  0.367494638
-## 122  0.249712529  0.308097212  0.243162937  0.2090825037  0.333173535
-## 123  1.295747136  0.414190482  0.674541636  1.4102809412  0.591804678
-## 124  0.210368966  0.032816471  0.061027082  0.3895585412  0.005985399
-## 125  0.765047734  1.523896476  1.705083606  0.7618669772  1.589749233
-## 126  0.121260700  0.181184555  0.443978942  0.2297441866  0.244125484
-## 127  0.592817105  1.266958985  1.092658963  0.6600626380  1.135591069
-## 128  0.666196695  0.819257605  0.954040268  0.6268148102  1.015001040
-## 129  0.913901612  0.804068658  0.777218717  0.7903842529  0.982839126
-## 130  0.088832825  0.254413522  0.185735321  0.0897986799  0.135035272
-## 131  1.029579006  0.480587257  0.581884751  1.1579927451  0.447432210
-## 132  0.635788418  0.347515248  0.486440124  0.5568418516  0.445999736
-## 133  0.606445948  1.193230440  0.851582920  0.6280873030  0.780792862
-## 134  3.439657350  2.590398689  2.254555436  3.3881798271  2.658908240
-## 135 -0.057954235 -0.190806033 -0.205183527 -0.1358652076 -0.096330203
-## 136 -0.117893469 -0.005347651 -0.045347143 -0.1188424290 -0.205413699
-## 137 -0.086949167  0.246906100  0.206234420 -0.0560955234  0.180080930
-## 138 -0.097945330 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 139 -0.064438434 -0.190806033 -0.114095193 -0.1261093046 -0.205413699
-## 140 -0.078767002 -0.190806033 -0.205183527 -0.0163202708 -0.098969650
-## 141 -0.073152815 -0.067620308 -0.115933498 -0.0346873159 -0.125853177
-## 142 -0.214760317 -0.088732009 -0.205183527 -0.0773727217 -0.121411919
-## 143 -0.033065155 -0.190806033 -0.104636685 -0.2228794705 -0.205413699
-## 144 -0.087106198 -0.190806033 -0.205183527 -0.0654035900 -0.205413699
-## 145  0.185351048  0.252271727  0.319500574  0.2572797239  0.271909274
-## 146  0.135541014  0.286203783  0.815638549  0.0406325424  0.712143213
-## 147  1.328112257  1.804278677  1.685192783  1.4077408755  1.665714880
-## 148  0.507673378  0.205897831  0.179298630  0.5309029166  0.178496596
-## 149  3.297120719  2.116611324  1.984071889  3.4142768201  2.558861851
-## 150 -0.082076114  0.097634833  0.639265361 -0.0552063568  0.678511187
-## 151 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 152 -0.002707905  0.079174732  0.046720926 -0.0954409218  0.129349178
-## 153 -0.061191179 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 154 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 155 -0.106875780 -0.028990066 -0.205183527 -0.2228794705 -0.205413699
-## 156 -0.214760317 -0.067684051 -0.205183527 -0.2228794705 -0.205413699
-## 157  1.076762900  0.574532844  0.813414152  1.3178898232  0.688128717
-## 158  1.425695591  0.735959819  1.617291222  2.6589082404  1.902319521
-## 159 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 160 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 161 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 162  1.116976102  0.891757425  0.976765383  1.0546584214  0.950949512
-## 163 -0.081276142 -0.190806033 -0.205183527 -0.0539331159 -0.205413699
-## 164 -0.052256437 -0.027861278 -0.010376521 -0.0975919189 -0.205413699
-## 165 -0.214760317 -0.190806033 -0.205183527 -0.1197567689 -0.205413699
-## 166  0.451860228  0.795480442  0.451508125  0.7270188899  0.543802734
-## 167  2.554886692  1.721481167  1.769037125  2.2385402896  1.850226534
-## 168  0.189032693  0.203651335  0.188983733  0.0771880793  0.109236565
-## 169  0.266628145  0.632020252  0.444566431  0.1467720381  0.494467955
-## 170  1.858460027  0.304250119  0.346049807  2.0867592222  0.419165812
-## 171  0.044486335 -0.025257704  0.102303931  0.1888377503 -0.057129770
-## 172  1.222278854  1.861465349  1.151426741  1.5097036357  1.208456690
-## 173  0.182004245  0.022666821 -0.041405032  0.4926795239 -0.205413699
-## 174 -0.108604098 -0.041707780 -0.205183527 -0.1372599074 -0.064373862
-## 175  2.089839112  0.806231013  0.653327233  2.0002322908  0.925248811
-## 176  0.018968015 -0.060301295 -0.205183527  0.0291909186 -0.062727841
-## 177  0.245290675  0.147373214 -0.010122704  0.2722759113 -0.071871377
-## 178  0.230751883  0.334191732  0.297461813  0.1388280214  0.357074000
-## 179  0.703044567  0.678066780  0.605890839  0.6205130628  0.699730764
-## 180  4.300279444  1.006359819  0.703044567  4.0742989262  1.424255703
-## 181  0.048880869  0.318131983  0.182589258  0.2393562208  0.035424787
-## 182  0.885563156  0.841782356  0.856413836  0.8470265845  0.701113194
-## 183 -0.100364621 -0.079015432 -0.053965826 -0.1073144484 -0.205413699
-## 184 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 185  0.408008323  0.575579523  0.516638337  0.2571769338  0.470828521
-## 186 -0.032689742 -0.190806033  0.334191732 -0.0806506279  0.225726530
-## 187 -0.092617045 -0.190806033 -0.078889887 -0.2228794705 -0.055829210
-## 188 -0.039178899 -0.190806033 -0.205183527 -0.0326205800 -0.205413699
-## 189 -0.096182658 -0.190806033 -0.205183527 -0.0582732024 -0.205413699
-## 190  0.133990881  0.093528532  0.436744909  0.1709607856  0.244487080
-## 191  0.682789567  0.614465443  0.618691459  0.6022673188  0.652660831
-## 192 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 193 -0.084918831 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 194  0.154643477  0.115874182  0.158770003  0.0591726424  0.327016124
-## 195 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 196  0.386576373  0.570218793  0.633292945  0.1736795870  0.682104940
-## 197 -0.030707025 -0.190806033 -0.133227810 -0.1197274487 -0.205413699
-## 198 -0.098613656 -0.190806033 -0.205183527 -0.1123439828 -0.205413699
-## 199 -0.064985486 -0.088305038 -0.132968645 -0.0370972780 -0.205413699
-## 200 -0.052089619  0.022468090 -0.109771610 -0.0362092295 -0.068069914
-## 201 -0.043555993 -0.035533139 -0.205183527 -0.0172556212 -0.114169777
-## 202 -0.102815729 -0.190806033 -0.205183527 -0.0802816058 -0.205413699
-## 203 -0.214760317 -0.190806033 -0.205183527 -0.1124580759 -0.126962344
-## 204 -0.099264709 -0.190806033 -0.125427736 -0.0185731454 -0.099738814
-## 205 -0.118700968 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 206 -0.086396234 -0.190806033 -0.205183527 -0.1432005187 -0.205413699
-## 207 -0.088642457 -0.190806033 -0.057626524 -0.1586427746 -0.205413699
-## 208 -0.085041809 -0.089893400 -0.205183527 -0.0795687707 -0.205413699
-## 209 -0.083022919 -0.190806033 -0.205183527 -0.2228794705 -0.125881507
-## 210 -0.214760317 -0.048336851 -0.105676687 -0.0848242623 -0.205413699
-## 211 -0.093018236 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 212 -0.125853177 -0.190806033 -0.105974142 -0.1221223237 -0.205413699
-## 213 -0.125684807 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 214 -0.081556577 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 215 -0.214760317 -0.190806033 -0.205183527 -0.1476727533 -0.205413699
-## 216 -0.214760317 -0.190806033 -0.205183527 -0.1434878803 -0.205413699
-## 217 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 218 -0.138285679 -0.190806033 -0.205183527 -0.1222056222 -0.205413699
-## 219 -0.214760317 -0.087965292 -0.205183527 -0.1100319394 -0.205413699
-## 220 -0.124005082 -0.190806033 -0.205183527 -0.1248299508 -0.205413699
-## 221 -0.099381536 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 222 -0.107343749 -0.088338546 -0.205183527 -0.2228794705 -0.205413699
-## 223 -0.214760317 -0.190806033 -0.205183527  0.0817038171 -0.205413699
-## 224 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 225 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 226 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 227  0.098196350  0.106162082  0.041731281  0.1499902447  0.199901733
-## 228 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 229 -0.214760317 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 230 -0.214760317 -0.190806033 -0.205183527 -0.0877742249 -0.205413699
-## 231  0.085040309  0.356632513  0.235085270  0.2589591246  0.198231699
-## 232  0.549092806  0.890983303  0.811545906  0.5918046784  0.847501349
-## 233 -0.214760317 -0.190806033 -0.205183527 -0.1633091444 -0.205413699
-## 234 -0.083738592 -0.190806033 -0.205183527 -0.2228794705 -0.205413699
-## 235  1.830385853  1.723024744  1.876334682  1.7821971534  1.923179024
-##       SRR1205174   SRR1205162   SRR1205156   SRR1205161   SRR1205157
-## 1   -0.139962489 -0.211171528 -0.137150652 -0.204834304 -0.213196435
-## 2    0.268704859  0.381717188  0.348217590  0.405898340  0.310383622
-## 3    0.989684179  1.004320467  1.006813086  0.962826220  0.797889544
-## 4    0.347348064  1.003528865  0.542685633  1.028868760  0.811717362
-## 5   -0.006740151  0.816791526 -0.017071825  0.797285229  0.291932726
-## 6    0.052431786  0.377715701  0.065276986  0.339608831  0.368762218
-## 7   -0.100032279 -0.023797137 -0.219379384  0.151914480  0.182490167
-## 8   -0.220919601 -0.211171528 -0.219379384 -0.010341112 -0.087490268
-## 9    1.102367137  0.760477475  1.093954460  0.774558277  0.817151363
-## 10   1.056845584  0.833211068  1.017199701  2.362930014  1.340365899
-## 11  -0.220919601 -0.211171528 -0.219379384 -0.132185501 -0.042369575
-## 12  -0.098912323  0.165111116 -0.219379384  0.098153639  0.038210303
-## 13  -0.090946852 -0.211171528 -0.128858170 -0.204834304 -0.213196435
-## 14   0.333333790 -0.042610717  0.478385560 -0.077952849  0.070360116
-## 15   0.815989117  0.554756790  0.923950481  0.376004127  0.473549906
-## 16  -0.008054844  0.956575221 -0.088760493  0.278602096  0.631232614
-## 17  -0.040136754  0.019082226 -0.042474414  0.042836272  0.097462209
-## 18  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.108125213
-## 19  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 20  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 21  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 22   0.359460592 -0.023763668  0.582963439  0.028084097  0.192042740
-## 23   0.476556155  0.424620394  0.434197774  0.476738214  0.408751708
-## 24   1.512216427  0.948424371  1.557779582  0.965417647  0.775545214
-## 25   0.957853116  0.486684452  0.975432593  0.507608973  0.486195171
-## 26  -0.019127650  0.462146123 -0.110622943  0.354338628  1.171921299
-## 27   0.089531685 -0.065436576 -0.014839915 -0.079444878  0.011852695
-## 28   0.320817335  0.150551818  0.111610995  0.296477141  1.949044580
-## 29  -0.136976822 -0.043011333 -0.089160038 -0.078168995 -0.016886732
-## 30  -0.003383911 -0.211171528 -0.093412952 -0.099027734  0.007411576
-## 31  -0.220919601 -0.211171528 -0.219379384 -0.109656497 -0.213196435
-## 32  -0.015311006  0.022548587 -0.030503876  0.043071066 -0.033662401
-## 33   0.030183998  0.079637077 -0.061504769  0.029622559  0.009684096
-## 34   0.178825300  0.059788004  0.069941969  0.228293768  0.153700166
-## 35   0.135910022  0.288936103  0.244741548  0.136376735  0.156218468
-## 36   0.264193575 -0.064855802  0.210025838 -0.000727512  0.266101621
-## 37  -0.220919601 -0.211171528 -0.031759810 -0.204834304 -0.213196435
-## 38  -0.220919601 -0.211171528 -0.061925082 -0.077249995 -0.213196435
-## 39   1.622430022  1.380658076  1.795652137  1.703921570  1.589494033
-## 40   0.246203934  0.391740785  0.274654427  0.464604705  0.471196404
-## 41  -0.220919601 -0.082320600 -0.013212184 -0.204834304 -0.042177337
-## 42   0.091567387  0.108930854  0.233475899  0.101505428  0.157111590
-## 43   1.409322050  1.486995395  1.520832026  1.500845073  1.402771993
-## 44  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 45  -0.220919601 -0.136061677 -0.219379384 -0.124005082 -0.141199883
-## 46   0.150130974  0.439794308  0.047943592  0.300064830  0.442379364
-## 47   0.233833393  0.167102137  0.206378439  0.170578543  0.137485806
-## 48  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 49   0.299428566  0.340798608  0.214856661  0.316287456  0.343318768
-## 50   0.011741345  0.042139970 -0.219379384  0.080539958  0.210572015
-## 51   0.121260700  0.028161462  0.026480139  0.184337092 -0.039041321
-## 52   0.303603493  0.569758412  0.304089713  0.476078021  0.292297335
-## 53   0.328212425  0.399523769  0.404226368  0.415809134  0.532011075
-## 54   0.247907913  0.119923297  0.154977003  0.185252347  0.168480402
-## 55  -0.097078455 -0.211171528 -0.050230862 -0.204834304 -0.213196435
-## 56   0.110438890  0.074974472 -0.089924631  0.125574802  0.051581336
-## 57   0.176400694  0.108355953  0.176695931  0.103191860  0.066217161
-## 58   0.178058120  0.382332918  0.172742421  0.299482424  0.241934801
-## 59   0.468169749  0.388306694  0.420212362  0.441430847  0.446535309
-## 60   0.149707794  0.254000725  0.184052747  0.136517069  0.244793398
-## 61   0.126828032  0.066472211  0.156643671  0.188983733  0.181330302
-## 62   0.091912050  0.365618446  0.307884686  0.481491691  0.301235219
-## 63  -0.048165727  0.110621954 -0.009207563  0.109541414  0.067431452
-## 64   0.288044378  0.432163322  0.336689827  0.497260660  0.385800081
-## 65   0.186466120  0.140633194  0.288621871  0.316498661  0.198628948
-## 66   0.068265872 -0.211171528  0.123263551 -0.204834304 -0.118384056
-## 67  -0.055273073  0.076170097 -0.067292936 -0.026657741  0.068564549
-## 68   0.128843320  0.225160197  0.081268357  0.246809577  0.182689212
-## 69   0.425024280  0.434137053  0.295798237  0.397979106  0.443687885
-## 70  -0.134328375 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 71   0.013106935 -0.092402077 -0.029937609 -0.204834304 -0.213196435
-## 72   0.115641339  0.019740977  0.145850355  0.053584721  0.090965828
-## 73   0.097721655  0.189658724  0.102482723  0.257949982  0.232013413
-## 74   2.088777536  0.154174922  1.452139368  0.206282453  0.161598573
-## 75  -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 76  -0.220919601 -0.211171528 -0.219379384 -0.131647933 -0.213196435
-## 77   2.275589023  1.259634959  1.725796573  1.451121289  2.180707325
-## 78  -0.095946643  0.068979831 -0.219379384 -0.204834304 -0.072389893
-## 79  -0.023410968 -0.099381536 -0.154937589 -0.204834304 -0.213196435
-## 80   0.990932468 -0.053834744  0.647033230  0.041245267  0.024542011
-## 81   3.773163282  0.248835099  3.569287633  0.495703692  0.703277112
-## 82   0.881967559  0.949374829  0.985486065  0.965307939  0.657207095
-## 83   0.454340526 -0.211171528 -0.001841049 -0.204834304 -0.213196435
-## 84   0.085129423 -0.038360151  0.060485895  0.003977582 -0.069253516
-## 85   0.159861330  0.117861711  0.199118772  0.122491351  0.176498631
-## 86   1.387597463  2.783266891  1.291366260  2.551962738  1.593343243
-## 87  -0.050362185 -0.067620308  0.015393325 -0.113805322 -0.013859891
-## 88   0.392464927  0.704982051  0.214954821  0.772690585  0.754003978
-## 89   0.477288983  0.800923035  0.563499927  0.481187353  0.543738069
-## 90   1.154340674  0.841139871  0.991952142  0.908668807  0.830175745
-## 91   0.549361528  0.441191383  0.515221116  0.484646378  0.478509952
-## 92   3.712942111  3.709137679  3.720342558  3.720342558  3.682638625
-## 93   1.447540741  1.501516597  1.713555718  1.414831121  0.920294318
-## 94   1.657297548  1.215547301  1.432033717  0.881679614  1.021131710
-## 95   1.115692089  1.470671778  1.012154274  1.512910389  1.331863490
-## 96   1.462647740  1.312148992  1.547417764  1.547183473  0.971115792
-## 97   0.947263055  0.835755463  0.892638064  0.933634816  0.941788612
-## 98   0.173679587  1.185083323  0.339114315  1.349872570  0.992294099
-## 99   3.716662896  0.438505068  1.947420446  0.736761340  1.184944672
-## 100  1.933586640  2.206954399  1.830745109  2.169169673  2.391658932
-## 101  1.160994307  1.068594180  1.009790159  1.143275837  1.044013587
-## 102  0.492679524  0.495575790  0.536718684  0.525211943  0.366223172
-## 103  1.783546527  1.724854340  1.800168893  1.763151933  0.960335441
-## 104  0.654873414  0.702503815  0.731598793  0.738792049  0.790992068
-## 105  0.926610781  0.184480459  0.952007969  0.200097323  0.183425073
-## 106  0.704832033  0.955925535  0.726854565  0.880529921  0.825477169
-## 107  0.665820493  0.763700776  0.835663673  0.902287330  0.567620557
-## 108  0.733199492  1.567606598  0.689882532  1.420222634  1.360154403
-## 109  1.371453323  1.901540653  1.622991838  2.055385070  2.113901223
-## 110 -0.220919601 -0.122150090 -0.139934699 -0.065370604 -0.075564294
-## 111  0.775626166  0.609837602  0.775302935  0.602761968  0.664354530
-## 112  0.105353863  0.195189814  0.045548333  0.240369210  0.440028097
-## 113  0.911364535  1.223842741  0.801433807  1.138744821  0.911566419
-## 114  0.093273198 -0.117316682  0.027062514 -0.129229312 -0.144184867
-## 115  1.131516578  0.991719413  1.130026903  1.013519034  1.403746550
-## 116  0.770674068  0.756672613  0.881105039  0.840676335  0.733115580
-## 117  0.488532459  0.007794776  0.350547715  0.040509372  0.023290206
-## 118  0.429120310  0.074933274  0.497574153  0.016008778 -0.045884563
-## 119  2.718331803  0.545377862  2.554886692  0.517710611  0.787201794
-## 120  0.250788568  0.398328401  0.230801249  0.387016246  0.301080217
-## 121  1.378767477  0.399579582  1.321716925  0.366000574  0.476615008
-## 122  0.258659493  0.175965741  0.216378045  0.217165697  0.221676436
-## 123  1.187576432  0.777218717  1.325977163  0.692495472  0.485948164
-## 124  0.242085264  0.098753975  0.168011253  0.096580577  0.170157418
-## 125  0.744913587  1.727967512  0.792208864  1.603402422  1.651008880
-## 126  0.138211471  0.237094682  0.158622513  0.245692935  0.579466051
-## 127  0.648051813  0.919401432  0.576784510  0.952981929  1.710810624
-## 128  0.739379152  1.016383356  0.699348599  1.042435192  0.717821704
-## 129  0.937985937  0.851489824  0.869162914  0.930847249  0.702966597
-## 130  0.090622257  0.209729226  0.044933048  0.214152961  0.124717732
-## 131  1.228644276  0.614131067  1.195265947  0.597042234  0.512590777
-## 132  0.612333886  0.528194038  0.668202236  0.378676845  0.486009975
-## 133  0.599935708  0.805710968  0.592888977  0.923538005  1.147307345
-## 134  3.466886624  2.634821540  3.487821930  2.519012404  2.543346428
-## 135 -0.069063297 -0.135950652 -0.084824262 -0.204834304 -0.112343983
-## 136 -0.142836782 -0.012607377 -0.065856277 -0.090766295 -0.079355558
-## 137 -0.100155843  0.215645286 -0.059320277  0.237248146  0.174278736
-## 138 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 139 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.125031885
-## 140 -0.005384653 -0.211171528 -0.087314963 -0.204834304 -0.060237328
-## 141 -0.077062118 -0.211171528 -0.072129117 -0.113951619 -0.073346833
-## 142 -0.085417415 -0.080806992 -0.033762332 -0.204834304  0.003795764
-## 143 -0.087934436 -0.211171528 -0.138566706 -0.204834304 -0.086824675
-## 144 -0.136006127 -0.211171528 -0.115002986 -0.204834304 -0.103628998
-## 145  0.219432934  0.295205873  0.200842769  0.339663321  0.374938535
-## 146  0.094631986  0.483652132  0.078616597  0.424906480  0.771772323
-## 147  1.335129815  1.619747888  1.330806017  1.695744323  1.815864883
-## 148  0.473194334  0.172547885  0.453168289  0.206090222  0.250228481
-## 149  3.101878338  1.785834059  3.565780703  1.666854840  2.614194704
-## 150 -0.039178899  0.428612871 -0.033134792  0.396210637  0.728875589
-## 151 -0.045884563 -0.211171528 -0.219379384 -0.035133455 -0.213196435
-## 152  0.073955941  0.023290206  0.031874799  0.070360116 -0.010877737
-## 153 -0.128602477 -0.211171528 -0.132185501 -0.204834304 -0.213196435
-## 154 -0.055731635 -0.211171528 -0.219379384 -0.204834304 -0.120361697
-## 155 -0.077403627 -0.211171528 -0.084635053 -0.110233201 -0.213196435
-## 156 -0.138341221 -0.112372468 -0.057986246 -0.204834304 -0.213196435
-## 157  1.247304262  0.603739964  0.972465363  0.710952085  0.725112012
-## 158  0.946717805  0.456894740  2.213597561  0.291779521  1.090569856
-## 159 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 160 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 161 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 162  1.157578590  0.845649846  1.196275558  0.940202061  0.724630032
-## 163 -0.131525966 -0.085386143 -0.065888898 -0.204834304 -0.063562282
-## 164 -0.055370723 -0.211171528 -0.052716336 -0.063980192 -0.047138160
-## 165 -0.102962903 -0.211171528 -0.153422305 -0.204834304 -0.124857387
-## 166  0.705364638  0.546617162  0.279387220  0.529045033  0.721769599
-## 167  2.491599862  1.669475657  2.159370174  1.651878665  1.704499230
-## 168  0.031161314  0.276621826  0.122355940  0.197136793  0.233013520
-## 169  0.189274133  0.407382496  0.169336344  0.484148390  0.595269143
-## 170  1.785495695  0.512149003  1.471544239  0.518226213  0.461077387
-## 171  0.183376005  0.136236866  0.200048730 -0.102138275  0.061917547
-## 172  1.429785403  1.205909855  1.423019259  1.151291218  1.992058739
-## 173  0.162638351 -0.077647809  0.190866566 -0.045917722  0.020784321
-## 174 -0.220919601 -0.116645374 -0.219379384 -0.035691464 -0.014038247
-## 175  2.239175666  0.856413836  2.049000466  0.745488155  0.872762125
-## 176  0.075532645 -0.100246144  0.047115564 -0.063272817  0.065962915
-## 177  0.147232862 -0.034318827  0.349456538 -0.097287806 -0.030435061
-## 178  0.077364205  0.327338152  0.092140972  0.307520769  0.316810614
-## 179  0.588928679  0.443219436  0.439736512  0.615804277  0.573459782
-## 180  4.074298926  0.594991212  3.997234974  1.132850555  1.348013942
-## 181  0.061705250  0.299799563  0.180129682  0.068937067  0.307208898
-## 182  0.998054135  0.716403458  0.802819630  0.846202685  0.746383248
-## 183 -0.057954235 -0.139313627 -0.101142044 -0.124463501 -0.142809165
-## 184 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 185  0.387292538  0.331650895  0.311504585  0.565820841  0.263783839
-## 186 -0.220919601  0.352801432 -0.067939241 -0.034387248  0.073870593
-## 187 -0.068418927 -0.090855260 -0.090260181 -0.049189344 -0.057792191
-## 188  0.026866817 -0.072194893 -0.026413561 -0.087165186 -0.090494255
-## 189 -0.050692314 -0.135287566 -0.067747200 -0.204834304 -0.038360151
-## 190  0.164875482  0.217360567  0.103372599  0.158672117  0.446953205
-## 191  0.625608264  0.556064585  0.638463537  0.574001811  0.557844878
-## 192 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 193 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 194  0.131701426  0.328879987  0.191212746  0.322173187  0.044126348
-## 195 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 196  0.312044931  0.895305724  0.317549258  0.983266615  0.406008892
-## 197 -0.220919601 -0.058538507 -0.117113823 -0.204834304 -0.066781760
-## 198 -0.138179467 -0.211171528 -0.131496518 -0.204834304 -0.124519305
-## 199 -0.023554995 -0.211171528 -0.046111788 -0.031373447  0.038734298
-## 200 -0.012245137 -0.211171528 -0.018712981 -0.204834304  0.104999786
-## 201 -0.066176033 -0.211171528 -0.108459172 -0.204834304 -0.064111438
-## 202 -0.142947303 -0.211171528 -0.105943724 -0.204834304 -0.213196435
-## 203 -0.075655971 -0.211171528 -0.102666974 -0.204834304 -0.118929142
-## 204 -0.036384512 -0.135865208 -0.045583230 -0.204834304 -0.054063441
-## 205 -0.220919601 -0.211171528 -0.154054043 -0.204834304 -0.106378075
-## 206 -0.065567031 -0.127584678 -0.142781370 -0.204834304 -0.213196435
-## 207 -0.139054972 -0.211171528 -0.139083748 -0.204834304 -0.129341184
-## 208 -0.060269312 -0.136407384 -0.097741453 -0.204834304 -0.123290469
-## 209 -0.098998265 -0.126461269 -0.139657871 -0.204834304 -0.213196435
-## 210 -0.102637638 -0.211171528 -0.102370409 -0.204834304 -0.062179815
-## 211 -0.220919601 -0.211171528 -0.091943503 -0.204834304 -0.103804514
-## 212 -0.100900493 -0.211171528 -0.143627488 -0.204834304 -0.213196435
-## 213 -0.220919601 -0.211171528 -0.156830842 -0.204834304 -0.213196435
-## 214 -0.097650487 -0.211171528 -0.130812822 -0.204834304 -0.087676343
-## 215 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 216 -0.220919601 -0.058603660 -0.153395082 -0.204834304 -0.213196435
-## 217 -0.220919601 -0.211171528 -0.103360595 -0.204834304 -0.126401959
-## 218 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.107108100
-## 219 -0.220919601 -0.211171528 -0.134951416 -0.204834304 -0.213196435
-## 220 -0.129682178 -0.211171528 -0.132636998 -0.204834304 -0.213196435
-## 221 -0.144237941 -0.211171528 -0.152699828 -0.204834304 -0.213196435
-## 222 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 223 -0.044098798 -0.211171528 -0.117603524 -0.204834304 -0.085103834
-## 224 -0.220919601 -0.127722239 -0.219379384 -0.204834304 -0.213196435
-## 225 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 226 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 227  0.074499912  0.027889911  0.085040309  0.104136518  0.154360840
-## 228 -0.097350008 -0.211171528 -0.219379384 -0.204834304  0.002224391
-## 229 -0.220919601 -0.211171528 -0.066240616 -0.204834304 -0.213196435
-## 230 -0.220919601 -0.211171528 -0.057495142 -0.204834304 -0.075533560
-## 231  0.103919283  0.228041865  0.319399077  0.282752343  0.263681530
-## 232  0.564833767  0.712611414  0.490785373  0.913387257  0.870897982
-## 233 -0.220919601 -0.033896714 -0.219379384 -0.204834304 -0.213196435
-## 234 -0.220919601 -0.211171528 -0.219379384 -0.204834304 -0.213196435
-## 235  1.745262123  1.976192050  1.812643971  1.914199804  1.736130567
-##       SRR1205153   SRR1205165   SRR1205155    SRR1205164   SRR1205159
-## 1   -0.148797278 -0.205321565 -0.138678363 -8.977018e-02 -0.200838374
-## 2    0.303763988  0.250997208  0.318763761  3.032854e-01  0.385466913
-## 3    0.987038262  0.811291576  1.023057464  9.086688e-01  0.914005622
-## 4    0.570087531  0.747616187  0.566354964  6.362962e-01  0.842714988
-## 5   -0.002159929  0.456772712 -0.004485016  7.178217e-01  0.241287597
-## 6    0.112179548  0.345107490  0.101461494  3.049514e-01  0.432398369
-## 7   -0.226739907 -0.205321565  0.070275203 -2.021294e-01  0.155073005
-## 8   -0.141369910 -0.103449001 -0.221056307 -2.021294e-01 -0.200838374
-## 9    1.274458415  0.780534300  1.163782809  7.311952e-01  0.846202685
-## 10   0.776367484  1.529968365  2.206954399  1.165627e+00  0.619050297
-## 11  -0.226739907 -0.205321565 -0.015311006 -2.021294e-01 -0.072485142
-## 12  -0.035340294  0.061203693 -0.221056307 -9.588774e-02  0.239308200
-## 13  -0.109887790 -0.085417415 -0.221056307 -2.021294e-01 -0.200838374
-## 14   0.302553577  0.028996074  0.386906214  8.365371e-02  0.009310511
-## 15   0.678218545  0.569233329  0.831282782  4.854622e-01  0.497512386
-## 16  -0.038699594  0.231963779 -0.052389658  5.717676e-01  0.517334006
-## 17   0.012195164  0.049700157 -0.042272862  3.950624e-02  0.033452067
-## 18  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 19  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.113260556
-## 20  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 21  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 22   0.557441218  0.052391438  0.554097653  1.522921e-01  0.286039229
-## 23   0.421719305  0.405787020  0.462693315  4.471285e-01  0.403201176
-## 24   1.400042442  0.947045514  1.494947443  1.036868e+00  0.793343135
-## 25   0.840035803  0.555148489  0.847695886  6.383894e-01  0.615238046
-## 26   0.058225596  0.490366386 -0.005904248  5.531710e-01  1.038548417
-## 27   0.014704649  0.037644955 -0.024445839 -5.850602e-02 -0.006845863
-## 28   0.513273061  0.952446402  0.219836456  5.238294e-01  1.721785248
-## 29  -0.096480460 -0.015345929 -0.137064573 -8.268972e-02 -0.042742180
-## 30  -0.010010933 -0.205321565  0.050558319 -7.010795e-02 -0.096629285
-## 31  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 32  -0.024340263 -0.048233576  0.021953262 -5.422530e-02 -0.032550840
-## 33  -0.023156874  0.058265385  0.014361935  9.178579e-05  0.076044212
-## 34   0.069817746  0.148902325  0.102482723  1.236202e-01 -0.059448841
-## 35   0.176646025  0.093528532  0.287256592  1.688078e-01  0.260457113
-## 36   0.353912004  0.167055010  0.158622513  4.794359e-02  0.006060692
-## 37  -0.063013812 -0.205321565 -0.022243268 -2.021294e-01  0.006395610
-## 38  -0.097621203 -0.205321565 -0.104636685 -2.021294e-01 -0.200838374
-## 39   1.820776185  1.412040280  1.813710772  1.551766e+00  1.760835265
-## 40   0.238456211  0.465504468  0.177619832  3.916841e-01  0.404741421
-## 41   0.006251056 -0.205321565 -0.035658877 -2.021294e-01 -0.052289219
-## 42   0.255495890  0.126088641  0.182589258  8.408688e-02  0.017273706
-## 43   1.473076883  0.895020829  1.287823689  1.131517e+00  1.301109882
-## 44  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 45  -0.226739907 -0.086518443 -0.144492620 -2.021294e-01 -0.200838374
-## 46   0.025511839  0.347734565  0.026557865  4.130867e-01  0.374107434
-## 47   0.185252347  0.163761517  0.172547885  2.647515e-01  0.045877923
-## 48  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 49   0.350385686  0.350817592  0.266524576  4.033161e-01  0.343909828
-## 50   0.006581461  0.097240585  0.032855479  1.466521e-02 -0.200838374
-## 51   0.036025719  0.253028902  0.039381845  1.541749e-01  0.076000827
-## 52   0.305435256  0.327502085  0.360723955  3.621675e-01  0.279602397
-## 53   0.369413572  0.462575768  0.359682067  2.787092e-01  0.336954326
-## 54   0.167771644  0.129257909  0.312792776  3.293195e-01  0.234436019
-## 55  -0.226739907 -0.205321565 -0.221056307 -1.860769e-02 -0.200838374
-## 56  -0.226739907  0.070997694  0.101899434  3.720491e-02 -0.120730452
-## 57   0.111696807  0.083869006  0.140440084  1.482536e-01  0.045714982
-## 58   0.314247040  0.387514731  0.158434432  2.518745e-01  0.165203238
-## 59   0.292456168  0.402568206  0.432339226  3.346396e-01  0.348324880
-## 60   0.211775196  0.279021479  0.074123890  2.073260e-01  0.307937867
-## 61   0.222129222  0.194847768  0.081960700  1.745334e-01  0.046878186
-## 62   0.149472031  0.212572119  0.245643355  3.871819e-01  0.287359883
-## 63  -0.012819518  0.185687015 -0.070267937  1.071006e-01 -0.099885602
-## 64   0.400705142  0.372239803  0.267613659  3.074188e-01  0.332204832
-## 65   0.133307619  0.141975104  0.227692720  5.239144e-02  0.139241195
-## 66   0.039016782 -0.205321565  0.097373366 -1.217224e-01 -0.029230173
-## 67  -0.018886383  0.146817327 -0.034005385  3.982617e-02  0.005124703
-## 68   0.159770081  0.252371251  0.122716530  2.416356e-01  0.238506119
-## 69   0.365178752  0.422535415  0.400371997  5.258938e-01  0.588112302
-## 70  -0.226739907 -0.205321565 -0.221056307 -1.234077e-01 -0.200838374
-## 71  -0.037166071 -0.205321565  0.043071066 -2.021294e-01 -0.200838374
-## 72   0.088017509  0.158527319  0.157827776  3.135788e-02  0.157253587
-## 73   0.163296316  0.159335995  0.080232732  2.031640e-01  0.044206527
-## 74   1.434718644  0.237044461  2.602581758  3.239034e-01  0.052550989
-## 75  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 76  -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 77   2.383140198  1.911050777  1.911050777  1.528997e+00  1.735191100
-## 78  -0.069725106 -0.205321565 -0.221056307 -1.252036e-01 -0.094356427
-## 79  -0.097562434 -0.205321565 -0.101235581 -2.021294e-01 -0.200838374
-## 80   0.780792862  0.062199859  0.765642173  1.029244e-01  0.035542433
-## 81   3.611158809  0.771336550  3.600452578  7.767048e-01  0.440255898
-## 82   0.880147659  0.942417648  1.008524263  9.364072e-01  0.763782929
-## 83   0.022902653 -0.047498817 -0.060971263 -2.021294e-01 -0.200838374
-## 84   0.047488275 -0.012535691  0.097329020 -9.040591e-02  0.003831940
-## 85   0.055484355  0.147326437  0.028956560  9.888454e-02  0.156643671
-## 86   1.311975562  2.229756966  1.385876518  2.395506e+00  1.710171334
-## 87   0.029700195 -0.064565877  0.030496485 -2.021294e-01 -0.082016495
-## 88   0.262518409  1.210096622  0.246255248  1.045436e+00  0.889418252
-## 89   0.500703473  0.449203833  0.531619969  4.725282e-01  0.752525393
-## 90   0.963146675  1.004320467  0.970249003  9.947566e-01  0.900460887
-## 91   0.453107971  0.590713328  0.508425584  5.240813e-01  0.612957390
-## 92   3.724158497  3.699793510  3.754335042  3.711040e+00  3.692047527
-## 93   1.327751405  1.220757395  1.458606121  1.273477e+00  1.231538606
-## 94   1.272341762  1.360722998  1.332746229  1.193088e+00  0.612123586
-## 95   0.919187635  1.276934420  1.217983198  1.314586e+00  1.122733294
-## 96   1.261756324  1.138329145  1.535627161  1.125145e+00  1.037695614
-## 97   0.921308164  0.956575221  0.910962003  1.004773e+00  1.136557812
-## 98   0.329798347  0.980769460  0.283280576  9.206991e-01  0.869544407
-## 99   3.572759052  0.996014454  3.404368858  7.229682e-01  0.741494446
-## 100  2.180111458  2.235420992  2.042719606  1.931911e+00  2.208622762
-## 101  1.313370022  0.976538830  1.301444021  1.010130e+00  0.979868239
-## 102  0.526154384  0.572237519  0.571350944  6.140620e-01  0.430417692
-## 103  1.506984477  1.632044832  1.803934251  1.552476e+00  1.194976160
-## 104  0.733776750  0.585010408  0.767228233  4.965012e-01  0.641008739
-## 105  0.742618140  0.211019543  0.805623837  2.302009e-01  0.133852997
-## 106  0.714569884  0.735881722  0.841139871  7.500696e-01  0.791773080
-## 107  0.782566953  0.866520645  0.835663673  7.683183e-01  0.480649094
-## 108  0.691791160  1.274950189  0.777808033  1.255952e+00  1.188610012
-## 109  1.553666806  1.797383180  1.625456867  1.774380e+00  1.800523720
-## 110 -0.226739907 -0.091342063 -0.140327501 -4.887548e-02 -0.200838374
-## 111  0.916509224  0.570554975  0.748575398  4.957645e-01  0.661104203
-## 112  0.114028331  0.239653534  0.151209679  3.091970e-01  0.116195529
-## 113  0.905852498  1.295921063  0.876226357  1.297586e+00  0.754085762
-## 114  0.037685277 -0.205321565  0.045374673 -1.000942e-01 -0.200838374
-## 115  1.111610704  1.369554289  1.123668265  1.362555e+00  1.550078011
-## 116  0.757925036  0.740907500  0.807398772  7.755452e-01  0.819888956
-## 117  0.383002334  0.108444830  0.383228540  3.361100e-02  0.016394164
-## 118  0.347292247  0.062241061  0.519058630 -9.023692e-03 -0.029656213
-## 119  2.463465702  0.684848234  2.478235433  7.227402e-01  0.722968164
-## 120  0.234436019  0.387570566  0.157492296  3.872372e-01  0.331813262
-## 121  1.188159248  0.486440124  1.187138358  2.518240e-01  0.359235473
-## 122  0.172499216  0.185491884  0.150598274  2.094797e-01  0.134356506
-## 123  1.246332752  0.543218165  1.321371623  5.662894e-01  0.532835782
-## 124  0.290040526  0.085968163  0.194752651  1.527620e-01  0.167678369
-## 125  0.841505216  1.670930426  0.718899786  1.570573e+00  1.643553723
-## 126  0.110987091  0.333440970  0.109367772  2.624666e-01  0.089843687
-## 127  0.661798320  1.235751259  0.668128449  1.126639e+00  1.332210911
-## 128  0.647763375  0.975106642  0.731829879  9.506292e-01  0.809792030
-## 129  0.898764657  1.018012298  0.905951781  9.839167e-01  0.794756039
-## 130  0.068688032  0.131246015  0.109323782  1.456143e-01  0.180032178
-## 131  1.387789860  0.414540884  1.230482012  4.170883e-01  0.526903150
-## 132  0.545902814  0.474691992  0.653551258  4.915122e-01  0.383343555
-## 133  0.707179925  0.903480962  0.581484653  9.849345e-01  1.182862576
-## 134  3.390240714  2.720783846  3.433786867  2.603620e+00  2.440626290
-## 135 -0.109569055 -0.110860166 -0.076622444 -2.021294e-01 -0.200838374
-## 136 -0.080586448 -0.120504676 -0.116417411 -1.199344e-01 -0.025115570
-## 137 -0.070045502  0.148350248 -0.044232023  1.430463e-01  0.185880554
-## 138 -0.142438870 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 139 -0.226739907 -0.111149909 -0.221056307 -2.021294e-01 -0.200838374
-## 140 -0.017399976 -0.078703119 -0.086949167 -3.262058e-02 -0.057922084
-## 141 -0.093324611 -0.076843661 -0.078517845 -2.021294e-01 -0.047695854
-## 142 -0.026981498 -0.046940902 -0.101664570 -1.055277e-01 -0.104091347
-## 143 -0.112114063 -0.103419532 -0.082871056 -2.021294e-01 -0.200838374
-## 144 -0.114619509 -0.205321565 -0.089955698 -2.021294e-01 -0.200838374
-## 145  0.240166931  0.389100439  0.213611434  3.107522e-01  0.301489257
-## 146  0.076379291  0.815638549  0.083341726  6.507704e-01  0.222585049
-## 147  1.360907419  1.692171665  1.407542736  1.662093e+00  1.691240128
-## 148  0.515900067  0.190623741  0.479610717  1.598157e-01  0.146493717
-## 149  3.618231832  1.878650922  3.197016187  1.804981e+00  2.653432059
-## 150 -0.132411995  0.881201373 -0.032101072  6.673169e-01  0.082445429
-## 151 -0.147413417 -0.048946394 -0.221056307 -2.021294e-01 -0.081086826
-## 152 -0.018040559  0.044609815  0.001245435 -1.212672e-01 -0.009060293
-## 153 -0.117229786 -0.205321565 -0.116019569 -2.021294e-01 -0.200838374
-## 154 -0.168599346 -0.205321565 -0.069031319 -2.021294e-01 -0.200838374
-## 155 -0.118009818 -0.205321565 -0.102197680 -2.021294e-01 -0.094627397
-## 156 -0.113657932 -0.080586448 -0.090915808 -2.021294e-01 -0.200838374
-## 157  1.111481601  0.671924949  1.377465263  6.080437e-01  0.569233329
-## 158  2.315812465  0.808468925  1.267438760  6.947819e-01  0.687826497
-## 159 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01  0.010019301
-## 160 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 161 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 162  1.107243418  1.016040362  1.104577982  9.551911e-01  0.997257356
-## 163 -0.114357172 -0.127438145 -0.092250944 -2.021294e-01 -0.200838374
-## 164 -0.088305038 -0.056644879 -0.086702939 -2.070170e-02 -0.042708525
-## 165 -0.135434622 -0.205321565 -0.123235329 -2.021294e-01 -0.200838374
-## 166  0.516953446  0.525394576  0.485276092  4.924318e-01  0.776034537
-## 167  2.364426357  1.990276298  2.251325687  1.850580e+00  1.728283015
-## 168  0.175634216  0.206870115  0.071549735  1.789183e-01  0.219290917
-## 169  0.265996711  0.608681106  0.212426812  4.743305e-01  0.607351516
-## 170  1.890916666  0.490178544  1.888606335  5.349031e-01  0.465082949
-## 171  0.084086879 -0.075348540  0.032428030  1.143609e-02 -0.200838374
-## 172  1.551529588  1.127040878  1.359003131  1.206511e+00  1.905868266
-## 173  0.424046210 -0.132243156  0.192864856 -1.143572e-01 -0.096006576
-## 174 -0.128034703 -0.002862674 -0.080650628 -9.777203e-02 -0.026413561
-## 175  2.024585747  0.848162841  1.935623934  9.120640e-01  0.763953937
-## 176  0.072019650 -0.041200105  0.060904489 -6.777879e-02 -0.011637380
-## 177  0.286685009  0.021873534  0.295904289 -1.747520e-02 -0.063369559
-## 178  0.132118445  0.308308282  0.223445178  3.339188e-01  0.134901028
-## 179  0.271030397  0.604367698  0.529548086  5.867953e-01  0.400538394
-## 180  3.857461736  1.195840967  4.047871175  1.335866e+00  0.517397486
-## 181  0.139838081  0.149848335  0.277253598  1.931533e-01  0.166529446
-## 182  0.889026407  0.732142960  1.058197802  7.481688e-01  0.783758954
-## 183 -0.077861855 -0.087872804 -0.029900865 -1.068177e-01 -0.200838374
-## 184 -0.144520292 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 185  0.369744884  0.547859017  0.424393025  5.589642e-01  0.236296698
-## 186 -0.072294357  0.018456433 -0.221056307  1.651111e-01  0.282805156
-## 187 -0.096869048 -0.108721045 -0.069952326 -8.417225e-02 -0.083151589
-## 188 -0.001104679 -0.085479962  0.036214320 -6.806991e-02  0.010920106
-## 189  0.023252685 -0.103390064 -0.060074346 -2.021294e-01 -0.089985774
-## 190  0.103508126  0.261950529  0.140772778  2.701046e-01 -0.016141827
-## 191  0.537233432  0.724234919  0.616803105  7.121432e-01  0.545511117
-## 192 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 193 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 194  0.101287908  0.320489778  0.207177099  3.637190e-01  0.133124349
-## 195 -0.112487461 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 196  0.219935666  0.830822742  0.331111996  7.441788e-01  0.566093056
-## 197 -0.103449001 -0.205321565 -0.046216309 -2.021294e-01 -0.200838374
-## 198 -0.071306918 -0.205321565 -0.103210025 -2.021294e-01 -0.200838374
-## 199  0.010844728 -0.205321565 -0.078735071 -2.021294e-01 -0.057792191
-## 200 -0.039484334 -0.047333653  0.045416578 -4.466773e-02 -0.030365586
-## 201 -0.012100157 -0.205321565 -0.031514173 -2.021294e-01 -0.200838374
-## 202 -0.164862936 -0.205321565 -0.126312965 -1.076900e-01 -0.200838374
-## 203 -0.128402344 -0.205321565 -0.119613429 -2.021294e-01 -0.086306214
-## 204 -0.003420685 -0.205321565  0.016430722 -2.021294e-01 -0.049015948
-## 205 -0.226739907 -0.205321565 -0.134668563 -9.982797e-02 -0.101235581
-## 206 -0.126431621 -0.205321565 -0.089924631 -2.021294e-01 -0.200838374
-## 207 -0.226739907 -0.205321565 -0.116703662 -2.021294e-01 -0.200838374
-## 208 -0.064502254 -0.100364621 -0.069412639 -2.021294e-01 -0.091854438
-## 209 -0.104464034 -0.205321565 -0.136321576 -1.164453e-01 -0.200838374
-## 210 -0.043353754 -0.205321565 -0.072031713 -1.166161e-01 -0.200838374
-## 211 -0.105167293 -0.205321565 -0.155538147 -2.021294e-01 -0.200838374
-## 212 -0.151108701 -0.205321565 -0.086455812 -2.021294e-01 -0.200838374
-## 213 -0.086854952 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 214 -0.124943308 -0.091709379 -0.221056307 -2.021294e-01 -0.200838374
-## 215 -0.226739907 -0.205321565 -0.142723510 -2.021294e-01 -0.200838374
-## 216 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 217 -0.226739907 -0.205321565 -0.138849937 -2.021294e-01 -0.071775128
-## 218 -0.140857569 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 219 -0.226739907 -0.205321565 -0.137313071 -2.021294e-01 -0.200838374
-## 220 -0.226739907 -0.087808566 -0.221056307 -5.712977e-02 -0.200838374
-## 221 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 222 -0.226739907 -0.205321565 -0.138341221 -2.021294e-01 -0.200838374
-## 223  0.051704308 -0.205321565 -0.103056056 -1.006921e-01 -0.200838374
-## 224 -0.146202834 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 225 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 226 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 227  0.062160122  0.004868411  0.081103049  1.248051e-01  0.028640252
-## 228 -0.126962344 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 229 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 230 -0.226739907 -0.205321565 -0.124090480 -2.021294e-01 -0.200838374
-## 231  0.194563468  0.163621433  0.380361996  1.639051e-01  0.274132218
-## 232  0.522260601  0.899574557  0.597649953  8.612356e-01  0.794485780
-## 233 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 234 -0.226739907 -0.205321565 -0.221056307 -2.021294e-01 -0.200838374
-## 235  1.703921570  1.944030602  1.828316769  1.829682e+00  1.569838394</code></pre>
-<p>We can store all of our mapped values in this format but we do not have a particular reason to store all or to choose one over the other, so let’s just keep the first mapped Entrez ID that comes up. We will do that in the next section by re-running the <code>mapIds()</code> function with <code>multiVals = &quot;first&quot;</code>.</p>
+<p>Let’s take a look at our new collapsed <code>entrez_ids</code> column in the <code>final_mapped_df</code> object.</p>
+<pre class="r"><code>final_mapped_df %&gt;%
+  # Filter `final_mapped_df` to include only the rows where `entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values
+  dplyr::filter(stringr::str_detect(entrez_ids, &quot;;&quot;)) %&gt;%
+  # We only need a preview here
+  head()</code></pre>
+<pre><code>##                      entrez_ids               Gene  SRR1205173  SRR1205166
+## 1           100000783;100536331 ENSDARG00000105400 -0.22020210 -0.12585318
+## 2           100001242;108183696 ENSDARG00000115506  0.35022019  0.41240046
+## 3           100002012;100331458 ENSDARG00000101883  1.11122616  0.95956820
+## 4 100002234;100191016;103910704 ENSDARG00000090160  0.51104668  0.43792302
+## 5           100002320;100126121 ENSDARG00000058299  0.03849259 -0.04099565
+## 6           100002917;110439293 ENSDARG00000105403  0.08931312  0.07671873
+##    SRR1205151 SRR1205167 SRR1205171  SRR1205168   SRR1205154 SRR1205169
+## 1 -0.06988958 -0.2205970 -0.1093926 -0.08352471 -0.223895519 -0.2104369
+## 2  0.28715370  0.2827010  0.4165098  0.33998139  0.260872350  0.3844089
+## 3  0.96728505  0.9542507  0.9236425  0.94671780  0.976990646  0.9833728
+## 4  0.60492215  0.4117210  0.6323814  0.41980500  0.409998106  0.7721137
+## 5 -0.08457189 -0.0335236  0.6886639 -0.03520211 -0.002124277  0.5839031
+## 6  0.14704384  0.1617413  0.3323130  0.15426822  0.047243375  0.2866328
+##   SRR1205163  SRR1205172  SRR1205158 SRR1205160  SRR1205152 SRR1205170
+## 1 -0.1987932 -0.07528637 -0.08805795 -0.2051835 -0.10927802 -0.1241470
+## 2  0.2881478  0.38244285  0.30180734  0.4037683  0.31473550  0.4490241
+## 3  0.9921814  1.06436798  0.76697973  1.0072708  0.92039273  0.9937590
+## 4  0.6208593  0.64006044  0.77142478  1.0595632  0.48112713  0.7169422
+## 5  0.4670872  0.03215264  0.33149125  0.7160864  0.01036169  0.7461438
+## 6  0.2733050  0.02671339  0.33057381  0.1436618  0.09480033  0.3246042
+##     SRR1205174 SRR1205162  SRR1205156 SRR1205161 SRR1205157   SRR1205153
+## 1 -0.139962489 -0.2111715 -0.13715065 -0.2048343 -0.2131964 -0.148797278
+## 2  0.268704859  0.3817172  0.34821759  0.4058983  0.3103836  0.303763988
+## 3  0.989684179  1.0043205  1.00681309  0.9628262  0.7978895  0.987038262
+## 4  0.347348064  1.0035289  0.54268563  1.0288688  0.8117174  0.570087531
+## 5 -0.006740151  0.8167915 -0.01707182  0.7972852  0.2919327 -0.002159929
+## 6  0.052431786  0.3777157  0.06527699  0.3396088  0.3687622  0.112179548
+##   SRR1205165   SRR1205155  SRR1205164 SRR1205159
+## 1 -0.2053216 -0.138678363 -0.08977018 -0.2008384
+## 2  0.2509972  0.318763761  0.30328537  0.3854669
+## 3  0.8112916  1.023057464  0.90866881  0.9140056
+## 4  0.7476162  0.566354964  0.63629620  0.8427150
+## 5  0.4567727 -0.004485016  0.71782170  0.2412876
+## 6  0.3451075  0.101461494  0.30495142  0.4323984</code></pre>
+<p>You may have a list of Entrez IDs you are interested in, in which case, the above format may work best for you. In a different study, you may want the oldest Entrez ID (which is probably first), in which case, you can create a column that stores just the first mapped Entrez ID that comes up for each Ensembl ID. We will do this in the next section by re-running the <code>mapIds()</code> function with <code>multiVals = &quot;first&quot;</code>.</p>
 </div>
-<div id="map-ensembl-ids-to-gene-symbols-keeping-only-the-first-mapped-value" class="section level2">
-<h2><span class="header-section-number">4.5</span> Map Ensembl IDs to gene symbols – keeping only the first mapped value</h2>
-<p>Let’s re-run <code>mapIds()</code>, this time using <code>multiVals = &quot;first&quot;</code>.</p>
+<div id="map-ensembl-ids-to-gene-symbols-keeping-only-the-first-mapped-value" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Map Ensembl IDs to gene symbols – keeping only the first mapped value</h3>
+<p>Let’s re-run <code>mapIds()</code>, this time using <code>multiVals = &quot;first&quot;</code> and add this information to our <code>final_mapped_df</code> object.</p>
 <pre class="r"><code>final_mapped_df &lt;- data.frame(
-  &quot;Entrez&quot; = mapIds(
+  &quot;first_mapped_entrez_id&quot; = mapIds(
     org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
     keys = df$Gene,
     column = &quot;ENTREZID&quot;, # Replace with the type of gene identifiers you would like to map to
@@ -3424,12 +2048,59 @@ head(multi_mapped_df)</code></pre>
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column(&quot;Ensembl&quot;) %&gt;%
   # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))</code></pre>
+  dplyr::inner_join(final_mapped_df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
+<p>Our <code>final_mapped_df</code> object now has a column named <code>first_mapped_entrez_id</code> that contains only the first mapped Entrez ID, in addition to the <code>entrez_ids</code> column that contains all mapped Entrez IDs per Ensembl ID.</p>
+<pre class="r"><code>final_mapped_df %&gt;%
+  dplyr::filter(stringr::str_detect(entrez_ids, &quot;;&quot;)) %&gt;%
+  head()</code></pre>
+<pre><code>##              Ensembl first_mapped_entrez_id
+## 1 ENSDARG00000000540                 368827
+## 2 ENSDARG00000006220                 406731
+## 3 ENSDARG00000010145                 550133
+## 4 ENSDARG00000019797                 336260
+## 5 ENSDARG00000020811                 405787
+## 6 ENSDARG00000021149                 337696
+##                                                        entrez_ids SRR1205173
+## 1                                                368827;110631416  0.9901324
+## 2 406731;641488;100379286;100384891;100384896;100384897;100384901  0.6655282
+## 3                                                550133;101886311  0.7058364
+## 4                                                336260;110437857  1.4504907
+## 5                                                   405787;572703  0.7176636
+## 6                                                   337696;792137  1.1852220
+##   SRR1205166 SRR1205151 SRR1205167 SRR1205171 SRR1205168 SRR1205154 SRR1205169
+## 1  0.9336348  0.9447219  0.9707928  0.8947301  1.0350372  0.9062361  0.7365067
+## 2  0.5585076  0.3988464  0.7089964  0.7773924  0.3884749  0.7888222  0.9310478
+## 3  0.7395471  0.6601366  0.6620915  1.0155840  0.7584339  0.7639539  0.9227509
+## 4  1.4487838  1.3222460  1.5628957  1.4384051  1.4120403  1.4438694  1.3078293
+## 5  0.7466297  0.6673898  0.7361904  0.7024317  0.7716012  0.8266388  0.7857751
+## 6  0.9619579  1.0466243  1.0885286  1.6057540  1.0411261  1.2206058  1.4295779
+##   SRR1205163 SRR1205172 SRR1205158 SRR1205160 SRR1205152 SRR1205170 SRR1205174
+## 1  0.9201981  0.9872643  1.0699393  0.7284615  0.9511675  0.9277571  0.9472631
+## 2  0.7029666  0.5182886  0.5084905  0.8834053  0.5844631  0.8938344  0.6658205
+## 3  0.9381937  0.6661967  0.8192576  0.9540403  0.6268148  1.0150010  0.7393792
+## 4  1.3941832  1.5133750  1.1599954  1.1795348  1.3582363  1.2476268  1.4475407
+## 5  0.7673962  0.6700022  0.7004191  0.8797663  0.8220890  0.8118034  0.7048320
+## 6  1.2487842  1.2201493  1.1504810  1.4953971  1.0379411  1.4244594  1.1156921
+##   SRR1205162 SRR1205156 SRR1205161 SRR1205157 SRR1205153 SRR1205165 SRR1205155
+## 1  0.8357555  0.8926381  0.9336348  0.9417886  0.9213082  0.9565752  0.9109620
+## 2  0.7637008  0.8356637  0.9022873  0.5676206  0.7825670  0.8665206  0.8356637
+## 3  1.0163834  0.6993486  1.0424352  0.7178217  0.6477634  0.9751066  0.7318299
+## 4  1.5015166  1.7135557  1.4148311  0.9202943  1.3277514  1.2207574  1.4586061
+## 5  0.9559255  0.7268546  0.8805299  0.8254772  0.7145699  0.7358817  0.8411399
+## 6  1.4706718  1.0121543  1.5129104  1.3318635  0.9191876  1.2769344  1.2179832
+##   SRR1205164 SRR1205159
+## 1  1.0047735  1.1365578
+## 2  0.7683183  0.4806491
+## 3  0.9506292  0.8097920
+## 4  1.2734774  1.2315386
+## 5  0.7500696  0.7917731
+## 6  1.3145863  1.1227333</code></pre>
 <p>Now let’s write our mapped results and data to file!</p>
 </div>
+</div>
 <div id="write-mapped-results-to-file" class="section level2">
-<h2><span class="header-section-number">4.6</span> Write mapped results to file</h2>
+<h2><span class="header-section-number">4.5</span> Write mapped results to file</h2>
 <pre class="r"><code># Write mapped and annotated data frame to output file
 readr::write_tsv(final_mapped_df, file.path(
   results_dir,
@@ -3474,19 +2145,18 @@ sessionInfo()</code></pre>
 ## [7] BiocGenerics_0.34.0  optparse_1.6.6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        plyr_1.8.6        pillar_1.4.6      compiler_4.0.2   
-##  [5] R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.2       bit_1.1-15.2     
-##  [9] digest_0.6.25     memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14    
-## [13] lifecycle_0.2.0   tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3  
-## [17] rlang_0.4.7       DBI_1.1.0         cli_2.0.2         rstudioapi_0.11  
-## [21] yaml_2.2.1        xfun_0.17         dplyr_1.0.0       styler_1.3.2     
-## [25] stringr_1.4.0     knitr_1.29        generics_0.0.2    vctrs_0.3.4      
-## [29] hms_0.5.3         tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3    
-## [33] glue_1.4.2        R6_2.4.1          fansi_0.4.1       rmarkdown_2.3    
-## [37] reshape2_1.4.4    blob_1.2.1        purrr_0.3.4       readr_1.3.1      
-## [41] rematch2_2.1.2    backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0  
-## [45] assertthat_0.2.1  utf8_1.1.4        stringi_1.5.3     crayon_1.3.4     
-## [49] R.oo_1.24.0</code></pre>
+##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    R.methodsS3_1.8.1
+##  [5] R.utils_2.10.1    tools_4.0.2       bit_1.1-15.2      digest_0.6.25    
+##  [9] memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14     lifecycle_0.2.0  
+## [13] tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.7      
+## [17] DBI_1.1.0         cli_2.0.2         rstudioapi_0.11   yaml_2.2.1       
+## [21] xfun_0.17         dplyr_1.0.0       styler_1.3.2      stringr_1.4.0    
+## [25] knitr_1.29        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
+## [29] tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3     glue_1.4.2       
+## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.0      
+## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       rematch2_2.1.2   
+## [41] backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
+## [45] utf8_1.1.4        stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish</p>

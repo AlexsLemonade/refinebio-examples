@@ -253,10 +253,10 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
+# Let's make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df <- mapped_list %>%
-  reshape2::melt(value.name = "Entrez") %>%
-  dplyr::rename("Ensembl" = "L1") # Here we are renaming the column holding the Ensembl IDs as good practice
+  tibble::enframe(name = "Ensembl", value = "Entrez") %>%
+  tidyr::unnest() # enframe makes a `list` column, so here we are converting that to simpler format
 ```
 
 Now let's take a peek at our data frame.
@@ -281,10 +281,8 @@ Now let's check to see how many genes we have that were mapped to multiple IDs.
 
 ```{r}
 multi_mapped_df <- mapped_df %>%
-  # Let's group by the Ensembl ID's in the `Ensembl` column
-  dplyr::group_by(Ensembl) %>%
-  # Create a new variable containing the number of Entrez IDs mapped to each ID
-  dplyr::mutate(entrez_id_count = dplyr::n()) %>%
+  # Let's count the number of times each Ensembl ID appears in `Ensembl` column
+  dplyr::count(Ensembl, name = "entrez_id_count") %>%
   # Arrange by the genes with the highest number of Entrez IDs mapped
   dplyr::arrange(desc(entrez_id_count))
 
@@ -297,37 +295,42 @@ We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez
 With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the `"filter"` option to the `multiVals` argument of `mapIds()`.
 If you want to see an example of a `multiVals = "filter"` strategy see the [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
+### Store all mapped values
+
 We are not sure which Entrez ID is relevant as yet, but we could store all of the mapped information for future use.
 In the next chunk, we show how we can collapse all the Entrez IDs into one column where we store them all for each unique Ensembl ID.
 
 ```{r}
-all_mapped_df <- df %>%
+final_mapped_df <- df %>%
   # Collapse the mapped values in `mapped_list` into one column named `entrez_ids`
-  dplyr::mutate(entrez_ids = sapply(mapped_list, paste, collapse = "-")) %>%
+  dplyr::mutate(entrez_ids = sapply(mapped_list, paste, collapse = ";")) %>%
   # Select the `entrez_ids` column first, then everything else in the data frame
   dplyr::select(entrez_ids, dplyr::everything()) %>%
   # Now arrange by the new `entrez_ids` column
   dplyr::arrange(entrez_ids)
 ```
 
-Let's take a look at our new collapsed `entrez_ids` column in the `all_mapped_df` object.
+Let's take a look at our new collapsed `entrez_ids` column in the `final_mapped_df` object.
 
 ```{r}
-all_mapped_df %>%
-  # Filter `all_mapped_df` to include only the rows where `entrez_ids` values include the "-" character -- we know that these are the rows with multiple mapped values
-  dplyr::filter(stringr::str_detect(entrez_ids, "-"))
+final_mapped_df %>%
+  # Filter `final_mapped_df` to include only the rows where `entrez_ids` values include the ";" character -- we know that these are the rows with multiple mapped values
+  dplyr::filter(stringr::str_detect(entrez_ids, ";")) %>%
+  # We only need a preview here
+  head()
 ```
 
-We can store all of our mapped values in this format but we do not have a particular reason to store all or to choose one over the other, so let's just keep the first mapped Entrez ID that comes up.
-We will do that in the next section by re-running the `mapIds()` function with `multiVals = "first"`.
+You may have a list of Entrez IDs you are interested in, in which case, the above format may work best for you.
+In a different study, you may want the oldest Entrez ID (which is probably first), in which case, you can create a column that stores just the first mapped Entrez ID that comes up for each Ensembl ID.
+We will do this in the next section by re-running the `mapIds()` function with `multiVals = "first"`.
 
-## Map Ensembl IDs to gene symbols -- keeping only the first mapped value
+### Map Ensembl IDs to gene symbols -- keeping only the first mapped value
 
-Let's re-run `mapIds()`, this time using `multiVals = "first"`.
+Let's re-run `mapIds()`, this time using `multiVals = "first"` and add this information to our `final_mapped_df` object.
 
 ```{r}
 final_mapped_df <- data.frame(
-  "Entrez" = mapIds(
+  "first_mapped_entrez_id" = mapIds(
     org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
     keys = df$Gene,
     column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
@@ -338,7 +341,15 @@ final_mapped_df <- data.frame(
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
   # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  dplyr::inner_join(final_mapped_df, by = c("Ensembl" = "Gene"))
+```
+
+Our `final_mapped_df` object now has a column named `first_mapped_entrez_id` that contains only the first mapped Entrez ID, in addition to the `entrez_ids` column that contains all mapped Entrez IDs per Ensembl ID.
+
+```{r}
+final_mapped_df %>%
+  dplyr::filter(stringr::str_detect(entrez_ids, ";")) %>%
+  head()
 ```
 
 Now let's write our mapped results and data to file!
