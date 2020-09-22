@@ -1,5 +1,5 @@
 ---
-title: "Differential Expression - Microarray"
+title: "Differential Expression - 2 groups - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
