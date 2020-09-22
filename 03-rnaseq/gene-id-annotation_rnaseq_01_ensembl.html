@@ -1867,10 +1867,9 @@ df &lt;- readr::read_tsv(file.path(
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
 <pre class="r"><code># Make the data in the order of the metadata
 df &lt;- df %&gt;%
-  dplyr::select(metadata$refinebio_accession_code)</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
-<pre class="r"><code># Check if this is in the same order
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code># Bring back the &quot;Gene&quot; column in preparation for mapping
@@ -1917,9 +1916,7 @@ head(mapped_list)</code></pre>
 <pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df &lt;- mapped_list %&gt;%
   tibble::enframe(name = &quot;Ensembl&quot;, value = &quot;Entrez&quot;) %&gt;%
-  tidyr::unnest() # enframe makes a `list` column, so here we are converting that to simpler format</code></pre>
-<pre><code>## Warning: `cols` is now required when using unnest().
-## Please use `cols = c(Entrez)`</code></pre>
+  tidyr::unnest(cols = Entrez) # enframe makes a `list` column, so here we are converting that to simpler format</code></pre>
 <p>Now let’s take a peek at our data frame.</p>
 <pre class="r"><code>head(mapped_df)</code></pre>
 <pre><code>## # A tibble: 6 x 2
@@ -1960,7 +1957,7 @@ summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function
 ##         2         2         2         2         2         2         2         2 
 ##    569452    570815   (Other)      NA&#39;s 
 ##         2         2     22821      9102</code></pre>
-<p>There are 9102 NA’s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This is not the best rate, in our opinion, which means that it may be wise to try a different gene identifier type that may have a better mapping rate. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
+<p>There are 9102 NA’s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <pre class="r"><code>multi_mapped_df &lt;- mapped_df %&gt;%
   # Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column
@@ -1979,63 +1976,37 @@ head(multi_mapped_df)</code></pre>
 ## 4 ENSDARG00000061547               5
 ## 5 ENSDARG00000095051               5
 ## 6 ENSDARG00000098788               5</code></pre>
-<p>Looks like we have some cases where 15 Entrez IDs mapped to a single Ensembl ID. We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs. With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument of <code>mapIds()</code>. If you want to see an example of a <code>multiVals = &quot;filter&quot;</code> strategy see the <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>.</p>
+<p>Looks like we have one case where one Ensembl ID mapped to 15 Entrez IDs! We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs. With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument of <code>mapIds()</code>. If you want to see an example of a <code>multiVals = &quot;filter&quot;</code> strategy see the <a href="https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>.</p>
 <div id="store-all-mapped-values" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Store all mapped values</h3>
-<p>We are not sure which Entrez ID is relevant as yet, but we could store all of the mapped information for future use. In the next chunk, we show how we can collapse all the Entrez IDs into one column where we store them all for each unique Ensembl ID.</p>
-<pre class="r"><code>final_mapped_df &lt;- df %&gt;%
-  # Collapse the mapped values in `mapped_list` into one column named `entrez_ids`
-  dplyr::mutate(entrez_ids = sapply(mapped_list, paste, collapse = &quot;;&quot;)) %&gt;%
-  # Select the `entrez_ids` column first, then everything else in the data frame
-  dplyr::select(entrez_ids, dplyr::everything()) %&gt;%
-  # Now arrange by the new `entrez_ids` column
-  dplyr::arrange(entrez_ids)</code></pre>
-<p>Let’s take a look at our new collapsed <code>entrez_ids</code> column in the <code>final_mapped_df</code> object.</p>
-<pre class="r"><code>final_mapped_df %&gt;%
-  # Filter `final_mapped_df` to include only the rows where `entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values
-  dplyr::filter(stringr::str_detect(entrez_ids, &quot;;&quot;)) %&gt;%
+<p>If we are not sure which Entrez ID is most relevant to our downstream analyses, we could store all of the mapped information for future use. In the next chunk, we show how we can collapse all the Entrez IDs into one column where we store them all for each unique Ensembl ID.</p>
+<pre class="r"><code>collapsed_mapped_df &lt;- mapped_df %&gt;%
+  # Group by Ensembl IDs
+  dplyr::group_by(Ensembl) %&gt;%
+  # Collapse the mapped values in `mapped_df` into one column named `all_entrez_ids`
+  dplyr::summarize(all_entrez_ids = paste(Entrez, collapse = &quot;;&quot;))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<p>Let’s take a look at our new collapsed <code>all_entrez_ids</code> column in the <code>collapsed_mapped_df</code> object.</p>
+<pre class="r"><code>collapsed_mapped_df %&gt;%
+  # Filter `collapsed_mapped_df` to include only the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values
+  dplyr::filter(stringr::str_detect(all_entrez_ids, &quot;;&quot;)) %&gt;%
   # We only need a preview here
   head()</code></pre>
-<pre><code>##                      entrez_ids               Gene  SRR1205173  SRR1205166
-## 1           100000783;100536331 ENSDARG00000105400 -0.22020210 -0.12585318
-## 2           100001242;108183696 ENSDARG00000115506  0.35022019  0.41240046
-## 3           100002012;100331458 ENSDARG00000101883  1.11122616  0.95956820
-## 4 100002234;100191016;103910704 ENSDARG00000090160  0.51104668  0.43792302
-## 5           100002320;100126121 ENSDARG00000058299  0.03849259 -0.04099565
-## 6           100002917;110439293 ENSDARG00000105403  0.08931312  0.07671873
-##    SRR1205151 SRR1205167 SRR1205171  SRR1205168   SRR1205154 SRR1205169
-## 1 -0.06988958 -0.2205970 -0.1093926 -0.08352471 -0.223895519 -0.2104369
-## 2  0.28715370  0.2827010  0.4165098  0.33998139  0.260872350  0.3844089
-## 3  0.96728505  0.9542507  0.9236425  0.94671780  0.976990646  0.9833728
-## 4  0.60492215  0.4117210  0.6323814  0.41980500  0.409998106  0.7721137
-## 5 -0.08457189 -0.0335236  0.6886639 -0.03520211 -0.002124277  0.5839031
-## 6  0.14704384  0.1617413  0.3323130  0.15426822  0.047243375  0.2866328
-##   SRR1205163  SRR1205172  SRR1205158 SRR1205160  SRR1205152 SRR1205170
-## 1 -0.1987932 -0.07528637 -0.08805795 -0.2051835 -0.10927802 -0.1241470
-## 2  0.2881478  0.38244285  0.30180734  0.4037683  0.31473550  0.4490241
-## 3  0.9921814  1.06436798  0.76697973  1.0072708  0.92039273  0.9937590
-## 4  0.6208593  0.64006044  0.77142478  1.0595632  0.48112713  0.7169422
-## 5  0.4670872  0.03215264  0.33149125  0.7160864  0.01036169  0.7461438
-## 6  0.2733050  0.02671339  0.33057381  0.1436618  0.09480033  0.3246042
-##     SRR1205174 SRR1205162  SRR1205156 SRR1205161 SRR1205157   SRR1205153
-## 1 -0.139962489 -0.2111715 -0.13715065 -0.2048343 -0.2131964 -0.148797278
-## 2  0.268704859  0.3817172  0.34821759  0.4058983  0.3103836  0.303763988
-## 3  0.989684179  1.0043205  1.00681309  0.9628262  0.7978895  0.987038262
-## 4  0.347348064  1.0035289  0.54268563  1.0288688  0.8117174  0.570087531
-## 5 -0.006740151  0.8167915 -0.01707182  0.7972852  0.2919327 -0.002159929
-## 6  0.052431786  0.3777157  0.06527699  0.3396088  0.3687622  0.112179548
-##   SRR1205165   SRR1205155  SRR1205164 SRR1205159
-## 1 -0.2053216 -0.138678363 -0.08977018 -0.2008384
-## 2  0.2509972  0.318763761  0.30328537  0.3854669
-## 3  0.8112916  1.023057464  0.90866881  0.9140056
-## 4  0.7476162  0.566354964  0.63629620  0.8427150
-## 5  0.4567727 -0.004485016  0.71782170  0.2412876
-## 6  0.3451075  0.101461494  0.30495142  0.4323984</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   Ensembl            all_entrez_ids                                             
+##   &lt;chr&gt;              &lt;chr&gt;                                                      
+## 1 ENSDARG00000000540 368827;110631416                                           
+## 2 ENSDARG00000006220 406731;641488;100379286;100384891;100384896;100384897;1003…
+## 3 ENSDARG00000010145 550133;101886311                                           
+## 4 ENSDARG00000019797 336260;110437857                                           
+## 5 ENSDARG00000020811 405787;572703                                              
+## 6 ENSDARG00000021149 337696;792137</code></pre>
 <p>You may have a list of Entrez IDs you are interested in, in which case, the above format may work best for you. In a different study, you may want the oldest Entrez ID (which is probably first), in which case, you can create a column that stores just the first mapped Entrez ID that comes up for each Ensembl ID. We will do this in the next section by re-running the <code>mapIds()</code> function with <code>multiVals = &quot;first&quot;</code>.</p>
 </div>
 <div id="map-ensembl-ids-to-gene-symbols-keeping-only-the-first-mapped-value" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> Map Ensembl IDs to gene symbols – keeping only the first mapped value</h3>
-<p>Let’s re-run <code>mapIds()</code>, this time using <code>multiVals = &quot;first&quot;</code> and add this information to our <code>final_mapped_df</code> object.</p>
+<p>If we don’t have a particular preference of which Entrez ID is returned, we can have <code>mapIds()</code> use its default of returning the first Entrez ID listed.</p>
+<p>Let’s re-run <code>mapIds()</code>, this time using <code>multiVals = &quot;first&quot;</code>.</p>
 <pre class="r"><code>final_mapped_df &lt;- data.frame(
   &quot;first_mapped_entrez_id&quot; = mapIds(
     org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
@@ -2047,12 +2018,15 @@ head(multi_mapped_df)</code></pre>
 ) %&gt;%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column(&quot;Ensembl&quot;) %&gt;%
-  # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(final_mapped_df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))</code></pre>
+  # Join the multiple mappings data from `collapsed_mapped_df` using the Ensembl IDs
+  dplyr::inner_join(collapsed_mapped_df, by = &quot;Ensembl&quot;) %&gt;%
+  # Now let&#39;s join the rest of the expression data
+  dplyr::inner_join(df, by = c(&quot;Ensembl&quot; = &quot;Gene&quot;))</code></pre>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<p>Our <code>final_mapped_df</code> object now has a column named <code>first_mapped_entrez_id</code> that contains only the first mapped Entrez ID, in addition to the <code>entrez_ids</code> column that contains all mapped Entrez IDs per Ensembl ID.</p>
+<p>Our <code>final_mapped_df</code> object now has a column named <code>first_mapped_entrez_id</code> that contains only the first mapped Entrez ID, in addition to the <code>all_entrez_ids</code> column that contains all mapped Entrez IDs per Ensembl ID.</p>
 <pre class="r"><code>final_mapped_df %&gt;%
-  dplyr::filter(stringr::str_detect(entrez_ids, &quot;;&quot;)) %&gt;%
+  # Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values
+  dplyr::filter(stringr::str_detect(all_entrez_ids, &quot;;&quot;)) %&gt;%
   head()</code></pre>
 <pre><code>##              Ensembl first_mapped_entrez_id
 ## 1 ENSDARG00000000540                 368827
@@ -2061,7 +2035,7 @@ head(multi_mapped_df)</code></pre>
 ## 4 ENSDARG00000019797                 336260
 ## 5 ENSDARG00000020811                 405787
 ## 6 ENSDARG00000021149                 337696
-##                                                        entrez_ids SRR1205173
+##                                                    all_entrez_ids SRR1205173
 ## 1                                                368827;110631416  0.9901324
 ## 2 406731;641488;100379286;100384891;100384896;100384897;100384901  0.6655282
 ## 3                                                550133;101886311  0.7058364
@@ -2145,18 +2119,18 @@ sessionInfo()</code></pre>
 ## [7] BiocGenerics_0.34.0  optparse_1.6.6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    R.methodsS3_1.8.1
-##  [5] R.utils_2.10.1    tools_4.0.2       bit_1.1-15.2      digest_0.6.25    
+##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    R.methodsS3_1.8.0
+##  [5] R.utils_2.9.2     tools_4.0.2       bit_1.1-15.2      digest_0.6.25    
 ##  [9] memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14     lifecycle_0.2.0  
 ## [13] tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.7      
 ## [17] DBI_1.1.0         cli_2.0.2         rstudioapi_0.11   yaml_2.2.1       
-## [21] xfun_0.17         dplyr_1.0.0       styler_1.3.2      stringr_1.4.0    
-## [25] knitr_1.29        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
-## [29] tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3     glue_1.4.2       
+## [21] xfun_0.16         dplyr_1.0.0       styler_1.3.2      stringr_1.4.0    
+## [25] knitr_1.29        generics_0.0.2    vctrs_0.3.2       hms_0.5.3        
+## [29] tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3     glue_1.4.1       
 ## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.0      
 ## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       rematch2_2.1.2   
-## [41] backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
-## [45] utf8_1.1.4        stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
+## [41] backports_1.1.9   ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
+## [45] utf8_1.1.4        stringi_1.4.6     crayon_1.3.4      R.oo_1.23.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish</p>
