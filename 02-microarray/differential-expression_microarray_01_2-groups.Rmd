@@ -353,6 +353,7 @@ ggsave(
 
 # Resources for further learning
 
+- [The refinebio example for differential expression with more than 2 groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html)
 - [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].

@@ -201,28 +201,19 @@ df <- readr::read_tsv(file.path(
   tibble::column_to_rownames("Gene")
 ```
 
-## Set up design matrix
+## Removing groups that are too small
 
-`limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma. 
-Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
-Note that the metadata variables that signify the treatment groups might be different across datasets and might not always be underneath the category.
-
-```{r Set up design matrix}
-# Set up group names in the `subgroup` column
-metadata <- metadata %>%
-  dplyr::mutate(subgroup = gsub("Group 3|Group 4", "NonSHH", subgroup))
-```
-
+We will be using the `subgroup` variable labels in our metadata to test differentially expression across.
 Let's take a look at how many sample of each subgroup we have. 
 
 ```{r}
-summary(metadata$subgroup)
+summary(as.factor(metadata$subgroup)) # Notice we are coercing this to a factor
+# so we can see the counts per group, `subgroup`
+# is actually a character
 ```
 
-Looks like there is one sample that has been labeled by the authors as an outlier, as well as one group, `U`, that only has two samples. 
+Looks like there is one sample that has been labeled by the authors as an outlier (`SHH OUTLIIER`), as well as one group, `U`, that only has two samples. 
 We will probably want to remove the `U` samples and this outlier since their inclusion might throw off our differential expression analysis results. 
-
-## Removing groups that are too small
 
 Let's start out by removing the outlier and the `U` group, we can do this all at once by removing groups smaller than 3. 
 
@@ -236,26 +227,12 @@ filtered_metadata <- metadata %>%
 Let's take a look at the subgroup summary again. 
 
 ```{r}
-summary(filtered_metadata$subgroup)
+summary(as.factor(filtered_metadata$subgroup))
 ```
 
-Note that the `levels()` we just filtered out are still here. 
-We'll need to reset the factor. 
+Note that the `U` and the `SHH OUTLIER` samples are gone and only the four groups we are interested in are left. 
 
-```{r}
-filtered_metadata <- filtered_metadata %>%
-  dplyr::mutate(subgroup = factor(subgroup))
-```
-
-Check this again. 
-
-```{r}
-summary(filtered_metadata$subgroup)
-```
-
-Now only the four groups we are look for are here. 
-
-But, we still need to filter these out from the expression data that's stored in `df`. 
+But, we still need to filter these samples out from the expression data that's stored in `df`. 
 
 ```{r}
 # Make the data in the order of the metadata
@@ -268,8 +245,9 @@ all.equal(colnames(df), filtered_metadata$geo_accession)
 
 ## Create the design matrix
 
+`limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma. 
 Now we will create a model matrix based on our `subgroup` variable.
-We are using a `+ 0` in the model so no particular group is treated as the baselinee/control. 
+We are using a `+ 0` in the model so no particular group is treated as the control. 
 
 ```{r}
 # Create the design matrix
@@ -283,14 +261,20 @@ Let's take a look at what our design matrix looks like.
 head(des_mat)
 ```
 
-The design matrix column names are a bit messy, so we will rename them based on the levels
+The design matrix column names are a bit messy, so we will neaten them up by dropping the `filtered_metadata$subgroup` designation they all have. 
 
 ```{r}
-# Make the column name more informative
-colnames(des_mat) <- levels(filtered_metadata$subgroup)
+# Make the column names less messy
+colnames(des_mat) <- stringr::str_remove(colnames(des_mat), "filtered_metadata\\$subgroup")
 ```
 
+Side note: If you are wondering why there are added two `\` above in `"filtered_metadata\\$subgroup"`, that's called an [escape character](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html#escaping). 
+There's a whole universe of things called [regular expressions (regex)](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html) that can be super handy for string manipulations. 
+
 ## Perform differential expression
+
+Now we are ready to actually start our setting up our differential expression model. 
+To accommodate our design that [has more than 2 groups this time](), we will need to do this in a couple steps. 
 
 First we need to set up our basic linear model then apply empirical Bayes smoothing.  
 
@@ -307,6 +291,7 @@ Depending on your scientific questions, you will need to switch this around.
 Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to alter these steps is good idea. 
 
 In this contrasts matrix, we are comparing each subtype to all the other subtypes.  
+We're diving by three in this expression so that each is contrasted to the average of the other three groups. 
 
 ```{r}
 contrast_matrix <- makeContrasts(
@@ -318,7 +303,8 @@ contrast_matrix <- makeContrasts(
 )
 ```
 
-Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`. 
+Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`.
+
 ```{r}
 # Fit the model according to the contrasts matrix
 contrasts_fit <- contrasts.fit(fit, contrast_matrix)
@@ -446,11 +432,12 @@ We'll put `SHH` in the name so we are aware which results this is showing.
 ggsave(
   plot = volcano_plot,
   file.path(plots_dir, "GSE37418_SHH_results_volcano_plot.png")
-) # Replace with a plot name relevant to your data
+)
 ```
 
 # Resources for further learning
 
+- [The refinebio example for differential expression for just 2 groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html)
 - [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
