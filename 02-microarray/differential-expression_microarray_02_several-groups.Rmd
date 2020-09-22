@@ -329,6 +329,7 @@ Let's take a peek at what our results table looks like.
 ```{r}
 head(stats_df)
 ```
+
 Each group's fold change in comparison to the other groups average are reported. 
 
 By default, results are ordered by largest `F` value to the smallest, which means your most differentially expressed genes should be toward the top. 
