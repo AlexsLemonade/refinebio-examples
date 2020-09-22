@@ -207,9 +207,7 @@ We will be using the `subgroup` variable labels in our metadata to test differen
 Let's take a look at how many sample of each subgroup we have. 
 
 ```{r}
-summary(as.factor(metadata$subgroup)) # Notice we are coercing this to a factor
-# so we can see the counts per group, `subgroup`
-# is actually a character
+summary(as.factor(metadata$subgroup)) # Notice we are coercing this to a factor so we can see the counts per group, `subgroup` is actually a character
 ```
 
 Looks like there is one sample that has been labeled by the authors as an outlier (`SHH OUTLIIER`), as well as one group, `U`, that only has two samples. 
@@ -291,7 +289,7 @@ Depending on your scientific questions, you will need to switch this around.
 Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to alter these steps is good idea. 
 
 In this contrasts matrix, we are comparing each subtype to all the other subtypes.  
-We're diving by three in this expression so that each is contrasted to the average of the other three groups. 
+We're diving by three in this expression so that each is contrasted to the average of the other three groups (`makeContrasts` doesn't allow you to use functions like `mean()`, it wants a formula). 
 
 ```{r}
 contrast_matrix <- makeContrasts(
