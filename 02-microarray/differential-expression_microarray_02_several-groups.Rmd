@@ -1,5 +1,5 @@
 ---
-title: "Differential Expression - More than 2 groups - Microarray"
+title: "Differential Expression - Several groups - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -209,7 +209,7 @@ Note that the metadata variables that signify the treatment groups might be diff
 
 ```{r Set up design matrix}
 # Set up group names in the `subgroup` column
-metadata <- metadata %>% 
+metadata <- metadata %>%
   dplyr::mutate(subgroup = gsub("Group 3|Group 4", "NonSHH", subgroup))
 ```
 
@@ -227,9 +227,9 @@ We will probably want to remove the `U` samples and this outlier since their inc
 Let's start out by removing the outlier and the `U` group, we can do this all at once by removing groups smaller than 3. 
 
 ```{r}
-filtered_metadata <- metadata %>% 
-  dplyr::group_by(subgroup) %>% 
-  dplyr::filter(dplyr::n() > 3) %>% 
+filtered_metadata <- metadata %>%
+  dplyr::group_by(subgroup) %>%
+  dplyr::filter(dplyr::n() > 3) %>%
   dplyr::ungroup()
 ```
 
@@ -243,7 +243,7 @@ Note that the `levels()` we just filtered out are still here.
 We'll need to reset the factor. 
 
 ```{r}
-filtered_metadata <- filtered_metadata %>% 
+filtered_metadata <- filtered_metadata %>%
   dplyr::mutate(subgroup = factor(subgroup))
 ```
 
@@ -309,11 +309,13 @@ Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/b
 In this contrasts matrix, we are comparing each subtype to all the other subtypes.  
 
 ```{r}
-contrast_matrix <- makeContrasts("G3vsOther"= G3 - (G4 + SHH + WNT)/3, 
-                                 "G4vsOther"= G4 - (G3 + SHH + WNT)/3,
-                                 "SHHvsOther"= SHH - (G3 + G4 + WNT)/3,
-                                 "WNTvsOther"= WNT - (G3 + G4 + SHH)/3,
-                                 levels = des_mat)
+contrast_matrix <- makeContrasts(
+  "G3vsOther" = G3 - (G4 + SHH + WNT) / 3,
+  "G4vsOther" = G4 - (G3 + SHH + WNT) / 3,
+  "SHHvsOther" = SHH - (G3 + G4 + WNT) / 3,
+  "WNTvsOther" = WNT - (G3 + G4 + SHH) / 3,
+  levels = des_mat
+)
 ```
 
 Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`. 
@@ -414,7 +416,7 @@ EnhancedVolcano::EnhancedVolcano(stats_df,
   lab = stats_df$Gene, # This has to be a vector with our labels we want for our genes
   x = "SHHvsOther", # This is the column name in `stats_df` that contains what we want on the x axis
   y = "adj.P.Val", # This is the column name in `stats_df` that contains what we want on the y axis
-  title = "SHH vs other groups" # We will put this on the title so we know which fold change we are plotting. 
+  title = "SHH vs other groups" # We will put this on the title so we know which fold change we are plotting.
 )
 ```
 

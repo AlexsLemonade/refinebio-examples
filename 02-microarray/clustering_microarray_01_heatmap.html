@@ -1616,7 +1616,8 @@ div.tocify {
             <!-- Individual microarray pages go in this list -->
             <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
             <li><a href="../02-microarray/clustering_microarray_01_heatmap.html">Clustering and Heatmaps</a></li>
-            <li><a href="../02-microarray/differential-expression_microarray_01.html">Differential Expression</a></li>
+            <li><a href="../02-microarray/differential-expression_microarray_01_2-groups.html">Differential Expression - 2 groups</a></li>
+            <li><a href="../02-microarray/differential-expression_microarray_02_several-groups.html">Differential Expression - more than 2 groups</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
@@ -1864,9 +1865,10 @@ df &lt;- readr::read_tsv(file.path(
 ## #   type &lt;chr&gt;</code></pre>
 <p>Now let’s ensure that the metadata and data are in the same sample order.</p>
 <pre class="r"><code># Make the data in the order of the metadata
-df &lt;- df %&gt;% dplyr::select(metadata$refinebio_accession_code)
-
-# Check if this is in the same order
+df &lt;- df %&gt;% dplyr::select(metadata$refinebio_accession_code)</code></pre>
+<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
+## when loading &#39;dplyr&#39;</code></pre>
+<pre class="r"><code># Check if this is in the same order
 all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <p>Now we are going to use a combination of functions from base R and the <code>pheatmap</code> package to look at how our samples and genes are clustering.</p>
@@ -2022,17 +2024,17 @@ sessionInfo()</code></pre>
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_1.0.5         pillar_1.4.6       compiler_4.0.2     RColorBrewer_1.1-2
-##  [5] R.methodsS3_1.8.0  R.utils_2.9.2      tools_4.0.2        digest_0.6.25     
+##  [5] R.methodsS3_1.8.1  R.utils_2.10.1     tools_4.0.2        digest_0.6.25     
 ##  [9] gtable_0.3.0       evaluate_0.14      lifecycle_0.2.0    tibble_3.0.3      
 ## [13] R.cache_0.14.0     pkgconfig_2.0.3    rlang_0.4.7        cli_2.0.2         
-## [17] rstudioapi_0.11    yaml_2.2.1         xfun_0.16          dplyr_1.0.0       
+## [17] rstudioapi_0.11    yaml_2.2.1         xfun_0.17          dplyr_1.0.0       
 ## [21] styler_1.3.2       stringr_1.4.0      knitr_1.29         generics_0.0.2    
-## [25] vctrs_0.3.2        hms_0.5.3          tidyselect_1.1.0   grid_4.0.2        
-## [29] getopt_1.20.3      glue_1.4.1         R6_2.4.1           fansi_0.4.1       
+## [25] vctrs_0.3.4        hms_0.5.3          tidyselect_1.1.0   grid_4.0.2        
+## [29] getopt_1.20.3      glue_1.4.2         R6_2.4.1           fansi_0.4.1       
 ## [33] rmarkdown_2.3      farver_2.0.3       purrr_0.3.4        readr_1.3.1       
-## [37] rematch2_2.1.2     scales_1.1.1       backports_1.1.9    ellipsis_0.3.1    
+## [37] rematch2_2.1.2     scales_1.1.1       backports_1.1.10   ellipsis_0.3.1    
 ## [41] htmltools_0.5.0    assertthat_0.2.1   colorspace_1.4-1   utf8_1.1.4        
-## [45] stringi_1.4.6      munsell_0.5.0      crayon_1.3.4       R.oo_1.23.0</code></pre>
+## [45] stringi_1.5.3      munsell_0.5.0      crayon_1.3.4       R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Gu2016">
 <p>Gu Z., R. Eils, and M. Schlesner, 2016 Complex heatmaps reveal patterns and correlations in multidimensional genomic data. Bioinformatics.</p>

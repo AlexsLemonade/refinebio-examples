@@ -1616,7 +1616,8 @@ div.tocify {
             <!-- Individual microarray pages go in this list -->
             <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
             <li><a href="../02-microarray/clustering_microarray_01_heatmap.html">Clustering and Heatmaps</a></li>
-            <li><a href="../02-microarray/differential-expression_microarray_01.html">Differential Expression</a></li>
+            <li><a href="../02-microarray/differential-expression_microarray_01_2-groups.html">Differential Expression - 2 groups</a></li>
+            <li><a href="../02-microarray/differential-expression_microarray_02_several-groups.html">Differential Expression - more than 2 groups</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
@@ -1790,9 +1791,10 @@ file.exists(file.path(data_dir, &quot;metadata_GSE37382.tsv&quot;))</code></pre>
 library(umap)
 
 # Attach the `ggplot2` library
-library(ggplot2)
-
-# We will need this so we can use the pipe: %&gt;%
+library(ggplot2)</code></pre>
+<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
+## when loading &#39;dplyr&#39;</code></pre>
+<pre class="r"><code># We will need this so we can use the pipe: %&gt;%
 library(magrittr)</code></pre>
 <p>The UMAP algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.</p>
 <pre class="r"><code># Set the seed so our results are reproducible:
@@ -1976,17 +1978,17 @@ sessionInfo()</code></pre>
 ## [1] magrittr_1.5   ggplot2_3.3.2  umap_0.2.6.0   optparse_1.6.6
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] reticulate_1.16   styler_1.3.2      tidyselect_1.1.0  xfun_0.16        
+##  [1] reticulate_1.16   styler_1.3.2      tidyselect_1.1.0  xfun_0.17        
 ##  [5] rematch2_2.1.2    purrr_0.3.4       lattice_0.20-41   colorspace_1.4-1 
-##  [9] vctrs_0.3.2       generics_0.0.2    htmltools_0.5.0   getopt_1.20.3    
-## [13] yaml_2.2.1        rlang_0.4.7       R.oo_1.23.0       pillar_1.4.6     
-## [17] glue_1.4.1        withr_2.2.0       R.utils_2.9.2     R.cache_0.14.0   
+##  [9] vctrs_0.3.4       generics_0.0.2    htmltools_0.5.0   getopt_1.20.3    
+## [13] yaml_2.2.1        rlang_0.4.7       R.oo_1.24.0       pillar_1.4.6     
+## [17] glue_1.4.2        withr_2.2.0       R.utils_2.10.1    R.cache_0.14.0   
 ## [21] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     gtable_0.3.0     
-## [25] R.methodsS3_1.8.0 evaluate_0.14     labeling_0.3      knitr_1.29       
+## [25] R.methodsS3_1.8.1 evaluate_0.14     labeling_0.3      knitr_1.29       
 ## [29] fansi_0.4.1       Rcpp_1.0.5        readr_1.3.1       openssl_1.4.2    
-## [33] backports_1.1.9   scales_1.1.1      jsonlite_1.7.0    farver_2.0.3     
+## [33] backports_1.1.10  scales_1.1.1      jsonlite_1.7.1    farver_2.0.3     
 ## [37] RSpectra_0.16-0   hms_0.5.3         askpass_1.1       digest_0.6.25    
-## [41] stringi_1.4.6     dplyr_1.0.0       grid_4.0.2        cli_2.0.2        
+## [41] stringi_1.5.3     dplyr_1.0.0       grid_4.0.2        cli_2.0.2        
 ## [45] tools_4.0.2       tibble_3.0.3      crayon_1.3.4      pkgconfig_2.0.3  
 ## [49] ellipsis_0.3.1    Matrix_1.2-18     assertthat_0.2.1  rmarkdown_2.3    
 ## [53] rstudioapi_0.11   R6_2.4.1          compiler_4.0.2</code></pre>
