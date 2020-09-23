@@ -157,7 +157,7 @@ A full list of the annotation R packages from Bioconductor is at this [link](htt
 # Obtaining Annotation for Ensembl IDs - RNA-seq
 
 Ensembl IDs can be used to obtain various different annotations at the gene/transcript level.
-Let's get ready to use the Ensembl IDs from our mouse dataset to obtain the associated Entrez IDs.
+Let's get ready to use the Ensembl IDs from our zebrafish dataset to obtain the associated Entrez IDs.
 
 ## Install libraries
 
