@@ -22,7 +22,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-convert_microarray_01_ensembl.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -144,7 +144,7 @@ refine.bio data comes with gene level data with Ensembl IDs.
 Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.
 
 <b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
-In the case of our [RNA-seq gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html), a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning `org.Dr.eg.db` or `Dr` would also need to be used there.
+In the case of our [RNA-seq gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html), a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning `org.Dr.eg.db` or `Dr` would also need to be used there.
 A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
 
 ***
@@ -341,7 +341,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
-- See our [RNA-seq gene ID conversion notebook](https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-rna-seq].
+- See our [RNA-seq gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-rna-seq].
 
 # Session info
 
