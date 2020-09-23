@@ -253,10 +253,12 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
+# Let's make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df <- mapped_list %>%
-  reshape2::melt(value.name = "Symbol") %>%
-  dplyr::rename("Ensembl" = "L1") # Here we are renaming the column holding the Ensembl IDs as good practice
+  tibble::enframe(name = "Ensembl", value = "Symbol") %>%
+  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
+  # This will result in one row of our data frame per list item
+  tidyr::unnest(cols = Symbol)
 ```
 
 Now let's take a peek at our data frame.
