@@ -76,7 +76,7 @@ Fill out the pop up window with your email and our Terms and Conditions:
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
 If you want to use this dataset with other examples you may want to download it non-quantile normalized.
-See the [RNA-seq header section](https://github.com/AlexsLemonade/refinebio-examples/tree/master/03-rnaseq/00-intro-to-rnaseq.html#14About_quantile_normalization) about quantile normalization.
+See the [RNA-seq header section](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#about-quantile-normalization) about quantile normalization.
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -147,7 +147,7 @@ refine.bio data comes with gene level data with Ensembl IDs.
 Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.
 
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
-In the case of our [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html), a Mouse (<i>Mus musculus</i>) dataset is used, meaning `org.Mm.eg.db` or `Mm` would also need to be used there.
+In the case of our [microarray gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html), a Mouse (<i>Mus musculus</i>) dataset is used, meaning `org.Mm.eg.db` or `Mm` would also need to be used there.
 A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
 
 ***
@@ -256,7 +256,9 @@ We are going to turn our list object into a data frame object in the next chunk.
 # Let's make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Entrez") %>%
-  tidyr::unnest(cols = Entrez) # enframe makes a `list` column, so here we are converting that to simpler format
+  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
+  # This will result in one row of our data frame per list item
+  tidyr::unnest(cols = Entrez) 
 ```
 
 Now let's take a peek at our data frame.
@@ -291,8 +293,8 @@ head(multi_mapped_df)
 
 Looks like we have one case where one Ensembl ID mapped to 15 Entrez IDs!
 We have a total of 235 out of 31882 Ensembl IDs with multiple mappings to Entrez IDs.
-With that rate, we can filter out the multi-mapped IDs if we want to keep 1:1 mappings for our downstream analyses by supplying the `"filter"` option to the `multiVals` argument of `mapIds()`.
-If you want to see an example of a `multiVals = "filter"` strategy see the [microarray gene identifier annotation example notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+One option is to filter out the multi-mapped IDs and keep only the 1:1 mappings for our downstream analyses by supplying the `"filter"` option to the `multiVals` argument of `mapIds()`.
+If you want to see an example of a `multiVals = "filter"` strategy see the [microarray gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
 ### Store all mapped values
 
@@ -369,7 +371,7 @@ readr::write_tsv(final_mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
-- See our [microarray gene ID conversion notebook](https://github.com/AlexsLemonade/refinebio-examples/tree/master/02-microarray/gene-id-annotation_microarray_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-microarray].
+- See our [microarray gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-microarray].
 
 # Session info
 
