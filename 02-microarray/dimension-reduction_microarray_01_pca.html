@@ -1782,10 +1782,9 @@ file.exists(file.path(data_dir, &quot;metadata_GSE37382.tsv&quot;))</code></pre>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
 <p>Attach the packages we need for this analysis:</p>
 <pre class="r"><code># Attach the library
-library(ggplot2)</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
-<pre class="r"><code># We will need this so we can use the pipe: %&gt;%
+library(ggplot2)
+
+# We will need this so we can use the pipe: %&gt;%
 library(magrittr)</code></pre>
 </div>
 <div id="import-and-set-up-data" class="section level2">
@@ -2290,10 +2289,10 @@ plot = pca_plot # Here we are giving the function the plot object that we want s
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04 LTS
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2314,7 +2313,7 @@ sessionInfo()</code></pre>
 ##  [5] R.utils_2.10.1    tools_4.0.2       digest_0.6.25     evaluate_0.14    
 ##  [9] lifecycle_0.2.0   tibble_3.0.3      gtable_0.3.0      R.cache_0.14.0   
 ## [13] pkgconfig_2.0.3   rlang_0.4.7       cli_2.0.2         rstudioapi_0.11  
-## [17] yaml_2.2.1        xfun_0.17         withr_2.2.0       dplyr_1.0.0      
+## [17] yaml_2.2.1        xfun_0.17         withr_2.2.0       dplyr_1.0.2      
 ## [21] styler_1.3.2      stringr_1.4.0     knitr_1.29        generics_0.0.2   
 ## [25] vctrs_0.3.4       hms_0.5.3         tidyselect_1.1.0  grid_4.0.2       
 ## [29] getopt_1.20.3     glue_1.4.2        R6_2.4.1          fansi_0.4.1      

@@ -1847,8 +1847,6 @@ library(DESeq2)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     aperm, apply, rowsum</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
 <pre class="r"><code># Attach the `umap` library
 library(umap)
 
@@ -2059,10 +2057,10 @@ ggsave(file.path(plots_dir, &quot;SRP133573_umap_plot.png&quot;), # Replace with
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04 LTS
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2086,10 +2084,10 @@ sessionInfo()</code></pre>
 ## [13] BiocGenerics_0.34.0         optparse_1.6.6             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-6           bit64_0.9-7.1          RColorBrewer_1.1-2    
+##  [1] bitops_1.0-6           bit64_4.0.5            RColorBrewer_1.1-2    
 ##  [4] R.cache_0.14.0         tools_4.0.2            backports_1.1.10      
 ##  [7] R6_2.4.1               DBI_1.1.0              colorspace_1.4-1      
-## [10] withr_2.2.0            tidyselect_1.1.0       bit_1.1-15.2          
+## [10] withr_2.2.0            tidyselect_1.1.0       bit_4.0.4             
 ## [13] compiler_4.0.2         cli_2.0.2              labeling_0.3          
 ## [16] scales_1.1.1           readr_1.3.1            genefilter_1.70.0     
 ## [19] askpass_1.1            stringr_1.4.0          digest_0.6.25         
@@ -2097,7 +2095,7 @@ sessionInfo()</code></pre>
 ## [25] pkgconfig_2.0.3        htmltools_0.5.0        styler_1.3.2          
 ## [28] rlang_0.4.7            rstudioapi_0.11        RSQLite_2.2.0         
 ## [31] farver_2.0.3           generics_0.0.2         jsonlite_1.7.1        
-## [34] BiocParallel_1.22.0    dplyr_1.0.0            R.oo_1.24.0           
+## [34] BiocParallel_1.22.0    dplyr_1.0.2            R.oo_1.24.0           
 ## [37] RCurl_1.98-1.2         GenomeInfoDbData_1.2.3 Matrix_1.2-18         
 ## [40] Rcpp_1.0.5             munsell_0.5.0          fansi_0.4.1           
 ## [43] reticulate_1.16        lifecycle_0.2.0        R.methodsS3_1.8.1     
@@ -2107,7 +2105,7 @@ sessionInfo()</code></pre>
 ## [55] hms_0.5.3              locfit_1.5-9.4         knitr_1.29            
 ## [58] pillar_1.4.6           geneplotter_1.66.0     XML_3.99-0.5          
 ## [61] glue_1.4.2             evaluate_0.14          vctrs_0.3.4           
-## [64] gtable_0.3.0           openssl_1.4.2          getopt_1.20.3         
+## [64] gtable_0.3.0           openssl_1.4.3          getopt_1.20.3         
 ## [67] purrr_0.3.4            rematch2_2.1.2         assertthat_0.2.1      
 ## [70] xfun_0.17              xtable_1.8-4           RSpectra_0.16-0       
 ## [73] survival_3.1-12        tibble_3.0.3           AnnotationDbi_1.50.3  
