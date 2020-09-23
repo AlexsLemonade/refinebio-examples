@@ -302,7 +302,7 @@ contrast_matrix <- makeContrasts(
 ```
 
 Side note: If you did have a control group you wanted to compare each group to, you could make each contrast to that control group, so the formulate would look like `G3 = G3 - Control` for each one. 
-We highly recommend consult the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `lmFit()` calls should look like [Ritchie2015]. 
+We highly recommend consult the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `model.matrix()` set ups should look like [@Ritchie2015]. 
 
 Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`.
 
