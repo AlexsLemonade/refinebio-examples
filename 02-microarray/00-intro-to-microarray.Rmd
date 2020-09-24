@@ -32,7 +32,7 @@ As with all experimental methods, microarray has strengths and limitations that 
 
 - Less expensive than RNA-seq - can afford more replicates and get higher statistical power [@Tarca2006]. 
 - Microarray has a faster turn-around than RNA-seq [@intro-microarray-slides].
-- It's a simpler experimental procedure than RNA-seq. 
+- It's a simpler experimental procedure than RNA-seq [@intro-microarray-slides].
 
 ### Microarray data **limitations**:  
 
