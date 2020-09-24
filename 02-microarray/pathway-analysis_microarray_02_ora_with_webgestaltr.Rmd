@@ -180,7 +180,7 @@ all_genes <- dge_df %>%
 ### WebGestaltR
 
 We can check whether or not we need to convert to a different gene identifier by figuring out what gene identifiers `WebGestaltR` accepts for human.
-We can do this with the `listIdType` function; the first argument is the organism name.
+We can do this with the `listIdType()` function; the first argument is the organism name.
 
 ```{r}
 listIdType("hsapiens")
@@ -220,15 +220,32 @@ go_enrichment_results <-
 As noted in the messages from `WebGestaltR`, the results are in `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
 The HTML report is at [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
+
+```{r}
+results_df <- readr::read_delim(
+  file.path(results_dir, 
+            "Project_GSE37418_up_SHH_lfc2_fdr0_05", 
+            "enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt"), 
+  delim = "\t")
+```
+
+Let's print out this table of results here. 
+
+```{r}
+results_df
+```
+	
 It looks like there are a lot of pathways associated with ribosomes and translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it's important to keep in mind that many of these gene sets could be telling us the same thing.
+
+In the `link` column, you can use the links to see more information about a particular GO term.
+Take a look at the link for the top result, `translational initiation`: http://amigo.geneontology.org/amigo/term/GO:0006413
 
 # Resources for further learning
 
 - [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
 - [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
-- [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) to learn more about the different types of pathway analysis and their limitations.
-- [Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)
+- [This handy review by @Khatri2012](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
 
 # Session info
 

@@ -1619,6 +1619,7 @@ div.tocify {
             <li><a href="../02-microarray/differential-expression_microarray_01.html">Differential Expression</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
+            <li><a href="../02-microarray/pathway-analysis_microarray_02_ora_with_webgestaltr.html">Pathway Analysis - ORA</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
 
           </ul>
@@ -1848,8 +1849,6 @@ library(DESeq2)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     aperm, apply, rowsum</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
 <pre class="r"><code># We will need this so we can use the pipe: %&gt;%
 library(magrittr)
 
@@ -2084,7 +2083,7 @@ sessionInfo()</code></pre>
 ## Running under: Ubuntu 20.04 LTS
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2108,7 +2107,7 @@ sessionInfo()</code></pre>
 ## [13] optparse_1.6.6             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bit64_0.9-7.1          splines_4.0.2          R.utils_2.10.1        
+##  [1] bit64_4.0.5            splines_4.0.2          R.utils_2.10.1        
 ##  [4] assertthat_0.2.1       blob_1.2.1             GenomeInfoDbData_1.2.3
 ##  [7] yaml_2.2.1             pillar_1.4.6           RSQLite_2.2.0         
 ## [10] backports_1.1.10       lattice_0.20-41        glue_1.4.2            
@@ -2128,8 +2127,8 @@ sessionInfo()</code></pre>
 ## [52] rlang_0.4.7            grid_4.0.2             RCurl_1.98-1.2        
 ## [55] rstudioapi_0.11        bitops_1.0-6           rmarkdown_2.3         
 ## [58] gtable_0.3.0           DBI_1.1.0              rematch2_2.1.2        
-## [61] R6_2.4.1               knitr_1.29             dplyr_1.0.0           
-## [64] utf8_1.1.4             bit_1.1-15.2           readr_1.3.1           
+## [61] R6_2.4.1               knitr_1.30             dplyr_1.0.2           
+## [64] utf8_1.1.4             bit_4.0.4              readr_1.3.1           
 ## [67] stringi_1.5.3          Rcpp_1.0.5             vctrs_0.3.4           
 ## [70] geneplotter_1.66.0     tidyselect_1.1.0       xfun_0.17</code></pre>
 <div id="refs" class="references">
