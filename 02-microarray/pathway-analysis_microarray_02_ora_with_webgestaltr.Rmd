@@ -60,30 +60,23 @@ if (!dir.exists(results_dir)) {
 
 In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
-## Obtain the dataset from refine.bio
+## Obtain the gene set for this example
 
-These results are from a two group comparison we completed in the [microarray differential expression analysis]() using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@limma].
-The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
+In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@limma].
+The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).
 
-For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+If you would like to follow the steps for obtaining this results file, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html).
 
 ## About the dataset we are using for this example
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-
-For this example analysis, we will use this [CREB overexpressed zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+The original refine.bio dataset used to obtain these results 
 
 ## Check out our file structure!
 
 Your new analysis folder should contain: 
 
 - The example analysis Rmd you downloaded  
-- A folder called "data" which contains:
-  - The `{{EXPERIMENT_ACCESSION_ID}}` folder which contains:
-    - The gene expression  
-    - The metadata TSV  
+- A folder called `data` (currently empty) 
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
     
@@ -122,7 +115,7 @@ Attach the packages we need for this analysis.
 
 ```{r}
 # Attach the library
-library("WebGestaltR")
+library(WebGestaltR)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
@@ -130,18 +123,29 @@ library(magrittr)
 
 ### Import data 
 
-We will read in the differential expression results from GitHub.
-These results are from a two group comparison we completed in the [microarray differential expression analysis]() using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+We will read in the differential expression results we will download from online.
+These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](ttps://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
 We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
 
 ```{r}
 # Define the url to your differential expression results file
-dge_url <- "https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d44267db3e3a6fde735187e1bcd195/validate-differential-expression/results/GSE37418_limma_results.tsv" # Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
+dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE37418/GSE37418_limma_results.tsv" 
+# Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
+```
 
+Read in the file that is online with the diifferential expression results. 
+
+```{r}
 # Read in the contents of your differential expression results file
 dge_df <- readr::read_tsv(dge_url)
+```
+
+Let's take a look at what these differential expression results look like. 
+
+```{r}
+dge_df
 ```
 
 Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
@@ -149,41 +153,31 @@ what genes are of interest.
 
 ```{r}
 upregulated_genes <- dge_df %>%
-  dplyr::filter(logFC > 2, adj.P.Val < 0.05) %>%
-  dplyr::pull(ENSEMBL)
+  dplyr::filter(SHHvsOther > 2, adj.P.Val < 0.05) %>%
+  dplyr::pull(Gene)
 ```
 
-Because we are testing if there is more overlap between a set of genes of 
-interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene 
-Ontology (GO)) than we would expect at random, we need to identify an 
-appropriate background set. 
-Put another way, if a gene is _not measured_, it can not possibly be in
-our gene set of interest.
-We can provide our analysis method of choice with a reference list, which
-we will generate by selecting all the genes in the table of differential
-expression results.
+Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. 
+Put another way, if a gene is _not measured_, it can not possibly be in our gene set of interest.
+We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.
 
 ```{r}
 all_genes <- dge_df %>% 
-   dplyr::pull(ENSEMBL)
+   dplyr::pull(Gene)
 ```
 
 ### WebGestaltR
 
-We can check whether or not we need to convert to a different gene identifier by
-figuring out what gene identifiers `WebGestaltR` accepts for human.
-We can do this with the `listIdType` function; the first argument is the 
-organism name.
+We can check whether or not we need to convert to a different gene identifier by figuring out what gene identifiers `WebGestaltR` accepts for human.
+We can do this with the `listIdType` function; the first argument is the organism name.
 
 ```{r}
 listIdType("hsapiens")
 ```
 
-We can see that `"ensembl_gene_id"` is a compatible identifier, and therefore
-we do not need to convert to a different identifier.
+We can see that the Ensembl IDs in the `Gene` column are compatible identifiers, and therefore we do not need to convert to a different identifier.
 
-The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT
-AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
+The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
 ([Wang et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkx356); 
 note that WebGestalt has a new 2019 version).
 
