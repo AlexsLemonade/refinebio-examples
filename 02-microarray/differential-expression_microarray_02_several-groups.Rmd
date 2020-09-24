@@ -207,7 +207,7 @@ We will be using the `subgroup` variable labels in our metadata to test differen
 Let's take a look at how many samples of each subgroup we have. 
 
 ```{r}
-summary(as.factor(metadata$subgroup)) # Notice we are coercing this to a factor so we can see the counts per group, `subgroup` is actually a character
+metadata %>% dplyr::count(subgroup)
 ```
 
 Looks like there is one sample that has been labeled by the authors as an outlier (`SHH OUTLIIER`), as well as one group, `U`, that only has two samples. 
@@ -225,7 +225,7 @@ filtered_metadata <- metadata %>%
 Let's take a look at the subgroup summary again. 
 
 ```{r}
-summary(as.factor(filtered_metadata$subgroup))
+metadata %>% dplyr::count(subgroup)
 ```
 
 Note that the `U` and the `SHH OUTLIER` samples are gone and only the four groups we are interested in are left. 
@@ -245,14 +245,15 @@ all.equal(colnames(df), filtered_metadata$geo_accession)
 
 `limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma. 
 Now we will create a model matrix based on our `subgroup` variable.
-We are using a `+ 0` in the model so the first group is not treated as your intercept. 
+We are using a `+ 0` in the model which sets the intercept to 0 so the subgroup effects capture expression for that group, rather than difference from the first group. 
+If you have a control group, you might want that to be the intercept. 
 
 ```{r}
 # Create the design matrix
 des_mat <- model.matrix(~ filtered_metadata$subgroup + 0)
 ```
 
-Let's take a look at what our design matrix looks like. 
+Let's take a look at the design matrix we created. 
 
 ```{r}
 # Print out the design matrix
@@ -271,10 +272,10 @@ There's a whole universe of things called [regular expressions (regex)](https://
 
 ## Perform differential expression
 
-Now we are ready to actually start setting up our differential expression model. 
+Now we are ready to actually start fitting our differential expression model to the data. 
 To accommodate our design that has more than 2 groups this time, we will need to do this in a couple steps. 
 
-First we need to set up our basic linear model then apply empirical Bayes smoothing.  
+First we need to fit our basic linear model to the data, then apply empirical Bayes smoothing.  
 
 ```{r}
 # Apply linear model to data
@@ -284,12 +285,12 @@ fit <- lmFit(df, design = des_mat)
 fit <- eBayes(fit)
 ```
 
-Now that we have our basic model fitting, we need to make the contrasts between all our groups. 
-Depending on your scientific questions, you will need to switch this around.
+Now that we have our basic model fitting, we will want to make the contrasts among all our groups. 
+Depending on your scientific questions, you will need to customize the next steps.
 Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to set up your model based on your hypothesis is a good idea. 
 
 In this contrasts matrix, we are comparing each subtype to all the other subtypes.  
-We're dividing by three in this expression so that each is contrasted to the average of the other three groups (`makeContrasts()` doesn't allow you to use functions like `mean()`, it wants a formula). 
+We're dividing by three in this expression so that each group is compared to the average of the other three groups (`makeContrasts()` doesn't allow you to use functions like `mean()`; it wants a formula).
 
 ```{r}
 contrast_matrix <- makeContrasts(
@@ -302,7 +303,7 @@ contrast_matrix <- makeContrasts(
 ```
 
 Side note: If you did have a control group you wanted to compare each group to, you could make each contrast to that control group, so the formulate would look like `G3 = G3 - Control` for each one. 
-We highly recommend consult the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `model.matrix()` set ups should look like [@Ritchie2015]. 
+We highly recommend consulting the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `model.matrix()` setups should look like [@Ritchie2015]. 
 
 Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`.
 
@@ -325,15 +326,15 @@ stats_df <- topTable(contrasts_fit, number = nrow(df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-Let's take a peek at what our results table looks like. 
+Let's take a peek at our results table. 
 
 ```{r}
 head(stats_df)
 ```
 
-Each group's fold change in comparison to the other groups average are reported. 
+For each gene, each group's fold change in expression, compared to the average of the other groups is reported. 
 
-By default, results are ordered by largest `F` value to the smallest, which means your most differentially expressed genes should be toward the top. 
+By default, results are ordered from largest `F` value to the smallest, which means your most differentially expressed genes across all groups should be toward the top. 
 
 See the help page by using `?topTable` for more information and options for this table.
 
@@ -363,10 +364,10 @@ top_gene_df <- df %>%
   ))
 ```
 
-Let's take a sneak peek at what our `top_gene_df` looks like. 
+Let's take a sneak peek at our `top_gene_df`. 
 
 ```{r}
-top_gene_df
+head(top_gene_df)
 ```
 
 Now let's plot the data for `ENSG00000128683` using our `top_gene_df`.
@@ -392,48 +393,120 @@ readr::write_tsv(stats_df, file.path(
 ))
 ```
 
-## Make a volcano plot
+## Make volcano plots
 
-We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+We'll use the `ggplot2` to make a set of volcano plots.
+But first, we need to set up our data for plotting. 
+We will need the p values from the individual contrasts as well as the log fold changes. 
 
-We will have to choose one of the groups fold changes to plot. 
-Let's plot the `SHH` fold changes for this example (You can add more chunks and plot the other subgroup results if you wish!)
-
-```{r}
-EnhancedVolcano::EnhancedVolcano(stats_df,
-  lab = stats_df$Gene, # This has to be a vector with our labels we want for our genes
-  x = "SHHvsOther", # This is the column name in `stats_df` that contains what we want on the x axis
-  y = "adj.P.Val", # This is the column name in `stats_df` that contains what we want on the y axis
-  title = "SHH vs other groups" # We will put this on the title so we know which fold change we are plotting.
-)
-```
-
-In this plot, green points represent genes that meet the log2 fold change, by default the cutoff is absolute value of 1.  
-But there are no genes that meet the p value cutoff, which by default is `1e-05`. 
-We used the adjusted p values for our plot above, so you may want to adjust this with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
-
-Let's make the same plot again, still using `SHHvsOther` but adjust the `pCutoff` since we are using multiple-testing corrected p values, and this time we will assign the plot to our environment as `volcano_plot`. 
+We can obtain the contrast p values from the `contrasts_fit` object and make it a longer format that the `ggplot()` function will want for plotting. 
 
 ```{r}
-volcano_plot <- EnhancedVolcano::EnhancedVolcano(stats_df,
-  lab = stats_df$Gene,
-  x = "SHHvsOther",
-  y = "adj.P.Val",
-  pCutoff = 0.01, # Because we are using adjusted p values, we can loosen this a bit
-  title = "SHH results"
-)
-
-# Print out our plot
-volcano_plot
+# Let's extract the contrast p values for each and convert them to -log10()
+contrast_p_vals_df <- -log10(contrasts_fit$p.value) %>%
+  # Make this into a data frame
+  as.data.frame() %>%
+  # Store genes as their own column
+  tibble::rownames_to_column("Gene") %>%
+  # Make this into long format
+  tidyr::pivot_longer(dplyr::contains("vsOther"),
+    names_to = "contrast",
+    values_to = "neg_log10_p_val"
+  )
 ```
 
-Let's save this plot to a PNG file. 
-We'll put `SHH` in the name so we are aware which results this is showing. 
+Now let's extract the log fold changes from `stats_df`.
+
+```{r}
+# Let's extract the fold changes from `stats_df`
+log_fc_df <- stats_df %>%
+  # We only want to keep the `Gene` column as well
+  dplyr::select("Gene", dplyr::contains("vsOther")) %>%
+  # Make this a longer format
+  tidyr::pivot_longer(dplyr::contains("vsOther"),
+    names_to = "contrast",
+    values_to = "logFoldChange"
+  )
+```
+
+We can perform an `inner_join()` of both these datasets using their `Gene` columns. 
+
+```{r}
+plot_df <- log_fc_df %>%
+  dplyr::inner_join(contrast_p_vals_df,
+    by = c("Gene", "contrast"),
+    suffix = c("_log_fc", "_p_val")
+  )
+```
+
+Let's print out a preview of `plot_df`.
+
+```{r}
+# Print out what this looks like
+head(plot_df)
+```
+Let's declare what we consider to be significant levels for fold change and for -log10 p values. 
+By saving this as its own variable, we only need to change these cutoffs in one place if we want to adjust later. 
+
+```{r}
+# This is equivalent to p value < 0.05
+p_val_cutoff <- 1.301
+
+# Absolute value cutoff for fold changes
+abs_fc_cutoff <- 5
+```
+
+Now we can use these cutoffs to make a new variable that declares which genes we consider significant. 
+We will use some logic with `dplyr::case_when()` to do this. 
+By default, tidyverse functions like `dplyr::case_when()` will assume an unquoted name is a column name, but we need to put `!!` so it knows that `abs_fc_cutoff` and `p_val_cutoff` are lone objects and not within the `plot_df` data frame. 
+
+```{r}
+plot_df <- plot_df %>%
+  dplyr::mutate(
+    signif_label = dplyr::case_when(
+      abs(logFoldChange) > !!abs_fc_cutoff & neg_log10_p_val > !!p_val_cutoff ~ "p-val and FC",
+      abs(logFoldChange) > !!abs_fc_cutoff ~ "FC",
+      neg_log10_p_val > !!p_val_cutoff ~ "p-val",
+      TRUE ~ "NS"
+    )
+  )
+```
+
+Now we're ready to plot the volcanoes!
+
+```{r}
+volcanoes_plot <- ggplot(
+  plot_df,
+  aes(
+    x = logFoldChange, # Fold change as x value
+    y = neg_log10_p_val, # -log10(p value) for the contrasts
+    color = signif_label
+  ) # Color code by significance cutoffs variable we made
+) +
+  # Making this a scatter plot with dots that are 30% opaque using the `alpha` argument
+  geom_point(alpha = 0.3) +
+  # Using our `p_val_cutoff` for our line here
+  geom_hline(yintercept = p_val_cutoff, linetype = "dashed") +
+  # Using our `abs_fc_cutoff` for our lines here
+  geom_vline(xintercept = c(-abs_fc_cutoff, abs_fc_cutoff), linetype = "dashed") +
+  # The default colors aren't great, we'll specify our own here
+  scale_colour_manual(values = c("#67a9cf", "darkgray", "gray", "#a1d76a")) +
+  # Let's be more specific about what this p value is in our y axis label
+  ylab("Contrast -log10(adjusted p value)") +
+  # This makes separate plots for each contrast!
+  facet_wrap(~contrast) +
+  # Just for making it prettier!
+  theme_classic()
+```
+Here the green points _might_ be of interest. 
+We recommend [ColorBrewer](https://colorbrewer2.org/) for finding different color sets if you don't like the ones we used. 
+
+Let's save these volcanoes to a PNG file. 
 
 ```{r}
 ggsave(
-  plot = volcano_plot,
-  file.path(plots_dir, "GSE37418_SHH_results_volcano_plot.png")
+  plot = volcanoes_plot,
+  file.path(plots_dir, "GSE37418_results_volcano_plots.png")
 )
 ```
 
@@ -443,7 +516,7 @@ ggsave(
 - [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
-- [The `EnhancedVolcano` vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/EnhancedVolcano/inst/doc/EnhancedVolcano.html) has more examples on how to tailor your volcano plot [@Blighe2020].
+- [The `ggplot2` cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) has a summary of `ggplot2 options that might give you some inspiration for tweaking the volcano plot.
 
 # Session info
 
