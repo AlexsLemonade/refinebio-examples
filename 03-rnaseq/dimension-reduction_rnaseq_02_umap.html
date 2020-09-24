@@ -1619,6 +1619,7 @@ div.tocify {
             <li><a href="../02-microarray/differential-expression_microarray_01.html">Differential Expression</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
+            <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
 
           </ul>
         </li> <!--/microarray dropdown-->
@@ -1929,7 +1930,7 @@ metadata &lt;- metadata %&gt;%
 </div>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.5</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="TODO:%20Add%20link%20to%20header%20section"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
+<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a>. ) and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <pre class="r"><code># Create a `DESeqDataSet` object
 dds &lt;- DESeqDataSetFromMatrix(
   countData = df, # This is the data frame with the counts values for all replicates in our dataset
