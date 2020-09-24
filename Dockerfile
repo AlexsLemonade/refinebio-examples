@@ -14,6 +14,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     zlib1g \
     libbz2-dev \
     liblzma-dev \
+    libglpk40 \
     libreadline-dev
 
 # libmagick++-dev is needed for coloblindr to install
@@ -46,7 +47,7 @@ RUN install2.r --error --deps TRUE \
 
 ##########################
 # Install bioconductor packages
-RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray'), \
+RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray', 'org.Mm.eg.db'), \
     update = FALSE)"
 
 # Installs packages needed for plottings
@@ -60,8 +61,7 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram \
-    org.Mm.eg.db
+    VennDiagram
 
 ##########################
 # Install packages from github

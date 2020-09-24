@@ -11,6 +11,10 @@ output:
 
 # Purpose of this analysis
 
+This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
+This pathway analysis method does not require any particular sample size, since the only input is gene sets [@Yaari2013].
+
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/pathway-analysis_microarray_00_intro.html) to help you determine with pathway analysis method is best suited for your purposes. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -71,6 +75,10 @@ If you would like to follow the steps for obtaining this results file, we sugges
 
 The original refine.bio dataset used to obtain these results 
 
+For this example analysis, we will use this medulloblastoma samples. 
+@Robinson2012 measured microarray gene expression of 71 medulloblastoma tumor samples. 
+In the differential expression analysis, we tested across the medulloblastoma subtypes.
+
 ## Check out our file structure!
 
 Your new analysis folder should contain: 
@@ -124,7 +132,7 @@ library(magrittr)
 ### Import data 
 
 We will read in the differential expression results we will download from online.
-These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](ttps://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
 We can identify upregulated genes by filtering these results and use this list
 as input to ORA.
@@ -135,12 +143,15 @@ dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/
 # Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
 ```
 
-Read in the file that is online with the diifferential expression results. 
+Read in the file that is online with the differential expression results. 
 
 ```{r}
 # Read in the contents of your differential expression results file
 dge_df <- readr::read_tsv(dge_url)
 ```
+
+`read_tsv()` can read TSV files online and doesn't necessarily require you download it first. 
+However, should you decide you want to download the file to your `data/` directory, you can use `download.file(dge_url, destfile = file.path(data_dir, "GSE37418_limma_results.tsv"))`.
 
 Let's take a look at what these differential expression results look like. 
 
@@ -148,7 +159,7 @@ Let's take a look at what these differential expression results look like.
 dge_df
 ```
 
-Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
+Here we'll use the `SHH` groups' log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
 what genes are of interest.
 
 ```{r}
@@ -175,24 +186,22 @@ We can do this with the `listIdType` function; the first argument is the organis
 listIdType("hsapiens")
 ```
 
-We can see that the Ensembl IDs in the `Gene` column are compatible identifiers, and therefore we do not need to convert to a different identifier.
+We can see that there is `ensembl_gene_id` listed above so the Ensembl IDs in the `Gene` column are compatible identifiers, and we do not need to convert to a different identifier.
+All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene ids, we'd encourage you to look at our [gene id annotation examples](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
 The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
 ([Wang et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkx356); 
 note that WebGestalt has a new 2019 version).
 
 WebGestalt can perform multiple _types_ of pathway analysis. 
-Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological
-processes as our source of gene sets.
-We can see all supported gene sets for humans with `listGeneSet`.
+Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological processes as our source of gene sets.
+We can see all supported gene sets for humans with `listGeneSet()` function.
 
 ```{r}
 listGeneSet("hsapiens")
 ```
 
-`WebGestaltR` will generate an HTML file with a report (path specified
-by the `outputDirectory` and `projectName` arguments) _and_ return a 
-`data.frame`.
+The `WebGestaltR()` function will generate an HTML file with a report (path specified by the `outputDirectory` and `projectName` arguments) _and_ return a data frame.
 
 ```{r}
 go_enrichment_results <- 
@@ -208,21 +217,18 @@ go_enrichment_results <-
               )
 ```
 
-As noted in the messages from `WebGestaltR`, the results are in
-`results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
-The HTML report is at 
-[`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
+As noted in the messages from `WebGestaltR`, the results are in `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
+The HTML report is at [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
-It looks like there are a lot of pathways associated with ribosomes and
-translation.
-Gene sets, particularly GO gene sets that are of a hierarchical nature, are
-not independent, so it's important to keep in mind that many of these gene sets 
-could be telling us the same thing.
+It looks like there are a lot of pathways associated with ribosomes and translation.
+Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it's important to keep in mind that many of these gene sets could be telling us the same thing.
 
 # Resources for further learning
 
 - [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
 - [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
+- [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) to learn more about the different types of pathway analysis and their limitations.
+- [Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)
 
 # Session info
 
@@ -232,56 +238,5 @@ This helps make your code more reproducible by recording what versions of softwa
 ```{r}
 # Print session info 
 sessionInfo()
-```
-
-## Background
-
-Over-representation analysis (ORA) is a method of pathway or gene set analysis
-where one can ask if a set of genes (e.g., those differentially expressed
-using some cutoff) shares more or less genes with gene sets/pathways than
-we would expect at random.
-The other methodologies introduced throughout this module such as QuSAGE and
-GSEA can require more samples than a different expression analysis. 
-For instance, the sample label permutation step of GSEA is reported to
-perform poorly with 7 samples or less in each group 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
-It is not uncommon to have n ~ 3 for each group in a treatment-control 
-transcriptomic study, at which point identifying differentially expressed genes
-is possible.
-If you are interested in performing pathway analysis on a small study, ORA may
-be your best bet.
-There are some limitations to ORA methods to be aware such as ignoring 
-gene-gene correlation.
-See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) 
-to learn more about the different types of pathway analysis and their 
-limitations.
-
-## Data
-
-In this example, we will use a table of differential expression analysis results
-from another one of the example modules 
-([`validate-differential-expression`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/validate-differential-expression)).
-Genes were tested for differential expression between the SHH and Groups 3 and
-4 subgroups of medulloblastoma in refine.bio-processed data from
-[Robinson et al. _Nature_. 2012.](https://doi.org/10.1038/nature11213)
-([`GSE37418`](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma)).
-We will read in these results from GitHub.
-
-## Set up
-
-#### Package installation and loading
-
-```{r}
-if (!("WebGestaltR" %in% installed.packages())) {
-  install.packages("WebGestaltR")
-}
-```
-
-```{r}
-`%>%` <- dplyr::`%>%`
-```
-
-```{r}
-library(WebGestaltR)
 ```
 
