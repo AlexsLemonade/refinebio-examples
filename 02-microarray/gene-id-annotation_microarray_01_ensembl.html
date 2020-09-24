@@ -1680,7 +1680,7 @@ div.tocify {
 <p>For general information about our tutorials and the basic software packages you will need, please see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
 <div id="obtain-the-.rmd-file" class="section level2">
 <h2><span class="header-section-number">2.1</span> Obtain the <code>.Rmd</code> file</h2>
-<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-convert_microarray_01_ensembl.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
+<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
 <p>You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there. (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files.) Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
 </div>
 <div id="set-up-your-analysis-folders" class="section level2">
@@ -1772,7 +1772,7 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
 <p>refine.bio data comes with gene level data with Ensembl IDs. Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -1890,10 +1890,9 @@ df &lt;- readr::read_tsv(file.path(
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
 <pre class="r"><code># Make the data in the order of the metadata
 df &lt;- df %&gt;%
-  dplyr::select(metadata$geo_accession)</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
-<pre class="r"><code># Check if this is in the same order
+  dplyr::select(metadata$geo_accession)
+
+# Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code># Bring back the &quot;Gene&quot; column in preparation for mapping
@@ -1937,19 +1936,23 @@ head(mapped_list)</code></pre>
 ## $ENSMUSG00000000049
 ## [1] &quot;Apoh&quot;</code></pre>
 <p>It looks like we have gene symbols that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
-<pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame using the `reshape2::melt()` function
+<pre class="r"><code># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame
 mapped_df &lt;- mapped_list %&gt;%
-  reshape2::melt(value.name = &quot;Symbol&quot;) %&gt;%
-  dplyr::rename(&quot;Ensembl&quot; = &quot;L1&quot;) # Here we are renaming the column holding the Ensembl IDs as good practice</code></pre>
+  tibble::enframe(name = &quot;Ensembl&quot;, value = &quot;Symbol&quot;) %&gt;%
+  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
+  # This will result in one row of our data frame per list item
+  tidyr::unnest(cols = Symbol)</code></pre>
 <p>Now let’s take a peek at our data frame.</p>
 <pre class="r"><code>head(mapped_df)</code></pre>
-<pre><code>##   Symbol            Ensembl
-## 1  Gnai3 ENSMUSG00000000001
-## 2   Pbsn ENSMUSG00000000003
-## 3  Cdc45 ENSMUSG00000000028
-## 4    H19 ENSMUSG00000000031
-## 5  Scml2 ENSMUSG00000000037
-## 6   Apoh ENSMUSG00000000049</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   Ensembl            Symbol
+##   &lt;chr&gt;              &lt;chr&gt; 
+## 1 ENSMUSG00000000001 Gnai3 
+## 2 ENSMUSG00000000003 Pbsn  
+## 3 ENSMUSG00000000028 Cdc45 
+## 4 ENSMUSG00000000031 H19   
+## 5 ENSMUSG00000000037 Scml2 
+## 6 ENSMUSG00000000049 Apoh</code></pre>
 <p>We can see that our data frame has a new column <code>Symbol</code>. Let’s get a summary of the gene symbols returned in the <code>Symbol</code> column of our mapped data frame.</p>
 <pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
 summary(mapped_df$Symbol)</code></pre>
@@ -1972,14 +1975,14 @@ summary(mapped_df$Symbol)</code></pre>
 head(multi_mapped)</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ## # Groups:   Ensembl [2]
-##   Symbol       Ensembl            gene_symbol_count
-##   &lt;chr&gt;        &lt;chr&gt;                          &lt;int&gt;
-## 1 Rpl23        ENSMUSG00000071415                 3
-## 2 LOC100044627 ENSMUSG00000071415                 3
-## 3 LOC100862455 ENSMUSG00000071415                 3
-## 4 Ppp2r3d      ENSMUSG00000093803                 3
-## 5 LOC108167320 ENSMUSG00000093803                 3
-## 6 LOC108167694 ENSMUSG00000093803                 3</code></pre>
+##   Ensembl            Symbol       gene_symbol_count
+##   &lt;chr&gt;              &lt;chr&gt;                    &lt;int&gt;
+## 1 ENSMUSG00000071415 Rpl23                        3
+## 2 ENSMUSG00000071415 LOC100044627                 3
+## 3 ENSMUSG00000071415 LOC100862455                 3
+## 4 ENSMUSG00000093803 Ppp2r3d                      3
+## 5 ENSMUSG00000093803 LOC108167320                 3
+## 6 ENSMUSG00000093803 LOC108167694                 3</code></pre>
 <p>Looks like we have some cases where 3 gene symbols mapped to a single Ensembl ID. We have a total of 130 out of 17984 Ensembl IDs with multiple mappings to gene symbols. If we are not too worried about the 130 IDs with multiple mappings, we can filter them out for the purpose of having 1:1 mappings for our downstream analysis.</p>
 </div>
 <div id="map-ensembl-ids-to-gene-symbols-filtering-out-multi-mappings" class="section level2">
@@ -2015,7 +2018,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020b)</span></li>
-<li>See our <a href="https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
+<li>See our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(CCDL 2020)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -2025,10 +2028,10 @@ readr::write_tsv(filtered_mapped_df, file.path(
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04 LTS
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2048,19 +2051,18 @@ sessionInfo()</code></pre>
 ## [7] BiocGenerics_0.34.0  optparse_1.6.6      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        plyr_1.8.6        pillar_1.4.6      compiler_4.0.2   
-##  [5] R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.2       bit_1.1-15.2     
-##  [9] digest_0.6.25     memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14    
-## [13] lifecycle_0.2.0   tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3  
-## [17] rlang_0.4.7       DBI_1.1.0         cli_2.0.2         rstudioapi_0.11  
-## [21] yaml_2.2.1        xfun_0.17         dplyr_1.0.0       styler_1.3.2     
-## [25] stringr_1.4.0     knitr_1.29        generics_0.0.2    vctrs_0.3.4      
-## [29] hms_0.5.3         tidyselect_1.1.0  bit64_0.9-7.1     getopt_1.20.3    
-## [33] glue_1.4.2        R6_2.4.1          fansi_0.4.1       rmarkdown_2.3    
-## [37] reshape2_1.4.4    blob_1.2.1        purrr_0.3.4       readr_1.3.1      
-## [41] rematch2_2.1.2    backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0  
-## [45] assertthat_0.2.1  utf8_1.1.4        stringi_1.5.3     crayon_1.3.4     
-## [49] R.oo_1.24.0</code></pre>
+##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    R.methodsS3_1.8.1
+##  [5] R.utils_2.10.1    tools_4.0.2       bit_4.0.4         digest_0.6.25    
+##  [9] memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14     lifecycle_0.2.0  
+## [13] tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.7      
+## [17] DBI_1.1.0         cli_2.0.2         rstudioapi_0.11   yaml_2.2.1       
+## [21] xfun_0.17         dplyr_1.0.2       styler_1.3.2      stringr_1.4.0    
+## [25] knitr_1.29        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
+## [29] tidyselect_1.1.0  bit64_4.0.5       getopt_1.20.3     glue_1.4.2       
+## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2      
+## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       rematch2_2.1.2   
+## [41] backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
+## [45] utf8_1.1.4        stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019">
 <p>Carlson M., 2019 Genome wide annotation for mouse</p>
