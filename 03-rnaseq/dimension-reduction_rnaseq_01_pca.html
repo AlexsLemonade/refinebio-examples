@@ -1634,6 +1634,7 @@ div.tocify {
             <li><a href="../03-rnaseq/differential-expression_rnaseq_01.html">Differential Expression</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
+            <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -2001,10 +2002,10 @@ ggsave(file.path(plots_dir, &quot;SRP133573_pca_plot.png&quot;), # Replace with 
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04 LTS
+## Running under: Ubuntu 20.04.1 LTS
 ## 
 ## Matrix products: default
-## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-openmp/libopenblasp-r0.3.8.so
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
 ## 
 ## locale:
 ##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -2028,30 +2029,30 @@ sessionInfo()</code></pre>
 ## [13] optparse_1.6.6             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bit64_0.9-7.1          splines_4.0.2          R.utils_2.9.2         
+##  [1] bit64_4.0.5            splines_4.0.2          R.utils_2.10.1        
 ##  [4] assertthat_0.2.1       blob_1.2.1             GenomeInfoDbData_1.2.3
 ##  [7] yaml_2.2.1             pillar_1.4.6           RSQLite_2.2.0         
-## [10] backports_1.1.9        lattice_0.20-41        glue_1.4.1            
+## [10] backports_1.1.10       lattice_0.20-41        glue_1.4.2            
 ## [13] digest_0.6.25          RColorBrewer_1.1-2     XVector_0.28.0        
 ## [16] colorspace_1.4-1       htmltools_0.5.0        Matrix_1.2-18         
-## [19] R.oo_1.23.0            XML_3.99-0.5           pkgconfig_2.0.3       
+## [19] R.oo_1.24.0            XML_3.99-0.5           pkgconfig_2.0.3       
 ## [22] genefilter_1.70.0      zlibbioc_1.34.0        purrr_0.3.4           
 ## [25] xtable_1.8-4           scales_1.1.1           getopt_1.20.3         
 ## [28] BiocParallel_1.22.0    tibble_3.0.3           annotate_1.66.0       
 ## [31] styler_1.3.2           farver_2.0.3           generics_0.0.2        
 ## [34] ellipsis_0.3.1         withr_2.2.0            cli_2.0.2             
 ## [37] survival_3.1-12        crayon_1.3.4           memoise_1.1.0         
-## [40] evaluate_0.14          R.methodsS3_1.8.0      fansi_0.4.1           
+## [40] evaluate_0.14          R.methodsS3_1.8.1      fansi_0.4.1           
 ## [43] R.cache_0.14.0         tools_4.0.2            hms_0.5.3             
 ## [46] lifecycle_0.2.0        stringr_1.4.0          locfit_1.5-9.4        
 ## [49] munsell_0.5.0          AnnotationDbi_1.50.3   compiler_4.0.2        
 ## [52] rlang_0.4.7            grid_4.0.2             RCurl_1.98-1.2        
 ## [55] rstudioapi_0.11        labeling_0.3           bitops_1.0-6          
 ## [58] rmarkdown_2.3          gtable_0.3.0           DBI_1.1.0             
-## [61] rematch2_2.1.2         R6_2.4.1               dplyr_1.0.0           
-## [64] knitr_1.29             bit_1.1-15.2           readr_1.3.1           
-## [67] stringi_1.4.6          Rcpp_1.0.5             vctrs_0.3.2           
-## [70] geneplotter_1.66.0     tidyselect_1.1.0       xfun_0.16</code></pre>
+## [61] rematch2_2.1.2         R6_2.4.1               dplyr_1.0.2           
+## [64] knitr_1.29             bit_4.0.4              readr_1.3.1           
+## [67] stringi_1.5.3          Rcpp_1.0.5             vctrs_0.3.4           
+## [70] geneplotter_1.66.0     tidyselect_1.1.0       xfun_0.17</code></pre>
 <div id="refs" class="references">
 <div id="ref-Freytag2019">
 <p>Freytag S., 2019 Workshop: Dimension reduction with r</p>
