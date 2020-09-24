@@ -1669,7 +1669,92 @@ div.tocify {
 </div>
 
 
-
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+<p><strong>Table of Contents</strong> <em>generated with <a href="https://github.com/thlorenz/doctoc">DocToc</a></em></p>
+<ul>
+<li><a href="#introduction-to-microarray-technology">Introduction to Microarray technology</a>
+<ul>
+<li><a href="#microarray-data-strengths">Microarray data <strong>strengths</strong>:</a></li>
+<li><a href="#microarray-data-limitations">Microarray data <strong>limitations</strong>:</a></li>
+</ul></li>
+<li><a href="#about-quantile-normalization">About quantile normalization</a>
+<ul>
+<li><a href="#more-resources-on-microarray-technology">More resources on microarray technology:</a>
+<ul>
+<li><a href="#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset">Why doesn’t the gene I care about show up in this microarray dataset?</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<div id="introduction-to-microarray-technology" class="section level2">
+<h2><span class="header-section-number">0.1</span> Introduction to Microarray technology</h2>
+<p>Data analyses are generally not “one size fits all”; this is particularly true between RNA-seq vs microarray data. This tutorial has example analyses <a href="../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured">organized by technology</a> so you can follow examples that are more closely tailored to the nature of the data at hand.</p>
+<p>As with all experimental methods, microarray has strengths and limitations that you should consider in regards to your scientific questions.</p>
+<div id="microarray-data-strengths" class="section level3">
+<h3><span class="header-section-number">0.1.1</span> Microarray data <strong>strengths</strong>:</h3>
+<ul>
+<li>Less expensive than RNA-seq - can afford more replicates and get higher statistical power <span class="citation">(Tarca <em>et al.</em> 2006)</span>.</li>
+<li>Microarray has a faster turn-around than RNA-seq <span class="citation">(Wu)</span>.</li>
+<li>It’s a simpler experimental procedure than RNA-seq.</li>
+</ul>
+</div>
+<div id="microarray-data-limitations" class="section level3">
+<h3><span class="header-section-number">0.1.2</span> Microarray data <strong>limitations</strong>:</h3>
+<ul>
+<li>If a transcript doesn’t have a probe designed to it, you won’t get it measured; can’t be used for transcript discovery <span class="citation">(Mantione <em>et al.</em> 2014)</span>.</li>
+<li>A chip’s probe designs are only as up to date as the genome annotation at the time it was designed <span class="citation">(Mantione <em>et al.</em> 2014)</span>.</li>
+<li>As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition.</li>
+</ul>
+<p>To help address these within-chip probe biases, refine.bio uses <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf">SCAN</a> normalization methods <span class="citation">(Piccolo <em>et al.</em> 2012)</span></p>
+</div>
+</div>
+<div id="about-quantile-normalization" class="section level2">
+<h2><span class="header-section-number">0.2</span> About quantile normalization</h2>
+<p>Microarray data is generally processed in groups of chips - this can lead to <a href="https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment">batch effects</a>. To minimize this, all refine.bio microarray data downloads come <a href="https://en.wikipedia.org/wiki/Quantile_normalization">quantile-normalized</a>. See the refine.bio docs for more about the microarray process steps including the <a href="http://docs.refine.bio/en/latest/main_text.html#quantile-normalization">quantile normalization</a>.</p>
+<div id="more-resources-on-microarray-technology" class="section level3">
+<h3><span class="header-section-number">0.2.1</span> More resources on microarray technology:</h3>
+<ul>
+<li><a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000543">Getting started in gene expression microarray analysis</a> <span class="citation">(Slonim and Yanai 2009)</span>.</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3467903/">Microarray and its applications</a> <span class="citation">(Govindarajan <em>et al.</em> 2012)</span>.</li>
+<li><a href="http://www.ub.edu/stat/docencia/bioinformatica/microarrays/ADM/slides/A_Tutorial_Review_of_Microarray_data_Analysis_17-06-08.pdf">An tutorial review of microarray data analysis</a> <span class="citation">(Sánchez and Villa 2008)</span>.</li>
+<li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2435252/">Analysis of microarray experiments of gene expression profiling</a> <span class="citation">(Tarca <em>et al.</em> 2006)</span>.</li>
+<li><a href="http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf">Some nice summary slides about microarray data analysis from Emory</a> <span class="citation">(Wu)</span>.</li>
+</ul>
+<div id="why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset" class="section level4">
+<h4><span class="header-section-number">0.2.1.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h4>
+<p>If a gene is not detected in any of the samples in a set through our processing, it is still kept in the <code>Gene</code> column, but it will be reported as <code>0</code>. For microarray data, a <code>0</code> is not necessarily indicative of biology; your gene of interest may have not been covered by the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">probes designed for the chip that was used</a>.</p>
+<p>If the gene you are interested in does not have an Ensembl ID according to the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">version of the annotation</a> we used, it will not be reported in any refine.bio download.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-Govindarajan2012">
+<p>Govindarajan R., J. Duraiyan, K. Kaliyappan, and M. Palanisamy, 2012 Microarray and its applications. J Pharm Bioallied Sci 4: S310–312.</p>
+</div>
+<div id="ref-Mantione2014">
+<p>Mantione K. J., R. M. Kream, H. Kuzelova, R. Ptacek, and J. Raboch <em>et al.</em>, 2014 Comparing bioinformatic gene expression profiling methods: microarray and RNA-Seq. Med Sci Monit Basic Res 20: 138–142.</p>
+</div>
+<div id="ref-Piccolo2012">
+<p>Piccolo S. R., Y. Sun, J. D. Campbell, M. E. Lenburg, and A. H. Bild <em>et al.</em>, 2012 A single-sample microarray normalization method to facilitate personalized-medicine workflows. Genomics 100: 337–344.</p>
+</div>
+<div id="ref-Sanchez2008">
+<p>Sánchez A., and M. C. R. de Villa, 2008 A tutorial review of microarray data analysis</p>
+</div>
+<div id="ref-Slonim2009">
+<p>Slonim D. K., and I. Yanai, 2009 Getting started in gene expression microarray analysis. PLoS Comput. Biol. 5: e1000543.</p>
+</div>
+<div id="ref-Tarca2006">
+<p>Tarca A. L., R. Romero, and S. Draghici, 2006 Analysis of microarray experiments of gene expression profiling. Am. J. Obstet. Gynecol. 195: 373–388.</p>
+</div>
+<div id="ref-intro-microarray-slides">
+<p>Wu H., Http://web1.sph.emory.edu/users/hwu30/</p>
+</div>
+</div>
+</div>
 
 
 
