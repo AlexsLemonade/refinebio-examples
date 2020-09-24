@@ -45,7 +45,8 @@ RUN install2.r --error --deps TRUE \
 
 ##########################
 # Install bioconductor packages
-RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray'), \
+# org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
+RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray', 'org.Mm.eg.db', 'org.Dr.eg.db'), \
     update = FALSE)"
 
 # Installs packages needed for plottings
@@ -59,8 +60,7 @@ RUN install2.r --error --deps TRUE \
     pheatmap \
     Rtsne \
     umap  \
-    VennDiagram \
-    org.Mm.eg.db
+    VennDiagram
 
 ##########################
 # Install packages from github
