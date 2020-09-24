@@ -19,6 +19,7 @@ What things should reviewers look out for?
 * [ ] Removed any instances of chunk naming.
 * [ ] Spell checked any Rmd file or md file.
 * [ ] Comments and documentation are up to date.
+* [ ] All links have been checked and are properly formatted. 
 
 ### Add datasets to S3
 * [ ] Added [data and metadata files to S3](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#adding-datasets-to-the-S3-bucket).
