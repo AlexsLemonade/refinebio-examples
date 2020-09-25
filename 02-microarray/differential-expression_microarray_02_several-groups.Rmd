@@ -422,12 +422,14 @@ log_fc_df <- stats_df %>%
   )
 ```
 
-We can perform an `inner_join()` of both these datasets using their `Gene` columns. 
+We can perform an `inner_join()` of both these datasets using both their `Gene` and `contrast` columns. 
 
 ```{r}
 plot_df <- log_fc_df %>%
   dplyr::inner_join(contrast_p_vals_df,
     by = c("Gene", "contrast"),
+    # This argument will automatically tack this on the end of the column names
+    # from the respective data frames - this way we can keep track of which columns are from which
     suffix = c("_log_fc", "_p_val")
   )
 ```
@@ -439,7 +441,7 @@ Let's print out a preview of `plot_df`.
 head(plot_df)
 ```
 
-Let's declare what we consider to be significant levels for fold change and for -log10 p values. 
+Let's declare what we consider to be significant levels for fold change and for -log10 p-values. 
 By saving this as its own variable, we only need to change these cutoffs in one place if we want to adjust later. 
 
 ```{r}
