@@ -517,6 +517,7 @@ ggsave(
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
 - [The `ggplot2` cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) has a summary of `ggplot2 options that might give you some inspiration for tweaking the volcano plot.
 - [About empirical Bayes estimations](http://varianceexplained.org/r/empirical_bayes_baseball/) [@bayes-estimates]
+
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
