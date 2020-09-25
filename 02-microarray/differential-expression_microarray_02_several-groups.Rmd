@@ -485,7 +485,7 @@ volcanoes_plot <- ggplot(
   # The default colors aren't great, we'll specify our own here
   scale_colour_manual(values = c("#67a9cf", "darkgray", "gray", "#a1d76a")) +
   # Let's be more specific about what this p value is in our y axis label
-  ylab("Contrast -log10(adjusted p value)") +
+  ylab("Contrast -log10(p value)") +
   # This makes separate plots for each contrast!
   facet_wrap(~contrast) +
   # Just for making it prettier!
