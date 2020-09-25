@@ -438,6 +438,7 @@ Let's print out a preview of `plot_df`.
 # Print out what this looks like
 head(plot_df)
 ```
+
 Let's declare what we consider to be significant levels for fold change and for -log10 p values. 
 By saving this as its own variable, we only need to change these cutoffs in one place if we want to adjust later. 
 
@@ -451,15 +452,14 @@ abs_fc_cutoff <- 5
 
 Now we can use these cutoffs to make a new variable that declares which genes we consider significant. 
 We will use some logic with `dplyr::case_when()` to do this. 
-By default, tidyverse functions like `dplyr::case_when()` will assume an unquoted name is a column name, but we need to put `!!` so it knows that `abs_fc_cutoff` and `p_val_cutoff` are lone objects and not within the `plot_df` data frame. 
 
 ```{r}
 plot_df <- plot_df %>%
   dplyr::mutate(
     signif_label = dplyr::case_when(
-      abs(logFoldChange) > !!abs_fc_cutoff & neg_log10_p_val > !!p_val_cutoff ~ "p-val and FC",
-      abs(logFoldChange) > !!abs_fc_cutoff ~ "FC",
-      neg_log10_p_val > !!p_val_cutoff ~ "p-val",
+      abs(logFoldChange) > abs_fc_cutoff & neg_log10_p_val > p_val_cutoff ~ "p-val and FC",
+      abs(logFoldChange) > abs_fc_cutoff ~ "FC",
+      neg_log10_p_val > p_val_cutoff ~ "p-val",
       TRUE ~ "NS"
     )
   )
@@ -491,6 +491,7 @@ volcanoes_plot <- ggplot(
   # Just for making it prettier!
   theme_classic()
 ```
+
 Here the green points _might_ be of interest. 
 We recommend [ColorBrewer](https://colorbrewer2.org/) for finding different color sets if you don't like the ones we used. 
 
