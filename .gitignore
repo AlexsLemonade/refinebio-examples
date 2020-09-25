@@ -9,7 +9,6 @@ _site
 *.nb.html
 */plots/*
 */results/*
-!02-microarray/results/GSE71270_limma_results.tsv
 */data/*
 
 # markdown spellcheck
