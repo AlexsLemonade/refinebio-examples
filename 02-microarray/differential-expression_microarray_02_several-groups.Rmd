@@ -492,6 +492,9 @@ volcanoes_plot <- ggplot(
   facet_wrap(~contrast) +
   # Just for making it prettier!
   theme_classic()
+
+# Print out the plot!
+volcanoes_plot
 ```
 
 Here the green points _might_ be of interest. 
