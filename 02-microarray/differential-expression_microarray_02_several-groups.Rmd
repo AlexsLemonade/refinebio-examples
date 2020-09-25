@@ -306,6 +306,8 @@ contrasts_fit <- contrasts.fit(fit, contrast_matrix)
 contrasts_fit <- eBayes(contrasts_fit)
 ```
 
+Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
+
 Now let's create the results table based on the contrasts fitted model. 
 
 This step will provide the Benjamini-Hochberg multiple testing correction. 
@@ -508,7 +510,7 @@ ggsave(
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
 - [The `ggplot2` cheatsheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) has a summary of `ggplot2 options that might give you some inspiration for tweaking the volcano plot.
-
+- [About empirical Bayes estimations](http://varianceexplained.org/r/empirical_bayes_baseball/) [@bayes-estimates]
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 

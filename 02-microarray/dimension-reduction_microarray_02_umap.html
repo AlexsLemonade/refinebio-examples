@@ -1792,10 +1792,9 @@ file.exists(file.path(data_dir, &quot;metadata_GSE37382.tsv&quot;))</code></pre>
 library(umap)
 
 # Attach the `ggplot2` library
-library(ggplot2)</code></pre>
-<pre><code>## Warning: replacing previous import &#39;vctrs::data_frame&#39; by &#39;tibble::data_frame&#39;
-## when loading &#39;dplyr&#39;</code></pre>
-<pre class="r"><code># We will need this so we can use the pipe: %&gt;%
+library(ggplot2)
+
+# We will need this so we can use the pipe: %&gt;%
 library(magrittr)</code></pre>
 <p>The UMAP algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.</p>
 <pre class="r"><code># Set the seed so our results are reproducible:
@@ -1959,7 +1958,7 @@ plot = umap_plot # Here we are giving the function the plot object that we want 
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.1 LTS
+## Running under: Ubuntu 20.04 LTS
 ## 
 ## Matrix products: default
 ## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
@@ -1983,9 +1982,9 @@ sessionInfo()</code></pre>
 ##  [5] rematch2_2.1.2    purrr_0.3.4       lattice_0.20-41   colorspace_1.4-1 
 ##  [9] vctrs_0.3.4       generics_0.0.2    htmltools_0.5.0   getopt_1.20.3    
 ## [13] yaml_2.2.1        rlang_0.4.7       R.oo_1.24.0       pillar_1.4.6     
-## [17] glue_1.4.2        withr_2.2.0       R.utils_2.10.1    R.cache_0.14.0   
+## [17] glue_1.4.2        withr_2.3.0       R.utils_2.10.1    R.cache_0.14.0   
 ## [21] lifecycle_0.2.0   stringr_1.4.0     munsell_0.5.0     gtable_0.3.0     
-## [25] R.methodsS3_1.8.1 evaluate_0.14     labeling_0.3      knitr_1.29       
+## [25] R.methodsS3_1.8.1 evaluate_0.14     labeling_0.3      knitr_1.30       
 ## [29] fansi_0.4.1       Rcpp_1.0.5        readr_1.3.1       openssl_1.4.3    
 ## [33] backports_1.1.10  scales_1.1.1      jsonlite_1.7.1    farver_2.0.3     
 ## [37] RSpectra_0.16-0   hms_0.5.3         askpass_1.1       digest_0.6.25    

@@ -258,7 +258,7 @@ mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Entrez") %>%
   # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
   # This will result in one row of our data frame per list item
-  tidyr::unnest(cols = Entrez) 
+  tidyr::unnest(cols = Entrez)
 ```
 
 Now let's take a peek at our data frame.
