@@ -22,7 +22,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # Build a docker image
+      - name: Build Docker image
+          uses: docker/build-push-action@v2
+          with:
+            push: false
+            context: docker
+            file: docker/Dockerfile
+            tags: ccdl/refinebio-examples:latest
+
 
