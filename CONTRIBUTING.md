@@ -47,7 +47,7 @@ Development should take place in the Docker container.
 Navigate your local `refinebio-examples` repository.
 Now, you can build the docker image locally using:
 ```
-docker build -< Dockerfile -t ccdl/refinebio-examples
+docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
 Or by pulling the image from Docker hub (this will by default pull the `latest` version).
 ```
@@ -67,9 +67,9 @@ All necessary packages needed for running all analyses should be added to the `D
 
 In the `refinebio-examples` repository:
 ```
-docker build -< Dockerfile -t ccdl/refinebio-examples
+docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
-After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.   
+After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.
 ```
 # log in with your credentials
 docker login
