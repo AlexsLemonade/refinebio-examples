@@ -83,12 +83,12 @@ In the differential expression analysis, we tested across the medulloblastoma su
 
 Your new analysis folder should contain: 
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called `data` (currently empty) 
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
     
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
@@ -143,7 +143,7 @@ dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/
 # Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
 ```
 
-Read in the file that is online with the differential expression results. 
+Read in the online file that has differential expression results. 
 
 ```{r}
 # Read in the contents of your differential expression results file
@@ -187,7 +187,7 @@ listIdType("hsapiens")
 ```
 
 We can see that there is `ensembl_gene_id` listed above so the Ensembl IDs in the `Gene` column are compatible identifiers, and we do not need to convert to a different identifier.
-All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene ids, we'd encourage you to look at our [gene id annotation examples](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we'd encourage you to look at our [gene ID annotation examples](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
 The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
 ([Wang et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkx356); 
@@ -260,4 +260,3 @@ This helps make your code more reproducible by recording what versions of softwa
 # Print session info
 sessionInfo()
 ```
-
