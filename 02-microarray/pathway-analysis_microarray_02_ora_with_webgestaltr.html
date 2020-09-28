@@ -1744,11 +1744,11 @@ if (!dir.exists(results_dir)) {
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
-<div id="over-representation-analysis-with-webgestaltr" class="section level2">
-<h2><span class="header-section-number">3.1</span> Over-Representation Analysis with <code>WebGestaltR</code></h2>
 </div>
+<div id="over-representation-analysis-with-webgestaltr" class="section level1">
+<h1><span class="header-section-number">4</span> Over-Representation Analysis with <code>WebGestaltR</code></h1>
 <div id="install-libraries" class="section level2">
-<h2><span class="header-section-number">3.2</span> Install libraries</h2>
+<h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
 <p>In this analysis, we will be using <code>WebGestaltR</code> <span class="citation">(Wang and Liao 2020)</span>.</p>
 <pre class="r"><code>if (!(&quot;WebGestaltR&quot; %in% installed.packages())) {
@@ -1765,8 +1765,9 @@ library(WebGestaltR)</code></pre>
 <pre><code>## ******************************************</code></pre>
 <pre class="r"><code># We will need this so we can use the pipe: %&gt;%
 library(magrittr)</code></pre>
-<div id="import-data" class="section level3">
-<h3><span class="header-section-number">3.2.1</span> Import data</h3>
+</div>
+<div id="import-data" class="section level2">
+<h2><span class="header-section-number">4.2</span> Import data</h2>
 <p>We will read in the differential expression results we will download from online. These results are from a four group comparison we completed in the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">microarray differential expression analysis for several groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case). We can identify upregulated genes by filtering these results and use this list as input to ORA.</p>
 <pre class="r"><code># Define the url to your differential expression results file
 dge_url &lt;- &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE37418/GSE37418_limma_results.tsv&quot;
@@ -1811,8 +1812,8 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 <pre class="r"><code>all_genes &lt;- dge_df %&gt;%
   dplyr::pull(Gene)</code></pre>
 </div>
-<div id="webgestaltr" class="section level3">
-<h3><span class="header-section-number">3.2.2</span> WebGestaltR</h3>
+<div id="webgestaltr" class="section level2">
+<h2><span class="header-section-number">4.3</span> WebGestaltR</h2>
 <p>We can check whether or not we need to convert to a different gene identifier by figuring out what gene identifiers <code>WebGestaltR</code> accepts for human. We can do this with the <code>listIdType()</code> function; the first argument is the organism name.</p>
 <pre class="r"><code>listIdType(&quot;hsapiens&quot;)</code></pre>
 <pre><code>##  [1] &quot;The_Genotype-Tissue_ExpressionProjectGTEx&quot;  
@@ -1891,213 +1892,39 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 <p>We can see that there is <code>ensembl_gene_id</code> listed above so the Ensembl IDs in the <code>Gene</code> column are compatible identifiers, and we do not need to convert to a different identifier. All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we’d encourage you to look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation examples</a>.</p>
 <p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a> (<a href="https://doi.org/10.1093/nar/gkx356">Wang et al. <em>NAR</em>. 2017.</a>; note that WebGestalt has a new 2019 version).</p>
 <p>WebGestalt can perform multiple <em>types</em> of pathway analysis. Here we’re using it for ORA and we will use <a href="http://geneontology.org/docs/ontology-documentation/">Gene Ontology (GO)</a> biological processes as our source of gene sets. We can see all supported gene sets for humans with <code>listGeneSet()</code> function.</p>
-<pre class="r"><code>listGeneSet(&quot;hsapiens&quot;)</code></pre>
-<pre><code>##                                               name
-## 1                  geneontology_Biological_Process
-## 2      geneontology_Biological_Process_noRedundant
-## 3                  geneontology_Cellular_Component
-## 4      geneontology_Cellular_Component_noRedundant
-## 5                  geneontology_Molecular_Function
-## 6      geneontology_Molecular_Function_noRedundant
-## 7                                     pathway_KEGG
-## 8                                  pathway_Panther
-## 9                                 pathway_Reactome
-## 10                             pathway_Wikipathway
-## 11                      pathway_Wikipathway_cancer
-## 12                                   network_CORUM
-## 13                   network_CPTAC_Proteomics_BRCA
-## 14               network_CPTAC_Proteomics_COADREAD
-## 15                     network_CPTAC_Proteomics_OV
-## 16                      network_Kinase_phosphosite
-## 17                           network_Kinase_target
-## 18                             network_PPI_BIOGRID
-## 19                                network_PTMsigDB
-## 20                         network_TCGA_RNASeq_ACC
-## 21                        network_TCGA_RNASeq_BLCA
-## 22                        network_TCGA_RNASeq_BRCA
-## 23                        network_TCGA_RNASeq_CESC
-## 24                        network_TCGA_RNASeq_CHOL
-## 25                    network_TCGA_RNASeq_COADREAD
-## 26                        network_TCGA_RNASeq_DLBC
-## 27                        network_TCGA_RNASeq_ESCA
-## 28                         network_TCGA_RNASeq_GBM
-## 29                      network_TCGA_RNASeq_GBMLGG
-## 30                        network_TCGA_RNASeq_HNSC
-## 31                        network_TCGA_RNASeq_KICH
-## 32                        network_TCGA_RNASeq_KIRP
-## 33                        network_TCGA_RNASeq_LAML
-## 34                         network_TCGA_RNASeq_LGG
-## 35                        network_TCGA_RNASeq_LIHC
-## 36                        network_TCGA_RNASeq_LUAD
-## 37                        network_TCGA_RNASeq_LUSC
-## 38                        network_TCGA_RNASeq_MESO
-## 39                          network_TCGA_RNASeq_OV
-## 40                        network_TCGA_RNASeq_PAAD
-## 41                        network_TCGA_RNASeq_PCPG
-## 42                        network_TCGA_RNASeq_PRAD
-## 43                        network_TCGA_RNASeq_SARC
-## 44                        network_TCGA_RNASeq_SKCM
-## 45                        network_TCGA_RNASeq_STAD
-## 46                        network_TCGA_RNASeq_STES
-## 47                        network_TCGA_RNASeq_TGCT
-## 48                        network_TCGA_RNASeq_THCA
-## 49                        network_TCGA_RNASeq_THYM
-## 50                        network_TCGA_RNASeq_UCEC
-## 51                         network_TCGA_RNASeq_UCS
-## 52                         network_TCGA_RNASeq_UVM
-## 53             network_Transcription_Factor_target
-## 54                            network_miRNA_target
-## 55                                disease_Disgenet
-## 56                                  disease_GLAD4U
-## 57                                    disease_OMIM
-## 58                                   drug_DrugBank
-## 59                                     drug_GLAD4U
-## 60              phenotype_Human_Phenotype_Ontology
-## 61             chromosomalLocation_CytogeneticBand
-## 62         community-contributed_5htGeneSets_Conte
-## 63                community-contributed_Hallmark50
-## 64 community-contributed_MuscleGeneSets_Duddy_2017
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   description
-## 1                                                                                                                                                                                                                                                                                                                                                                                                                             The gene ontology biological process database was downloaded from http://www.geneontology.org/.
-## 2                                                                                                                                                                                                                   The gene ontology biological process database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
-## 3                                                                                                                                                                                                                                                                                                                                                                                                                             The gene ontology cellular component database was downloaded from http://www.geneontology.org/.
-## 4                                                                                                                                                                                                                   The gene ontology cellular component database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
-## 5                                                                                                                                                                                                                                                                                                                                                                                                                             The gene ontology molecular function database was downloaded from http://www.geneontology.org/.
-## 6                                                                                                                                                                                                                   The gene ontology molecular function database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
-## 7                                                                                                                                                                                                                                                                                                                                                                                                                                                          The KEGG pathway database was downloaded from http://www.kegg.jp/.
-## 8                                                                                                                                                                                                                                                                                                                                                                                                                                         The PANTHER pathway database was downloaded from http://www.pantherdb.org/pathway/.
-## 9                                                                                                                                                                                                                                                                                                                                                                                                                                                 The Reactome pathway database was downloaded from http://www.reactome.org/.
-## 10                                                                                                                                                                                                                                                                                                                                                                                                                                                  The Wikipathway database was downloaded from http://www.wikipathway.org/.
-## 11                                                                                                                                                                                                                                                                                                                                                                     The Wikipathway database was downloaded from http://www.wikipathway.org/. This is the subset relevant to Clinical Proteomic Tumor Analysis Consortium.
-## 12                                                                                                                                                                                                                                                                                                                                                                                                                The core complex subunits were downloaded from CORUM database (https://mips.helmholtz-muenchen.de/corum/#).
-## 13       The BRCA (Breast invasive carcinoma) Proteomics data was downloaded from CPTAC (Clinical Proteomic Tumor Analysis Consortium) data portal (https://cptac-data-portal.georgetown.edu/cptacPublic/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus Proteomics co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 14   The COADREAD (Colorectal adenocarcinoma) Proteomics data was downloaded from CPTAC (Clinical Proteomic Tumor Analysis Consortium) data portal (https://cptac-data-portal.georgetown.edu/cptacPublic/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus Proteomics co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 15 The OV (Ovarian serous cystadenocarcinoma) Proteomics data was downloaded from CPTAC (Clinical Proteomic Tumor Analysis Consortium) data portal (https://cptac-data-portal.georgetown.edu/cptacPublic/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus Proteomics co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 16                                                                                                                                                                                          The relationship between Kinase and the corresponding protein phosposite position was from RegPhos (http://140.138.144.141/~RegPhos/). Then, we got the 15-mer sequence window around the phosphorylated site of the peptide (up and down 7 amino acid) from the Uniprot website (http://www.uniprot.org/) as the identifier tag.
-## 17                                                                                                                                                                                                                                                                                                                                   The relationship between Kinase and its targets was from PhosphositePlus (http://www.phosphosite.org/) and the phosphorylation relationships from a in-house combined signaling network.
-## 18                                                                                                                                                                                                                                                               The protein-protein interaction (PPI) network was downloaded from BIOGRID (https://thebiogrid.org/). Then, we used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 19                                                                                                                                                                                                                                                                                                                                                                                The database was downloaded from the PTM signatures database (https://github.com/broadinstitute/ssGSEA2.0). Direction of change is removed.
-## 20                                                   The ACC (Adrenocortical carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 21                                              The BLCA (Bladder Urothelial Carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 22                                                 The BRCA (Breast invasive carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 23          The CESC (Cervical squamous cell carcinoma and endocervical adenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 24                                                        The CHOL (Cholangiocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 25                                               The COADREAD (Colon and rectal cancer) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 26                           The DLBC (Lymphoid Neoplasm Diffuse Large B-cell Lymphoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 27                                                      The ESCA (Esophageal carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 28                                                    The GBM (Glioblastoma multiforme) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 29                                                                  The GBMLGG (Glioma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 30                                     The HNSC (Head and Neck squamous cell carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 31                                                        The KICH (Kidney Chromophobe) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 32                                     The KIRP (Kidney renal papillary cell carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 33                                                    The LAML (Acute Myeloid Leukemia) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 34                                                   The LGG (Brain Lower Grade Glioma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 35                                            The LIHC (Liver hepatocellular carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 36                                                       The LUAD (Lung adenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 37                                              The LUSC (Lung squamous cell carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 38                                                              The MESO (Mesothelioma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 39                                           The OV (Ovarian serous cystadenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 40                                                 The PAAD (Pancreatic adenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 41                                        The PCPG (Pheochromocytoma and Paraganglioma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 42                                                   The PRAD (Prostate adenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 43                                                                   The SARC (Sarcoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 44                                                   The SKCM (Skin Cutaneous Melanoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 45                                                    The STAD (Stomach adenocarcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 46                                          The STES (Stomach and Esophageal carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 47                                               The TGCT (Testicular Germ Cell Tumors) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 48                                                         The THCA (Thyroid carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 49                                                                   The THYM (Thymoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 50                                      The UCEC (Uterine Corpus Endometrial Carcinoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 51                                                     The UCS (Uterine Carcinosarcoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 52                                                             The UVM (Uveal Melanoma) RNASeq data was downloaded from TCGA (The Cancer Genome Atlas) firehose data portal (https://gdac.broadinstitute.org/). Then, based on the method described in our recently published paper (PMID: 27836980), we first constructed the consensus RNASeq co-expression network and then used the NetSAM R package (http://bioconductor.org/packages/release/bioc/html/NetSAM.html) to identify the hierarchical co-expression modules.
-## 53                                                                                                                                                                                                                                                                                                                                                                                 The relationship between transcription factor and its targets was downloaded from MsigDB (http://software.broadinstitute.org/gsea/msigdb).
-## 54                                                                                                                                                                                                                                                                                                                                                                                                The relationship between miRNA and its targets was downloaded from MsigDB (http://software.broadinstitute.org/gsea/msigdb).
-## 55                                                                                                                                                                                                                                                                                                                                                                                                                                                 The DisgeNET disease database was downloaded from http://www.disgenet.org.
-## 56                                                                                                                                                                                                                                                                                                                                  Disease terms were downloaded from ParmGKB (https://www.pharmgkb.org/). Genes associated with individual disease term were inferred using GLAD4U (http://glad4u.zhang-lab.org/index.php).
-## 57                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-## 58                                                                                                                                                                                                                                                                                                                                                                                                                                                   The DrugBank drug database was downloaded from https://www.drugbank.ca/.
-## 59                                                                                                                                                                                                                                                                                                                                        Drug terms were downloaded from ParmGKB (https://www.pharmgkb.org/). Genes associated with individual drug term were inferred using GLAD4U (http://glad4u.zhang-lab.org/index.php).
-## 60                                                                                                                                                                                                                                                                                                                                                                                                               The phenotype ontology information for human was downloaded from http://human-phenotype-ontology.github.io/.
-## 61                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-## 62                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-## 63                                                                                                                                                                                                                                                                                                         Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression. See details at http://software.broadinstitute.org/gsea/msigdb/collections.jsp#H .
-## 64                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Muscle Gene Sets (v3) Duddy 2017
-##            idType
-## 1      entrezgene
-## 2      entrezgene
-## 3      entrezgene
-## 4      entrezgene
-## 5      entrezgene
-## 6      entrezgene
-## 7      entrezgene
-## 8      entrezgene
-## 9      entrezgene
-## 10     entrezgene
-## 11     entrezgene
-## 12     entrezgene
-## 13     entrezgene
-## 14     entrezgene
-## 15     entrezgene
-## 16 phosphositeSeq
-## 17     entrezgene
-## 18     entrezgene
-## 19 phosphositeSeq
-## 20     entrezgene
-## 21     entrezgene
-## 22     entrezgene
-## 23     entrezgene
-## 24     entrezgene
-## 25     entrezgene
-## 26     entrezgene
-## 27     entrezgene
-## 28     entrezgene
-## 29     entrezgene
-## 30     entrezgene
-## 31     entrezgene
-## 32     entrezgene
-## 33     entrezgene
-## 34     entrezgene
-## 35     entrezgene
-## 36     entrezgene
-## 37     entrezgene
-## 38     entrezgene
-## 39     entrezgene
-## 40     entrezgene
-## 41     entrezgene
-## 42     entrezgene
-## 43     entrezgene
-## 44     entrezgene
-## 45     entrezgene
-## 46     entrezgene
-## 47     entrezgene
-## 48     entrezgene
-## 49     entrezgene
-## 50     entrezgene
-## 51     entrezgene
-## 52     entrezgene
-## 53     entrezgene
-## 54     entrezgene
-## 55     entrezgene
-## 56     entrezgene
-## 57     entrezgene
-## 58     entrezgene
-## 59     entrezgene
-## 60     entrezgene
-## 61     entrezgene
-## 62     entrezgene
-## 63     entrezgene
-## 64     entrezgene</code></pre>
+<pre class="r"><code>head(listGeneSet(&quot;hsapiens&quot;))</code></pre>
+<pre><code>##                                          name
+## 1             geneontology_Biological_Process
+## 2 geneontology_Biological_Process_noRedundant
+## 3             geneontology_Cellular_Component
+## 4 geneontology_Cellular_Component_noRedundant
+## 5             geneontology_Molecular_Function
+## 6 geneontology_Molecular_Function_noRedundant
+##                                                                                                                                                                                                                                                                                                 description
+## 1                                                                                                                                                                                                           The gene ontology biological process database was downloaded from http://www.geneontology.org/.
+## 2 The gene ontology biological process database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+## 3                                                                                                                                                                                                           The gene ontology cellular component database was downloaded from http://www.geneontology.org/.
+## 4 The gene ontology cellular component database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+## 5                                                                                                                                                                                                           The gene ontology molecular function database was downloaded from http://www.geneontology.org/.
+## 6 The gene ontology molecular function database was downloaded from http://www.geneontology.org/. Then, we only contain the non-redundant categories by selecting the most general categories in each branch of the GO DAG structure from all categories with the number of annotated genes from 20 to 500.
+##       idType
+## 1 entrezgene
+## 2 entrezgene
+## 3 entrezgene
+## 4 entrezgene
+## 5 entrezgene
+## 6 entrezgene</code></pre>
 <p>The <code>WebGestaltR()</code> function will generate an HTML file with a report (path specified by the <code>outputDirectory</code> and <code>projectName</code> arguments) <em>and</em> return a data frame.</p>
 <pre class="r"><code>go_enrichment_results &lt;-
   WebGestaltR(
     enrichMethod = &quot;ORA&quot;,
     organism = &quot;hsapiens&quot;,
-    enrichDatabase = &quot;geneontology_Biological_Process&quot;,
-    interestGene = upregulated_genes,
+    enrichDatabase = &quot;geneontology_Biological_Process&quot;, # What categories we&#39;d like enrichment results for
+    interestGene = upregulated_genes, # The vector of our genes of interest
     interestGeneType = &quot;ensembl_gene_id&quot;,
-    referenceGene = all_genes,
+    referenceGene = all_genes, # The vector of all the genes originally in our set
     referenceGeneType = &quot;ensembl_gene_id&quot;,
-    outputDirectory = results_dir,
+    outputDirectory = results_dir, # Replace with the directory you would like your results saved to
     projectName = &quot;GSE37418_up_SHH_lfc2_fdr0_05&quot; # Replace with a relevant output name for the HTML file
   )</code></pre>
 <pre><code>## Loading the functional categories...
@@ -2114,6 +1941,10 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 ## Generate the final report...
 ## Results can be found in the results/Project_GSE37418_up_SHH_lfc2_fdr0_05!</code></pre>
 <p>As noted in the messages from <code>WebGestaltR</code>, the results are in <code>results/Project_GSE37418_up_SHH_lfc2_fdr0_05</code>. The HTML report is at <a href="./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html"><code>results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html</code></a>.</p>
+</div>
+<div id="read-in-a-results-table" class="section level2">
+<h2><span class="header-section-number">4.4</span> Read in a results table</h2>
+<p>Let’s take a look at one of the results tables look like by importing it into R.</p>
 <pre class="r"><code>results_df &lt;- readr::read_delim(
   file.path(
     results_dir,
@@ -2136,7 +1967,7 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 ##   overlapId = col_character(),
 ##   userId = col_character()
 ## )</code></pre>
-<p>Let’s print out this table of results here.</p>
+<p>Let’s print it out.</p>
 <pre class="r"><code>results_df</code></pre>
 <pre><code>## # A tibble: 111 x 11
 ##    geneSet description link   size overlap expect enrichmentRatio   pValue
@@ -2157,17 +1988,16 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 <p>In the <code>link</code> column, you can use the links to see more information about a particular GO term. Take a look at the link for the top result, <code>translational initiation</code>: <a href="http://amigo.geneontology.org/amigo/term/GO:0006413" class="uri">http://amigo.geneontology.org/amigo/term/GO:0006413</a></p>
 </div>
 </div>
-</div>
 <div id="resources-for-further-learning" class="section level1">
-<h1><span class="header-section-number">4</span> Resources for further learning</h1>
+<h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li><a href="http://www.webgestalt.org/WebGestalt_2019_Manual.pdf">WebGestalt 2019 Manual</a></li>
 <li><a href="https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0"><code>WebGestaltR</code> package documentation</a>.</li>
-<li><span class="citation">(This handy review by Khatri <em>et al.</em> 2012)</span>(<a href="https://doi.org/10.1371/journal.pcbi.1002375" class="uri">https://doi.org/10.1371/journal.pcbi.1002375</a>) which summarizes the different types of pathway analysis and their limitations <span class="citation">(Khatri <em>et al.</em> 2012)</span>.</li>
+<li><a href="https://doi.org/10.1371/journal.pcbi.1002375">This handy review</a> which summarizes the different types of pathway analysis and their limitations <span class="citation">(Khatri <em>et al.</em> 2012)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
-<h1><span class="header-section-number">5</span> Session info</h1>
+<h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>

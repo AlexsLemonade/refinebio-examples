@@ -104,7 +104,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-## Over-Representation Analysis with `WebGestaltR`
+# Over-Representation Analysis with `WebGestaltR`
 
 ## Install libraries
 
@@ -129,7 +129,7 @@ library(WebGestaltR)
 library(magrittr)
 ```
 
-### Import data 
+## Import data 
 
 We will read in the differential expression results we will download from online.
 These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
@@ -177,7 +177,7 @@ all_genes <- dge_df %>%
   dplyr::pull(Gene)
 ```
 
-### WebGestaltR
+## WebGestaltR
 
 We can check whether or not we need to convert to a different gene identifier by figuring out what gene identifiers `WebGestaltR` accepts for human.
 We can do this with the `listIdType()` function; the first argument is the organism name.
@@ -198,7 +198,7 @@ Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneonto
 We can see all supported gene sets for humans with `listGeneSet()` function.
 
 ```{r}
-listGeneSet("hsapiens")
+head(listGeneSet("hsapiens"))
 ```
 
 The `WebGestaltR()` function will generate an HTML file with a report (path specified by the `outputDirectory` and `projectName` arguments) _and_ return a data frame.
@@ -208,12 +208,12 @@ go_enrichment_results <-
   WebGestaltR(
     enrichMethod = "ORA",
     organism = "hsapiens",
-    enrichDatabase = "geneontology_Biological_Process",
-    interestGene = upregulated_genes,
+    enrichDatabase = "geneontology_Biological_Process", # What categories we'd like enrichment results for
+    interestGene = upregulated_genes, # The vector of our genes of interest
     interestGeneType = "ensembl_gene_id",
-    referenceGene = all_genes,
+    referenceGene = all_genes, # The vector of all the genes originally in our set
     referenceGeneType = "ensembl_gene_id",
-    outputDirectory = results_dir,
+    outputDirectory = results_dir, # Replace with the directory you would like your results saved to
     projectName = "GSE37418_up_SHH_lfc2_fdr0_05" # Replace with a relevant output name for the HTML file
   )
 ```
@@ -221,6 +221,9 @@ go_enrichment_results <-
 As noted in the messages from `WebGestaltR`, the results are in `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
 The HTML report is at [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
+## Read in a results table
+
+Let's take a look at one of the results tables look like by importing it into R. 
 
 ```{r}
 results_df <- readr::read_delim(
@@ -233,7 +236,7 @@ results_df <- readr::read_delim(
 )
 ```
 
-Let's print out this table of results here. 
+Let's print it out.  
 
 ```{r}
 results_df
@@ -249,7 +252,7 @@ Take a look at the link for the top result, `translational initiation`: http://a
 
 - [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
 - [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
-- [This handy review by @Khatri2012](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
+- [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
 
 # Session info
 
