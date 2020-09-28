@@ -5,7 +5,7 @@ name: Build and Push Docker
 on:
   push:
     branches: [ master ]
-    path: docker/Dockerfile
+    paths: [ docker/Dockerfile ]
 
 jobs:
   # This workflow contains a single job called "build-push"
