@@ -5,8 +5,8 @@ name: Build and Push Docker
 on:
   push:
     branches: [ master ]
+    path: docker/Dockerfile
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build-push"
   build-push:
