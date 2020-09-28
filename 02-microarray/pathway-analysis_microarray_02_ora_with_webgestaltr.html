@@ -1675,7 +1675,7 @@ div.tocify {
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random. This pathway analysis method does not require any particular sample size, since the only input is gene sets <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
-<p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine with pathway analysis method is best suited for your purposes.</p>
+<p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine with pathway analysis method is best suited for your purposes.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1683,7 +1683,7 @@ div.tocify {
 <p>For general information about our tutorials and the basic software packages you will need, please see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
 <div id="obtain-the-.rmd-file" class="section level2">
 <h2><span class="header-section-number">2.1</span> Obtain the <code>.Rmd</code> file</h2>
-<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
+<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
 <p>You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there. (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files.) Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
 </div>
 <div id="set-up-your-analysis-folders" class="section level2">
@@ -1714,8 +1714,8 @@ if (!dir.exists(results_dir)) {
 </div>
 <div id="obtain-the-gene-set-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the gene set for this example</h2>
-<p>In this example, we are using differential expression results from an <a href="https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
-<p>If you would like to follow the steps for obtaining this results file, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
+<p>In this example, we are using differential expression results from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
+<p>If you would like to follow the steps for obtaining this results file, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>

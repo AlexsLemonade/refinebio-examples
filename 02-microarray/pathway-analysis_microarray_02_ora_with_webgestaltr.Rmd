@@ -14,7 +14,7 @@ output:
 This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
 This pathway analysis method does not require any particular sample size, since the only input is gene sets [@Yaari2013].
 
-This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/pathway-analysis_microarray_00_intro.html) to help you determine with pathway analysis method is best suited for your purposes. 
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine with pathway analysis method is best suited for your purposes. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -25,7 +25,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -66,10 +66,10 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## Obtain the gene set for this example
 
-In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).
 
-If you would like to follow the steps for obtaining this results file, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html).
+If you would like to follow the steps for obtaining this results file, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html).
 
 ## About the dataset we are using for this example
 
