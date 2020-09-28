@@ -3,9 +3,12 @@ dataset
 dataset's
 DESeq
 DESeq2
+Ensembl
 et.
+ortholog
 PNG
 `.Rmd`
 RStudio
 tidyverse
 TSV
+zebrafish
