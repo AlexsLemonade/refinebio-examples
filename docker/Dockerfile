@@ -84,9 +84,13 @@ RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad0
 
 # Install python3 data science tools
 RUN pip3 install \
-    "cycler==0.10.0" "kiwisolver==1.2.0" "pyparsing==2.4.7" "python-dateutil==2.8.1" "pytz==2020.1" \
+    "cycler==0.10.0" \
+    "kiwisolver==1.2.0" \
     "numpy==1.19.1" \
     "pandas==1.1.0" \
+    "pyparsing==2.4.7" \
+    "python-dateutil==2.8.1" \
+    "pytz==2020.1" \
     "snakemake==5.20.1"
 
 # set final workdir for commands
