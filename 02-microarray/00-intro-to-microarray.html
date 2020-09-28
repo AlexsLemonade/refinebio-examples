@@ -1679,12 +1679,10 @@ div.tocify {
 <li><a href="#microarray-data-strengths">Microarray data <strong>strengths</strong>:</a></li>
 <li><a href="#microarray-data-limitations">Microarray data <strong>limitations</strong>:</a></li>
 </ul></li>
-<li><a href="#about-quantile-normalization">About quantile normalization</a>
-<ul>
+<li><a href="#about-quantile-normalization">About quantile normalization</a></li>
 <li><a href="#more-resources-on-microarray-technology">More resources on microarray technology:</a>
 <ul>
 <li><a href="#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset">Why doesn’t the gene I care about show up in this microarray dataset?</a></li>
-</ul></li>
 </ul></li>
 <li><a href="#references">References</a></li>
 </ul>
@@ -1705,7 +1703,7 @@ div.tocify {
 <ul>
 <li>If a transcript doesn’t have a probe designed to it, you won’t get it measured; can’t be used for transcript discovery <span class="citation">(Mantione <em>et al.</em> 2014)</span>.</li>
 <li>A chip’s probe designs are only as up to date as the genome annotation at the time it was designed <span class="citation">(Mantione <em>et al.</em> 2014)</span>.</li>
-<li>As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition.</li>
+<li>As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias).</li>
 </ul>
 <p>To help address these probe nucleotide composition biases, refine.bio uses <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf">SCAN</a> normalization methods prior to your downloads <span class="citation">(Piccolo <em>et al.</em> 2012)</span>.</p>
 </div>
@@ -1713,8 +1711,9 @@ div.tocify {
 <div id="about-quantile-normalization" class="section level2">
 <h2><span class="header-section-number">0.2</span> About quantile normalization</h2>
 <p>Microarray data is generally processed in groups of chips - this can lead to <a href="https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment">batch effects</a>. To minimize this, all refine.bio microarray data downloads come <a href="https://en.wikipedia.org/wiki/Quantile_normalization">quantile-normalized</a>. See the refine.bio docs for more about the microarray process steps including the <a href="http://docs.refine.bio/en/latest/main_text.html#quantile-normalization">quantile normalization</a>.</p>
-<div id="more-resources-on-microarray-technology" class="section level3">
-<h3><span class="header-section-number">0.2.1</span> More resources on microarray technology:</h3>
+</div>
+<div id="more-resources-on-microarray-technology" class="section level2">
+<h2><span class="header-section-number">0.3</span> More resources on microarray technology:</h2>
 <ul>
 <li><a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000543">Getting started in gene expression microarray analysis</a> <span class="citation">(Slonim and Yanai 2009)</span>.</li>
 <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3467903/">Microarray and its applications</a> <span class="citation">(Govindarajan <em>et al.</em> 2012)</span>.</li>
@@ -1722,11 +1721,10 @@ div.tocify {
 <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2435252/">Analysis of microarray experiments of gene expression profiling</a> <span class="citation">(Tarca <em>et al.</em> 2006)</span>.</li>
 <li><a href="http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf">Some nice summary slides about microarray data analysis from Emory</a> <span class="citation">(Wu)</span>.</li>
 </ul>
-<div id="why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset" class="section level4">
-<h4><span class="header-section-number">0.2.1.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h4>
+<div id="why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset" class="section level3">
+<h3><span class="header-section-number">0.3.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h3>
 <p>If a gene is not detected in any of the samples in a set through our processing, it is still kept in the <code>Gene</code> column, but it will be reported as <code>0</code>. For microarray data, a <code>0</code> is not necessarily indicative of biology; your gene of interest may have not been covered by the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">probes designed for the chip that was used</a>.</p>
 <p>If the gene you are interested in does not have an Ensembl ID according to the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">version of the annotation</a> we used, it will not be reported in any refine.bio download.</p>
-</div>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

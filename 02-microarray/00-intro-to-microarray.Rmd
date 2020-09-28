@@ -15,8 +15,8 @@ output:
   - [Microarray data **strengths**:](#microarray-data-strengths)
   - [Microarray data **limitations**:](#microarray-data-limitations)
 - [About quantile normalization](#about-quantile-normalization)
-  - [More resources on microarray technology:](#more-resources-on-microarray-technology)
-    - [Why doesn't the gene I care about show up in this microarray dataset?](#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset)
+- [More resources on microarray technology:](#more-resources-on-microarray-technology)
+  - [Why doesn't the gene I care about show up in this microarray dataset?](#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -37,7 +37,7 @@ As with all experimental methods, microarray has strengths and limitations that 
 
 - If a transcript doesn't have a probe designed to it, you won't get it measured; can't be used for transcript discovery [@Mantione2014]. 
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
-- As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition. 
+- As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
 To help address these probe nucleotide composition biases, refine.bio uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads [@Piccolo2012].
 
@@ -47,7 +47,7 @@ Microarray data is generally processed in groups of chips - this can lead to [ba
 To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization). 
 See the refine.bio docs for more about the microarray process steps including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
-### More resources on microarray technology: 
+## More resources on microarray technology: 
 
 - [Getting started in gene expression microarray analysis](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000543) [@Slonim2009].
 - [Microarray and its applications](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3467903/) [@Govindarajan2012].
@@ -55,7 +55,7 @@ See the refine.bio docs for more about the microarray process steps including th
 - [Analysis of microarray experiments of gene expression profiling](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2435252/) [@Tarca2006].
 - [Some nice summary slides about microarray data analysis from Emory](http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf) [@intro-microarray-slides].
 
-#### Why doesn't the gene I care about show up in this microarray dataset?
+### Why doesn't the gene I care about show up in this microarray dataset?
 
 If a gene is not detected in any of the samples in a set through our processing, it is still kept in the `Gene` column, but it will be reported as `0`.
 For microarray data, a `0` is not necessarily indicative of biology; your gene of interest may have not been covered by the [probes designed for the chip that was used](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed). 
