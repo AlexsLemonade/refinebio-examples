@@ -66,7 +66,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## Obtain the gene set for this example
 
-In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@limma].
+In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).
 
 If you would like to follow the steps for obtaining this results file, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html).
@@ -133,24 +133,23 @@ library(magrittr)
 
 We will read in the differential expression results we will download from online.
 These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
-The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case).
-We can identify upregulated genes by filtering these results and use this list
-as input to ORA.
+The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
+We can identify upregulated genes by filtering these results and use this list as input to ORA.
 
 ```{r}
 # Define the url to your differential expression results file
 dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE37418/GSE37418_limma_results.tsv"
-# Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer
+# Replace with a link to your desired differential expression results TSV file
 ```
 
 Read in the online file that has differential expression results. 
 
 ```{r}
 # Read in the contents of your differential expression results file
-dge_df <- readr::read_tsv(dge_url)
+dge_df <- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results
 ```
 
-`read_tsv()` can read TSV files online and doesn't necessarily require you download it first. 
+`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
 However, should you decide you want to download the file to your `data/` directory, you can use `download.file(dge_url, destfile = file.path(data_dir, "GSE37418_limma_results.tsv"))`.
 
 Let's take a look at what these differential expression results look like. 
@@ -196,6 +195,7 @@ note that WebGestalt has a new 2019 version).
 WebGestalt can perform multiple _types_ of pathway analysis. 
 Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological processes as our source of gene sets.
 We can see all supported gene sets for humans with `listGeneSet()` function.
+We are using `head()` so we just get a preview and not the whole table printed out. 
 
 ```{r}
 head(listGeneSet("hsapiens"))
@@ -223,25 +223,24 @@ The HTML report is at [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE3
 
 ## Read in a results table
 
-Let's take a look at one of the results tables look like by importing it into R. 
+Let's take a look at one of the results tables look like by reading it into R. 
+It is a `.txt` file, however its values are separated by tabs, making it a TSV; hence we can read it in with `readr::read_tsv()` function. 
 
 ```{r}
-results_df <- readr::read_delim(
+results_df <- readr::read_tsv(
   file.path(
     results_dir,
     "Project_GSE37418_up_SHH_lfc2_fdr0_05",
     "enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt"
-  ),
-  delim = "\t"
+  )
 )
 ```
 
-Let's print it out.  
+Let's print out a preview of it.   
 
 ```{r}
-results_df
+head(results_df)
 ```
-	
 It looks like there are a lot of pathways associated with ribosomes and translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it's important to keep in mind that many of these gene sets could be telling us the same thing.
 

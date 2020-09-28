@@ -1714,7 +1714,7 @@ if (!dir.exists(results_dir)) {
 </div>
 <div id="obtain-the-gene-set-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the gene set for this example</h2>
-<p>In this example, we are using differential expression results from an <a href="https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(<span class="citeproc-not-found" data-reference-id="limma"><strong>???</strong></span>)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
+<p>In this example, we are using differential expression results from an <a href="https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
 <p>If you would like to follow the steps for obtaining this results file, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
@@ -1768,13 +1768,13 @@ library(magrittr)</code></pre>
 </div>
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import data</h2>
-<p>We will read in the differential expression results we will download from online. These results are from a four group comparison we completed in the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">microarray differential expression analysis for several groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-change, and adjusted p-values (FDR in this case). We can identify upregulated genes by filtering these results and use this list as input to ORA.</p>
+<p>We will read in the differential expression results we will download from online. These results are from a four group comparison we completed in the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">microarray differential expression analysis for several groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case). We can identify upregulated genes by filtering these results and use this list as input to ORA.</p>
 <pre class="r"><code># Define the url to your differential expression results file
 dge_url &lt;- &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE37418/GSE37418_limma_results.tsv&quot;
-# Replace with a link to your desired differential expression results TSV file or the file path to differential expression results TSV file on your local computer</code></pre>
+# Replace with a link to your desired differential expression results TSV file</code></pre>
 <p>Read in the online file that has differential expression results.</p>
 <pre class="r"><code># Read in the contents of your differential expression results file
-dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
+dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   Gene = col_character(),
@@ -1787,7 +1787,7 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 ##   P.Value = col_double(),
 ##   adj.P.Val = col_double()
 ## )</code></pre>
-<p><code>read_tsv()</code> can read TSV files online and doesn’t necessarily require you download it first. However, should you decide you want to download the file to your <code>data/</code> directory, you can use <code>download.file(dge_url, destfile = file.path(data_dir, &quot;GSE37418_limma_results.tsv&quot;))</code>.</p>
+<p><code>read_tsv()</code> can read TSV files online and doesn’t necessarily require you download the file first. However, should you decide you want to download the file to your <code>data/</code> directory, you can use <code>download.file(dge_url, destfile = file.path(data_dir, &quot;GSE37418_limma_results.tsv&quot;))</code>.</p>
 <p>Let’s take a look at what these differential expression results look like.</p>
 <pre class="r"><code>dge_df</code></pre>
 <pre><code>## # A tibble: 20,056 x 9
@@ -1891,7 +1891,7 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 ## [73] &quot;uniprotswissprot&quot;</code></pre>
 <p>We can see that there is <code>ensembl_gene_id</code> listed above so the Ensembl IDs in the <code>Gene</code> column are compatible identifiers, and we do not need to convert to a different identifier. All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we’d encourage you to look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation examples</a>.</p>
 <p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a> (<a href="https://doi.org/10.1093/nar/gkx356">Wang et al. <em>NAR</em>. 2017.</a>; note that WebGestalt has a new 2019 version).</p>
-<p>WebGestalt can perform multiple <em>types</em> of pathway analysis. Here we’re using it for ORA and we will use <a href="http://geneontology.org/docs/ontology-documentation/">Gene Ontology (GO)</a> biological processes as our source of gene sets. We can see all supported gene sets for humans with <code>listGeneSet()</code> function.</p>
+<p>WebGestalt can perform multiple <em>types</em> of pathway analysis. Here we’re using it for ORA and we will use <a href="http://geneontology.org/docs/ontology-documentation/">Gene Ontology (GO)</a> biological processes as our source of gene sets. We can see all supported gene sets for humans with <code>listGeneSet()</code> function. We are using <code>head()</code> so we just get a preview and not the whole table printed out.</p>
 <pre class="r"><code>head(listGeneSet(&quot;hsapiens&quot;))</code></pre>
 <pre><code>##                                          name
 ## 1             geneontology_Biological_Process
@@ -1944,14 +1944,13 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 </div>
 <div id="read-in-a-results-table" class="section level2">
 <h2><span class="header-section-number">4.4</span> Read in a results table</h2>
-<p>Let’s take a look at one of the results tables look like by importing it into R.</p>
-<pre class="r"><code>results_df &lt;- readr::read_delim(
+<p>Let’s take a look at one of the results tables look like by reading it into R. It is a <code>.txt</code> file, however its values are separated by tabs, making it a TSV; hence we can read it in with <code>readr::read_tsv()</code> function.</p>
+<pre class="r"><code>results_df &lt;- readr::read_tsv(
   file.path(
     results_dir,
     &quot;Project_GSE37418_up_SHH_lfc2_fdr0_05&quot;,
     &quot;enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt&quot;
-  ),
-  delim = &quot;\t&quot;
+  )
 )</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
@@ -1967,23 +1966,18 @@ dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 ##   overlapId = col_character(),
 ##   userId = col_character()
 ## )</code></pre>
-<p>Let’s print it out.</p>
-<pre class="r"><code>results_df</code></pre>
-<pre><code>## # A tibble: 111 x 11
-##    geneSet description link   size overlap expect enrichmentRatio   pValue
-##    &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;    &lt;dbl&gt;
-##  1 GO:000… translatio… http…   135      31   5.68            5.46 5.33e-15
-##  2 GO:000… cotranslat… http…    62      21   2.61            8.05 3.29e-14
-##  3 GO:000… SRP-depend… http…    59      20   2.48            8.06 1.33e-13
-##  4 GO:004… protein ta… http…    69      20   2.90            6.89 3.70e-12
-##  5 GO:007… establishm… http…    73      20   3.07            6.51 1.17e-11
-##  6 GO:000… nuclear-tr… http…    82      21   3.45            6.09 1.48e-11
-##  7 GO:006… axon devel… http…   468      53  19.7             2.69 4.26e-11
-##  8 GO:000… protein ta… http…   139      26   5.85            4.45 1.20e-10
-##  9 GO:000… axonogenes… http…   430      49  18.1             2.71 1.94e-10
-## 10 GO:000… cytoplasmi… http…    64      17   2.69            6.31 7.05e-10
-## # … with 101 more rows, and 3 more variables: FDR &lt;dbl&gt;, overlapId &lt;chr&gt;,
-## #   userId &lt;chr&gt;</code></pre>
+<p>Let’s print out a preview of it.</p>
+<pre class="r"><code>head(results_df)</code></pre>
+<pre><code>## # A tibble: 6 x 11
+##   geneSet description link   size overlap expect enrichmentRatio   pValue
+##   &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;    &lt;dbl&gt;
+## 1 GO:000… translatio… http…   135      31   5.68            5.46 5.33e-15
+## 2 GO:000… cotranslat… http…    62      21   2.61            8.05 3.29e-14
+## 3 GO:000… SRP-depend… http…    59      20   2.48            8.06 1.33e-13
+## 4 GO:004… protein ta… http…    69      20   2.90            6.89 3.70e-12
+## 5 GO:007… establishm… http…    73      20   3.07            6.51 1.17e-11
+## 6 GO:000… nuclear-tr… http…    82      21   3.45            6.09 1.48e-11
+## # … with 3 more variables: FDR &lt;dbl&gt;, overlapId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
 <p>It looks like there are a lot of pathways associated with ribosomes and translation. Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it’s important to keep in mind that many of these gene sets could be telling us the same thing.</p>
 <p>In the <code>link</code> column, you can use the links to see more information about a particular GO term. Take a look at the link for the top result, <code>translational initiation</code>: <a href="http://amigo.geneontology.org/amigo/term/GO:0006413" class="uri">http://amigo.geneontology.org/amigo/term/GO:0006413</a></p>
 </div>
