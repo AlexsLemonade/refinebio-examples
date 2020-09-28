@@ -1,5 +1,5 @@
 ---
-title: "Differential Expression - Microarray"
+title: "Differential Expression - 2 groups - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -22,7 +22,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
@@ -353,6 +353,7 @@ ggsave(
 
 # Resources for further learning
 
+- [The refinebio example for differential expression with more than 2 groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html)
 - [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
