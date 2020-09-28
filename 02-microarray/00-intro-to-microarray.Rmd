@@ -31,8 +31,7 @@ As with all experimental methods, microarray has strengths and limitations that 
 ### Microarray data **strengths**:  
 
 - Less expensive than RNA-seq - can afford more replicates and get higher statistical power [@Tarca2006]. 
-- Microarray has a faster turn-around than RNA-seq [@intro-microarray-slides].
-- It's a simpler experimental procedure than RNA-seq [@intro-microarray-slides].
+- Microarray has a faster turn-around than RNA-seq [@LCSciences2014].
 
 ### Microarray data **limitations**:  
 
@@ -40,7 +39,7 @@ As with all experimental methods, microarray has strengths and limitations that 
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition. 
 
-To help address these within-chip probe biases, refine.bio uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods [@Piccolo2012]
+To help address these probe nucleotide composition biases, refine.bio uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads [@Piccolo2012].
 
 ## About quantile normalization 
 
