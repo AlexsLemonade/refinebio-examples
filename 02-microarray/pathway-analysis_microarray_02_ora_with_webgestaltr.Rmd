@@ -167,7 +167,7 @@ upregulated_genes <- dge_df %>%
   dplyr::pull(Gene)
 ```
 
-Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. 
+Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledge base (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. 
 Put another way, if a gene is _not measured_, it can not possibly be in our gene set of interest.
 We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.
 
@@ -188,9 +188,7 @@ listIdType("hsapiens")
 We can see that there is `ensembl_gene_id` listed above so the Ensembl IDs in the `Gene` column are compatible identifiers, and we do not need to convert to a different identifier.
 All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we'd encourage you to look at our [gene ID annotation examples](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
-The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
-([Wang et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkx356); 
-note that WebGestalt has a new 2019 version).
+The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/); note that WebGestalt has a new 2019 version) [@Wang2017].
 
 WebGestalt can perform multiple _types_ of pathway analysis. 
 Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological processes as our source of gene sets.

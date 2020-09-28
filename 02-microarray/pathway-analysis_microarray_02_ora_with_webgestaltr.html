@@ -1808,7 +1808,7 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 <pre class="r"><code>upregulated_genes &lt;- dge_df %&gt;%
   dplyr::filter(SHHvsOther &gt; 2, adj.P.Val &lt; 0.05) %&gt;%
   dplyr::pull(Gene)</code></pre>
-<p>Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. Put another way, if a gene is <em>not measured</em>, it can not possibly be in our gene set of interest. We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.</p>
+<p>Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledge base (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. Put another way, if a gene is <em>not measured</em>, it can not possibly be in our gene set of interest. We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.</p>
 <pre class="r"><code>all_genes &lt;- dge_df %&gt;%
   dplyr::pull(Gene)</code></pre>
 </div>
@@ -1890,7 +1890,7 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 ## [72] &quot;unigene&quot;                                    
 ## [73] &quot;uniprotswissprot&quot;</code></pre>
 <p>We can see that there is <code>ensembl_gene_id</code> listed above so the Ensembl IDs in the <code>Gene</code> column are compatible identifiers, and we do not need to convert to a different identifier. All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we’d encourage you to look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation examples</a>.</p>
-<p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a> (<a href="https://doi.org/10.1093/nar/gkx356">Wang et al. <em>NAR</em>. 2017.</a>; note that WebGestalt has a new 2019 version).</p>
+<p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a>; note that WebGestalt has a new 2019 version) <span class="citation">(Wang <em>et al.</em> 2017)</span>.</p>
 <p>WebGestalt can perform multiple <em>types</em> of pathway analysis. Here we’re using it for ORA and we will use <a href="http://geneontology.org/docs/ontology-documentation/">Gene Ontology (GO)</a> biological processes as our source of gene sets. We can see all supported gene sets for humans with <code>listGeneSet()</code> function. We are using <code>head()</code> so we just get a preview and not the whole table printed out.</p>
 <pre class="r"><code>head(listGeneSet(&quot;hsapiens&quot;))</code></pre>
 <pre><code>##                                          name
@@ -2045,6 +2045,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Wang2020">
 <p>Wang J., and Y. Liao, 2020 <em>WebGestaltR: Gene set analysis toolkit webgestaltr</em>.</p>
+</div>
+<div id="ref-Wang2017">
+<p>Wang J., S. Vasaikar, Z. Shi, M. Greer, and B. Zhang, 2017 WebGestalt 2017: a more comprehensive, powerful, flexible and interactive gene set enrichment analysis toolkit. Nucleic Acids Res. 45: W130–W137.</p>
 </div>
 <div id="ref-Yaari2013">
 <p>Yaari G., C. R. Bolen, J. Thakar, and S. H. Kleinstein, 2013 Quantitative set analysis for gene expression: a method to quantify gene set differential expression including gene-gene correlations. Nucleic Acids Res. 41: e170.</p>
