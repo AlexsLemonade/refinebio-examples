@@ -28,10 +28,16 @@ jobs:
         run: Rscript -e "install.packages(c('styler', 'spelling'))"
 
       - name: Run spell check
+        id: spell_check_run
         run: |
-          Rscript -e "spelling::spell_check_files( \
-          list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE), \
-          ignore = readLines(file.path('components', 'dictionary.txt')))"
+          Rscript components/spell-check.R
+          echo $(./spell-check.r)
+        env:
+          spell_check_result: $(./spell-check.r)
+
+      - name: Check on spelling
+        if: job.steps.spell_check_run.spell_check_results > 300
+        run: exit 1
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
