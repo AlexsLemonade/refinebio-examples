@@ -43,7 +43,6 @@ RUN Rscript -e  "install.packages( \
       'viridis', \
       'styler'))"
 
-
 ##########################
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
