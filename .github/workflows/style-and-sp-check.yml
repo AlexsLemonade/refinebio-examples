@@ -38,7 +38,7 @@ jobs:
       - name: Check on spell check results
         if: ${{ steps.spell_check_run.outputs.sp_chk_results > 3 }}
         run: |
-          echo Too many spelling errors, $steps.spell_check_run.outputs.sp_chk_results
+          echo Too many spelling errors, $result
           exit 1
         env:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
