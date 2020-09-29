@@ -36,7 +36,7 @@ jobs:
 
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
-        if: ${{ steps.spell_check_run.outputs.sp_chk_results > 3 }}
+        if: ${{ steps.spell_check_run.outputs.sp_chk_results > 340 }}
         run: |
           echo Too many spelling errors, $result
           exit 1
