@@ -91,4 +91,4 @@ RUN pip3 install \
     "snakemake==5.20.1"
 
 # set final workdir for commands
-WORKDIR /home/studio
+WORKDIR /home/rstudio
