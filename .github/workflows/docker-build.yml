@@ -1,10 +1,8 @@
 name: Build Docker
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow for a pull request for 
+# master
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -41,7 +39,3 @@ jobs:
           tags: ccdl/refinebio-examples:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-
-
-
-

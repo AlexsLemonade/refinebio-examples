@@ -1,0 +1,39 @@
+
+name: Style R markdowns
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  styler:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:4.0.2
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+        # What branch to commit to: the one from the pull request
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Install styler
+        run: Rscript -e "install.packages('styler')"
+
+      - name: Run styler
+        run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
+
+      - name: Commit
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add \*.Rmd
+          git commit -m 'Style Rmds' || echo "No changes to commit"
+          git push origin || echo "No changes to commit"

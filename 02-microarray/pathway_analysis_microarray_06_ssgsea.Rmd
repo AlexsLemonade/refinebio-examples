@@ -69,7 +69,7 @@ if (!("GSVA" %in% installed.packages())) {
   BiocManager::install("GSVA", update = FALSE)
 }
 
-if(!("matrixStats" %in% installed.packages())) {
+if (!("matrixStats" %in% installed.packages())) {
   install.packages("matrixStats")
 }
 ```
@@ -87,7 +87,7 @@ Create directories to hold plots and results if they do not yet exist.
 
 ```{r}
 # Define the file path to the plots directory
-plots_dir <- "plots"  # Replace with path to desired output plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
 
 # Make a plots directory if it isn't created yet
 if (!dir.exists(plots_dir)) {
@@ -95,7 +95,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results"  # Replace with path to desired output results directory
+results_dir <- "results" # Replace with path to desired output results directory
 
 # Make a results directory if it isn't created yet
 if (!dir.exists(results_dir)) {
@@ -115,12 +115,14 @@ This compressed folder contains both the expression matrix and the metadata.
 
 ```{r}
 # if the unzipped folder does not exist
-if (!dir.exists(file.path(data_dir,
-                          "GSE75574" # Replace with the name of your file without the .zip extension
-                          ))) {
-  compressed_file <- file.path(data_dir,
-                               "GSE75574.zip" # Replace with the name of your zipped file
-                               )
+if (!dir.exists(file.path(
+  data_dir,
+  "GSE75574" # Replace with the name of your file without the .zip extension
+))) {
+  compressed_file <- file.path(
+    data_dir,
+    "GSE75574.zip" # Replace with the name of your zipped file
+  )
   unzip(compressed_file, exdir = data_dir)
 }
 ```
@@ -141,35 +143,39 @@ gene symbol.
 ```{r}
 # check for the existence of the file that would have been generated in the
 # other notebook
-symbol_file <- file.path(data_dir,
-                         "GSE75574", # Replace with name of your unzipped folder
-                         "GSE75574_symbols.tsv" # Replace with relevant output name
-                         )
+symbol_file <- file.path(
+  data_dir,
+  "GSE75574", # Replace with name of your unzipped folder
+  "GSE75574_symbols.tsv" # Replace with relevant output name
+)
 if (file.exists(symbol_file)) {
   symbol_exprs_df <- readr::read_tsv(symbol_file, progress = FALSE)
 } else {
-  
+
   # read in the refine.bio expression data
-  expression_file <- file.path(data_dir,
-                               "GSE75574", # Replace with name of your unzipped folder
-                               "GSE75574.tsv" # Replace with name of your expression file
-                               )
+  expression_file <- file.path(
+    data_dir,
+    "GSE75574", # Replace with name of your unzipped folder
+    "GSE75574.tsv" # Replace with name of your expression file
+  )
   exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
   # first column is currently named 'Gene' and contains Ensembl gene IDs
   colnames(exprs_df)[1] <- "ENSEMBL"
-  
+
   # using the default behavior for 1:many mappings here -- select the first one
-  symbol_mappings <- mapIds(org.Mm.eg.db, keys = exprs_df$ENSEMBL, 
-                            column = "SYMBOL", keytype = "ENSEMBL")
-  
+  symbol_mappings <- mapIds(org.Mm.eg.db,
+    keys = exprs_df$ENSEMBL,
+    column = "SYMBOL", keytype = "ENSEMBL"
+  )
+
   # mapIds should give us back IDs in the same order as the keys, but we can
   # check to be sure
   if (!(all.equal(names(symbol_mappings), exprs_df$ENSEMBL))) {
     stop("Gene order is not as expected!")
   }
-  
+
   symbol_exprs_df <- exprs_df %>%
-    # add a new column that contains the gene symbols 
+    # add a new column that contains the gene symbols
     # this gets added as the last column
     dplyr::mutate(SYMBOL = symbol_mappings) %>%
     # drop the Ensembl gene IDs
@@ -178,14 +184,14 @@ if (file.exists(symbol_file)) {
     dplyr::select(SYMBOL, dplyr::everything()) %>%
     # drop any genes without a gene symbol
     dplyr::filter(!is.na(SYMBOL))
-  
+
   # if there are any duplicate gene symbols, collapse to the mean value
   if (any(duplicated(symbol_exprs_df$SYMBOL))) {
     symbol_exprs_df <- symbol_exprs_df %>%
       dplyr::group_by(SYMBOL) %>%
       dplyr::summarise_all(mean)
   }
-  
+
   # write to file
   readr::write_tsv(symbol_exprs_df, symbol_file)
 }
@@ -194,10 +200,11 @@ if (file.exists(symbol_file)) {
 ### Metadata 
 
 ```{r}
-metadata_file <- file.path(data_dir,
-                           "GSE75574", # Replace with name of your unzipped folder
-                           "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
-                           )
+metadata_file <- file.path(
+  data_dir,
+  "GSE75574", # Replace with name of your unzipped folder
+  "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
+)
 metadata_df <- readr::read_tsv(metadata_file) %>%
   # drop any metadata columns that are all NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -207,8 +214,10 @@ Retain only the most pertinent columns.
 
 ```{r}
 metadata_df <- metadata_df %>%
-  dplyr::select(refinebio_accession_code, refinebio_title, 
-                refinebio_specimen_part, refinebio_sex, strain)
+  dplyr::select(
+    refinebio_accession_code, refinebio_title,
+    refinebio_specimen_part, refinebio_sex, strain
+  )
 ```
 
 We're interested in the are calorie-restricted vs. controls information, which
@@ -234,8 +243,10 @@ Again, these were prepared in the
 [Gene Sets](#gene-sets) above).
 
 ```{r}
-kegg_file <- file.path("gene-sets", 
-                       "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt")
+kegg_file <- file.path(
+  "gene-sets",
+  "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt"
+)
 kegg_pathways <- qusage::read.gmt(kegg_file)
 ```
 
@@ -256,10 +267,12 @@ We can specify that we'd like to perform ssGSEA with the `method` argument to
 `gsva`.
 
 ```{r}
-ssgsea_results <- gsva(expr = exprs_mat,
-                       gset.idx.list = kegg_pathways,
-                       method = "ssgsea",
-                       verbose = FALSE)
+ssgsea_results <- gsva(
+  expr = exprs_mat,
+  gset.idx.list = kegg_pathways,
+  method = "ssgsea",
+  verbose = FALSE
+)
 ```
 
 This returns a matrix of ssGSEA enrichment scores where the columns are samples
@@ -288,8 +301,10 @@ system and may very well share a large number of genes.
 Let's look at an example pair of these pathways.
 
 ```{r}
-intersect(kegg_pathways$KEGG_ALLOGRAFT_REJECTION, 
-          kegg_pathways$KEGG_GRAFT_VERSUS_HOST_DISEASE)
+intersect(
+  kegg_pathways$KEGG_ALLOGRAFT_REJECTION,
+  kegg_pathways$KEGG_GRAFT_VERSUS_HOST_DISEASE
+)
 ```
 
 These ssGSEA scores should not be treated as if they are independent.
@@ -315,30 +330,37 @@ informative plot.
 
 ```{r}
 comp_coag_df <- metadata_df %>%
-  dplyr::inner_join(comp_coag_df, 
-                    by = c("refinebio_accession_code" = "sample_accession"))
+  dplyr::inner_join(comp_coag_df,
+    by = c("refinebio_accession_code" = "sample_accession")
+  )
 ```
 
 ```{r fig.height=11, fig.width=8.5}
-comp_coag_df %>% 
-  ggplot(aes(x = condition, 
-                               y = ssgsea_score)) +
+comp_coag_df %>%
+  ggplot(aes(
+    x = condition,
+    y = ssgsea_score
+  )) +
   geom_boxplot() +
   facet_grid(strain ~ refinebio_specimen_part) +
   labs(y = "KEGG Complement and Coagulation Cascades") +
   theme_bw() +
   # x-axis text at a 45 degree angle to increase readability
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-                 text = element_text(size = 15))
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    text = element_text(size = 15)
+  )
 ```
 
 ```{r}
 # saving to file
-ggsave(file.path(plots_dir,
-                          "GSE75574_ssgsea_comp_coag_facet.pdf" # Replace with relevant output plot name
-                          ),
-                plot = last_plot() + 
-                  theme( text = element_text(size = 10)))
+ggsave(file.path(
+  plots_dir,
+  "GSE75574_ssgsea_comp_coag_facet.pdf" # Replace with relevant output plot name
+),
+plot = last_plot() +
+  theme(text = element_text(size = 10))
+)
 ```
 
 Looks like there may be some differences between tissues in this pathway, with
@@ -379,10 +401,12 @@ for (pathway_size in c(25, 50, 100, 250, 500)) {
 }
 
 # calculate ssGSEA scores for the random gene sets
-random_ssgsea_results <- gsva(expr = exprs_mat,
-                              gset.idx.list = random_gene_sets,
-                              method = "ssgsea",
-                              verbose = FALSE)
+random_ssgsea_results <- gsva(
+  expr = exprs_mat,
+  gset.idx.list = random_gene_sets,
+  method = "ssgsea",
+  verbose = FALSE
+)
 
 # plot the results with ggplot2
 # first we need to get this in a form that is amenable for plotting, as gsva
@@ -395,17 +419,20 @@ random_long_df <- as.data.frame(random_ssgsea_results) %>%
   # extract the gene set size from the gene set name
   dplyr::mutate(gene_set_size = stringr::word(gene_set, 2, sep = "_")) %>%
   # we want to plot smallest no. genes -> largest no. genes
-  dplyr::mutate(gene_set_size = factor(gene_set_size, 
-                                       levels = c(25, 50, 100, 250, 500)))
+  dplyr::mutate(gene_set_size = factor(gene_set_size,
+    levels = c(25, 50, 100, 250, 500)
+  ))
 
 # violin plot comparing no. genes / gene set size
 random_long_df %>%
   ggplot(aes(x = gene_set_size, y = ssgsea_score)) +
   geom_violin() +
   coord_flip() +
-  labs(title = "Random gene set scores",
-                x = "gene set size",
-                y = "ssGSEA score") +
+  labs(
+    title = "Random gene set scores",
+    x = "gene set size",
+    y = "ssGSEA score"
+  ) +
   theme_bw()
 ```
 
