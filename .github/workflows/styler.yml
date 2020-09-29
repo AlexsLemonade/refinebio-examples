@@ -21,6 +21,4 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       - name: Run styler
-        container:
-          image: ccdl/refinebio-examples:latest
         run: Rscript -e "styler::style_files(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE))"
