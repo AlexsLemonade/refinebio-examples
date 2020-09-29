@@ -34,6 +34,12 @@ jobs:
           results=$(Rscript "components/spell-check.R")
           echo "::set-output name=sp_chk_results::$results"
 
+      - name: Archive spelling errors
+        uses: actions/upload-artifact@v2
+        with:
+          name: Spell check report
+          path: components/spell_check_results.tsv
+
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
         if: ${{ steps.spell_check_run.outputs.sp_chk_results > 340 }}
