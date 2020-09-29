@@ -357,5 +357,5 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-     sessionInfo()
+sessionInfo()
 ```
