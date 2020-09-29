@@ -29,9 +29,9 @@ jobs:
 
       - name: Run spell check
         run: |
-        Rscript -e "spelling::spell_check_files( \
-        list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE), \
-        ignore = readLines(file.path('components', 'dictionary.txt')))"
+          Rscript -e "spelling::spell_check_files( \
+          list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE), \
+          ignore = readLines(file.path('components', 'dictionary.txt')))"
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
