@@ -26,4 +26,4 @@ jobs:
         run: Rscript -e "install.packages('styler')"
 
       - name: Run styler
-        run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE))"
+        run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
