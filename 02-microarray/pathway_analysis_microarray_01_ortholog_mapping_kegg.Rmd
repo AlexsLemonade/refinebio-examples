@@ -48,9 +48,8 @@ if (!("devtools" %in% installed.packages())) {
 
 # this installs a specific version of hcop
 # we pass the commit hash to the ref argument
-devtools::install_github("stephenturner/hcop",
-  ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98"
-)
+devtools::install_github("stephenturner/hcop", 
+                         ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
 ```
 
 ```{r}
@@ -76,17 +75,14 @@ kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
 # since we do not track this file in our repository, let's check to make sure
 # it exists where we expect it and download it if we don't find it
 if (!file.exists(kegg_file)) {
-  message(paste(
-    "KEGG GMT file is not found at", kegg_file,
-    ", downloading now..."
-  ))
+  message(paste("KEGG GMT file is not found at", kegg_file, 
+                ", downloading now..."))
   # need gene-sets directory
   if (!dir.exists("gene-sets")) {
     dir.create("gene-sets")
   }
-  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt",
-    destfile = kegg_file
-  )
+  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt", 
+                destfile = kegg_file)
 }
 ```
 
@@ -113,7 +109,7 @@ Join to mouse orthologs by the human Entrez IDs.
 
 ```{r}
 # Join to mouse orthologs
-mouse_ortholog_df <- entrez_in_pathways_df %>%
+mouse_ortholog_df <- entrez_in_pathways_df %>% 
   dplyr::inner_join(mouse, by = "human_entrez")
 ```
 
@@ -129,25 +125,21 @@ permissive criteria.
 # add a column that counts resources
 mouse_ortholog_df <- mouse_ortholog_df %>%
   dplyr::rowwise() %>%
-  dplyr::mutate(
-    num_resources_support =
-      length(stringr::str_split(support,
-        pattern = ",",
-        simplify = TRUE
-      ))
-  )
+  dplyr::mutate(num_resources_support = 
+                  length(stringr::str_split(support, 
+                                            pattern = ",", 
+                                            simplify = TRUE)))
+
 ```
 
 To demonstrate how this works, we'll pick a gene that had 1:many mappings
 and follow it along.
 
 ```{r}
-mouse_ortholog_df %>%
-  dplyr::filter(human_entrez == 5631) %>%
-  dplyr::select(
-    human_entrez, mouse_entrez, human_symbol, mouse_symbol,
-    num_resources_support
-  )
+mouse_ortholog_df %>% 
+  dplyr::filter(human_entrez == 5631) %>% 
+  dplyr::select(human_entrez, mouse_entrez, human_symbol, mouse_symbol,
+                num_resources_support)
 ```
 
 We can see that the human gene _PRPS1_/`5631` maps to 4 mouse genes, one of 
@@ -164,12 +156,10 @@ most_support_df <- mouse_ortholog_df %>%
 What happened to `5631`?
 
 ```{r}
-most_support_df %>%
+most_support_df %>% 
   dplyr::filter(human_entrez == 5631) %>%
-  dplyr::select(
-    human_entrez, mouse_entrez, human_symbol, mouse_symbol,
-    num_resources_support
-  )
+  dplyr::select(human_entrez, mouse_entrez, human_symbol, mouse_symbol,
+                num_resources_support)
 ```
 
 We successfully selected the mapping with the highest number of resources
@@ -181,14 +171,12 @@ For each KEGG pathway we have (currently populated with human Entrez IDs),
 we need a new gene set that is comprised of mouse gene symbols.
 
 ```{r}
-kegg_mouse_list <-
-  lapply(
-    kegg_human_list,
-    function(pathway) {
-      dplyr::filter(most_support_df, human_entrez %in% pathway) %>%
-        dplyr::pull(mouse_symbol)
-    }
-  )
+kegg_mouse_list <- 
+  lapply(kegg_human_list, 
+         function(pathway) {
+           dplyr::filter(most_support_df, human_entrez %in% pathway) %>%
+             dplyr::pull(mouse_symbol)
+         })
 ```
 
 Do the results this seem reasonable?
@@ -196,10 +184,8 @@ Let's pick the polymerase pathway, where our success should be pretty obvious
 from the mouse gene symbols.
 
 ```{r}
-kegg_mouse_list[[grep(
-  "POLYMERASE", # Replace with a word (case sensitive) or phrase that would filter in your desired pathway(s)
-  names(kegg_mouse_list)
-)]]
+kegg_mouse_list[[grep("POLYMERASE", # Replace with a word (case sensitive) or phrase that would filter in your desired pathway(s)
+                      names(kegg_mouse_list))]]
 ```
 
 ### Write mouse pathway list in `GMT` format
@@ -224,10 +210,9 @@ We can pretty easily stick this back in when we write to file with `write()`.
 
 ```{r}
 # filename we're going to write to
-mouse_file <- file.path(
-  "gene-sets", # Replace with path to desired output directory
-  "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt" # Replace with name for output file
-)
+mouse_file <- file.path("gene-sets", # Replace with path to desired output directory
+                        "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt" # Replace with name for output file
+                        )
 
 # if you run this again after making changes above, you'd just end up appending
 # this to the end of your old file, so we should take steps to get rid of
@@ -241,19 +226,16 @@ if (file.exists(mouse_file)) {
 for (pathway_iter in seq_along(kegg_mouse_list)) {
   # extract the current pathway name
   pathway_name <- names(kegg_mouse_list)[pathway_iter]
-  text_to_write <-
+  text_to_write <- 
     paste(
       # the name of the pathway
       pathway_name,
       # the description -- this is stripped out by qusage::read.gmt
-      paste0(
-        "http://www.broadinstitute.org/gsea/msigdb/cards/",
-        pathway_name
-      ),
+      paste0("http://www.broadinstitute.org/gsea/msigdb/cards/",
+            pathway_name),
       # the gene symbols
       paste(kegg_mouse_list[[pathway_iter]], collapse = "\t"),
-      sep = "\t"
-    )
+      sep = "\t")
   write(text_to_write, mouse_file, append = TRUE)
 }
 ```

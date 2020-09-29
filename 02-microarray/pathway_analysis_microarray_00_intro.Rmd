@@ -63,7 +63,7 @@ library(WebGestaltR)
 
 ```{r}
 # Define the file path to the results directory
-results_dir <- "results" # Replace with path to desired output results directory
+results_dir <- "results"  # Replace with path to desired output results directory
 
 # Make a results directory if it isn't created yet
 if (!dir.exists(results_dir)) {
@@ -111,8 +111,8 @@ we will generate by selecting all the genes in the table of differential
 expression results.
 
 ```{r}
-all_genes <- dge_df %>%
-  dplyr::pull(ENSEMBL)
+all_genes <- dge_df %>% 
+   dplyr::pull(ENSEMBL)
 ```
 
 ### WebGestaltR
@@ -148,18 +148,17 @@ by the `outputDirectory` and `projectName` arguments) _and_ return a
 `data.frame`.
 
 ```{r}
-go_enrichment_results <-
-  WebGestaltR(
-    enrichMethod = "ORA",
-    organism = "hsapiens",
-    enrichDatabase = "geneontology_Biological_Process",
-    interestGene = upregulated_genes,
-    interestGeneType = "ensembl_gene_id",
-    referenceGene = all_genes,
-    referenceGeneType = "ensembl_gene_id",
-    outputDirectory = results_dir,
-    projectName = "GSE37418_up_SHH_lfc2_fdr0_05" # Replace with a relevant output name for the HTML file
-  )
+go_enrichment_results <- 
+  WebGestaltR(enrichMethod = "ORA",
+              organism = "hsapiens",
+              enrichDatabase = "geneontology_Biological_Process",
+              interestGene = upregulated_genes,
+              interestGeneType = "ensembl_gene_id",
+              referenceGene = all_genes,
+              referenceGeneType = "ensembl_gene_id",
+              outputDirectory = results_dir,
+              projectName = "GSE37418_up_SHH_lfc2_fdr0_05" # Replace with a relevant output name for the HTML file
+              )
 ```
 
 As noted in the messages from `WebGestaltR`, the results are in

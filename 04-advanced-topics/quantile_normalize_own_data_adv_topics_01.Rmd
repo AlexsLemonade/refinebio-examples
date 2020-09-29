@@ -109,10 +109,9 @@ if (!("preprocessCore" %in% installed.packages())) {
 First, the gene expression matrix.
 
 ```{r}
-expression_file <- file.path(
-  "data",
-  "GSE39842_RMA_converted.tsv" # Replace with name of desired expression file
-)
+expression_file <- file.path("data",
+                             "GSE39842_RMA_converted.tsv" # Replace with name of desired expression file
+                             )
 expression_df <- readr::read_tsv(expression_file)
 ```
 
@@ -131,17 +130,14 @@ The QN target will ultimately need to be a vector:
 
 ```{r}
 qn_target <- as.vector(as.matrix(readr::read_tsv(qn_url,
-  col_names = FALSE
-)))
+                                                 col_names = FALSE)))
 ```
 
 ## Quantile normalization
 
 ```{r}
-qn_matrix <- preprocessCore::normalize.quantiles.use.target(
-  expression_matrix,
-  qn_target
-)
+qn_matrix <- preprocessCore::normalize.quantiles.use.target(expression_matrix,
+                                                            qn_target)
 ```
 
 To write this to file or to do plotting with `ggplot2`, we'll want to neaten 
@@ -149,19 +145,16 @@ things a bit (e.g., use column names).
 
 ```{r}
 colnames(qn_matrix) <- colnames(expression_df)[-1]
-qn_df <- data.frame(
-  Gene = rownames(expression_matrix),
-  qn_matrix
-)
+qn_df <- data.frame(Gene = rownames(expression_matrix),
+                    qn_matrix)
 ```
 
 Let's write the quantile normalized data to file.
 
 ```{r}
-qn_expression_file <- file.path(
-  "data",
-  "GSE39842_RMA_refinebio_QN.tsv" # Replace with relevant output quantile normalized file name
-)
+qn_expression_file <- file.path("data",
+                                "GSE39842_RMA_refinebio_QN.tsv" # Replace with relevant output quantile normalized file name
+                                )
 readr::write_tsv(qn_df, path = qn_expression_file)
 ```
 
@@ -174,7 +167,7 @@ normalization.
 
 ```{r}
 # we need this information in long format to make the plots
-exprs_long_df <- expression_df %>%
+exprs_long_df <- expression_df %>% 
   reshape2::melt() %>%
   dplyr::mutate(Sample = variable) %>%
   dplyr::select(-variable)
@@ -185,10 +178,8 @@ exprs_long_df %>%
   ggplot(aes(x = value, fill = Sample)) +
   geom_density(alpha = 0.2) +
   theme_bw() +
-  labs(
-    title = "Before quantile normalization",
-    x = "expression value"
-  )
+  labs(title = "Before quantile normalization",
+                x = "expression value")
 ```
 
 The distributions look pretty similar, but they're not the _same_.
@@ -196,14 +187,12 @@ The distributions look pretty similar, but they're not the _same_.
 #### After normalization
 
 ```{r}
-qn_long_df <- qn_df %>%
+qn_long_df <- qn_df %>% 
   reshape2::melt() %>%
   # because the sample names were the column names, they are not pretty!
-  dplyr::mutate(Sample = gsub(
-    "X7", "7",
-    gsub("[[:punct:]]", " ", variable)
-  )) %>%
-  dplyr::select(-variable)
+  dplyr::mutate(Sample = gsub("X7", "7", 
+                              gsub("[[:punct:]]", " ", variable))) %>%
+  dplyr::select(-variable) 
 ```
 
 ```{r}
@@ -211,10 +200,8 @@ qn_p <- qn_long_df %>%
   ggplot(aes(x = value, fill = Sample)) +
   geom_density(alpha = 0.2) +
   theme_bw() +
-  labs(
-    title = "After quantile normalization",
-    x = "expression value"
-  )
+  labs(title = "After quantile normalization",
+                x = "expression value")
 qn_p
 ```
 
@@ -223,12 +210,10 @@ We can use `facet_wrap` to get a better look.
 
 ```{r}
 qn_p +
-  facet_wrap(~Sample, ncol = 4) +
-  theme(
-    legend.position = "none",
-    strip.background = element_blank(),
-    strip.text = element_blank()
-  )
+  facet_wrap(~ Sample, ncol = 4) +
+  theme(legend.position = "none",
+                 strip.background = element_blank(),
+                 strip.text = element_blank())
 ```
 
 Quantile normalization was successful.
