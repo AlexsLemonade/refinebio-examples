@@ -31,12 +31,12 @@ jobs:
         id: spell_check_run
         run: |
           Rscript components/spell-check.R
-          echo $(./spell-check.r)
+          echo $(components/spell-check.r)
         env:
-          spell_check_result: $(./spell-check.r)
+          spell_check_result: $(components/spell-check.r)
 
       - name: Check on spelling
-        if: job.steps.spell_check_run.spell_check_results > 300
+        if: job.steps.spell_check_run.spell_check_results > 30
         run: exit 1
 
       - name: Run styler
