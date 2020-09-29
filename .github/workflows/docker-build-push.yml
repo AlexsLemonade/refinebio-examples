@@ -31,9 +31,10 @@ jobs:
             echo "::set-output name=changed::false"
           fi
       - name: test check
-          env:
-            TEST: ${{ steps.check_docker.outputs.changed }}
-          run: echo $TEST
+        env:
+          TEST: ${{ steps.check_docker.outputs.changed }}
+        run: echo $TEST
+
       # Login to dockerhub
       # - name: Login to DockerHub
       #   if: ${{ steps.check_docker.outputs.changed }}
