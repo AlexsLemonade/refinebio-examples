@@ -15,4 +15,4 @@ sp_errors <- spelling::spell_check_files(files, ignore = dictionary)
 print(nrow(sp_errors))
 
 # Save spell errors to file temporarily
-write_tsv(sp_errors, file.path('components', 'spell_check_results.tsv'))
+readr::write_tsv(sp_errors, file.path('components', 'spell_check_results.tsv'))
