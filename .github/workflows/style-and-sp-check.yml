@@ -31,8 +31,8 @@ jobs:
         id: spell_check_run
         run: |
           Rscript components/spell-check.R
-          c
-          echo "::set-env name=spell_check_results::$(components/spell-check.R)"
+          results=$(Rscript "components/spell-check.R")
+          echo "::set-env name=spell_check_results::$results"
 
       - name: Check on spell check results
         if: job.steps.spell_check_run.spell_check_results > 30
