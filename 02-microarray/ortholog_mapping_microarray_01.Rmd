@@ -45,8 +45,9 @@ Here, we'll use the most recent commit at the time that we are putting together
 this example.
 
 ```{r Install hcop, eval=FALSE}
-devtools::install_github("stephenturner/hcop", 
-                         ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
+devtools::install_github("stephenturner/hcop",
+  ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98"
+)
 ```
 
 Create output folder.
@@ -81,9 +82,10 @@ Because of the formatting of the output of refine.bio, the first column name
 will be filled in with `'X1'`.
 
 ```{r Read in zebrafish gene expression data}
-exprs.df <- readr::read_tsv(file.path("data", # Replace with path to your data file
-                                      "GSE12955.tsv" # Replace with the name of your data file
-                                      ))
+exprs.df <- readr::read_tsv(file.path(
+  "data", # Replace with path to your data file
+  "GSE12955.tsv" # Replace with the name of your data file
+))
 ```
 
 refine.bio data uses Ensembl gene identifiers, which will be in the first 
@@ -122,10 +124,13 @@ head(human.symbol.df, 25)
 ## 3) Write newly annotated data to a tsv file
 
 ```{r Write to file}
-readr::write_tsv(human.symbol.df,
-                 file.path(results_dir, 
-                           "GSE12955_mapped_to_human_gene_symbol.tsv" # Replace with a relevant output file name
-                           ))
+readr::write_tsv(
+  human.symbol.df,
+  file.path(
+    results_dir,
+    "GSE12955_mapped_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+  )
+)
 ```
 
 *There are some things to note:*
@@ -145,6 +150,6 @@ human.symbol.df %>%
 Print session info:
 
 ```{r}
-# Print session info 
+# Print session info
 sessionInfo()
 ```
