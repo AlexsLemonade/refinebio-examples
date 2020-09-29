@@ -20,12 +20,7 @@ jobs:
       - name: check_docker
         env: 
           before: ${{ github.event.push.before }}
-        run: |
-          git diff-index --name-only $before > changes.txt
-          if grep "docker/Dockerfile" changes.txt; then
-            echo "::set-output name=changed::true"
-          else
-            echo "::set-output name=changed::false"
+        run: echo $before
       # Login to dockerhub
       - name: Login to DockerHub
         if: ${{ steps.check_docker.outputs.changed }}
