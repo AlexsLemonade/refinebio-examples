@@ -5,7 +5,7 @@ name: Style R markdowns
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, cansavvy/gha-styler ]
   pull_request:
     branches: [ master ]
 
