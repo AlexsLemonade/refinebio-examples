@@ -161,7 +161,10 @@ See our Getting Started page with [instructions for package installation](https:
 In this analysis, we will be using {{PACKAGE}} [{{CITATION}}].
 
 ```{r}
-if (!({{PACKAGE}} %in% installed.packages())) {BiocManager::install({{PACKAGE}}, update = FALSE)}
+if (!({{PACKAGE}} %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install({{PACKAGE}}, update = FALSE)
+}
 ```
 
 Attach the packages we need for this analysis.
