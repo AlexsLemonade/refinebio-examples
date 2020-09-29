@@ -4,7 +4,7 @@ name: Build and Push Docker
 # events only for the master branch, and only when the Dockerfile changes
 on:
   push:
-    branches: [ master, jashapiro/docker-push-fix ]
+    branches: [ master ]
     paths: [ docker/Dockerfile ]
 
 jobs:
