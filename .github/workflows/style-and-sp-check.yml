@@ -40,6 +40,8 @@ jobs:
         run: |
           echo Too many spelling errors, $steps.spell_check_run.outputs.sp_chk_results
           exit 1
+        env:
+          result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
