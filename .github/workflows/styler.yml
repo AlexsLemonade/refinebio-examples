@@ -15,7 +15,7 @@ jobs:
   styler:
     runs-on: ubuntu-latest
     container:
-      image: rocker/r-ver:4.0.2
+      image: rocker/tidyverse:4.0.2
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install styler
-        run: Rscript -e "install.packages(c('knitr', 'styler'))"
+        run: Rscript -e "install.packages('styler')"
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
