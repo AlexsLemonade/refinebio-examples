@@ -16,7 +16,7 @@ sp_errors <- spelling::spell_check_files(files, ignore = dictionary) %>%
   tidyr::unnest(cols = found)
 
 # Print out how many spell check errors
-print(nrow(sp_errors))
+nrow(sp_errors)
 
 # Save spell errors to file temporarily
 readr::write_tsv(sp_errors, file.path('components', 'spell_check_results.tsv'))

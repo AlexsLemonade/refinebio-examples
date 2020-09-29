@@ -36,10 +36,12 @@ jobs:
 
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
-        #if: ${{ steps.spell_check_run.output.sp_chk_results > 3 }}
+        if: ${{ result > 3 }}
         run: |
-          echo "Too many spelling errors; $steps.spell_check_run.output.sp_chk_results"
-          #exit 1
+          echo Too many spelling errors, $result
+          exit 1
+        env:
+          result: ${{ steps.spell_check_run.outputs.result }}
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
