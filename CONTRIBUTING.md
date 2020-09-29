@@ -6,7 +6,7 @@
 
 - [Docker for refinebio-examples](#docker-for-refinebio-examples)
   - [Setting up the docker container](#setting-up-the-docker-container)
-  - [Pushing Docker image updates](#pushing-docker-image-updates)
+  - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Add a new analysis](#add-a-new-analysis)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
@@ -47,7 +47,7 @@ Development should take place in the Docker container.
 Navigate your local `refinebio-examples` repository.
 Now, you can build the docker image locally using:
 ```
-docker build -< Dockerfile -t ccdl/refinebio-examples
+docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
 Or by pulling the image from Docker hub (this will by default pull the `latest` version).
 ```
@@ -61,22 +61,17 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSW
 Now you can navigate to http://localhost:8787/ to start developing.
 Login to the RStudio server with the username `rstudio` and the password you set above.
 
-### Pushing Docker image updates
+### Docker image updates
 
 All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
+Successful building of the `Dockerfile` will also be checked when the PR is filed by Github Actions.
 
 In the `refinebio-examples` repository:
 ```
-docker build -< Dockerfile -t ccdl/refinebio-examples
+docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
-After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.   
-```
-# log in with your credentials
-docker login
+When a PR with Dockerfile changes is merged, its associated image will be automatically pushed to the Docker hub repository.
 
-# Push it!
-docker push ccdl/refinebio-examples
-```
 
 ## Download the datasets
 
@@ -97,7 +92,6 @@ Click on the links to go to the detailed instructions for each step.
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
 - In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
-- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ### Setting up a new analysis file
 
@@ -136,7 +130,7 @@ Each section has a folder (`02-microarray`, `03-rnaseq`, and `04-advanced-topics
 10) Click `Next` again.
 11) Click Upload.
 
-Test that the files you've uploaded succesfully download by running the `download-data.sh`
+Test that the files you've uploaded successfully download by running the `download-data.sh`
 script.
 If you run the script and it says `Access Denied` you may have missed step 8, but you can go back to the file and click the `Make it Public` button and try testing your download again.
 
@@ -154,7 +148,7 @@ Each analysis `.Rmd` notebook needs to be entirely self-contained so that a user
 
 #### Output files
 
-Output file names should look like this; `<experiment_accesion>_<sensible_name>.png`
+Output file names should look like this; `<experiment_accession>_<sensible_name>.png`
 For example: `GSE12345_pca_plot.png`
 
 - A `plots` and/or `results` folder should be created by the analysis notebook.  
@@ -346,4 +340,6 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
 To require that branches are up-to-date with `master` before merging, we need to require that a status check passes before merging to `master`.
 Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
-The status check used is a GitHub Action that runs `echo Hello, world!` in a few seconds and does not check that anything can execute.
+The status check used is a GitHub Action that test builds the docker image.
+Most of the time, this should pull cached docker layers, so this will complete in a matter of minutes.
+As a bonus, this process also checks that any changes to the Dockerfile result in a buildable image.
