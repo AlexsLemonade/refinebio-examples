@@ -19,8 +19,8 @@ jobs:
       # Test if Dockerfile has changed 
       - name: check_docker
         env: 
-          before: ${{ github.event.push.ref }}
-        run: echo "$before"
+          GITHUB_CONTEXT: ${{ toJson(github.event) }}
+        run: echo "$GITHUB_CONTEXT"
       # Login to dockerhub
       # - name: Login to DockerHub
       #   if: ${{ steps.check_docker.outputs.changed }}
