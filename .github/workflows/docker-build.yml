@@ -2,13 +2,12 @@
 
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
+# Controls when the action will run. Triggers the workflow pull request
+# events but only for the master branch when the Dockerfile changes
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
+    paths: [ docker/Dockerfile ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -43,7 +42,3 @@ jobs:
           tags: ccdl/refinebio-examples:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-
-
-
-
