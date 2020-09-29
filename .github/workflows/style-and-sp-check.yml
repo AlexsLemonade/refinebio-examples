@@ -32,11 +32,11 @@ jobs:
         run: |
           Rscript components/spell-check.R
           results=$(Rscript "components/spell-check.R")
-          echo "::set-env name=spell_check_results::$results"
+          echo "::set-output name=sp_chk_results::$results"
 
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
-        if: ${{ spell_check_results > 3 }}
+        if: ${{ steps.spell_check_run.output.sp_chk_results > 3 }}
         run: |
           echo "Too many spelling errors; $spell_check_results"
           exit 1
