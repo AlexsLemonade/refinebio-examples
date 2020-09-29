@@ -37,7 +37,7 @@ jobs:
       - name: Archive spelling errors
         uses: actions/upload-artifact@v2
         with:
-          name: Spell check report
+          name: spell-check-results
           path: components/spell_check_results.tsv
 
       # If there are too many spell checks, this will stop everything
