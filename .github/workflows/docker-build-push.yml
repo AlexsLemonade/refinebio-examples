@@ -19,7 +19,7 @@ jobs:
       # Test if Dockerfile has changed 
       - name: check_docker
         env: 
-          before: github.event.push.before
+          before: ${{ github.event.push.before }}
         run: |
           git diff-index --name-only $before > changes.txt
           if grep "docker/Dockerfile" changes.txt; then
@@ -28,7 +28,7 @@ jobs:
             echo "::set-output name=changed::false"
       # Login to dockerhub
       - name: Login to DockerHub
-        if: steps.check_docker.outputs.changed
+        if: ${{ steps.check_docker.outputs.changed }}
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_ID }}
