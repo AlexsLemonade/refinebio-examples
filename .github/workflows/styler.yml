@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install styler
-        run: Rscript -e "install.packages('styler')"
+        run: Rscript -e "install.packages(c('knitr', 'styler'))"
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
