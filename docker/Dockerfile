@@ -63,7 +63,6 @@ RUN R -e "BiocManager::install( \
 # Installs packages needed for plottings
 # treemap, interactive plots, and hex plots
 # Rtsne and umap are required for dimension reduction analyses
-# org.Mm.eg.db is required for gene mapping
 RUN Rscript -e  "install.packages( \
     c('ggfortify', \
       'ggsignif', \
