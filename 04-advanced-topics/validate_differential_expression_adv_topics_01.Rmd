@@ -93,7 +93,7 @@ Set up output directories if they haven't been set up yet.
 
 ```{r}
 # Define the file path to the results directory
-results_dir <- "results"  # Replace with path to desired output results directory
+results_dir <- "results" # Replace with path to desired output results directory
 
 # Make a results directory if it isn't created yet
 if (!dir.exists(results_dir)) {
@@ -101,7 +101,7 @@ if (!dir.exists(results_dir)) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots"  # Replace with path to desired output plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
 
 # Make a plots directory if it isn't created yet
 if (!dir.exists(plots_dir)) {
@@ -109,7 +109,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the data directory
-data_dir <- "data"  # Replace with path to data directory
+data_dir <- "data" # Replace with path to data directory
 ```
 
 ## 2) Import differential expression results from Northcott dataset
@@ -124,9 +124,10 @@ Note that these differential expression results come with Affymetrix probe IDs
 
 ```{r}
 # Load in the summary statistics from limma run
-author.full.results <- readr::read_tsv(file.path(results_dir, 
-                                                 "GSE37382_limma_results.tsv" # Replace with name of your own differential expression results file you've generated that you'd like to compare to refinebio data
-                                                 )) 
+author.full.results <- readr::read_tsv(file.path(
+  results_dir,
+  "GSE37382_limma_results.tsv" # Replace with name of your own differential expression results file you've generated that you'd like to compare to refinebio data
+))
 ```
 
 ## 3) Convert the differentially expressed gene identifiers to Ensembl gene IDs
@@ -144,27 +145,28 @@ microarray platforms can be downloaded from [Zenodo](https://zenodo.org/record/1
 
 ```{r}
 # Unzip hugene11st ID conversion file obtained from identifier refinery
-id.conversion.file <- file.path(data_dir, "hugene11st.tsv") 
+id.conversion.file <- file.path(data_dir, "hugene11st.tsv")
 if (!file.exists(id.conversion.file)) {
   unzip(paste0(id.conversion.file, ".zip"), exdir = data_dir)
-} 
+}
 
 # Read in the probe conversion info - this step may take some time
-probe.conversion <- readr::read_tsv(id.conversion.file, 
-                                    progress = FALSE) %>% 
+probe.conversion <- readr::read_tsv(id.conversion.file,
+  progress = FALSE
+) %>%
   dplyr::select("PROBEID", "ENSEMBL")
 
-# Add annotation to imported author limma results 
+# Add annotation to imported author limma results
 author.full.results <- author.full.results %>%
-  # You may need to replace "affy_probe_ids" with the name of the column that        
-  # contains the probe IDs in your data 
+  # You may need to replace "affy_probe_ids" with the name of the column that
+  # contains the probe IDs in your data
   dplyr::inner_join(probe.conversion, by = c("affy_probe_ids" = "PROBEID")) %>%
-  dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>% 
-  # Determine direction of fold change. 
+  dplyr::mutate("ENSEMBL" = as.factor(ENSEMBL)) %>%
+  # Determine direction of fold change.
   # Note up-directed genes will be TRUE, down-genes will be FALSE
-  # You may need to replace "logFC" with the name of the column that contains the    
-  # log fold change values in your data 
-  dplyr::mutate('direction' = logFC > 0) %>% 
+  # You may need to replace "logFC" with the name of the column that contains the
+  # log fold change values in your data
+  dplyr::mutate("direction" = logFC > 0) %>%
   # This is to make sure we don't get repeat probes
   dplyr::distinct()
 
@@ -190,14 +192,16 @@ variable `direction` we made in the previous section.
 
 ```{r}
 # Summarize the direction of significant probes for each gene
-direction.summary <- author.full.results %>% 
-  # Keep only significant at 0.05 probes -- you may need to replace "adj.P.Val" 
-  # with the corresponding column name in your data that contains the adjusted P values. 
-  dplyr::filter(adj.P.Val < 0.05) %>% 
-  # Group probes by their associated 
-  dplyr::group_by(ENSEMBL) %>% 
-  dplyr::summarize('up' = sum(direction), 
-                   'down' = sum(!direction))
+direction.summary <- author.full.results %>%
+  # Keep only significant at 0.05 probes -- you may need to replace "adj.P.Val"
+  # with the corresponding column name in your data that contains the adjusted P values.
+  dplyr::filter(adj.P.Val < 0.05) %>%
+  # Group probes by their associated
+  dplyr::group_by(ENSEMBL) %>%
+  dplyr::summarize(
+    "up" = sum(direction),
+    "down" = sum(!direction)
+  )
 
 # Print out this dataset
 direction.summary
@@ -212,14 +216,14 @@ probesets are in the same direction.
 ```{r}
 # Create an up-regulated genes list
 author.up.genes <- direction.summary %>%
-  # Upregulated genes are only those that have no significant downregulated 
+  # Upregulated genes are only those that have no significant downregulated
   # probesets
   dplyr::filter(down == 0) %>%
   dplyr::pull(ENSEMBL) %>%
   as.character()
 
 author.down.genes <- direction.summary %>%
-  # Downregulated genes are only those that have no significant upregulated 
+  # Downregulated genes are only those that have no significant upregulated
   # probesets
   dplyr::filter(up == 0) %>%
   dplyr::pull(ENSEMBL) %>%
@@ -234,26 +238,28 @@ This data set was obtained from [refine.bio](https://www.refine.bio/).
 
 ```{r}
 # Put name of data file
-refine.bio.data.filename <- file.path(data_dir,
-                                      "GSE37418.tsv" # Replace with your desired refine.bio processed data file
-                                      )
+refine.bio.data.filename <- file.path(
+  data_dir,
+  "GSE37418.tsv" # Replace with your desired refine.bio processed data file
+)
 
 # Read in data tsv file
-refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>% 
+refine.bio.df <- readr::read_tsv(refine.bio.data.filename, progress = FALSE) %>%
   # Make the gene column the rownames so the gene names are out of the way for calculations
-  tibble::column_to_rownames('Gene') 
+  tibble::column_to_rownames("Gene")
 ```
 
 Set up the metadata for this set.
 
 ```{r}
 # Metadata file name
-metadata.filename <- file.path(data_dir,
-                               "metadata_GSE37418.tsv" # Replace with name of metadata file relevant to your refine.bio processed data file
-                               )
+metadata.filename <- file.path(
+  data_dir,
+  "metadata_GSE37418.tsv" # Replace with name of metadata file relevant to your refine.bio processed data file
+)
 
 # Read in metadata tsv file
-metadata <- readr::read_tsv(metadata.filename) %>% 
+metadata <- readr::read_tsv(metadata.filename) %>%
   # Get rid of columns that have only NAs
   dplyr::select(-which(apply(is.na(.), 2, all)))
 
@@ -279,7 +285,7 @@ classifications.
 
 ```{r}
 # Only keep samples that are SHH or Non-SHH (which is now both Group3 and Group4)
-metadata <- metadata %>% 
+metadata <- metadata %>%
   dplyr::filter(subgroup %in% c("SHH", "NonSHH"))
 ```
 
@@ -287,8 +293,10 @@ Make refine.bio metadata and data are same samples, in the same order.
 
 ```{r}
 # Reorder/filter data to match metadata
-refine.bio.df <- refine.bio.df[, match(metadata$refinebio_accession_code, 
-                                       colnames(refine.bio.df))]
+refine.bio.df <- refine.bio.df[, match(
+  metadata$refinebio_accession_code,
+  colnames(refine.bio.df)
+)]
 
 # Check if they are the same:
 all.equal(colnames(refine.bio.df), metadata$refinebio_accession_code)
@@ -335,8 +343,8 @@ correction to the p-values.
 ```{r}
 # Apply multiple testing correction and obtain stats
 refine.bio.results <- topTable(fit, number = nrow(refine.bio.df)) %>%
-  tibble::rownames_to_column("ENSEMBL") 
-  
+  tibble::rownames_to_column("ENSEMBL")
+
 # Print out stats
 refine.bio.results
 ```
@@ -344,9 +352,10 @@ refine.bio.results
 Write these results to an output file.
 
 ```{r  Write results}
-readr::write_tsv(refine.bio.results, file.path(results_dir,
-                                               "GSE37418_limma_results.tsv" # Replace with relevant output file name
-                                               ))
+readr::write_tsv(refine.bio.results, file.path(
+  results_dir,
+  "GSE37418_limma_results.tsv" # Replace with relevant output file name
+))
 ```
 
 ### Create up/down-regulated gene lists for refine.bio results
@@ -381,7 +390,7 @@ We previously did this same test for the Northcott data in the in [`author_proce
 
 ```{r}
 # Extract a gene's data from the original refine.bio data.frame
-test.gene <- refine.bio.df %>% 
+test.gene <- refine.bio.df %>%
   tibble::rownames_to_column("genes") %>%
   dplyr::filter(genes == refine.bio.up.genes[12]) %>%
   dplyr::select(-genes) %>%
@@ -390,9 +399,9 @@ test.gene <- refine.bio.df %>%
 # Make a dataframe with the group information
 box.plot <- data.frame(test.gene, subgroup = metadata$subgroup) %>%
 
-# Use ggplot2 to make a boxplot from this info
-ggplot(., aes(x = subgroup, y = test.gene)) + 
-  geom_boxplot() + 
+  # Use ggplot2 to make a boxplot from this info
+  ggplot(., aes(x = subgroup, y = test.gene)) +
+  geom_boxplot() +
   theme_classic() +
   ggtitle(paste("refine.bio up gene test:", refine.bio.up.genes[12]))
 
@@ -408,12 +417,16 @@ Determine overlap in up-regulated genes between datasets.
 
 ```{r}
 # Make into named list
-up.genes <- list('refine.bio' = refine.bio.up.genes, 
-                 'author' = author.up.genes)
+up.genes <- list(
+  "refine.bio" = refine.bio.up.genes,
+  "author" = author.up.genes
+)
 
 # Make into named list
-down.genes <- list('refine.bio' = refine.bio.down.genes, 
-                   'author' = author.down.genes)
+down.genes <- list(
+  "refine.bio" = refine.bio.down.genes,
+  "author" = author.down.genes
+)
 ```
 
 Determine overlap in gene sets between datasets.
@@ -434,11 +447,13 @@ Make Venn diagram of up-regulation results and save to png.
 
 ```{r}
 # Make filename to save plot as
-up.plot.file <- file.path(plots_dir, 
-                          "up-regulated_venn_northcott_vs_robinson.png")
+up.plot.file <- file.path(
+  plots_dir,
+  "up-regulated_venn_northcott_vs_robinson.png"
+)
 
 # Make the Venn diagram
-grid::grid.newpage();
+grid::grid.newpage()
 up.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(up.genes[[1]]),
   area2 = length(up.genes[[2]]),
@@ -453,15 +468,16 @@ up.venn.plot <- VennDiagram::draw.pairwise.venn(
   ext.dist = -0.01,
   ext.length = .8,
   ext.line.lwd = 2,
-  ext.line.lty = "dashed");
+  ext.line.lty = "dashed"
+)
 grid::grid.draw(up.venn.plot) # Draw plot
 ```
 
 Save up-regulated genes Venn to a png.
 
 ```{r}
-png(up.plot.file);
-grid::grid.draw(up.venn.plot);
+png(up.plot.file)
+grid::grid.draw(up.venn.plot)
 dev.off()
 ```
 
@@ -471,11 +487,13 @@ Repeat the process for down-regulation results.
 
 ```{r}
 # Make filename to save plot as
-down.plot.file <- file.path(plots_dir, 
-                            "down-regulated_venn_northcott_vs_robinson.png")
+down.plot.file <- file.path(
+  plots_dir,
+  "down-regulated_venn_northcott_vs_robinson.png"
+)
 
 # Make the Venn diagram
-grid::grid.newpage();
+grid::grid.newpage()
 down.venn.plot <- VennDiagram::draw.pairwise.venn(
   area1 = length(down.genes[[1]]),
   area2 = length(down.genes[[2]]),
@@ -491,15 +509,16 @@ down.venn.plot <- VennDiagram::draw.pairwise.venn(
   ext.dist = -0.01,
   ext.length = .8,
   ext.line.lwd = 2,
-  ext.line.lty = "dashed");
+  ext.line.lty = "dashed"
+)
 grid::grid.draw(down.venn.plot) # Draw plot
 ```
 
 Save down-regulated genes Venn to a png.
 
 ```{r}
-png(down.plot.file);
-grid::grid.draw(down.venn.plot);
+png(down.plot.file)
+grid::grid.draw(down.venn.plot)
 dev.off()
 ```
 
@@ -512,11 +531,11 @@ third vector in the output object so we use `[[3]]`.
 
 ```{r}
 # Write the up-regulated gene overlap lists to tsv file
-data.frame(up.overlap[[3]]) %>% 
+data.frame(up.overlap[[3]]) %>%
   readr::write_tsv(file.path(results_dir, "up-regulated_overlap_gene_list.tsv"))
 
 # Do the same but for the down-regulated gene overlap list
-data.frame(down.overlap[[3]]) %>% 
+data.frame(down.overlap[[3]]) %>%
   readr::write_tsv(file.path(results_dir, "down-regulated_overlap_gene_list.tsv"))
 ```
 

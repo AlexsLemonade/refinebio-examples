@@ -48,7 +48,7 @@ Set up output directories.
 
 ```{r}
 # Define the file path to the results directory
-results_dir <- "results"  # Replace with path to desired output results directory
+results_dir <- "results" # Replace with path to desired output results directory
 
 # Make a results directory if it isn't created yet
 if (!dir.exists(results_dir)) {
@@ -56,7 +56,7 @@ if (!dir.exists(results_dir)) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots"  # Replace with path to desired output plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
 
 # Make a plots directory if it isn't created yet
 if (!dir.exists(plots_dir)) {
@@ -64,7 +64,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the data directory
-data_dir <- "data"  # Replace with path to data directory
+data_dir <- "data" # Replace with path to data directory
 
 # Make a data directory if it isn't created yet
 if (!dir.exists(data_dir)) {
@@ -78,14 +78,16 @@ For more information on how this data was processed, see its
 
 ```{r}
 # Store file name for gene matrix
-matrix.file.name <- file.path(data_dir,
-                              "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
-                              )
+matrix.file.name <- file.path(
+  data_dir,
+  "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
+)
 
 # Download author processed data file directly to the data directory
-geo.data <-  GEOquery::getGEO("GSE37382", # Replace with the GEO Accession ID relevant to your txt file -- you can search for a GEO Accession ID using the [NCBI's Gene Expression Omnibus database](https://www.ncbi.nlm.nih.gov/geo/).The GEO ID will start with `GSE`, `GSM`, `GDS`, or `GPL` (more information here: https://www.rdocumentation.org/packages/GEOquery/versions/2.38.4/topics/getGEO)
-                              destdir = data_dir, GSEMatrix = TRUE)
-  
+geo.data <- GEOquery::getGEO("GSE37382", # Replace with the GEO Accession ID relevant to your txt file -- you can search for a GEO Accession ID using the [NCBI's Gene Expression Omnibus database](https://www.ncbi.nlm.nih.gov/geo/).The GEO ID will start with `GSE`, `GSM`, `GDS`, or `GPL` (more information here: https://www.rdocumentation.org/packages/GEOquery/versions/2.38.4/topics/getGEO)
+  destdir = data_dir, GSEMatrix = TRUE
+)
+
 # If the unzipped version of the file doesn't exist, run this
 if (!file.exists(matrix.file.name)) {
   # Unzip the .gz file with the gene matrix in it
@@ -97,10 +99,12 @@ Read in the gene matrix.
 
 ```{r}
 # Read in the author processed gene matrix
-author.df <- readr::read_tsv(file.path(data_dir,
-                                       "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
-                                       ), 
-                             comment = "!") %>% 
+author.df <- readr::read_tsv(file.path(
+  data_dir,
+  "GSE37382_series_matrix.txt" # Replace with name of your gene matrix file
+),
+comment = "!"
+) %>%
   # Store probe ids as the rownames
   tibble::column_to_rownames("ID_REF")
 ```
@@ -109,9 +113,9 @@ author.df <- readr::read_tsv(file.path(data_dir,
 
 ```{r}
 # Extract metadata
-metadata <- data.frame(geo.data[[1]]@phenoData@data) %>% 
+metadata <- data.frame(geo.data[[1]]@phenoData@data) %>%
   # Get rid of columns that have only NAs
-  dplyr::select(-which(apply(is.na(.), 2, all))) 
+  dplyr::select(-which(apply(is.na(.), 2, all)))
 
 # Double check if metadata and data are in same order
 all.equal(metadata$geo_accession, colnames(author.df))
@@ -125,11 +129,11 @@ limma needs a numeric design matrix to signify which are treatment and control
 samples. 
 
 ```{r Set up design matrix}
-# Set up group names 
+# Set up group names
 subgroup <- as.factor(gsub("Group 3|Group 4", "NonSHH", metadata$subgroup.ch1))
 
 # Create the design matrix
-des.mat <- model.matrix(~ subgroup)
+des.mat <- model.matrix(~subgroup)
 
 # Make the column name more informative
 colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
@@ -151,7 +155,7 @@ Obtain summary statistics:
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-stats <- topTable(fit, number = nrow(author.df)) %>% 
+stats <- topTable(fit, number = nrow(author.df)) %>%
   tibble::rownames_to_column("affy_probe_ids")
 
 # Print out stats
@@ -171,7 +175,7 @@ Let's extract this data and make a bopxplot to check if that is what we see.
 
 ```{r}
 # Extract a gene's data from the original refine.bio data.frame
-test.probe <- author.df %>% 
+test.probe <- author.df %>%
   tibble::rownames_to_column("probe_ids") %>%
   dplyr::filter(probe_ids == stats$affy_probe_ids[32]) %>%
   dplyr::select(-probe_ids) %>%
@@ -179,9 +183,9 @@ test.probe <- author.df %>%
 
 # Make a dataframe with the group information
 box.plot <- data.frame(test.probe, subgroup) %>%
-# Use ggplot2 to make a boxplot from this info
-ggplot(., aes(x = subgroup, y = test.probe)) + 
-  geom_boxplot() + 
+  # Use ggplot2 to make a boxplot from this info
+  ggplot(., aes(x = subgroup, y = test.probe)) +
+  geom_boxplot() +
   theme_classic() +
   ggtitle(paste("Probe ID:", stats$affy_probe_ids[32]))
 
