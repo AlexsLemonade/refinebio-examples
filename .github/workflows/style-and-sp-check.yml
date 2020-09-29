@@ -36,7 +36,7 @@ jobs:
 
       - name: Check on spell check results
         # if: spell_check_results > 3
-        run: echo spell_check_results
+        run: echo $spell_check_results
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
