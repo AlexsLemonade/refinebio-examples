@@ -443,7 +443,7 @@ ggsave(
 ```
 
 Heatmaps are also a pretty common way to show differential expression results. 
-You can take your results from this example and make a heatmap following our heatmap module: TODO: link here. 
+You can take your results from this example and make a heatmap [following our heatmap module](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/clustering_rnaseq_01_heatmap.html).
 
 # Further learning resources about this analysis
 
