@@ -56,10 +56,7 @@ jobs:
           tags: ccdl/refinebio-examples:latest
       # download data
       - name: Download data
-        run: docker run \
-          --mount type=bind,target=/home/rstudio,source=$PWD \
-          ccdl/refinebio-examples \
-          bash scripts/download-data.sh
+        run: bash scripts/download-data.sh
       # render pages with snakemake in the docker image
       - name: Render all pages to html
         run: |
