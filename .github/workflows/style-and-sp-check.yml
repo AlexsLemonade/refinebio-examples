@@ -5,7 +5,7 @@ name: Style and spell check R markdowns
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ master, cansavvy/sp-check ]
   pull_request:
     branches: [ master ]
 
