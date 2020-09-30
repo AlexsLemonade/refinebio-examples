@@ -66,7 +66,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -81,9 +81,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [zebrafish kidney side population (SP) cell dataset](https://www.refine.bio/experiments/GSE12955/gene-expression-profile-of-zebrafish-kidney-side-population-sp-cells).
+For this example analysis, we will use this [CREB overexpression zebrafish dataset](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process), which contains 10 samples.
 
-This dataset has 4 microarray zebrafish kidney side population (SP) cell samples.
+@Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
 
 ## Place the dataset in your new `data/` folder
 
@@ -98,7 +98,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `GSE12955` folder into your newly created `data/` folder.
+Copy and paste the `GSE71270` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -106,7 +106,7 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `GSE12955` folder which contains:
+  - The `GSE71270` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
@@ -121,13 +121,13 @@ Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE12955")
+data_dir <- file.path("data", "GSE71270")
 
 # Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "GSE12955.tsv"))
+file.exists(file.path(data_dir, "GSE71270.tsv"))
 
 # Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "metadata_GSE12955.tsv"))
+file.exists(file.path(data_dir, "metadata_GSE71270.tsv"))
 ```
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
@@ -153,7 +153,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 In this analysis, we will be using `hcop` to map between zebrafish and human identifiers [@Turner2018].
 
-We'll need to use the [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) package to install `hcop` from Github.
+We'll need to use the `devtools` package to install `hcop` from Github [@Wickham2020].
 
 ```{r}
 if (!("devtools" %in% installed.packages())) {
@@ -188,15 +188,15 @@ This chunk of code will read the both TSV files and add them as data frames to y
 # Read in metadata TSV file
 metadata <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your metadata file
-  "metadata_GSE12955.tsv" # Replace with the name of your metadata file
+  "metadata_GSE71270.tsv" # Replace with the name of your metadata file
 ))
 
 # Read in data TSV file
 df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
-  "GSE12955.tsv" # Replace with the name of your data file
+  "GSE71270.tsv" # Replace with the name of your data file
 )) %>%
-  # Tuck away the Gene id column as rownames
+  # Tuck away the Gene ID column as rownames
   tibble::column_to_rownames("Gene")
 ```
 
@@ -278,7 +278,7 @@ readr::write_tsv(
   human_symbol_df,
   file.path(
     results_dir,
-    "GSE12955_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+    "GSE71270_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
   )
 )
 ```
@@ -287,6 +287,8 @@ readr::write_tsv(
 
 * Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols.
 Some downstream tools may need this to be resolved.
+One way to resolve this may be to map to a different gene identifier.
+See our [gene ID annotation microarray notebook](https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html) for an example of mapping between gene identifiers.
 * If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
 Let's look at the `ENSDARG00000069142` example below.
 
@@ -311,14 +313,29 @@ collapsed_symbol_df <- human_symbol_df %>%
 head(collapsed_symbol_df)
 ```
 
+Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
+
+```{r}
+collapsed_ensembl_df <- human_symbol_df %>%
+  # Group by human gene symbols
+  dplyr::group_by(human_symbol) %>%
+  # Collapse the Ensembl IDs in `human_symbol_df` into one column named `all_zebrafish_ensembl_ids`
+  dplyr::summarize(all_zebrafish_ensembl_ids = paste(zebrafish_ensembl, collapse = ";"))
+
+head(collapsed_ensembl_df)
+```
+The final format in which you save your results data frame largely depends on your question and the downstream analyses/tools that you would like to implement.
+
 ## Write collapsed results to file
+
+We are going to save the results data frame where we have collapsed human gene symbols into one column for each unique zebrafish Ensembl ID.
 
 ```{r}
 readr::write_tsv(
   collapsed_symbol_df,
   file.path(
     results_dir,
-    "GSE12955_collapsed_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+    "GSE71270_collapsed_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
   )
 )
 ```
