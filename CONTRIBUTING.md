@@ -269,7 +269,7 @@ Click on `spell-check-results` to download a zip file that contains the list of 
 Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
 Keep words alphabetical; each word is on its own line.
 
-If you want to run a spell check of all `.Rmd` files locally, you can use run `Rscript scripts/spell-check.R` and it will print out the same type of file in the `components` folder.
+If you want to run a spell check of all `.Rmd` files locally, you can use run `Rscript scripts/spell-check.R` and it will print out the same type of file in your current folder.
 
 ## Rendering notebooks
 
