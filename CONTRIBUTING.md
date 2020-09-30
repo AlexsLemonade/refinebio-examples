@@ -26,7 +26,7 @@
     - [Citing sources in text](#citing-sources-in-text)
       - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
       - [Key naming](#key-naming)
-    - [How to spell check](#how-to-spell-check)
+    - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
@@ -265,7 +265,7 @@ Spell checks are run automatically using Github actions upon opening a PR for ma
 Github actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
-Click on `spell-check-results` to download a zip file that contains the list of misspelled words. 
+Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
 Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
 Keep words alphabetical; each word is on its own line.
 
