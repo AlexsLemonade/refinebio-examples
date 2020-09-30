@@ -64,7 +64,7 @@ jobs:
           docker run \
           --mount type=bind,target=/home/rstudio,source=$PWD \
           ccdl/refinebio-examples \
-          snakemake --cores 2
+          snakemake --cores 2 --forceall
 
       - name: Commit changed html
         run: |
