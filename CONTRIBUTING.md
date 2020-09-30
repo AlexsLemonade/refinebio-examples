@@ -266,6 +266,8 @@ Github actions will abort if there are more than 2 spelling errors and you will 
 You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
 Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
+Alternatively, click on the "Check on spell check results" step in the workflow log to see the misspellings.
+
 Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
 Keep words alphabetical; each word is on its own line.
 
