@@ -20,4 +20,4 @@ _site
 .rstudio/
 
 # If spell check is run, we don't really have a need for tracking this
-components/spell_check_results.tsv
+spell_check_results.tsv
