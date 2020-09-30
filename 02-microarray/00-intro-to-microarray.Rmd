@@ -7,11 +7,14 @@ output:
     toc_float: true
 ---
 
+Data analyses are generally not "one size fits all"; this is particularly true between RNA-seq vs microarray data.
+This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [Introduction to Microarray technology](#introduction-to-microarray-technology)
+- [Introduction to microarray technology](#introduction-to-microarray-technology)
   - [Microarray data **strengths**:](#microarray-data-strengths)
   - [Microarray data **limitations**:](#microarray-data-limitations)
 - [About quantile normalization](#about-quantile-normalization)
@@ -21,10 +24,11 @@ output:
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Introduction to Microarray technology
+## Introduction to microarray technology
 
-Data analyses are generally not "one size fits all"; this is particularly true between RNA-seq vs microarray data.
-This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
+Microarrays measure gene expression using chips filled with probes designed to hybridize to RNA samples that have been reverse transcribed to cDNA. 
+Bound probes give off fluorescence the intensity of which indicates the number of probes bound and therefore the relative quantity of the transcript the probe is designed for. 
+
 
 As with all experimental methods, microarray has strengths and limitations that you should consider in regards to your scientific questions. 
 
@@ -44,7 +48,7 @@ To help address these probe nucleotide composition biases, refine.bio uses [SCAN
 ## About quantile normalization 
 
 Microarray data is generally processed in groups of chips - this can lead to [batch effects](https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment). 
-To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization). 
+To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization) which enables more confident comparisons of expression levels between experiments.
 See the refine.bio docs for more about the microarray process steps including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
 ## More resources on microarray technology: 
