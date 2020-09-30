@@ -31,7 +31,6 @@ RUN pip3 install \
     "six==1.15.0" \
     "wheel==0.34.2"
 
-
 #### R packages
 ###############
 

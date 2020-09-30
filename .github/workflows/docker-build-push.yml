@@ -52,6 +52,7 @@ jobs:
         with:
           # TODO: enable push
           push: false
+          load: true
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
