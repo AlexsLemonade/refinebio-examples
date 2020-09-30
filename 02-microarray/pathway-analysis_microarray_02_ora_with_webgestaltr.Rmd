@@ -14,7 +14,7 @@ output:
 This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
 This pathway analysis method does not require any particular sample size, since the only input is gene sets [@Yaari2013].
 
-This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine with pathway analysis method is best suited for your purposes. 
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -66,18 +66,16 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## Obtain the gene set for this example
 
-In this example, we are using differential expression results from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+In this example, we are using differential expression results table we obtained from an [example analysis of medulloblastoma subgroups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).
 
-If you would like to follow the steps for obtaining this results file, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html).
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html).
 
 ## About the dataset we are using for this example
 
-The original refine.bio dataset used to obtain these results 
-
-For this example analysis, we will use this medulloblastoma samples. 
+The original refine.bio dataset used to obtain these results is this [medulloblastoma subtype dataset](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma) [@Robsinson2012]. 
 @Robinson2012 measured microarray gene expression of 71 medulloblastoma tumor samples. 
-In the differential expression analysis, we tested across the medulloblastoma subtypes.
+In the [differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html), we tested across the medulloblastoma subtypes which gave us the results file we will use here. 
 
 ## Check out our file structure!
 
@@ -188,7 +186,7 @@ listIdType("hsapiens")
 We can see that there is `ensembl_gene_id` listed above so the Ensembl IDs in the `Gene` column are compatible identifiers, and we do not need to convert to a different identifier.
 All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we'd encourage you to look at our [gene ID annotation examples](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
-The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/); note that WebGestalt has a new 2019 version) [@Wang2017].
+The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) [@Wang2017].
 
 WebGestalt can perform multiple _types_ of pathway analysis. 
 Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological processes as our source of gene sets.
@@ -228,8 +226,8 @@ It is a `.txt` file, however its values are separated by tabs, making it a TSV; 
 results_df <- readr::read_tsv(
   file.path(
     results_dir,
-    "Project_GSE37418_up_SHH_lfc2_fdr0_05",
-    "enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt"
+    "Project_GSE37418_up_SHH_lfc2_fdr0_05", # This will need to change depending on what you supply to `projectName` argument in `WebGestaltR()` function
+    "enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt" # Same here, but the prefix is different
   )
 )
 ```
@@ -239,7 +237,7 @@ Let's print out a preview of it.
 ```{r}
 head(results_df)
 ```
-It looks like there are a lot of pathways associated with ribosomes and translation.
+It looks like some of the top results are pathways associated with ribosomes and translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it's important to keep in mind that many of these gene sets could be telling us the same thing.
 
 In the `link` column, you can use the links to see more information about a particular GO term.
@@ -247,14 +245,14 @@ Take a look at the link for the top result, `translational initiation`: http://a
 
 # Resources for further learning
 
-- [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
-- [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
+- [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf) [@Wang2019].
+- [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0) [@Wang2017].
 - [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
 
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info

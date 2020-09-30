@@ -1675,7 +1675,7 @@ div.tocify {
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random. This pathway analysis method does not require any particular sample size, since the only input is gene sets <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
-<p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine with pathway analysis method is best suited for your purposes.</p>
+<p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1714,13 +1714,12 @@ if (!dir.exists(results_dir)) {
 </div>
 <div id="obtain-the-gene-set-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the gene set for this example</h2>
-<p>In this example, we are using differential expression results from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
-<p>If you would like to follow the steps for obtaining this results file, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
+<p>In this example, we are using differential expression results table we obtained from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">example analysis of medulloblastoma subgroups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each subgroup, and adjusted p-values (FDR in this case).</p>
+<p>We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you’d like to follow the steps for obtaining this results file yourself, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
-<p>The original refine.bio dataset used to obtain these results</p>
-<p>For this example analysis, we will use this medulloblastoma samples. <span class="citation">Robinson <em>et al.</em> (2012)</span> measured microarray gene expression of 71 medulloblastoma tumor samples. In the differential expression analysis, we tested across the medulloblastoma subtypes.</p>
+<p>The original refine.bio dataset used to obtain these results is this <a href="https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma">medulloblastoma subtype dataset</a> <span class="citation">(<span class="citeproc-not-found" data-reference-id="Robsinson2012"><strong>???</strong></span>)</span>. <span class="citation">Robinson <em>et al.</em> (2012)</span> measured microarray gene expression of 71 medulloblastoma tumor samples. In the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">differential expression example analysis</a>, we tested across the medulloblastoma subtypes which gave us the results file we will use here.</p>
 </div>
 <div id="check-out-our-file-structure" class="section level2">
 <h2><span class="header-section-number">2.5</span> Check out our file structure!</h2>
@@ -1890,7 +1889,7 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 ## [72] &quot;unigene&quot;                                    
 ## [73] &quot;uniprotswissprot&quot;</code></pre>
 <p>We can see that there is <code>ensembl_gene_id</code> listed above so the Ensembl IDs in the <code>Gene</code> column are compatible identifiers, and we do not need to convert to a different identifier. All refine.bio dataset downloads come with Ensembl IDs but if do find yourself needing to convert gene IDs, we’d encourage you to look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation examples</a>.</p>
-<p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a>; note that WebGestalt has a new 2019 version) <span class="citation">(Wang <em>et al.</em> 2017)</span>.</p>
+<p>The <code>WebGestaltR</code> function is a wrapper for the <a href="http://www.webgestalt.org/">WEB-based GEne SeT AnaLysis Toolkit (WebGestalt)</a> <span class="citation">(Wang <em>et al.</em> 2017)</span>.</p>
 <p>WebGestalt can perform multiple <em>types</em> of pathway analysis. Here we’re using it for ORA and we will use <a href="http://geneontology.org/docs/ontology-documentation/">Gene Ontology (GO)</a> biological processes as our source of gene sets. We can see all supported gene sets for humans with <code>listGeneSet()</code> function. We are using <code>head()</code> so we just get a preview and not the whole table printed out.</p>
 <pre class="r"><code>head(listGeneSet(&quot;hsapiens&quot;))</code></pre>
 <pre><code>##                                          name
@@ -1948,8 +1947,8 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 <pre class="r"><code>results_df &lt;- readr::read_tsv(
   file.path(
     results_dir,
-    &quot;Project_GSE37418_up_SHH_lfc2_fdr0_05&quot;,
-    &quot;enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt&quot;
+    &quot;Project_GSE37418_up_SHH_lfc2_fdr0_05&quot;, # This will need to change depending on what you supply to `projectName` argument in `WebGestaltR()` function
+    &quot;enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt&quot; # Same here, but the prefix is different
   )
 )</code></pre>
 <pre><code>## Parsed with column specification:
@@ -1978,21 +1977,21 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 ## 5 GO:007… establishm… http…    73      20   3.07            6.51 1.17e-11
 ## 6 GO:000… nuclear-tr… http…    82      21   3.45            6.09 1.48e-11
 ## # … with 3 more variables: FDR &lt;dbl&gt;, overlapId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
-<p>It looks like there are a lot of pathways associated with ribosomes and translation. Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it’s important to keep in mind that many of these gene sets could be telling us the same thing.</p>
+<p>It looks like some of the top results are pathways associated with ribosomes and translation. Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it’s important to keep in mind that many of these gene sets could be telling us the same thing.</p>
 <p>In the <code>link</code> column, you can use the links to see more information about a particular GO term. Take a look at the link for the top result, <code>translational initiation</code>: <a href="http://amigo.geneontology.org/amigo/term/GO:0006413" class="uri">http://amigo.geneontology.org/amigo/term/GO:0006413</a></p>
 </div>
 </div>
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="http://www.webgestalt.org/WebGestalt_2019_Manual.pdf">WebGestalt 2019 Manual</a></li>
-<li><a href="https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0"><code>WebGestaltR</code> package documentation</a>.</li>
+<li><a href="http://www.webgestalt.org/WebGestalt_2019_Manual.pdf">WebGestalt 2019 Manual</a> <span class="citation">(Wang and Liao 2019)</span>.</li>
+<li><a href="https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0"><code>WebGestaltR</code> package documentation</a> <span class="citation">(Wang <em>et al.</em> 2017)</span>.</li>
 <li><a href="https://doi.org/10.1371/journal.pcbi.1002375">This handy review</a> which summarizes the different types of pathway analysis and their limitations <span class="citation">(Khatri <em>et al.</em> 2012)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
-<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
+<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
@@ -2017,22 +2016,21 @@ sessionInfo()</code></pre>
 ## [1] magrittr_1.5      WebGestaltR_0.4.4 optparse_1.6.6   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         rematch2_2.1.2   
-##  [5] purrr_0.3.4       lattice_0.20-41   vctrs_0.3.4       generics_0.0.2   
-##  [9] htmltools_0.5.0   getopt_1.20.3     yaml_2.2.1        utf8_1.1.4       
-## [13] rlang_0.4.7       R.oo_1.24.0       pillar_1.4.6      glue_1.4.2       
-## [17] R.utils_2.10.1    gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2      
-## [21] foreach_1.5.0     R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0    
-## [25] R.methodsS3_1.8.1 codetools_0.2-16  evaluate_0.14     knitr_1.30       
-## [29] doParallel_1.0.15 curl_4.3          parallel_4.0.2    fansi_0.4.1      
-## [33] Rcpp_1.0.5        readr_1.3.1       backports_1.1.10  cpp11_0.2.1      
-## [37] jsonlite_1.7.1    apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3        
-## [41] digest_0.6.25     stringi_1.5.3     dplyr_1.0.2       grid_4.0.2       
-## [45] cli_2.0.2         tools_4.0.2       tibble_3.0.3      whisker_0.4      
-## [49] crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18    
-## [53] assertthat_0.2.1  rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2       
-## [57] rstudioapi_0.11   iterators_1.0.12  R6_2.4.1          igraph_1.2.5     
-## [61] compiler_4.0.2</code></pre>
+##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         purrr_0.3.4      
+##  [5] lattice_0.20-41   vctrs_0.3.4       generics_0.0.2    htmltools_0.5.0  
+##  [9] getopt_1.20.3     yaml_2.2.1        utf8_1.1.4        rlang_0.4.7      
+## [13] R.oo_1.24.0       pillar_1.4.6      glue_1.4.2        R.utils_2.10.1   
+## [17] gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2       foreach_1.5.0    
+## [21] R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0     R.methodsS3_1.8.1
+## [25] codetools_0.2-16  evaluate_0.14     knitr_1.30        doParallel_1.0.15
+## [29] curl_4.3          parallel_4.0.2    fansi_0.4.1       Rcpp_1.0.5       
+## [33] readr_1.3.1       backports_1.1.10  cpp11_0.2.1       jsonlite_1.7.1   
+## [37] apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3         digest_0.6.25    
+## [41] stringi_1.5.3     dplyr_1.0.2       grid_4.0.2        cli_2.0.2        
+## [45] tools_4.0.2       tibble_3.0.3      whisker_0.4       crayon_1.3.4     
+## [49] pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18     assertthat_0.2.1 
+## [53] rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2        rstudioapi_0.11  
+## [57] iterators_1.0.12  R6_2.4.1          igraph_1.2.5      compiler_4.0.2</code></pre>
 <div id="refs" class="references">
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: current approaches and outstanding challenges. PLoS Comput. Biol. 8: e1002375.</p>
@@ -2042,6 +2040,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-Robinson2012">
 <p>Robinson G., M. Parker, T. A. Kranenburg, C. Lu, and X. Chen <em>et al.</em>, 2012 Novel mutations target distinct subgroups of medulloblastoma. Nature 488: 43–48.</p>
+</div>
+<div id="ref-Wang2019">
+<p>Wang J., and Y. Liao, 2019 <em>User manual of webgestalt 2019</em>.</p>
 </div>
 <div id="ref-Wang2020">
 <p>Wang J., and Y. Liao, 2020 <em>WebGestaltR: Gene set analysis toolkit webgestaltr</em>.</p>
