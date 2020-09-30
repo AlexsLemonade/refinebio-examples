@@ -67,7 +67,7 @@ Make directories to hold the plots and results if they do not yet exist.
 
 ```{r}
 # Define the file path to the plots directory
-plots_dir <- "plots"  # Replace with path to desired output plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
 
 # Make a plots directory if it isn't created yet
 if (!dir.exists(plots_dir)) {
@@ -75,7 +75,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results"  # Replace with path to desired output results directory
+results_dir <- "results" # Replace with path to desired output results directory
 
 # Make a results directory if it isn't created yet
 if (!dir.exists(results_dir)) {
@@ -97,37 +97,39 @@ For an example where we do the conversion without using a custom function, see
 
 ```{r}
 convert_ensembl_to_entrez_mat <- function(exprs_df) {
-  # Given a data.frame that contains human gene expression values and a column 
+  # Given a data.frame that contains human gene expression values and a column
   # (named ENSEMBL) that contains Ensembl gene IDs, return an expression matrix
-  # where the rownames are Entrez IDs. In the case of duplicate Entrez 
+  # where the rownames are Entrez IDs. In the case of duplicate Entrez
   # identifiers, we summarize to the mean value for an Entrez ID. Mapping
   # is performed with AnnotationDbi::mapIDs.
-  # 
+  #
   # Args:
   #   exprs_df: A data.frame of gene expression data. The first column should be
-  #             named ENSEMBL and contain Ensembl gene IDs. Rows are genes; 
+  #             named ENSEMBL and contain Ensembl gene IDs. Rows are genes;
   #             columns are samples.
   # Returns:
   #   An expression matrix where the rownames are Entrez gene IDs
-  
+
   `%>%` <- dplyr::`%>%`
   require(org.Hs.eg.db)
-  
+
   # error-handling: we need an ENSEMBL column
   if (!("ENSEMBL" %in% colnames(exprs_df))) {
     stop("'ENSEMBL' column expected in exprs_df")
   }
-  
-  # using the default behavior for 1:many mappings, where only the first one is 
+
+  # using the default behavior for 1:many mappings, where only the first one is
   # selected
-  entrez_mappings <- mapIds(org.Hs.eg.db, keys = exprs_df$ENSEMBL, 
-                            column = "ENTREZID", keytype = "ENSEMBL")
-  
+  entrez_mappings <- mapIds(org.Hs.eg.db,
+    keys = exprs_df$ENSEMBL,
+    column = "ENTREZID", keytype = "ENSEMBL"
+  )
+
   # if this is not returned in the same order as the keys for some reason, stop
   if (!all.equal(names(entrez_mappings), exprs_df$ENSEMBL)) {
     stop("Something happened to the gene order!")
   }
-  
+
   # annotation with Entrez IDs
   entrez_exprs_df <- exprs_df %>%
     # add a new column that contains the Entrez IDs
@@ -139,7 +141,7 @@ convert_ensembl_to_entrez_mat <- function(exprs_df) {
     dplyr::select(ENTREZID, dplyr::everything()) %>%
     # drop any genes without an Entrez ID
     dplyr::filter(!is.na(ENTREZID))
-  
+
   # if there are any duplicate Entrez gene IDs, collapse to the mean value
   if (any(duplicated(entrez_exprs_df$ENTREZID))) {
     message("Collapsing to mean value...")
@@ -147,12 +149,11 @@ convert_ensembl_to_entrez_mat <- function(exprs_df) {
       dplyr::group_by(ENTREZID) %>%
       dplyr::summarise_all(mean)
   }
-  
+
   # expression matrix where the rownames are the gene identifiers
   exprs_mat <- entrez_exprs_df %>%
     tibble::column_to_rownames("ENTREZID") %>%
     as.matrix()
-
 }
 ```
 
@@ -179,14 +180,17 @@ kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
 # since we do not track this file in our repository, let's check to make sure
 # it exists where we expect it and download it if we don't find it
 if (!file.exists(kegg_file)) {
-  message(paste("KEGG GMT file is not found at", kegg_file, 
-                ", downloading now..."))
+  message(paste(
+    "KEGG GMT file is not found at", kegg_file,
+    ", downloading now..."
+  ))
   # need gene-sets directory
   if (!dir.exists("gene-sets")) {
     dir.create("gene-sets")
   }
-  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt", 
-                destfile = kegg_file)
+  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt",
+    destfile = kegg_file
+  )
 }
 ```
 
@@ -200,12 +204,14 @@ Note that if your file is not zipped you can skip this chunk.
 
 ```{r}
 # if the unzipped folder does not exist -- skip this if you do not have a zipped file
-if (!dir.exists(file.path(data_dir,
-                          "GSE37382" # Replace with the name of your file without the .zip extension
-                          ))) {
-  compressed_file <- file.path(data_dir,
-                               "GSE37382.zip" # Replace with the name of your zipped file
-                               )
+if (!dir.exists(file.path(
+  data_dir,
+  "GSE37382" # Replace with the name of your file without the .zip extension
+))) {
+  compressed_file <- file.path(
+    data_dir,
+    "GSE37382.zip" # Replace with the name of your zipped file
+  )
   unzip(compressed_file, exdir = data_dir)
 }
 ```
@@ -213,14 +219,17 @@ if (!dir.exists(file.path(data_dir,
 #### Expression data
 
 ```{r}
-northcott_dir <- file.path(data_dir,
-                           "GSE37382" # Replace with name of the folder in which your northcott expression file is stored
-                           )
-northcott_expression_file <- file.path(northcott_dir,
-                                       "GSE37382.tsv" # Replace with name of your northcott expression file
-                                       )
-northcott_exprs_df <- readr::read_tsv(northcott_expression_file, 
-                                      progress = FALSE)
+northcott_dir <- file.path(
+  data_dir,
+  "GSE37382" # Replace with name of the folder in which your northcott expression file is stored
+)
+northcott_expression_file <- file.path(
+  northcott_dir,
+  "GSE37382.tsv" # Replace with name of your northcott expression file
+)
+northcott_exprs_df <- readr::read_tsv(northcott_expression_file,
+  progress = FALSE
+)
 # first column is currently named 'Gene' and contains Ensembl gene IDs
 colnames(northcott_exprs_df)[1] <- "ENSEMBL"
 ```
@@ -241,9 +250,10 @@ rm(northcott_exprs_df)
 #### Metadata
 
 ```{r}
-northcott_metadata_file <- file.path(northcott_dir,
-                                     "metadata_GSE37382.tsv" # Replace with name of your northcott metadata file
-                                     )
+northcott_metadata_file <- file.path(
+  northcott_dir,
+  "metadata_GSE37382.tsv" # Replace with name of your northcott metadata file
+)
 northcott_metadata_df <- readr::read_tsv(northcott_metadata_file) %>%
   # drop columns that are all NA
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -255,8 +265,10 @@ this information in a new column (`shh_v_other`).
 ```{r}
 northcott_metadata_df <- northcott_metadata_df %>%
   # retain only pertinent columns
-  dplyr::select(refinebio_accession_code, refinebio_title, refinebio_age, 
-                refinebio_sex, subgroup) %>%
+  dplyr::select(
+    refinebio_accession_code, refinebio_title, refinebio_age,
+    refinebio_sex, subgroup
+  ) %>%
   # new column that sets up pathway analysis
   dplyr::mutate(shh_v_other = dplyr::case_when(
     subgroup != "SHH" ~ "Other",
@@ -275,14 +287,17 @@ northcott_mat <- northcott_mat[, northcott_metadata_df$refinebio_accession_code]
 #### Expression data
 
 ```{r}
-robinson_dir <- file.path(data_dir,
-                          "GSE37418" # Replace with name of the folder in which your robinson expression file is stored
-                           )
-robinson_expression_file <- file.path(robinson_dir,
-                                      "GSE37418.tsv" # Replace with name of your robinson expression file
-                                      )
+robinson_dir <- file.path(
+  data_dir,
+  "GSE37418" # Replace with name of the folder in which your robinson expression file is stored
+)
+robinson_expression_file <- file.path(
+  robinson_dir,
+  "GSE37418.tsv" # Replace with name of your robinson expression file
+)
 robinson_exprs_df <- readr::read_tsv(robinson_expression_file,
-                                     progress = FALSE)
+  progress = FALSE
+)
 colnames(robinson_exprs_df)[1] <- "ENSEMBL"
 ```
 
@@ -300,9 +315,10 @@ rm(robinson_exprs_df)
 #### Metadata
 
 ```{r}
-robinson_metadata_file <- file.path(robinson_dir,
-                                    "metadata_GSE37418.tsv" # Replace with name of your robinson metadata file
-                                    )
+robinson_metadata_file <- file.path(
+  robinson_dir,
+  "metadata_GSE37418.tsv" # Replace with name of your robinson metadata file
+)
 robinson_metadata_df <- readr::read_tsv(robinson_metadata_file) %>%
   # drop columns that are all NA
   dplyr::select(-which(apply(is.na(.), 2, all)))
@@ -315,8 +331,10 @@ to Group 3 and Group 4.
 ```{r}
 robinson_metadata_df <- robinson_metadata_df %>%
   # retain only pertinent columns
-  dplyr::select(refinebio_accession_code, refinebio_title, age, `m stage`,
-                subgroup) %>%
+  dplyr::select(
+    refinebio_accession_code, refinebio_title, age, `m stage`,
+    subgroup
+  ) %>%
   # make more comparable to Northcott dataset
   dplyr::filter(!(subgroup %in% c("WNT", "SHH OUTLIER", "U"))) %>%
   # we'll use SHH vs. Other for our pathway analysis
@@ -343,36 +361,42 @@ kegg_pathways <- read.gmt(kegg_file)
 ### Northcott et al.
 
 ```{r}
-northcott_results <- qusage(eset = northcott_mat,
-                            labels = northcott_metadata_df$shh_v_other,
-                            contrast = "SHH-Other",
-                            geneSets = kegg_pathways)
+northcott_results <- qusage(
+  eset = northcott_mat,
+  labels = northcott_metadata_df$shh_v_other,
+  contrast = "SHH-Other",
+  geneSets = kegg_pathways
+)
 ```
 
 Save the Northcott et al. results to file.
 
 ```{r}
-northcott_results_file <- file.path(results_dir,
-                                    "Northcott_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the first results RDS file
-                                    )
+northcott_results_file <- file.path(
+  results_dir,
+  "Northcott_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the first results RDS file
+)
 readr::write_rds(northcott_results, northcott_results_file)
 ```
 
 ### Robinson et al.
 
 ```{r}
-robinson_results <- qusage(eset = robinson_mat,
-                           labels = robinson_metadata_df$shh_v_other,
-                           contrast = "SHH-Other",
-                           geneSets = kegg_pathways)
+robinson_results <- qusage(
+  eset = robinson_mat,
+  labels = robinson_metadata_df$shh_v_other,
+  contrast = "SHH-Other",
+  geneSets = kegg_pathways
+)
 ```
 
 Save the Robinson et al. results to file.
 
 ```{r}
-robinson_results_file <- file.path(results_dir, 
-                                   "Robinson_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the second results RDS file
-                                   )
+robinson_results_file <- file.path(
+  results_dir,
+  "Robinson_SHH-Other_QSarray.RDS" # Replace with a relevant output name for the second results RDS file
+)
 readr::write_rds(robinson_results, robinson_results_file)
 ```
 
@@ -418,8 +442,10 @@ of the log expression of all genes in a pathway.
 
 ```{r}
 plotCombinedPDF(combined_results, path.index = 162)
-legend("topleft", legend = c("Northcott", "Robinson", "Meta-analysis"),
-       lty = 1, col = c("#E41A1C", "#377EB8", "black"))
+legend("topleft",
+  legend = c("Northcott", "Robinson", "Meta-analysis"),
+  lty = 1, col = c("#E41A1C", "#377EB8", "black")
+)
 ```
 
 The positive pathway activity curves indicate that the genes in this 
@@ -432,8 +458,10 @@ Group 3 and 4 samples.
 
 ```{r}
 plotCombinedPDF(combined_results, path.index = 107)
-legend("topleft", legend = c("Northcott", "Robinson", "Meta-analysis"),
-       lty = 1, col = c("#E41A1C", "#377EB8", "black"))
+legend("topleft",
+  legend = c("Northcott", "Robinson", "Meta-analysis"),
+  lty = 1, col = c("#E41A1C", "#377EB8", "black")
+)
 ```
 
 #### Plot individual gene mean and 95% confidence intervals (CI)
@@ -447,8 +475,10 @@ two groups.
 The _pathway_ CI will also be displayed on the plot as a grey band by default.
 
 ```{r}
-plotCIsGenes(northcott_results, path.index = 107, addGrid = FALSE,
-             cex.xaxis = 1.25)
+plotCIsGenes(northcott_results,
+  path.index = 107, addGrid = FALSE,
+  cex.xaxis = 1.25
+)
 ```
 
 We can see that, in the Northcott dataset, there are about 5 genes really
@@ -456,8 +486,10 @@ driving the negative pathway activity.
 Let's take a look at the same pathway in Robinson.
 
 ```{r}
-plotCIsGenes(robinson_results, path.index = 107, addGrid = FALSE,
-             cex.xaxis = 1.25)
+plotCIsGenes(robinson_results,
+  path.index = 107, addGrid = FALSE,
+  cex.xaxis = 1.25
+)
 ```
 
 Looks like some of the top genes are the same between datasets: `56907`, `56776`
@@ -465,8 +497,10 @@ Because Entrez IDs are not particularly human-readable, we can use the same
 annotation package to convert these to gene symbols and gene names.
 
 ```{r}
-AnnotationDbi::select(org.Hs.eg.db, keys = c("56907", "56776"), 
-                      keytype = "ENTREZID", columns = c("SYMBOL", "GENENAME"))
+AnnotationDbi::select(org.Hs.eg.db,
+  keys = c("56907", "56776"),
+  keytype = "ENTREZID", columns = c("SYMBOL", "GENENAME")
+)
 ```
 
 It looks like these two genes promote the polymerization of actin filaments.
