@@ -6,7 +6,7 @@
 
 - [Docker for refinebio-examples](#docker-for-refinebio-examples)
   - [Setting up the docker container](#setting-up-the-docker-container)
-  - [Pushing Docker image updates](#pushing-docker-image-updates)
+  - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Add a new analysis](#add-a-new-analysis)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
@@ -26,7 +26,7 @@
     - [Citing sources in text](#citing-sources-in-text)
       - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
       - [Key naming](#key-naming)
-    - [How to spell check](#how-to-spell-check)
+    - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
@@ -61,7 +61,7 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSW
 Now you can navigate to http://localhost:8787/ to start developing.
 Login to the RStudio server with the username `rstudio` and the password you set above.
 
-### Pushing Docker image updates
+### Docker image updates
 
 All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
 Successful building of the `Dockerfile` will also be checked when the PR is filed by Github Actions.
@@ -70,14 +70,8 @@ In the `refinebio-examples` repository:
 ```
 docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
-After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.
-```
-# log in with your credentials
-docker login
+When a PR with Dockerfile changes is merged, its associated image will be automatically pushed to the Docker hub repository.
 
-# Push it!
-docker push ccdl/refinebio-examples
-```
 
 ## Download the datasets
 
@@ -98,7 +92,6 @@ Click on the links to go to the detailed instructions for each step.
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
 - In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
-- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ### Setting up a new analysis file
 
@@ -266,16 +259,19 @@ For example:
 ```
 Had no year associated with it, so it has keywords for its tag `pca-visually-explained`.
 
-#### How to spell check
+#### Spell checking
 
-In R, run the following:
-```
-dictionary <- readLines(file.path("components", "dictionary.txt"))
-spelling::spell_check_files("<tech-section>_<file_name>.Rmd",
-                            ignore = dictionary)
-```
+Spell checks are run automatically using Github actions upon opening a PR for master or prior to merging to master.
+Github actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
+You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
+Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
+Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
+Alternatively, click on the "Check on spell check results" step in the workflow log to see the misspellings.
+
 Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
-Keep words alphabetical; each word is on its own line.  
+Keep words alphabetical; each word is on its own line.
+
+If you want to run a spell check of all `.Rmd` files locally, you can use run `Rscript scripts/spell-check.R` and it will print out the same type of file in your current directory.
 
 ## Rendering notebooks
 

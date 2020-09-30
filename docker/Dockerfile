@@ -33,39 +33,48 @@ RUN pip3 install "setuptools==49.3.0" "six==1.15.0" "wheel==0.34.2"
 ###############
 
 # Commonly used R packages
-RUN install2.r --error --deps TRUE \
-    cluster \
-    GGally \
-    optparse \
-    R.utils \
-    RColorBrewer \
-    rprojroot \
-    viridis \
-    styler
+RUN Rscript -e  "install.packages( \
+    c('cluster', \
+      'GGally', \
+      'optparse', \
+      'R.utils', \
+      'RColorBrewer', \
+      'rprojroot', \
+      'viridis', \
+      'styler'))"
 
 ##########################
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
-RUN R -e "BiocManager::install(c('affy', 'apeglm', 'Biobase', 'ComplexHeatmap', 'DESeq2', 'EnhancedVolcano', 'limma', 'marray', 'org.Mm.eg.db', 'org.Dr.eg.db'), \
-    update = FALSE)"
+RUN R -e "BiocManager::install( \
+    c('affy', \
+      'apeglm', \
+      'Biobase', \
+      'ComplexHeatmap', \
+      'DESeq2', \
+      'EnhancedVolcano', \
+      'limma', \
+      'marray', \
+      'org.Mm.eg.db', \
+      'org.Dr.eg.db'), \
+     update = FALSE)"
 
 # Installs packages needed for plottings
 # treemap, interactive plots, and hex plots
 # Rtsne and umap are required for dimension reduction analyses
-# org.Mm.eg.db is required for gene mapping
-RUN install2.r --error --deps TRUE \
-    ggfortify \
-    ggsignif \
-    patchwork \
-    pheatmap \
-    Rtsne \
-    umap  \
-    VennDiagram
+RUN Rscript -e  "install.packages( \
+    c('ggfortify', \
+      'ggsignif', \
+      'patchwork', \
+      'pheatmap', \
+      'Rtsne', \
+      'umap', \
+      'VennDiagram'))"
 
 ##########################
 # Install packages from github
 # Need this package to make plots colorblind friendly
-RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
+RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
 
 # Install python libraries
 ##########################
