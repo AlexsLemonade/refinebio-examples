@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: spell-check-results
-          path: scripts/spell_check_results.tsv
+          path: spell_check_results.tsv
 
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
