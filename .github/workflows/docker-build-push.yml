@@ -54,7 +54,9 @@ jobs:
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
-
+      # download data
+      - name: Download data
+        run: bash scripts/download-data.sh
       # render pages with snakemake in the docker image
       - name: Render all pages to html
         run: |
