@@ -44,7 +44,7 @@ jobs:
         env:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
         run: |
-          cat components/spell_check_results.tsv
+          cat spell_check_results.tsv
           if (( $result > 340 )); then
             echo Too many spelling errors, $result
             exit 1
