@@ -31,7 +31,7 @@ Bound probes give off fluorescence the intensity of which indicates the number o
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/microarray-overview.jpg" width=400>  
 
-[@microarraaay-video]
+[@microarray-video]
 
 As with all experimental methods, microarray has strengths and limitations that you should consider in regards to your scientific questions. 
 
