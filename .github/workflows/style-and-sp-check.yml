@@ -39,7 +39,7 @@ jobs:
           name: spell-check-results
           path: spell_check_results.tsv
 
-      # If there are too many spell checks, this will stop everything
+      # If there are too many spelling errors, this will stop the workflow
       - name: Check on spell check results
         env:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
