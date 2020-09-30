@@ -6,7 +6,7 @@
 
 - [Docker for refinebio-examples](#docker-for-refinebio-examples)
   - [Setting up the docker container](#setting-up-the-docker-container)
-  - [Pushing Docker image updates](#pushing-docker-image-updates)
+  - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Add a new analysis](#add-a-new-analysis)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
@@ -61,7 +61,7 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD -e PASSWORD=<PASSW
 Now you can navigate to http://localhost:8787/ to start developing.
 Login to the RStudio server with the username `rstudio` and the password you set above.
 
-### Pushing Docker image updates
+### Docker image updates
 
 All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
 Successful building of the `Dockerfile` will also be checked when the PR is filed by Github Actions.
@@ -70,14 +70,8 @@ In the `refinebio-examples` repository:
 ```
 docker build -< docker/Dockerfile -t ccdl/refinebio-examples
 ```
-After a PR with Dockerfile changes is merged, its associated image should be pushed to the Docker hub repository.
-```
-# log in with your credentials
-docker login
+When a PR with Dockerfile changes is merged, its associated image will be automatically pushed to the Docker hub repository.
 
-# Push it!
-docker push ccdl/refinebio-examples
-```
 
 ## Download the datasets
 
@@ -98,7 +92,6 @@ Click on the links to go to the detailed instructions for each step.
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
 - In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
-- After PR is merged, [push updated Docker image](#pushing-docker-image-updates).
 
 ### Setting up a new analysis file
 
