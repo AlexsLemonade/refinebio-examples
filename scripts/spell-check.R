@@ -7,13 +7,17 @@ library(magrittr)
 # Read in dictionary
 dictionary <- readLines(file.path('components', 'dictionary.txt'))
 
+# Add mysterious emoji joining character
+dictionary <- c(dictionary, spelling::spell_check_text("⬇️")$word)
+
 # Only declare Rmd files
 files <- list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE)
 
 # Run spell check
 sp_errors <- spelling::spell_check_files(files, ignore = dictionary) %>% 
   data.frame() %>%
-  tidyr::unnest(cols = found)
+  tidyr::unnest(cols = found) %>%
+  tidyr::separate(found, into = c("file", "lines"), sep = ":")
 
 # Print out how many spell check errors
 write(nrow(sp_errors), stdout())

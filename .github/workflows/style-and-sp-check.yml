@@ -30,24 +30,25 @@ jobs:
       - name: Run spell check
         id: spell_check_run
         run: |
-          Rscript components/spell-check.R
-          results=$(Rscript "components/spell-check.R")
+          results=$(Rscript "scripts/spell-check.R")
           echo "::set-output name=sp_chk_results::$results"
 
       - name: Archive spelling errors
         uses: actions/upload-artifact@v2
         with:
           name: spell-check-results
-          path: components/spell_check_results.tsv
+          path: scripts/spell_check_results.tsv
 
       # If there are too many spell checks, this will stop everything
       - name: Check on spell check results
-        if: ${{ steps.spell_check_run.outputs.sp_chk_results > 340 }}
-        run: |
-          echo Too many spelling errors, $result
-          exit 1
         env:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
+        run: |
+          cat components/spell_check_results.tsv
+          if (( $result > 340 )); then
+            echo Too many spelling errors, $result
+            exit 1
+          fi
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
