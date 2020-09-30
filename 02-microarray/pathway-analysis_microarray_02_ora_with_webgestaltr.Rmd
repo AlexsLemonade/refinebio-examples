@@ -73,7 +73,7 @@ We have provided this file for you and the code in this notebook will read in th
 
 ## About the dataset we are using for this example
 
-The original refine.bio dataset used to obtain these results is this [medulloblastoma subtype dataset](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma) [@Robsinson2012]. 
+The original refine.bio dataset used to obtain these results is this [medulloblastoma subtype dataset](https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma) [@Robinson2012]. 
 @Robinson2012 measured microarray gene expression of 71 medulloblastoma tumor samples. 
 In the [differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html), we tested across the medulloblastoma subtypes which gave us the results file we will use here. 
 

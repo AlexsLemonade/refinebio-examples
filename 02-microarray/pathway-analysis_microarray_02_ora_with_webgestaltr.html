@@ -1719,7 +1719,7 @@ if (!dir.exists(results_dir)) {
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
-<p>The original refine.bio dataset used to obtain these results is this <a href="https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma">medulloblastoma subtype dataset</a> <span class="citation">(<span class="citeproc-not-found" data-reference-id="Robsinson2012"><strong>???</strong></span>)</span>. <span class="citation">Robinson <em>et al.</em> (2012)</span> measured microarray gene expression of 71 medulloblastoma tumor samples. In the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">differential expression example analysis</a>, we tested across the medulloblastoma subtypes which gave us the results file we will use here.</p>
+<p>The original refine.bio dataset used to obtain these results is this <a href="https://www.refine.bio/experiments/GSE37418/novel-mutations-target-distinct-subgroups-of-medulloblastoma">medulloblastoma subtype dataset</a> <span class="citation">(Robinson <em>et al.</em> 2012)</span>. <span class="citation">Robinson <em>et al.</em> (2012)</span> measured microarray gene expression of 71 medulloblastoma tumor samples. In the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">differential expression example analysis</a>, we tested across the medulloblastoma subtypes which gave us the results file we will use here.</p>
 </div>
 <div id="check-out-our-file-structure" class="section level2">
 <h2><span class="header-section-number">2.5</span> Check out our file structure!</h2>
@@ -2048,22 +2048,21 @@ sessionInfo()</code></pre>
 ## [1] magrittr_1.5      WebGestaltR_0.4.4 optparse_1.6.6   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         rematch2_2.1.2   
-##  [5] purrr_0.3.4       lattice_0.20-41   vctrs_0.3.4       generics_0.0.2   
-##  [9] htmltools_0.5.0   getopt_1.20.3     yaml_2.2.1        utf8_1.1.4       
-## [13] rlang_0.4.7       R.oo_1.24.0       pillar_1.4.6      glue_1.4.2       
-## [17] R.utils_2.10.1    gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2      
-## [21] foreach_1.5.0     R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0    
-## [25] R.methodsS3_1.8.1 codetools_0.2-16  evaluate_0.14     knitr_1.30       
-## [29] doParallel_1.0.15 curl_4.3          parallel_4.0.2    fansi_0.4.1      
-## [33] Rcpp_1.0.5        readr_1.3.1       backports_1.1.10  cpp11_0.2.1      
-## [37] jsonlite_1.7.1    apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3        
-## [41] digest_0.6.25     stringi_1.5.3     dplyr_1.0.2       grid_4.0.2       
-## [45] cli_2.0.2         tools_4.0.2       tibble_3.0.3      whisker_0.4      
-## [49] crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18    
-## [53] assertthat_0.2.1  rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2       
-## [57] rstudioapi_0.11   iterators_1.0.12  R6_2.4.1          igraph_1.2.5     
-## [61] compiler_4.0.2</code></pre>
+##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         purrr_0.3.4      
+##  [5] lattice_0.20-41   vctrs_0.3.4       generics_0.0.2    htmltools_0.5.0  
+##  [9] getopt_1.20.3     yaml_2.2.1        utf8_1.1.4        rlang_0.4.7      
+## [13] R.oo_1.24.0       pillar_1.4.6      glue_1.4.2        R.utils_2.10.1   
+## [17] gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2       foreach_1.5.0    
+## [21] R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0     R.methodsS3_1.8.1
+## [25] codetools_0.2-16  evaluate_0.14     knitr_1.30        doParallel_1.0.15
+## [29] curl_4.3          parallel_4.0.2    fansi_0.4.1       Rcpp_1.0.5       
+## [33] readr_1.3.1       backports_1.1.10  cpp11_0.2.1       jsonlite_1.7.1   
+## [37] apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3         digest_0.6.25    
+## [41] stringi_1.5.3     dplyr_1.0.2       grid_4.0.2        cli_2.0.2        
+## [45] tools_4.0.2       tibble_3.0.3      whisker_0.4       crayon_1.3.4     
+## [49] pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18     assertthat_0.2.1 
+## [53] rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2        rstudioapi_0.11  
+## [57] iterators_1.0.12  R6_2.4.1          igraph_1.2.5      compiler_4.0.2</code></pre>
 <div id="refs" class="references">
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: current approaches and outstanding challenges. PLoS Comput. Biol. 8: e1002375.</p>
