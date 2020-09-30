@@ -19,5 +19,5 @@ _site
 .local/share/rstudio/rstudio-server.json
 .rstudio/
 
-# If spell check is run, we don't really have a need fo tracking this
+# If spell check is run, we don't really have a need for tracking this
 components/spell_check_results.tsv
