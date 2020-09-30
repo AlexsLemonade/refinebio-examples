@@ -26,7 +26,10 @@ RUN apt-get -y --no-install-recommends install \
 RUN apt-get -y --no-install-recommends install \
     python3-pip  python3-dev
 
-RUN pip3 install "setuptools==49.3.0" "six==1.15.0" "wheel==0.34.2"
+RUN pip3 install \
+    "setuptools==49.3.0" \
+    "six==1.15.0" \
+    "wheel==0.34.2"
 
 
 #### R packages
