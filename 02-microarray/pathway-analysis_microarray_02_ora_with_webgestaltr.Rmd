@@ -235,7 +235,7 @@ results_df <- readr::read_tsv(
 Let's print out a preview of it.   
 
 ```{r}
-head(results_df)
+head(as.data.frame(results_df)) # We are coercing to a data frame (from a tibble) so all results are rendered a bit more clearly
 ```
 It looks like some of the top results are pathways associated with ribosomes and translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it's important to keep in mind that many of these gene sets could be telling us the same thing.

@@ -1966,17 +1966,49 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 ##   userId = col_character()
 ## )</code></pre>
 <p>Let’s print out a preview of it.</p>
-<pre class="r"><code>head(results_df)</code></pre>
-<pre><code>## # A tibble: 6 x 11
-##   geneSet description link   size overlap expect enrichmentRatio   pValue
-##   &lt;chr&gt;   &lt;chr&gt;       &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;           &lt;dbl&gt;    &lt;dbl&gt;
-## 1 GO:000… translatio… http…   135      31   5.68            5.46 5.33e-15
-## 2 GO:000… cotranslat… http…    62      21   2.61            8.05 3.29e-14
-## 3 GO:000… SRP-depend… http…    59      20   2.48            8.06 1.33e-13
-## 4 GO:004… protein ta… http…    69      20   2.90            6.89 3.70e-12
-## 5 GO:007… establishm… http…    73      20   3.07            6.51 1.17e-11
-## 6 GO:000… nuclear-tr… http…    82      21   3.45            6.09 1.48e-11
-## # … with 3 more variables: FDR &lt;dbl&gt;, overlapId &lt;chr&gt;, userId &lt;chr&gt;</code></pre>
+<pre class="r"><code>head(as.data.frame(results_df)) # We are coercing to a data frame (from a tibble) so all results are rendered a bit more clearly</code></pre>
+<pre><code>##      geneSet
+## 1 GO:0006413
+## 2 GO:0006613
+## 3 GO:0006614
+## 4 GO:0045047
+## 5 GO:0072599
+## 6 GO:0000184
+##                                                           description
+## 1                                            translational initiation
+## 2                       cotranslational protein targeting to membrane
+## 3         SRP-dependent cotranslational protein targeting to membrane
+## 4                                             protein targeting to ER
+## 5      establishment of protein localization to endoplasmic reticulum
+## 6 nuclear-transcribed mRNA catabolic process, nonsense-mediated decay
+##                                                  link size overlap   expect
+## 1 http://amigo.geneontology.org/amigo/term/GO:0006413  135      31 5.678579
+## 2 http://amigo.geneontology.org/amigo/term/GO:0006613   62      21 2.607940
+## 3 http://amigo.geneontology.org/amigo/term/GO:0006614   59      20 2.481749
+## 4 http://amigo.geneontology.org/amigo/term/GO:0045047   69      20 2.902385
+## 5 http://amigo.geneontology.org/amigo/term/GO:0072599   73      20 3.070639
+## 6 http://amigo.geneontology.org/amigo/term/GO:0000184   82      21 3.449211
+##   enrichmentRatio       pValue          FDR
+## 1        5.459112 5.329071e-15 3.272049e-11
+## 2        8.052333 3.286260e-14 1.008882e-10
+## 3        8.058832 1.325606e-13 2.713074e-10
+## 4        6.890885 3.696377e-12 5.673938e-09
+## 5        6.513302 1.173195e-11 1.440683e-08
+## 6        6.088349 1.482703e-11 1.517299e-08
+##                                                                                                                                                         overlapId
+## 1 1968;3646;4869;6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;7311;8440;8664;8666;8667;8668;10209;25873;27335;51441;83939
+## 2                                                     6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;6746;7311;25873;133022
+## 3                                                          6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;7311;25873;133022
+## 4                                                          6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;7311;25873;133022
+## 5                                                          6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;7311;25873;133022
+## 6                                                      3646;6124;6125;6132;6135;6146;6156;6158;6165;6181;6188;6192;6194;6205;6217;6218;6223;6227;7311;25873;55802
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            userId
+## 1 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000181163;ENSG00000182899;ENSG00000161016;ENSG00000104408;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000144895;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000174444;ENSG00000147677;ENSG00000116251;ENSG00000130741;ENSG00000221983;ENSG00000130811;ENSG00000100353;ENSG00000071051;ENSG00000178982;ENSG00000084623;ENSG00000142534;ENSG00000177600;ENSG00000129824;ENSG00000173812;ENSG00000198492
+## 2                                                                                                                                                                 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000182899;ENSG00000161016;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000163479;ENSG00000174444;ENSG00000116251;ENSG00000221983;ENSG00000174599;ENSG00000142534;ENSG00000177600;ENSG00000129824
+## 3                                                                                                                                                                                 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000182899;ENSG00000161016;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000174444;ENSG00000116251;ENSG00000221983;ENSG00000174599;ENSG00000142534;ENSG00000177600;ENSG00000129824
+## 4                                                                                                                                                                                 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000182899;ENSG00000161016;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000174444;ENSG00000116251;ENSG00000221983;ENSG00000174599;ENSG00000142534;ENSG00000177600;ENSG00000129824
+## 5                                                                                                                                                                                 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000182899;ENSG00000161016;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000174444;ENSG00000116251;ENSG00000221983;ENSG00000174599;ENSG00000142534;ENSG00000177600;ENSG00000129824
+## 6                                                                                                                                                                 ENSG00000182774;ENSG00000137154;ENSG00000105372;ENSG00000142676;ENSG00000182899;ENSG00000161016;ENSG00000104408;ENSG00000122406;ENSG00000156482;ENSG00000149273;ENSG00000130255;ENSG00000108107;ENSG00000105193;ENSG00000171858;ENSG00000174444;ENSG00000272886;ENSG00000116251;ENSG00000221983;ENSG00000142534;ENSG00000177600;ENSG00000129824</code></pre>
 <p>It looks like some of the top results are pathways associated with ribosomes and translation. Gene sets, particularly GO gene sets that are of a hierarchical nature, are not independent, so it’s important to keep in mind that many of these gene sets could be telling us the same thing.</p>
 <p>In the <code>link</code> column, you can use the links to see more information about a particular GO term. Take a look at the link for the top result, <code>translational initiation</code>: <a href="http://amigo.geneontology.org/amigo/term/GO:0006413" class="uri">http://amigo.geneontology.org/amigo/term/GO:0006413</a></p>
 </div>
@@ -2016,21 +2048,22 @@ sessionInfo()</code></pre>
 ## [1] magrittr_1.5      WebGestaltR_0.4.4 optparse_1.6.6   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         purrr_0.3.4      
-##  [5] lattice_0.20-41   vctrs_0.3.4       generics_0.0.2    htmltools_0.5.0  
-##  [9] getopt_1.20.3     yaml_2.2.1        utf8_1.1.4        rlang_0.4.7      
-## [13] R.oo_1.24.0       pillar_1.4.6      glue_1.4.2        R.utils_2.10.1   
-## [17] gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2       foreach_1.5.0    
-## [21] R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0     R.methodsS3_1.8.1
-## [25] codetools_0.2-16  evaluate_0.14     knitr_1.30        doParallel_1.0.15
-## [29] curl_4.3          parallel_4.0.2    fansi_0.4.1       Rcpp_1.0.5       
-## [33] readr_1.3.1       backports_1.1.10  cpp11_0.2.1       jsonlite_1.7.1   
-## [37] apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3         digest_0.6.25    
-## [41] stringi_1.5.3     dplyr_1.0.2       grid_4.0.2        cli_2.0.2        
-## [45] tools_4.0.2       tibble_3.0.3      whisker_0.4       crayon_1.3.4     
-## [49] pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18     assertthat_0.2.1 
-## [53] rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2        rstudioapi_0.11  
-## [57] iterators_1.0.12  R6_2.4.1          igraph_1.2.5      compiler_4.0.2</code></pre>
+##  [1] styler_1.3.2      tidyselect_1.1.0  xfun_0.17         rematch2_2.1.2   
+##  [5] purrr_0.3.4       lattice_0.20-41   vctrs_0.3.4       generics_0.0.2   
+##  [9] htmltools_0.5.0   getopt_1.20.3     yaml_2.2.1        utf8_1.1.4       
+## [13] rlang_0.4.7       R.oo_1.24.0       pillar_1.4.6      glue_1.4.2       
+## [17] R.utils_2.10.1    gdtools_0.2.2     rngtools_1.5      doRNG_1.8.2      
+## [21] foreach_1.5.0     R.cache_0.14.0    lifecycle_0.2.0   stringr_1.4.0    
+## [25] R.methodsS3_1.8.1 codetools_0.2-16  evaluate_0.14     knitr_1.30       
+## [29] doParallel_1.0.15 curl_4.3          parallel_4.0.2    fansi_0.4.1      
+## [33] Rcpp_1.0.5        readr_1.3.1       backports_1.1.10  cpp11_0.2.1      
+## [37] jsonlite_1.7.1    apcluster_1.4.8   systemfonts_0.3.1 hms_0.5.3        
+## [41] digest_0.6.25     stringi_1.5.3     dplyr_1.0.2       grid_4.0.2       
+## [45] cli_2.0.2         tools_4.0.2       tibble_3.0.3      whisker_0.4      
+## [49] crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.1    Matrix_1.2-18    
+## [53] assertthat_0.2.1  rmarkdown_2.3     svglite_1.2.3.2   httr_1.4.2       
+## [57] rstudioapi_0.11   iterators_1.0.12  R6_2.4.1          igraph_1.2.5     
+## [61] compiler_4.0.2</code></pre>
 <div id="refs" class="references">
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: current approaches and outstanding challenges. PLoS Comput. Biol. 8: e1002375.</p>
