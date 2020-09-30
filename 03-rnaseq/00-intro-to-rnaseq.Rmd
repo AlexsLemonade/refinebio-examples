@@ -36,6 +36,8 @@ RNA-sequencing measures gene expression by direct high-throughput sequencing met
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/rnaseq-overview.png" width=400>  
 
+[@rnaseq-blog]
+
 As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions. 
 
 ### RNA-seq data **strengths**  
