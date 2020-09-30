@@ -29,6 +29,9 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 Microarrays measure gene expression using chips filled with probes designed to hybridize to RNA samples that have been reverse transcribed to cDNA. 
 Bound probes give off fluorescence the intensity of which indicates the number of probes bound and therefore the relative quantity of the transcript the probe is designed for. 
 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/microarray-overview.jpg" width=400>  
+
+[@microarraaay-video]
 
 As with all experimental methods, microarray has strengths and limitations that you should consider in regards to your scientific questions. 
 
