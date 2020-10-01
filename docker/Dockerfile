@@ -41,6 +41,7 @@ RUN Rscript -e  "install.packages( \
       'RColorBrewer', \
       'rprojroot', \
       'viridis', \
+      'spelling', \
       'styler'))"
 
 ##########################
