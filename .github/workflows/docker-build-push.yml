@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       # Test if Dockerfile has changed 
-      # sets steps.check_docker.outputs.changed to 1 if the dockerfile has changed, 0 otherwise
+      # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
       - name: Check Dockerfile for changes
         id: check_docker
         env:
@@ -75,7 +75,6 @@ jobs:
           git add \*.html
           git commit -m 'Render Rmd to html' || echo "No changes to commit"
           git push origin || echo "No changes to push"
-
 
 
 
