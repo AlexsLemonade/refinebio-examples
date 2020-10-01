@@ -45,7 +45,6 @@ RUN Rscript -e  "install.packages( \
       'viridis', \
       'styler'))"
 
-##########################
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
 RUN R -e "BiocManager::install( \
@@ -73,7 +72,6 @@ RUN Rscript -e  "install.packages( \
       'umap', \
       'VennDiagram'))"
 
-##########################
 # Install packages from github
 # Need this package to make plots colorblind friendly
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
@@ -91,7 +89,6 @@ RUN pip3 install \
     "python-dateutil==2.8.1" \
     "pytz==2020.1" \
     "snakemake==5.20.1"
-
 
 # set final workdir for commands
 WORKDIR /home/rstudio
