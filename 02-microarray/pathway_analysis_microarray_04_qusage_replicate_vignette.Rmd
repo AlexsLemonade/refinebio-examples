@@ -75,7 +75,7 @@ data_dir <- "data"
 ### Gene sets
 
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
-[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers genesets in this format.
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
 
 We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs and placed them at the following relative path:
 
