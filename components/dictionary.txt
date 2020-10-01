@@ -1,7 +1,6 @@
 actin
 ADT
 al
-al.
 AML
 AnaLysis
 ASXL
@@ -34,7 +33,7 @@ devtools
 DGE
 directionality
 DocToc
-Dorsoventral
+dorsoventral
 ECM
 edgeR
 edgeR's
@@ -44,12 +43,10 @@ Ensembl
 ENSG
 Entrez
 et
-et.
 FACS
 functionalize
 FPKM
 GEne
-genesets
 generalizable
 ggplot
 GitHub
@@ -68,7 +65,7 @@ Illumina
 IRF
 isoform
 isoforms
-jpeg
+JPEG
 KEGG
 limma
 logFC
@@ -85,12 +82,11 @@ orthology
 overexpressing
 overexpression
 pheatmap
-PLoS
+PLOS
 PLX
 PNAS
 PNG
 polymerase
-probesets
 prostatectomy
 PRPS
 pre

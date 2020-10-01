@@ -180,13 +180,16 @@ This will help fix some spacing and formatting issues automatically.
 #### Formatting of typical words/items:
 
   - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
-  - Use "IDs" or "ID", NOT ids/id or Ids/Ids
+  - Use et al., NOT et. al. 
+  - Use "gene sets", NOT "genesets"
+  - Use "IDs" or "ID", NOT "ids"/"id" or "Ids"/"Ids"
   - Use "NA" or "NAs", NOT na/nas or Na or `NA` or `NA`s or NA's
   - Use "PNG", NOT png or `png` or .png (and etc.)
+  - Use "probe sets", NOT "probesets"
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
   - Use "tidyverse", NOT "Tidyverse"
-  - Use "TSV",  NOT tsv or `tsv` or .tsv
+  - Use "TSV",  NOT "tsv" or `tsv` or ".tsv"
 
   - **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
   Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  

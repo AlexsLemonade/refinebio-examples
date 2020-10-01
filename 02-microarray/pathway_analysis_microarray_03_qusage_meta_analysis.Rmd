@@ -21,7 +21,7 @@ If we're interested in pathway analysis of multiple datasets, QuSAGE allows
 us to perform a _meta-analysis_ by combining distributions from the QuSAGE 
 results from each dataset.
 Meta-analysis with QuSAGE is described in 
-[ et al. _PLoS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)
+[ et al. _PLOS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)
 and implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html). 
 The [`qusage` vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf)
 contains a section on meta-analysis.

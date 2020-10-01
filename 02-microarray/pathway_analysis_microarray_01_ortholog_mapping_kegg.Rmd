@@ -1,6 +1,6 @@
 ---
 title: "KEGG pathways: mapping to mouse orthologs with `hcop`"
-output: 
+output:
   html_notebook:
     toc: TRUE
     toc_float: TRUE
@@ -15,8 +15,8 @@ for pathway analysis (implemented in the [`qusage` bioconductor package](https:/
 
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
 
-[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers genesets in this format.
-[Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2) 
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
+[Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2)
 such as [KEGG](https://www.genome.jp/kegg/) are a good starting point for any pathway analysis.
 
 However, MSigDB only distributes human pathways.
@@ -24,7 +24,7 @@ If we want to use KEGG Pathways with another species without going through
 [KEGG Orthology](https://www.genome.jp/kegg/ko.html), we need to map to
 orthologs ourselves.
 
-We'll use the [`hcop` package](https://github.com/stephenturner/hcop) to do 
+We'll use the [`hcop` package](https://github.com/stephenturner/hcop) to do
 this.
 If you're looking for a little bit more background information (like if you
 run into trouble installing `hcop`), check out the notebook in our
@@ -150,7 +150,7 @@ mouse_ortholog_df %>%
   )
 ```
 
-We can see that the human gene _PRPS1_/`5631` maps to 4 mouse genes, one of 
+We can see that the human gene _PRPS1_/`5631` maps to 4 mouse genes, one of
 which has 10 resources supporting that mapping.
 
 ```{r}
@@ -212,7 +212,7 @@ Briefly, the GMT format has one pathway per line and it follows this pattern:
 <PATHWAY_NAME>\t<PATHWAY_DESCRIPTION>\t<gene_1_in_pathway>...<gene_n_in_pathway>
 ```
 
-We've lost the description information because it's removed by 
+We've lost the description information because it's removed by
 `qusage::read.gmt`.
 The description in `r kegg_file` follows this pattern:
 

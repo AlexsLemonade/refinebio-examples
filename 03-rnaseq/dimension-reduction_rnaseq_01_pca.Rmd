@@ -122,7 +122,7 @@ Your new analysis folder should contain:
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using):
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/analysis-folder-structure.png" width=400>
 

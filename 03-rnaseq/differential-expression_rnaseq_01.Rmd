@@ -117,7 +117,7 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)
 - A folder for `results` (currently empty)
 
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
@@ -340,7 +340,7 @@ Using `lfcShrink()` can help decrease noise and preserve large differences betwe
 ```{r}
 deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object with DESeq() already having been ran
   coef = 2, # This is based on what log fold change coefficient was used in DESeq(), the default is 2.
-  res = deseq_results # This needs to be the DESeq results table
+  res = deseq_results # This needs to be the DESeq2 results table
 )
 ```
 

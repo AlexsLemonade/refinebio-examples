@@ -169,7 +169,7 @@ Let's pick a probe from the results to double check our output.
 stats[32, ]
 ```
 
-According to the data above, we should see that Affymetrix probe id `8154846` should
+According to the data above, we should see that Affymetrix probe ID `8154846` should
 be higher in `SHH` group data than in `NonSHH` group data.
 Let's extract this data and make a boxplot to check if that is what we see.
 

@@ -26,7 +26,7 @@ If you are interested in performing pathway analysis on a small study, ORA may
 be your best bet.
 There are some limitations to ORA methods to be aware such as ignoring
 gene-gene correlation.
-See [ et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375)
+See [ et al. _PLOS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375)
 to learn more about the different types of pathway analysis and their
 limitations.
 

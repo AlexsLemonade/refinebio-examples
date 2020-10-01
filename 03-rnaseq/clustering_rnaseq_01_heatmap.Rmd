@@ -117,7 +117,7 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)
 - A folder for `results` (currently empty)
 
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
@@ -313,7 +313,7 @@ We've created a heatmap but although our genes and samples are clustered, there 
 First let's save our clustered heatmap.
 
 ### Save heatmap as a PNG 
-You can easily switch this to save to a jpeg or tiff by changing the function and file name within the function to the respective file suffix.
+You can easily switch this to save to a JPEG or tiff by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
 # Open a PNG file

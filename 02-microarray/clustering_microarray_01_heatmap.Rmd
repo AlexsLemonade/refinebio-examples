@@ -112,7 +112,7 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
 
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using):
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
