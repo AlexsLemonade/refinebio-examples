@@ -180,7 +180,8 @@ This will help fix some spacing and formatting issues automatically.
 #### Formatting of typical words/items:
 
   - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
-  - Use et al., NOT et. al. 
+  - Use _e.g._, NOT "eg" or "_eg_" or "e.g."
+  - Use et al., NOT et. al.
   - Use "gene sets", NOT "genesets"
   - Use "IDs" or "ID", NOT "ids"/"id" or "Ids"/"Ids"
   - Use "NA" or "NAs", NOT na/nas or Na or `NA` or `NA`s or NA's

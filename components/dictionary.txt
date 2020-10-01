@@ -37,7 +37,7 @@ dorsoventral
 ECM
 edgeR
 edgeR's
-eg
+e.g.
 ENSDARG
 Ensembl
 ENSG

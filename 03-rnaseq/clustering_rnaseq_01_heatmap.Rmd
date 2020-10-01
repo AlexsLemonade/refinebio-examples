@@ -271,7 +271,7 @@ dds_norm <- rlog(dds)
 ## Choose genes of interest
 
 Although you may want to create a heatmap including all of the genes in the set, alternatively, the heatmap could be created using only genes of interest.
-For this example, we will sort genes by variance, but there are many alternative criterion by which you may want to sort your genes <i>eg</i> fold change, t-statistic, membership to a particular gene ontology, so on. 
+For this example, we will sort genes by variance, but there are many alternative criterion by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership to a particular gene ontology, so on. 
 
 ```{r}
 # Calculate the variance for each gene
