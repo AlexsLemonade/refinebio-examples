@@ -276,7 +276,7 @@ We are going to use the `vst()` function from the `DESeq2` package to normalize 
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
 ```{r}
-# Normalize the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+# Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
 dds_norm <- vst(dds)
 ```
 

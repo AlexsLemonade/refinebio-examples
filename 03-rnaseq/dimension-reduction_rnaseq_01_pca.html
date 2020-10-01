@@ -1666,7 +1666,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">PCA Visualization - RNA-seq</h1>
 <h4 class="author">CCDL for ALSF</h4>
-<h4 class="date">September 2020</h4>
+<h4 class="date">October 2020</h4>
 
 </div>
 
@@ -1939,7 +1939,7 @@ dds &lt;- dds[genes_to_keep, ]</code></pre>
 <div id="perform-deseq2-normalization-and-transformation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Perform DESeq2 normalization and transformation</h2>
 <p>We are going to use the <code>vst()</code> function from the <code>DESeq2</code> package to normalize and transform the data. For more information about these transformation methods, <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">see here</a>.</p>
-<pre class="r"><code># Normalize the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+<pre class="r"><code># Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
 dds_norm &lt;- vst(dds)</code></pre>
 </div>
 <div id="create-pca-plot-using-deseq2" class="section level2">
