@@ -10,7 +10,7 @@ date: 2019
 
 ## Background
 
-Here, we will replicate the [`qusage` package vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf) (Bolen C.).
+Here, we will replicate the [`qusage` package vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf) ( C.).
 Specifically, we'll use the same dataset and analysis as the vignette, but the 
 expression data and sample metadata we will use is processed with refine.bio.
 This allows us to explore formatting refine.bio datasets for use with 

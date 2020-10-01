@@ -1666,7 +1666,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Clustering Data - Microarray</h1>
 <h4 class="author">CCDL for ALSF</h4>
-<h4 class="date">September 2020</h4>
+<h4 class="date">October 2020</h4>
 
 </div>
 
@@ -1737,7 +1737,7 @@ if (!dir.exists(results_dir)) {
 <h2><span class="header-section-number">2.6</span> Check out our file structure!</h2>
 <p>Your new analysis folder should contain:</p>
 <ul>
-<li>The example analysis Rmd you downloaded<br />
+<li>The example analysis <code>.Rmd</code> you downloaded<br />
 </li>
 <li>A folder called “data” which contains:
 <ul>
@@ -1910,7 +1910,7 @@ heatmap &lt;-
 <div id="save-heatmap-as-a-png" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Save heatmap as a PNG</h3>
 <p>You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.</p>
-<pre class="r"><code># Open a png file
+<pre class="r"><code># Open a PNG file
 png(file.path(
   plots_dir,
   &quot;GSE24862_heatmap_non_annotated.png&quot; # Replace file name with a relevant output plot name
@@ -1919,7 +1919,7 @@ png(file.path(
 # Print your heatmap
 heatmap
 
-# Close the png file:
+# Close the PNG file:
 dev.off()</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
@@ -1982,7 +1982,7 @@ png(file.path(
 # Print your heatmap
 heatmap_annotated
 
-# Close the png file:
+# Close the PNG file:
 dev.off()</code></pre>
 <pre><code>## png 
 ##   2</code></pre>
@@ -1998,7 +1998,7 @@ dev.off()</code></pre>
 </div>
 <div id="print-session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Print session info</h1>
-<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
+<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)

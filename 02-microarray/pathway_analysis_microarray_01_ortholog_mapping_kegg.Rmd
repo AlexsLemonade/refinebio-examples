@@ -10,7 +10,7 @@ date: 2019
 
 ## Background
 
-In this module, we use QuSAGE ([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660))
+In this module, we use QuSAGE ([](https://doi.org/10.1093/nar/gkt660))
 for pathway analysis (implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html)).
 
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).

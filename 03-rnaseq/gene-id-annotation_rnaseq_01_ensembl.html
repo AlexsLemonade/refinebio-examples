@@ -1666,7 +1666,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Obtaining Annotation for Ensembl IDs - RNA-seq</h1>
 <h4 class="author">CCDL for ALSF</h4>
-<h4 class="date">September 2020</h4>
+<h4 class="date">October 2020</h4>
 
 </div>
 
@@ -1960,7 +1960,7 @@ summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function
 ##         2         2         2         2         2         2         2         2 
 ##    569452    570815   (Other)      NA&#39;s 
 ##         2         2     22821      9102</code></pre>
-<p>There are 9102 NA’s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
+<p>There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <pre class="r"><code>multi_mapped_df &lt;- mapped_df %&gt;%
   # Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column
@@ -2094,7 +2094,7 @@ readr::write_tsv(final_mapped_df, file.path(
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
-<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
+<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
@@ -2131,9 +2131,9 @@ sessionInfo()</code></pre>
 ## [25] knitr_1.30        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
 ## [29] tidyselect_1.1.0  bit64_4.0.5       getopt_1.20.3     glue_1.4.2       
 ## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2      
-## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       rematch2_2.1.2   
-## [41] backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
-## [45] utf8_1.1.4        stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
+## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       backports_1.1.10 
+## [41] ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1  utf8_1.1.4       
+## [45] stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish</p>

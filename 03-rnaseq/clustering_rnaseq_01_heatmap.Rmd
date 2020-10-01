@@ -109,7 +109,7 @@ Copy and paste the `SRP070849` folder into your newly created `data/` folder.
 
 Your new analysis folder should contain: 
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `SRP070849` folder which contains:
     - The gene expression  
@@ -312,12 +312,11 @@ We've created a heatmap but although our genes and samples are clustered, there 
 
 First let's save our clustered heatmap.
 
-### Save heatmap as a png
-
+### Save heatmap as a PNG 
 You can easily switch this to save to a jpeg or tiff by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
-# Open a png file
+# Open a PNG file
 png(file.path(
   plots_dir,
   "SRP070849_heatmap_non_annotated.png" # Replace file name with a relevant output plot name
@@ -326,7 +325,7 @@ png(file.path(
 # Print your heatmap
 pheatmap
 
-# Close the png file:
+# Close the PNG file:
 dev.off()
 ```
 
@@ -334,7 +333,7 @@ Now, let's add some annotation bars to our heatmap.
 
 ## Prepare metadata for annotation
 
-From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). [@Shih2017]
+From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we know that the mice with `IDH2` mutant AML were treated with vehicle or AG-221 (the first small molecule in-vivo inhibitor of IDH2 to enter clinical trials) and the mice with `TET2` mutant AML were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent). [@Shih2017]
 We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.
 
 ```{r}
@@ -387,8 +386,7 @@ Now that we have annotation bars on our heatmap, we have a better idea of the sa
 
 Let's save our annotated heatmap.
 
-### Save annotated heatmap as a png
-
+### Save annotated heatmap as a PNG 
 You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
@@ -401,7 +399,7 @@ png(file.path(
 # Print your heatmap
 pheatmap_annotated
 
-# Close the png file:
+# Close the PNG file:
 dev.off()
 ```
 
@@ -413,7 +411,7 @@ dev.off()
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info

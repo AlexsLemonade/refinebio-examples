@@ -64,7 +64,7 @@ Login to the RStudio server with the username `rstudio` and the password you set
 ### Docker image updates
 
 All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
-Successful building of the `Dockerfile` will also be checked when the PR is filed by Github Actions.
+Successful building of the `Dockerfile` will also be checked when the PR is filed by GitHub Actions.
 
 In the `refinebio-examples` repository:
 ```
@@ -261,9 +261,9 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using Github actions upon opening a PR for master or prior to merging to master.
-Github actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
-You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
+Spell checks are run automatically using GitHub actions upon opening a PR for master or prior to merging to master.
+GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
+You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
 Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
 Alternatively, click on the "Check on spell check results" step in the workflow log to see the misspellings.

@@ -455,7 +455,7 @@ You can take your results from this example and make a heatmap following our hea
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info

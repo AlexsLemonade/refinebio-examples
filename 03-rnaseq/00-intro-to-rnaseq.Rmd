@@ -68,7 +68,7 @@ See here for more about the [quantile normalization process in refine.bio](http:
 
 ### More resources on RNA-seq technology 
 
-- [StatsQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY) [@Starmer2017-rnaseq].
+- [StatQuest: A gentle introduction to RNA-seq](https://www.youtube.com/watch?v=tlf6wYJrwKY) [@Starmer2017-rnaseq].
 - [A general background on the wet lab methods of RNA-seq](https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/) [@Hadfield2016].
 - [Modeling of RNA-seq fragment sequence bias reduces systematic errors in transcript abundance estimation](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5143225/) [@Love2016].
 - [Mike Love blog post about sequencing biases]( https://mikelove.wordpress.com/2016/09/26/rna-seq-fragment-sequence-bias/) [@bias-blog]
@@ -96,7 +96,7 @@ Which is why our examples advise downloading [non-quantile normalized](#about-qu
 Our examples recommend using DESeq2 for normalizing your RNA-seq data. 
 You may have heard about or worked with FPKM, TPM, RPKMs; how does DESeq2's normalization compare? 
 This [handy table from an online Harvard Bioinformatics Core course nicely summarizes and compares these different methods](https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html#common-normalization-methods) [@dge-workshop-deseq2].
-For more about the steps behind DESeq2 normalization, we highly recommend this [StatsQuest video](https://www.youtube.com/watch?v=UFB993xufUU) which explains it quite nicely [@Starmer2017-deseq2]. 
+For more about the steps behind DESeq2 normalization, we highly recommend this [StatQuest video](https://www.youtube.com/watch?v=UFB993xufUU) which explains it quite nicely [@Starmer2017-deseq2]. 
 
 To normalize and transform our data with DESeq2, we generally use `vst()` (variance stabilizing transformation) or `rlog()` (regularized logarithm transformation). 
 [Both methods are very similar](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog). 
@@ -106,7 +106,7 @@ If you end up using a larger dataset and `rlog()` transformation takes a bit too
 
 ### Further resources for DESeq2
 
-- [StatsQuest: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU) [@Starmer2017-deseq2].
+- [StatQuest: DESeq2, part 1, Library Normalization](https://www.youtube.com/watch?v=UFB993xufUU) [@Starmer2017-deseq2].
 - [DESeq2 vignette: Analyzing RNA-seq data with DESeq2](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) [@Love2014].
 - [Beginner's guide to DESeq2](Bhttps://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf) [@Love2014-guide].
 - [Introduction to DGE - Count Normalization](https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html) [@dge-workshop-count-normalization]

@@ -275,7 +275,7 @@ Let's get a summary of the values returned in the `Entrez` column of our mapped 
 summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned
 ```
 
-There are 9102 NA's in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs.
+There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs.
 This means if you are depending on `Entrez` IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.
 
 Now let's check to see how many genes we have that were mapped to multiple IDs.
@@ -376,7 +376,7 @@ readr::write_tsv(final_mapped_df, file.path(
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info
