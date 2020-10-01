@@ -219,11 +219,12 @@ df <- df %>%
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
 ```{r}
-# Let's take a look at the first 6 items in the first column of `df`
-head(df[, 1])
+# Let's take a look at the first 6 items in the `Gene` column of `df`
+head(df$Gene)
 ```
 
-In zebrafish, Ensembl gene identifiers begin with `ENSDARG`.
+Enembl gene identifiers have different species-specific prefixes. 
+In zebrafish, Ensembl gene identifiers begin with `ENSDARG` (in human, `ENSG`, etc.).
 
 Now let's do the conversion!
 We'll use the `zebrafish` data from `hcop`; this is what `zebrafish` looks like.
@@ -235,106 +236,121 @@ zebrafish
 We're interested in the `human_symbol` and `zebrafish_ensembl` columns specifically.
 
 ```{r}
-human_symbol_df <- zebrafish %>%
+human_zebrafish_key <- zebrafish %>%
   # we'll want to subset zebrafish to only the columns we're interested in
-  dplyr::select(zebrafish_ensembl, human_symbol) %>%
-  # only retain the genes from the expression matrix that are in zebrafish data
-  dplyr::inner_join(df, by = c("zebrafish_ensembl" = "Gene"))
+  dplyr::select(zebrafish_ensembl, human_symbol)
+
+# Now let's join the expression data from `df` for the subset of genes in `df`
+human_zebrafish_mapped_df <- df %>%
+  dplyr::left_join(human_zebrafish_key, by = c("Gene" = "zebrafish_ensembl"))
 ```
 
 Here's what the new data frame looks like:
 
 ```{r}
-head(human_symbol_df, 25)
+head(human_zebrafish_mapped_df, n = 25)
 ```
 
 Let's get a summary of the gene symbols returned in the `human_symbol` column of our mapped data frame.
 
 ```{r}
-# We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
-summary(as.factor(human_symbol_df$human_symbol)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned
+# We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+human_zebrafish_mapped_df %>%
+  dplyr::group_by(human_symbol) %>%
+  dplyr::count() %>%
+  # Sort by highest `n` which would be the human gene symbol with the most mapped zebrafish Ensembl IDs
+  dplyr::arrange(desc(n))
 ```
 
 Looks like we have mapped symbols!
-It does not explicitly tell us if we have IDs that did not map to symbols, which would result in NAs so let's explore to find out if we do have any.
+We also have 415 NAs, which is okay, because we do not expect everything to map across species.
+
+## Sort out multi mappings
+
+* Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols.
+Some downstream tools may require the data be simplified to 1:1 mappings.
+Using another gene identifier may result in a better 1:1 ratio to the zebrafish Ensembl IDs, i.e. human Ensembl IDs instead of human gene symbols.
+See our [gene ID annotation microarray notebook](https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html) for an example of mapping between gene identifiers.
+
+* If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+Let's look at the `ENSDARG00000069142` example below.
 
 ```{r}
-any(is.na(human_symbol_df$human_symbol)) # Logical statement to check if there are any NAs in the `human_symbol` column of our mapped data frame
+human_zebrafish_mapped_df %>%
+  dplyr::filter(Gene == "ENSDARG00000069142") %>%
+  dplyr::select(Gene, human_symbol, dplyr::everything())
 ```
 
-There are no NAs!
-This means that all of our zebrafish Ensembl IDs mapped to at least one human gene symbol!
-This is exciting because it is not always the case everything maps across species and that is okay.
+* On the other, if a human gene symbol maps to multiple zebrafish Ensembl IDs, the gene expression values do not necessarily get duplicated.
+Let's look at the `A1BG` example below.
 
-However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
+```{r}
+human_zebrafish_mapped_df %>%
+  dplyr::filter(human_symbol == "MATR3") %>%
+  dplyr::select(Gene, human_symbol, dplyr::everything())
+```
 
-## Write results to file
+## Collapse multiple mapped human gene symbols
+
+We can collapse the multi-mapped values into a list for each Ensembl ID or we can keep it in the format above with one row for each mapped ID (resulting in duplicated rows for some Ensembl IDs).
+
+In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique zebrafish Ensembl ID.
+
+```{r}
+collapsed_human_symbol_df <- human_zebrafish_mapped_df %>%
+  # Group by Ensembl IDs
+  dplyr::group_by(Gene) %>%
+  # Collapse the mapped values in `human_zebrafish_mapped_df` into one column named `all_human_symbols`
+  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
+  # Now we need get the gene expression data back
+  dplyr::left_join(df, by = "Gene")
+
+head(collapsed_human_symbol_df)
+```
+
+### Write results to file
 
 Now let's write our results to file.
 
 ```{r}
 readr::write_tsv(
-  human_symbol_df,
+  collapsed_human_symbol_df,
   file.path(
     results_dir,
-    "GSE71270_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+    "GSE71270_zebrafish_ensembl_to_collapsed_human_gene_symbol.tsv" # Replace with a relevant output file name
   )
 )
 ```
 
-*Some things to note:*
-
-* Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols.
-Some downstream tools may need this to be resolved.
-One way to resolve this may be to map to a different gene identifier.
-See our [gene ID annotation microarray notebook](https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html) for an example of mapping between gene identifiers.
-* If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
-Let's look at the `ENSDARG00000069142` example below.
-
-```{r}
-human_symbol_df %>%
-  dplyr::filter(zebrafish_ensembl == "ENSDARG00000069142")
-```
-
-We can collapse the multi-mapped values into a list for each Ensembl ID or we can keep it in the format above with one row for each mapped ID (resulting in duplicated rows for some Ensembl IDs).
-
-## Collapse mapped values
-
-In the next chunk, we show how we can collapse all the symbols into one column where we store them all for each unique Ensembl ID.
-
-```{r}
-collapsed_symbol_df <- human_symbol_df %>%
-  # Group by Ensembl IDs
-  dplyr::group_by(zebrafish_ensembl) %>%
-  # Collapse the mapped values in `human_symbol_df` into one column named `all_human_symbols`
-  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";"))
-
-head(collapsed_symbol_df)
-```
+## Collapse multiple mapped zebrafish Ensembl IDs
 
 Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
 
+A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
+Therefore, we will not add the expression data here since the expression values are not
+the same across Ensembl IDs, despite mapping to the same human gene symbol.
+
 ```{r}
-collapsed_ensembl_df <- human_symbol_df %>%
+collapsed_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
   # Group by human gene symbols
   dplyr::group_by(human_symbol) %>%
-  # Collapse the Ensembl IDs in `human_symbol_df` into one column named `all_zebrafish_ensembl_ids`
-  dplyr::summarize(all_zebrafish_ensembl_ids = paste(zebrafish_ensembl, collapse = ";"))
+  # Collapse the Ensembl IDs in `human_zebrafish_mapped_df` into one column named `all_zebrafish_ensembl_ids`
+  dplyr::summarize(all_zebrafish_ensembl_ids = paste(Gene, collapse = ";"))
 
-head(collapsed_ensembl_df)
+head(collapsed_zebrafish_ensembl_df)
 ```
-The final format in which you save your results data frame largely depends on your question and the downstream analyses/tools that you would like to implement.
 
-## Write collapsed results to file
 
-We are going to save the results data frame where we have collapsed human gene symbols into one column for each unique zebrafish Ensembl ID.
+### Write results to file
+
+Now let's write our list of collapsed zebrafish Ensembl IDs for each unique human gene symbol to file.
 
 ```{r}
 readr::write_tsv(
-  collapsed_symbol_df,
+  collapsed_zebrafish_ensembl_df,
   file.path(
     results_dir,
-    "GSE71270_collapsed_ensembl_to_human_gene_symbol.tsv" # Replace with a relevant output file name
+    "GSE71270_collapsed_zebrafish_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
   )
 )
 ```
@@ -342,6 +358,7 @@ readr::write_tsv(
 # Resources for further learning
 
 - [HCOP: the HGNC comparison of orthology predictions search tool](https://pubmed.ncbi.nlm.nih.gov/16284797/) [@Wright2005]
+- See our [RNA-seq ortholog mapping notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.Rmd) as another applicable example, since the steps for this workflow do not change with technology. 
 
 # Session info
 

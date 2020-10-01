@@ -1666,7 +1666,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Ortholog Mapping with <code>hcop</code> - Microarray</h1>
 <h4 class="author">CCDL for ALSF</h4>
-<h4 class="date">September 2020</h4>
+<h4 class="date">October 2020</h4>
 
 </div>
 
@@ -1722,8 +1722,7 @@ if (!dir.exists(results_dir)) {
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
-<p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process">CREB overexpression zebrafish dataset</a>, which contains 10 samples.</p>
-<p><span class="citation">Tregnago <em>et al.</em> (2016)</span> measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.</p>
+<p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process">CREB overexpression zebrafish dataset</a>. <span class="citation">Tregnago <em>et al.</em> (2016)</span> measured microarray gene expression of ten zebrafish samples, five overexpressing human CREB, as well as five control samples.</p>
 </div>
 <div id="place-the-dataset-in-your-new-data-folder" class="section level2">
 <h2><span class="header-section-number">2.5</span> Place the dataset in your new <code>data/</code> folder</h2>
@@ -1863,11 +1862,11 @@ df &lt;- df %&gt;%
 <div id="mapping-zebrafish-ensembl-gene-ids-to-human-symbols" class="section level2">
 <h2><span class="header-section-number">4.3</span> Mapping zebrafish Ensembl gene IDs to human symbols</h2>
 <p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
-<pre class="r"><code># Let&#39;s take a look at the first 6 items in the first column of `df`
-head(df[, 1])</code></pre>
+<pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
+head(df$Gene)</code></pre>
 <pre><code>## [1] &quot;ENSDARG00000000018&quot; &quot;ENSDARG00000000019&quot; &quot;ENSDARG00000000068&quot;
 ## [4] &quot;ENSDARG00000000069&quot; &quot;ENSDARG00000000103&quot; &quot;ENSDARG00000000151&quot;</code></pre>
-<p>In zebrafish, Ensembl gene identifiers begin with <code>ENSDARG</code>.</p>
+<p>Enembl gene identifiers have different species-specific prefixes. In zebrafish, Ensembl gene identifiers begin with <code>ENSDARG</code> (in human, <code>ENSG</code>, etc.).</p>
 <p>Now let’s do the conversion! We’ll use the <code>zebrafish</code> data from <code>hcop</code>; this is what <code>zebrafish</code> looks like.</p>
 <pre class="r"><code>zebrafish</code></pre>
 <pre><code>## # A tibble: 115,166 x 9
@@ -1886,152 +1885,229 @@ head(df[, 1])</code></pre>
 ## # … with 115,156 more rows, and 4 more variables: zebrafish_entrez &lt;int&gt;,
 ## #   human_name &lt;chr&gt;, zebrafish_name &lt;chr&gt;, support &lt;chr&gt;</code></pre>
 <p>We’re interested in the <code>human_symbol</code> and <code>zebrafish_ensembl</code> columns specifically.</p>
-<pre class="r"><code>human_symbol_df &lt;- zebrafish %&gt;%
+<pre class="r"><code>human_zebrafish_key &lt;- zebrafish %&gt;%
   # we&#39;ll want to subset zebrafish to only the columns we&#39;re interested in
-  dplyr::select(zebrafish_ensembl, human_symbol) %&gt;%
-  # only retain the genes from the expression matrix that are in zebrafish data
-  dplyr::inner_join(df, by = c(&quot;zebrafish_ensembl&quot; = &quot;Gene&quot;))</code></pre>
+  dplyr::select(zebrafish_ensembl, human_symbol)
+
+# Now let&#39;s join the expression data from `df` for the subset of genes in `df`
+human_zebrafish_mapped_df &lt;- df %&gt;%
+  dplyr::left_join(human_zebrafish_key, by = c(&quot;Gene&quot; = &quot;zebrafish_ensembl&quot;))</code></pre>
 <p>Here’s what the new data frame looks like:</p>
-<pre class="r"><code>head(human_symbol_df, 25)</code></pre>
-<pre><code>## # A tibble: 25 x 12
-##    zebrafish_ensem… human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
-##    &lt;chr&gt;            &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-##  1 ENSDARG00000041… A2M              -0.108   -0.198       0.0383    -0.0880
-##  2 ENSDARG00000008… A2M              -0.170    0.965      -0.113      0.436 
-##  3 ENSDARG00000078… A2M              -0.137   -0.243      -0.182     -0.191 
-##  4 ENSDARG00000074… A2M              -0.281    0.157      -0.0485     0.345 
-##  5 ENSDARG00000041… A2ML1            -0.108   -0.198       0.0383    -0.0880
-##  6 ENSDARG00000008… A2ML1            -0.170    0.965      -0.113      0.436 
-##  7 ENSDARG00000078… A2ML1            -0.137   -0.243      -0.182     -0.191 
-##  8 ENSDARG00000074… A2ML1            -0.281    0.157      -0.0485     0.345 
-##  9 ENSDARG00000102… AAAS              0.138    0.112       0.0984     0.0643
-## 10 ENSDARG00000012… AACS             -0.166    0.00462     0.0464     0.227 
-## # … with 15 more rows, and 6 more variables: GSM1831684 &lt;dbl&gt;,
-## #   GSM1831681 &lt;dbl&gt;, GSM1831679 &lt;dbl&gt;, GSM1831676 &lt;dbl&gt;, GSM1831682 &lt;dbl&gt;,
-## #   GSM1831683 &lt;dbl&gt;</code></pre>
+<pre class="r"><code>head(human_zebrafish_mapped_df, n = 25)</code></pre>
+<pre><code>##                  Gene   GSM1831675  GSM1831677  GSM1831680  GSM1831678
+## 1  ENSDARG00000000018  0.517670753  0.35842940  0.63073566  0.61292939
+## 2  ENSDARG00000000019  0.277703590  0.32893008  0.71364377  0.19725973
+## 3  ENSDARG00000000068  1.717454760  1.94375581  1.45578401  1.43987504
+## 4  ENSDARG00000000068  1.717454760  1.94375581  1.45578401  1.43987504
+## 5  ENSDARG00000000069  0.759764255  0.93489218  1.21284010  0.71364377
+## 6  ENSDARG00000000103  0.637398537  0.29535821  0.15907420  0.44848868
+## 7  ENSDARG00000000103  0.637398537  0.29535821  0.15907420  0.44848868
+## 8  ENSDARG00000000103  0.637398537  0.29535821  0.15907420  0.44848868
+## 9  ENSDARG00000000151  0.315776447  0.26964895  0.15400521  0.14656368
+## 10 ENSDARG00000000151  0.315776447  0.26964895  0.15400521  0.14656368
+## 11 ENSDARG00000000161 -0.216037963 -0.14677372 -0.26589953 -0.26329751
+## 12 ENSDARG00000000161 -0.216037963 -0.14677372 -0.26589953 -0.26329751
+## 13 ENSDARG00000000175  0.008775981  0.05290532 -0.18556095 -0.09942205
+## 14 ENSDARG00000000175  0.008775981  0.05290532 -0.18556095 -0.09942205
+## 15 ENSDARG00000000183 -0.059098517 -0.13752464  0.02049271 -0.10902348
+## 16 ENSDARG00000000183 -0.059098517 -0.13752464  0.02049271 -0.10902348
+## 17 ENSDARG00000000229 -0.281377279 -0.28738544 -0.36246941 -0.29534542
+## 18 ENSDARG00000000229 -0.281377279 -0.28738544 -0.36246941 -0.29534542
+## 19 ENSDARG00000000241  1.119281296  0.81578295  1.53586371  0.87918037
+## 20 ENSDARG00000000380 -0.189654060 -0.14947385 -0.27637856 -0.27550894
+## 21 ENSDARG00000000380 -0.189654060 -0.14947385 -0.27637856 -0.27550894
+## 22 ENSDARG00000000380 -0.189654060 -0.14947385 -0.27637856 -0.27550894
+## 23 ENSDARG00000000394  1.227190101  1.50293221  1.26390113  1.21600126
+## 24 ENSDARG00000000394  1.227190101  1.50293221  1.26390113  1.21600126
+## 25 ENSDARG00000000394  1.227190101  1.50293221  1.26390113  1.21600126
+##     GSM1831684  GSM1831681  GSM1831679  GSM1831676  GSM1831682  GSM1831683
+## 1   0.76406550  0.70469629  0.41969729  0.43419316  0.83722430  0.66800742
+## 2   0.89630771  0.82899513  0.43989193  0.61531854  0.87118805  0.81762658
+## 3   1.08587796  1.54498010  1.83859688  1.53342370  1.11883428  1.39279199
+## 4   1.08587796  1.54498010  1.83859688  1.53342370  1.11883428  1.39279199
+## 5   1.06765088  0.95821499  0.93668421  0.81824026  1.01935888  1.11473509
+## 6   0.24625466  0.36871311  0.42069631  0.58157993  0.28607316  0.20220976
+## 7   0.24625466  0.36871311  0.42069631  0.58157993  0.28607316  0.20220976
+## 8   0.24625466  0.36871311  0.42069631  0.58157993  0.28607316  0.20220976
+## 9   0.20610040  0.13757963  0.25877469  0.30764238  0.08802174  0.09237853
+## 10  0.20610040  0.13757963  0.25877469  0.30764238  0.08802174  0.09237853
+## 11 -0.21306591 -0.17484074 -0.10972459 -0.24194037 -0.27771537 -0.29010393
+## 12 -0.21306591 -0.17484074 -0.10972459 -0.24194037 -0.27771537 -0.29010393
+## 13 -0.18164948 -0.15024340 -0.06877355 -0.08367656 -0.18506496 -0.19007209
+## 14 -0.18164948 -0.15024340 -0.06877355 -0.08367656 -0.18506496 -0.19007209
+## 15 -0.06154869 -0.08047214 -0.09192863 -0.06321798 -0.02519205 -0.04861886
+## 16 -0.06154869 -0.08047214 -0.09192863 -0.06321798 -0.02519205 -0.04861886
+## 17 -0.32204694 -0.29381225 -0.20725069 -0.24381469 -0.26608866 -0.33269122
+## 18 -0.32204694 -0.29381225 -0.20725069 -0.24381469 -0.26608866 -0.33269122
+## 19  0.84641545  1.60099526  0.80874245  0.74271037  0.70903649  1.45805976
+## 20 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051 -0.23001865
+## 21 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051 -0.23001865
+## 22 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051 -0.23001865
+## 23  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703  1.23356710
+## 24  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703  1.23356710
+## 25  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703  1.23356710
+##    human_symbol
+## 1          NRF1
+## 2         UBE2H
+## 3      SLC9A3R1
+## 4      SLC9A3R2
+## 5           DAP
+## 6         MYH10
+## 7         MYH11
+## 8          MYH9
+## 9          THRA
+## 10         THRB
+## 11        ITSN1
+## 12        ITSN2
+## 13        HOXA2
+## 14        HOXB2
+## 15        PTPN3
+## 16        PTPN4
+## 17        USP44
+## 18        USP49
+## 19      SLC40A1
+## 20        PDE6A
+## 21        PDE6B
+## 22        PDE6C
+## 23        MATR3
+## 24        MATR3
+## 25        RBM20</code></pre>
 <p>Let’s get a summary of the gene symbols returned in the <code>human_symbol</code> column of our mapped data frame.</p>
-<pre class="r"><code># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
-summary(as.factor(human_symbol_df$human_symbol)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned</code></pre>
-<pre><code>##        RAB28        CLDN3        CLDN4        CLDN6        CLDN9          ZP3 
-##           38           11           11           11           11           11 
-##       CAMK2A       CAMK2B       CAMK2D       CAMK2G        DCLK1        DCLK2 
-##           10           10           10           10           10           10 
-##        DCLK3      TMSB15B       TUBA1A       TUBA1B       TUBA1C       TUBA3C 
-##           10           10           10           10           10           10 
-##       TUBA3D       TUBA3E       TUBA4A        TUBA8       ZNF729       COL5A1 
-##           10           10           10           10           10            9 
-##       COL5A3       POMZP3   AC092143.1        CAMK1       CAMK1D       CAMK1G 
-##            9            9            8            8            8            8 
-##       CLDN17        CLDN5        CLDN8      COL11A1      COL16A1       COL4A1 
-##            8            8            8            8            8            8 
-##       COL4A3       COL4A5       COL4A6       COL5A2        EPHA4 LOC105371242 
-##            8            8            8            8            8            8 
-##         PNCK         PPIA      PPIAL4A      PPIAL4C      PPIAL4D      PPIAL4G 
-##            8            8            8            8            8            8 
-##         PPIB         PPIC         PPIE         PPIF         PPIH        PPIL6 
-##            8            8            8            8            8            8 
-##       PRSS38       TUBAL3   AC109583.3      C2orf80      COL11A2       COL1A1 
-##            8            8            7            7            7            7 
-##       COL1A2      COL22A1      COL24A1       COL2A1       COL3A1       COL4A2 
-##            7            7            7            7            7            7 
-##       COL4A4       COL7A1         CRY1         CRY2        CRYGA        CRYGB 
-##            7            7            7            7            7            7 
-##        CRYGC        CRYGD        CRYGS        EPHA3        EPHA5        EPHA6 
-##            7            7            7            7            7            7 
-##        EPHA7        EPHB4        KRT20        KRT31        KRT32       KRT33A 
-##            7            7            7            7            7            7 
-##       KRT33B        KRT34        KRT35        KRT36        KRT40         KRT7 
-##            7            7            7            7            7            7 
-##        KRT79         KRT8        KRT80        MATR3        MYLK3        MYLK4 
-##            7            7            7            7            7            7 
-##        OR6K2        OR6K3        OR6K6      (Other) 
-##            7            7            7        17869</code></pre>
-<p>Looks like we have mapped symbols! It does not explicitly tell us if we have IDs that did not map to symbols, which would result in NAs so let’s explore to find out if we do have any.</p>
-<pre class="r"><code>any(is.na(human_symbol_df$human_symbol)) # Logical statement to check if there are any NAs in the `human_symbol` column of our mapped data frame</code></pre>
-<pre><code>## [1] FALSE</code></pre>
-<p>There are no NAs! This means that all of our zebrafish Ensembl IDs mapped to at least one human gene symbol! This is exciting because it is not always the case everything maps across species and that is okay.</p>
-<p>However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
+<pre class="r"><code># We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+human_zebrafish_mapped_df %&gt;%
+  dplyr::group_by(human_symbol) %&gt;%
+  dplyr::count() %&gt;%
+  # Sort by highest `n` which would be the human gene symbol with the most mapped zebrafish Ensembl IDs
+  dplyr::arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 11,454 x 2
+## # Groups:   human_symbol [11,454]
+##    human_symbol     n
+##    &lt;chr&gt;        &lt;int&gt;
+##  1 &lt;NA&gt;           415
+##  2 RAB28           38
+##  3 CLDN3           11
+##  4 CLDN4           11
+##  5 CLDN6           11
+##  6 CLDN9           11
+##  7 ZP3             11
+##  8 CAMK2A          10
+##  9 CAMK2B          10
+## 10 CAMK2D          10
+## # … with 11,444 more rows</code></pre>
+<p>Looks like we have mapped symbols! We also have 415 NAs, which is okay, because we do not expect everything to map across species.</p>
 </div>
-<div id="write-results-to-file" class="section level2">
-<h2><span class="header-section-number">4.4</span> Write results to file</h2>
+<div id="sort-out-multi-mappings" class="section level2">
+<h2><span class="header-section-number">4.4</span> Sort out multi mappings</h2>
+<ul>
+<li><p>Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols. Some downstream tools may require the data be simplified to 1:1 mappings. Using another gene identifier may result in a better 1:1 ratio to the zebrafish Ensembl IDs, i.e. human Ensembl IDs instead of human gene symbols. See our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation microarray notebook</a> for an example of mapping between gene identifiers.</p></li>
+<li><p>If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSDARG00000069142</code> example below.</p></li>
+</ul>
+<pre class="r"><code>human_zebrafish_mapped_df %&gt;%
+  dplyr::filter(Gene == &quot;ENSDARG00000069142&quot;) %&gt;%
+  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
+<pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
+## 1 ENSDARG00000069142         AARS   1.926439   2.187861    1.95831   2.221289
+## 2 ENSDARG00000069142        AARS2   1.926439   2.187861    1.95831   2.221289
+##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
+## 1   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502
+## 2   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502</code></pre>
+<ul>
+<li>On the other, if a human gene symbol maps to multiple zebrafish Ensembl IDs, the gene expression values do not necessarily get duplicated. Let’s look at the <code>A1BG</code> example below.</li>
+</ul>
+<pre class="r"><code>human_zebrafish_mapped_df %&gt;%
+  dplyr::filter(human_symbol == &quot;MATR3&quot;) %&gt;%
+  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
+<pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
+## 1 ENSDARG00000000394        MATR3  1.2271901  1.5029322  1.2639011  1.2160013
+## 2 ENSDARG00000000394        MATR3  1.2271901  1.5029322  1.2639011  1.2160013
+## 3 ENSDARG00000001162        MATR3  1.2293416  1.4669775  1.3024408  1.1883847
+## 4 ENSDARG00000001162        MATR3  1.2293416  1.4669775  1.3024408  1.1883847
+## 5 ENSDARG00000101808        MATR3  0.2441498  0.3500758  0.2300314  0.2575420
+## 6 ENSDARG00000101808        MATR3  0.2441498  0.3500758  0.2300314  0.2575420
+## 7 ENSDARG00000104169        MATR3  0.7927356  0.7951872  0.4846576  0.6662095
+##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
+## 1  1.1674200  1.2050887  1.3509308  1.2717920  1.1398870  1.2335671
+## 2  1.1674200  1.2050887  1.3509308  1.2717920  1.1398870  1.2335671
+## 3  1.2192026  1.2931079  1.2277305  1.1743127  1.2757582  1.2931079
+## 4  1.2192026  1.2931079  1.2277305  1.1743127  1.2757582  1.2931079
+## 5  0.1240822  0.2460772  0.2689210  0.2284626  0.1950655  0.1878759
+## 6  0.1240822  0.2460772  0.2689210  0.2284626  0.1950655  0.1878759
+## 7  0.3858910  0.5355053  0.7486323  0.6253056  0.3337947  0.5792599</code></pre>
+</div>
+<div id="collapse-multiple-mapped-human-gene-symbols" class="section level2">
+<h2><span class="header-section-number">4.5</span> Collapse multiple mapped human gene symbols</h2>
+<p>We can collapse the multi-mapped values into a list for each Ensembl ID or we can keep it in the format above with one row for each mapped ID (resulting in duplicated rows for some Ensembl IDs).</p>
+<p>In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique zebrafish Ensembl ID.</p>
+<pre class="r"><code>collapsed_human_symbol_df &lt;- human_zebrafish_mapped_df %&gt;%
+  # Group by Ensembl IDs
+  dplyr::group_by(Gene) %&gt;%
+  # Collapse the mapped values in `human_zebrafish_mapped_df` into one column named `all_human_symbols`
+  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = &quot;;&quot;)) %&gt;%
+  # Now we need get the gene expression data back
+  dplyr::left_join(df, by = &quot;Gene&quot;)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>head(collapsed_human_symbol_df)</code></pre>
+<pre><code>## # A tibble: 6 x 12
+##   Gene  all_human_symbo… GSM1831675 GSM1831677 GSM1831680 GSM1831678 GSM1831684
+##   &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 ENSD… NRF1                  0.518      0.358      0.631      0.613      0.764
+## 2 ENSD… UBE2H                 0.278      0.329      0.714      0.197      0.896
+## 3 ENSD… SLC9A3R1;SLC9A3…      1.72       1.94       1.46       1.44       1.09 
+## 4 ENSD… DAP                   0.760      0.935      1.21       0.714      1.07 
+## 5 ENSD… MYH10;MYH11;MYH9      0.637      0.295      0.159      0.448      0.246
+## 6 ENSD… THRA;THRB             0.316      0.270      0.154      0.147      0.206
+## # … with 5 more variables: GSM1831681 &lt;dbl&gt;, GSM1831679 &lt;dbl&gt;,
+## #   GSM1831676 &lt;dbl&gt;, GSM1831682 &lt;dbl&gt;, GSM1831683 &lt;dbl&gt;</code></pre>
+<div id="write-results-to-file" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Write results to file</h3>
 <p>Now let’s write our results to file.</p>
 <pre class="r"><code>readr::write_tsv(
-  human_symbol_df,
+  collapsed_human_symbol_df,
   file.path(
     results_dir,
-    &quot;GSE71270_ensembl_to_human_gene_symbol.tsv&quot; # Replace with a relevant output file name
+    &quot;GSE71270_zebrafish_ensembl_to_collapsed_human_gene_symbol.tsv&quot; # Replace with a relevant output file name
   )
 )</code></pre>
-<p><em>Some things to note:</em></p>
-<ul>
-<li>Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols. Some downstream tools may need this to be resolved. One way to resolve this may be to map to a different gene identifier. See our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation microarray notebook</a> for an example of mapping between gene identifiers.</li>
-<li>If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSDARG00000069142</code> example below.</li>
-</ul>
-<pre class="r"><code>human_symbol_df %&gt;%
-  dplyr::filter(zebrafish_ensembl == &quot;ENSDARG00000069142&quot;)</code></pre>
-<pre><code>## # A tibble: 2 x 12
-##   zebrafish_ensem… human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
-##   &lt;chr&gt;            &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 ENSDARG00000069… AARS               1.93       2.19       1.96       2.22
-## 2 ENSDARG00000069… AARS2              1.93       2.19       1.96       2.22
-## # … with 6 more variables: GSM1831684 &lt;dbl&gt;, GSM1831681 &lt;dbl&gt;,
-## #   GSM1831679 &lt;dbl&gt;, GSM1831676 &lt;dbl&gt;, GSM1831682 &lt;dbl&gt;, GSM1831683 &lt;dbl&gt;</code></pre>
-<p>We can collapse the multi-mapped values into a list for each Ensembl ID or we can keep it in the format above with one row for each mapped ID (resulting in duplicated rows for some Ensembl IDs).</p>
 </div>
-<div id="collapse-mapped-values" class="section level2">
-<h2><span class="header-section-number">4.5</span> Collapse mapped values</h2>
-<p>In the next chunk, we show how we can collapse all the symbols into one column where we store them all for each unique Ensembl ID.</p>
-<pre class="r"><code>collapsed_symbol_df &lt;- human_symbol_df %&gt;%
-  # Group by Ensembl IDs
-  dplyr::group_by(zebrafish_ensembl) %&gt;%
-  # Collapse the mapped values in `human_symbol_df` into one column named `all_human_symbols`
-  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = &quot;;&quot;))</code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>head(collapsed_symbol_df)</code></pre>
-<pre><code>## # A tibble: 6 x 2
-##   zebrafish_ensembl  all_human_symbols
-##   &lt;chr&gt;              &lt;chr&gt;            
-## 1 ENSDARG00000000018 NRF1             
-## 2 ENSDARG00000000019 UBE2H            
-## 3 ENSDARG00000000068 SLC9A3R1;SLC9A3R2
-## 4 ENSDARG00000000069 DAP              
-## 5 ENSDARG00000000103 MYH10;MYH11;MYH9 
-## 6 ENSDARG00000000151 THRA;THRB</code></pre>
+</div>
+<div id="collapse-multiple-mapped-zebrafish-ensembl-ids" class="section level2">
+<h2><span class="header-section-number">4.6</span> Collapse multiple mapped zebrafish Ensembl IDs</h2>
 <p>Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.</p>
-<pre class="r"><code>collapsed_ensembl_df &lt;- human_symbol_df %&gt;%
+<p>A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology. Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.</p>
+<pre class="r"><code>collapsed_zebrafish_ensembl_df &lt;- human_zebrafish_mapped_df %&gt;%
   # Group by human gene symbols
   dplyr::group_by(human_symbol) %&gt;%
-  # Collapse the Ensembl IDs in `human_symbol_df` into one column named `all_zebrafish_ensembl_ids`
-  dplyr::summarize(all_zebrafish_ensembl_ids = paste(zebrafish_ensembl, collapse = &quot;;&quot;))</code></pre>
+  # Collapse the Ensembl IDs in `human_zebrafish_mapped_df` into one column named `all_zebrafish_ensembl_ids`
+  dplyr::summarize(all_zebrafish_ensembl_ids = paste(Gene, collapse = &quot;;&quot;))</code></pre>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>head(collapsed_ensembl_df)</code></pre>
+<pre class="r"><code>head(collapsed_zebrafish_ensembl_df)</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##   human_symbol all_zebrafish_ensembl_ids                                        
 ##   &lt;chr&gt;        &lt;chr&gt;                                                            
-## 1 A2M          ENSDARG00000041685;ENSDARG00000008835;ENSDARG00000078183;ENSDARG…
-## 2 A2ML1        ENSDARG00000041685;ENSDARG00000008835;ENSDARG00000078183;ENSDARG…
+## 1 A2M          ENSDARG00000008835;ENSDARG00000041685;ENSDARG00000074764;ENSDARG…
+## 2 A2ML1        ENSDARG00000008835;ENSDARG00000041685;ENSDARG00000074764;ENSDARG…
 ## 3 AAAS         ENSDARG00000102274                                               
 ## 4 AACS         ENSDARG00000012468                                               
 ## 5 AAED1        ENSDARG00000075299                                               
 ## 6 AAGAB        ENSDARG00000041170</code></pre>
-<p>The final format in which you save your results data frame largely depends on your question and the downstream analyses/tools that you would like to implement.</p>
-</div>
-<div id="write-collapsed-results-to-file" class="section level2">
-<h2><span class="header-section-number">4.6</span> Write collapsed results to file</h2>
-<p>We are going to save the results data frame where we have collapsed human gene symbols into one column for each unique zebrafish Ensembl ID.</p>
+<div id="write-results-to-file-1" class="section level3">
+<h3><span class="header-section-number">4.6.1</span> Write results to file</h3>
+<p>Now let’s write our list of collapsed zebrafish Ensembl IDs for each unique human gene symbol to file.</p>
 <pre class="r"><code>readr::write_tsv(
-  collapsed_symbol_df,
+  collapsed_zebrafish_ensembl_df,
   file.path(
     results_dir,
-    &quot;GSE71270_collapsed_ensembl_to_human_gene_symbol.tsv&quot; # Replace with a relevant output file name
+    &quot;GSE71270_collapsed_zebrafish_ensembl_to_human_gene_symbol_list.tsv&quot; # Replace with a relevant output file name
   )
 )</code></pre>
+</div>
 </div>
 </div>
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li><a href="https://pubmed.ncbi.nlm.nih.gov/16284797/">HCOP: the HGNC comparison of orthology predictions search tool</a> <span class="citation">(Wright <em>et al.</em> 2005)</span></li>
+<li>See our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.Rmd">RNA-seq ortholog mapping notebook</a> as another applicable example, since the steps for this workflow do not change with technology.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
