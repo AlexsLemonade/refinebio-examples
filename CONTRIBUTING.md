@@ -26,7 +26,7 @@
     - [Citing sources in text](#citing-sources-in-text)
       - [Adding new sources to the `references.bib`](#adding-new-sources-to-the-referencesbib)
       - [Key naming](#key-naming)
-    - [How to spell check](#how-to-spell-check)
+    - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
   - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
@@ -259,16 +259,19 @@ For example:
 ```
 Had no year associated with it, so it has keywords for its tag `pca-visually-explained`.
 
-#### How to spell check
+#### Spell checking
 
-In R, run the following:
-```
-dictionary <- readLines(file.path("components", "dictionary.txt"))
-spelling::spell_check_files("<tech-section>_<file_name>.Rmd",
-                            ignore = dictionary)
-```
+Spell checks are run automatically using Github actions upon opening a PR for master or prior to merging to master.
+Github actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
+You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
+Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
+Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
+Alternatively, click on the "Check on spell check results" step in the workflow log to see the misspellings.
+
 Any terms that should be recognized by the spell check, you can add to `components/dictionary.txt`.
-Keep words alphabetical; each word is on its own line.  
+Keep words alphabetical; each word is on its own line.
+
+If you want to run a spell check of all `.Rmd` files locally, you can use run `Rscript scripts/spell-check.R` and it will print out the same type of file in your current directory.
 
 ## Rendering notebooks
 
