@@ -1704,7 +1704,7 @@ div.tocify {
 <h3><span class="header-section-number">0.1.1</span> RNA-seq data <strong>strengths</strong></h3>
 <ul>
 <li>RNA-seq can assay unknown transcripts, as it is not bound to a pre-determined set of probes like microarrays <span class="citation">(Wang <em>et al.</em>)</span>.</li>
-<li>Its values are considered more dynamic than microarray values which are constrained to a smaller range based on background signal and probesets being saturated <span class="citation">(Wang <em>et al.</em>)</span>.</li>
+<li>Its values are considered more dynamic than microarray values which are constrained to a smaller range based on background signal and probe sets being saturated <span class="citation">(Wang <em>et al.</em>)</span>.</li>
 </ul>
 </div>
 <div id="rna-seq-data-limitationsbiases" class="section level3">
@@ -1734,7 +1734,7 @@ div.tocify {
 <div id="more-resources-on-rna-seq-technology" class="section level3">
 <h3><span class="header-section-number">0.1.4</span> More resources on RNA-seq technology</h3>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=tlf6wYJrwKY">StatsQuest: A gentle introduction to RNA-seq</a> <span class="citation">(Josh Starmer 2017a)</span>.</li>
+<li><a href="https://www.youtube.com/watch?v=tlf6wYJrwKY">StatQuest: A gentle introduction to RNA-seq</a> <span class="citation">(Josh Starmer 2017a)</span>.</li>
 <li><a href="https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/">A general background on the wet lab methods of RNA-seq</a> <span class="citation">(James Hadfield 2016)</span>.</li>
 <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5143225/">Modeling of RNA-seq fragment sequence bias reduces systematic errors in transcript abundance estimation</a> <span class="citation">(Love <em>et al.</em> 2016)</span>.</li>
 <li><a href="https://mikelove.wordpress.com/2016/09/26/rna-seq-fragment-sequence-bias/">Mike Love blog post about sequencing biases</a> <span class="citation">(Love 2016)</span></li>
@@ -1753,13 +1753,13 @@ div.tocify {
 </div>
 <div id="deseq2-transformation-methods" class="section level3">
 <h3><span class="header-section-number">0.2.2</span> DESeq2 transformation methods</h3>
-<p>Our examples recommend using DESeq2 for normalizing your RNA-seq data. You may have heard about or worked with FPKM, TPM, RPKMs; how does DESeq2’s normalization compare? This <a href="https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html#common-normalization-methods">handy table from an online Harvard Bioinformatics Core course nicely summarizes and compares these different methods</a> <span class="citation">(Harvard Chan Bioinformatics Core (HBC))</span>. For more about the steps behind DESeq2 normalization, we highly recommend this <a href="https://www.youtube.com/watch?v=UFB993xufUU">StatsQuest video</a> which explains it quite nicely <span class="citation">(Josh Starmer 2017b)</span>.</p>
+<p>Our examples recommend using DESeq2 for normalizing your RNA-seq data. You may have heard about or worked with FPKM, TPM, RPKMs; how does DESeq2’s normalization compare? This <a href="https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html#common-normalization-methods">handy table from an online Harvard Bioinformatics Core course nicely summarizes and compares these different methods</a> <span class="citation">(Harvard Chan Bioinformatics Core (HBC))</span>. For more about the steps behind DESeq2 normalization, we highly recommend this <a href="https://www.youtube.com/watch?v=UFB993xufUU">StatQuest video</a> which explains it quite nicely <span class="citation">(Josh Starmer 2017b)</span>.</p>
 <p>To normalize and transform our data with DESeq2, we generally use <code>vst()</code> (variance stabilizing transformation) or <code>rlog()</code> (regularized logarithm transformation). <a href="http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog">Both methods are very similar</a>. Both <em>normalize</em> your data by correcting for library size differences but they also <em>transform</em> your data <a href="https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#count-data-transformations">removing the dependence of the variance on the mean</a>, meaning that low mean genes won’t have inflated variance from just one or a few samples having higher values than the rest <span class="citation">(Michael I. Love, Simon Anders, and Wolfgang Huber 2020)</span>. Of the two methods, <code>rlog()</code> takes a bit longer to run <span class="citation">(Michael I. Love and Huber 2019)</span>. If you end up using a larger dataset and <code>rlog()</code> transformation takes a bit too long, you can switch to using <code>vst()</code> with confidence since they yield similar results given the dataset is large enough <span class="citation">(Michael I. Love and Huber 2019)</span>.</p>
 </div>
 <div id="further-resources-for-deseq2" class="section level3">
 <h3><span class="header-section-number">0.2.3</span> Further resources for DESeq2</h3>
 <ul>
-<li><a href="https://www.youtube.com/watch?v=UFB993xufUU">StatsQuest: DESeq2, part 1, Library Normalization</a> <span class="citation">(Josh Starmer 2017b)</span>.</li>
+<li><a href="https://www.youtube.com/watch?v=UFB993xufUU">StatQuest: DESeq2, part 1, Library Normalization</a> <span class="citation">(Josh Starmer 2017b)</span>.</li>
 <li><a href="https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html">DESeq2 vignette: Analyzing RNA-seq data with DESeq2</a> <span class="citation">(Love <em>et al.</em> 2014)</span>.</li>
 <li><a href="Bhttps://bioc.ism.ac.jp/packages/2.14/bioc/vignettes/DESeq2/inst/doc/beginner.pdf">Beginner’s guide to DESeq2</a> <span class="citation">(Michael I. Love and Huber 2014)</span>.</li>
 <li><a href="https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html">Introduction to DGE - Count Normalization</a> <span class="citation">(Harvard Chan Bioinformatics Core (HBC))</span></li>

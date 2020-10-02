@@ -17,7 +17,7 @@ What things should reviewers look out for?
 ### Formatting Checks
 * [ ] Removed any manual numbering of sections.
 * [ ] Removed any instances of chunk naming.
-* [ ] Spell checked any Rmd file or md file.
+* [ ] Spell checked any `.Rmd` file or md file.
 * [ ] Comments and documentation are up to date.
 * [ ] All links have been checked and are properly formatted. 
 
