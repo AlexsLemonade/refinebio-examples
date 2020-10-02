@@ -141,9 +141,9 @@ We suggest saving plots and results to `plots/` and `results/` directories, resp
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 refine.bio data comes with gene level data with Ensembl IDs. 
-Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.
+Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.
 
-<b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
+<b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
 In the case of our [RNA-seq gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html), a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning `org.Dr.eg.db` or `Dr` would also need to be used there.
 A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
 
@@ -275,11 +275,11 @@ Let's get a summary of the gene symbols returned in the `Symbol` column of our m
 summary(mapped_df$Symbol)
 ```
 
-There are 998 NA's in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
+There are 998 NAs in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
-However, if you have almost all NA's it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
+However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
 
 Now let's check to see if we have any genes that were mapped to multiple symbols.
 
@@ -346,7 +346,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info
