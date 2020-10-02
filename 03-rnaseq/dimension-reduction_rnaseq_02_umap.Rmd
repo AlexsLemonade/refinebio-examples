@@ -1,7 +1,7 @@
 ---
 title: "UMAP Visualization - RNA-seq"
 author: "CCDL for ALSF"
-date: "Oct 2020"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
