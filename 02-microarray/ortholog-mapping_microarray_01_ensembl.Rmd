@@ -152,7 +152,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 In this analysis, we will be using `hcop` to map between zebrafish and human identifiers [@Turner2018].
 
-We'll need to use the `devtools` package to install `hcop` from Github [@Wickham2020].
+We'll need to use the `devtools` package to install `hcop` from GitHub [@Wickham2020].
 
 ```{r}
 if (!("devtools" %in% installed.packages())) {
@@ -223,7 +223,7 @@ refine.bio data uses Ensembl gene identifiers, which will be in the first column
 head(df$Gene)
 ```
 
-Enembl gene identifiers have different species-specific prefixes. 
+Ensembl gene identifiers have different species-specific prefixes. 
 In zebrafish, Ensembl gene identifiers begin with `ENSDARG` (in human, `ENSG`, etc.).
 
 Now let's do the conversion!
@@ -237,12 +237,29 @@ We're interested in the `human_symbol` and `zebrafish_ensembl` columns specifica
 
 ```{r}
 human_zebrafish_key <- zebrafish %>%
-  # we'll want to subset zebrafish to only the columns we're interested in
+  # We'll want to subset zebrafish to only the columns we're interested in
   dplyr::select(zebrafish_ensembl, human_symbol)
 
-# Now let's join the expression data from `df` for the subset of genes in `df`
+# Since we ignored the additional columns in `zebrafish`, let's check to see if we have any duplicates in our `human_zebrafish_key`
+any(duplicated(human_zebrafish_key))
+```
+
+We do have duplicates!
+We don't want to handle duplicate data, so let's remove those duplicates before moving forward.
+
+```{r}
+human_zebrafish_key <- human_zebrafish_key %>%
+  # We need to use the `distinct()` function to remove duplicates resulted from ignoring the additional columns in the `zebrafish` object
+  dplyr::distinct()
+```
+
+Now let's join the mapped data from `human_zebrafish_key` with the expression data in `df`.
+
+```{r}
 human_zebrafish_mapped_df <- df %>%
-  dplyr::left_join(human_zebrafish_key, by = c("Gene" = "zebrafish_ensembl"))
+  dplyr::left_join(human_zebrafish_key, by = c("Gene" = "zebrafish_ensembl")) %>%
+  # Sort so that the columns with the zebrafish Ensembl IDs and human gene symbols are first
+  dplyr::select(Gene, human_symbol, dplyr::everything())
 ```
 
 Here's what the new data frame looks like:
@@ -263,42 +280,49 @@ human_zebrafish_mapped_df %>%
 ```
 
 Looks like we have mapped symbols!
-We also have 415 NAs, which is okay, because we do not expect everything to map across species.
 
-## Sort out multi mappings
+Now, let's get an idea of how many zebrafish Ensembl IDs we have that were not mapped to human gene symbols.
 
-* Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols.
+```{r}
+sum(is.na(human_zebrafish_mapped_df$human_symbol))
+```
+
+We have 415 NAs, which means we have 415 zebrafish Ensembl IDs that were not mapped to human gene symbols.
+This is okay because we do not expect everything to map across species.
+
+## Sort out multi-mappings
+
+Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols.
 Some downstream tools may require the data be simplified to 1:1 mappings.
-Using another gene identifier may result in a better 1:1 ratio to the zebrafish Ensembl IDs, i.e. human Ensembl IDs instead of human gene symbols.
+Using another gene identifier may result in a better 1:1 ratio to the zebrafish Ensembl IDs, _i.e._ human Ensembl IDs instead of human gene symbols.
 See our [gene ID annotation microarray notebook](https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html) for an example of mapping between gene identifiers.
 
-* If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
 Let's look at the `ENSDARG00000069142` example below.
 
 ```{r}
 human_zebrafish_mapped_df %>%
-  dplyr::filter(Gene == "ENSDARG00000069142") %>%
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+  dplyr::filter(Gene == "ENSDARG00000069142")
 ```
 
-* On the other, if a human gene symbol maps to multiple zebrafish Ensembl IDs, the gene expression values do not necessarily get duplicated.
+Remember that our original data is associate to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
 Let's look at the `A1BG` example below.
 
 ```{r}
 human_zebrafish_mapped_df %>%
-  dplyr::filter(human_symbol == "MATR3") %>%
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+  dplyr::filter(human_symbol == "MATR3")
 ```
 
-## Collapse multiple mapped human gene symbols
+## Collapse multi-mapped human gene symbols
 
-We can collapse the multi-mapped values into a list for each Ensembl ID or we can keep it in the format above with one row for each mapped ID (resulting in duplicated rows for some Ensembl IDs).
+Remember that if a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.
 
 In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique zebrafish Ensembl ID.
 
 ```{r}
 collapsed_human_symbol_df <- human_zebrafish_mapped_df %>%
-  # Group by Ensembl IDs
+  # Group by zebrafish Ensembl IDs
   dplyr::group_by(Gene) %>%
   # Collapse the mapped values in `human_zebrafish_mapped_df` into one column named `all_human_symbols`
   dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
@@ -322,7 +346,7 @@ readr::write_tsv(
 )
 ```
 
-## Collapse multiple mapped zebrafish Ensembl IDs
+## Collapse multi-mapped zebrafish Ensembl IDs
 
 Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
 
