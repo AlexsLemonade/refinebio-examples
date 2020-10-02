@@ -1868,15 +1868,15 @@ all.equal(colnames(df), metadata$geo_accession)</code></pre>
 df &lt;- df %&gt;%
   tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
 </div>
-<div id="mapping-zebrafish-ensembl-gene-ids-to-human-symbols" class="section level2">
-<h2><span class="header-section-number">4.3</span> Mapping zebrafish Ensembl gene IDs to human symbols</h2>
+<div id="mapping-human-gene-symbols-to-zebrafish-ensembl-gene-ids" class="section level2">
+<h2><span class="header-section-number">4.3</span> Mapping human gene symbols to zebrafish Ensembl gene IDs</h2>
 <p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
 <pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
 head(df$Gene)</code></pre>
 <pre><code>## [1] &quot;ENSDARG00000000018&quot; &quot;ENSDARG00000000019&quot; &quot;ENSDARG00000000068&quot;
 ## [4] &quot;ENSDARG00000000069&quot; &quot;ENSDARG00000000103&quot; &quot;ENSDARG00000000151&quot;</code></pre>
 <p>Ensembl gene identifiers have different species-specific prefixes. In zebrafish, Ensembl gene identifiers begin with <code>ENSDARG</code> (in human, <code>ENSG</code>, etc.).</p>
-<p>Now let’s do the conversion! We’ll use the <code>zebrafish</code> data from <code>hcop</code>; this is what <code>zebrafish</code> looks like.</p>
+<p>Now let’s do the mapping! We’ll use the <code>zebrafish</code> data from <code>hcop</code>; this is what <code>zebrafish</code> looks like.</p>
 <pre class="r"><code>zebrafish</code></pre>
 <pre><code>## # A tibble: 115,166 x 9
 ##    human_symbol zebrafish_symbol human_ensembl zebrafish_ensem… human_entrez
@@ -1990,8 +1990,8 @@ any(duplicated(human_zebrafish_key))</code></pre>
 ## 23  1.23356710
 ## 24  1.23356710
 ## 25  0.53082141</code></pre>
-<p>Let’s get a summary of the gene symbols returned in the <code>human_symbol</code> column of our mapped data frame.</p>
-<pre class="r"><code># We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+<p>Let’s get a summary of the human gene symbols returned in our mapped data frame, <code>human_zebrafish_mapped_df</code>.</p>
+<pre class="r"><code># We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s
 human_zebrafish_mapped_df %&gt;%
   dplyr::group_by(human_symbol) %&gt;%
   dplyr::count() %&gt;%
@@ -2018,8 +2018,8 @@ human_zebrafish_mapped_df %&gt;%
 <pre><code>## [1] 415</code></pre>
 <p>We have 415 NAs, which means we have 415 zebrafish Ensembl IDs that were not mapped to human gene symbols. This is okay because we do not expect everything to map across species.</p>
 </div>
-<div id="sort-out-multi-mappings" class="section level2">
-<h2><span class="header-section-number">4.4</span> Sort out multi-mappings</h2>
+<div id="take-a-look-at-some-multi-mappings" class="section level2">
+<h2><span class="header-section-number">4.4</span> Take a look at some multi-mappings</h2>
 <p>If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSDARG00000069142</code> example below.</p>
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(Gene == &quot;ENSDARG00000069142&quot;)</code></pre>
@@ -2029,7 +2029,7 @@ human_zebrafish_mapped_df %&gt;%
 ##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
 ## 1   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502
 ## 2   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502</code></pre>
-<p>Remember that our original data is associate to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>A1BG</code> example below.</p>
+<p>Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>A1BG</code> example below.</p>
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(human_symbol == &quot;MATR3&quot;)</code></pre>
 <pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678

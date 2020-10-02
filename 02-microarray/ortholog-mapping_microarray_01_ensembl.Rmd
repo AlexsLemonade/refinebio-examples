@@ -271,7 +271,7 @@ head(human_zebrafish_mapped_df, n = 25)
 Let's get a summary of the human gene symbols returned in our mapped data frame, `human_zebrafish_mapped_df`. 
 
 ```{r}
-# We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s 
+# We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s
 human_zebrafish_mapped_df %>%
   dplyr::group_by(human_symbol) %>%
   dplyr::count() %>%
