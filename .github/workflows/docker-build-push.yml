@@ -24,9 +24,9 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git checkout gh-pages
-          git rebase ${{ github.event.after }}
+          git merge -s recursive --strategy-option=theirs ${{ github.event.after }}
 
-      # Test if Dockerfile has changed 
+      # Test if Dockerfile has changed
       # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
       - name: Check Dockerfile for changes
         id: check_docker
