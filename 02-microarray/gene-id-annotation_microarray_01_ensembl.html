@@ -1772,8 +1772,8 @@ file.exists(file.path(data_dir, &quot;metadata_GSE13490.tsv&quot;))</code></pre>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
-<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
+<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -1959,8 +1959,8 @@ mapped_df &lt;- mapped_list %&gt;%
 summary(mapped_df$Symbol)</code></pre>
 <pre><code>##    Length     Class      Mode 
 ##     17977 character character</code></pre>
-<p>There are 998 NA’s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
-<p>However, if you have almost all NA’s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
+<p>There are 998 NAs in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
+<p>However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
 <pre class="r"><code>multi_mapped &lt;- mapped_df %&gt;%
   # Let&#39;s group by the Ensembl IDs in the `Ensembl` column
@@ -2024,7 +2024,7 @@ readr::write_tsv(filtered_mapped_df, file.path(
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
-<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
+<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
@@ -2056,12 +2056,12 @@ sessionInfo()</code></pre>
 ##  [5] R.utils_2.10.1    tools_4.0.2       bit_4.0.4         digest_0.6.25    
 ##  [9] memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14     lifecycle_0.2.0  
 ## [13] tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.7      
-## [17] DBI_1.1.0         cli_2.0.2         yaml_2.2.1        xfun_0.17        
-## [21] dplyr_1.0.2       styler_1.3.2      stringr_1.4.0     knitr_1.30       
-## [25] generics_0.0.2    vctrs_0.3.4       hms_0.5.3         tidyselect_1.1.0 
-## [29] bit64_4.0.5       getopt_1.20.3     glue_1.4.2        R6_2.4.1         
-## [33] fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2       blob_1.2.1       
-## [37] purrr_0.3.4       readr_1.3.1       rematch2_2.1.2    backports_1.1.10 
+## [17] DBI_1.1.0         cli_2.0.2         rstudioapi_0.11   yaml_2.2.1       
+## [21] xfun_0.17         dplyr_1.0.2       styler_1.3.2      stringr_1.4.0    
+## [25] knitr_1.30        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
+## [29] tidyselect_1.1.0  bit64_4.0.5       getopt_1.20.3     glue_1.4.2       
+## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2      
+## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       backports_1.1.10 
 ## [41] ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1  utf8_1.1.4       
 ## [45] stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">

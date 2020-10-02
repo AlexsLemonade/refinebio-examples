@@ -11,7 +11,7 @@ date: 2019
 ## Background
 
 The Quantitative Set Analysis of Gene Expression (QuSAGE) 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)) framework
+([](https://doi.org/10.1093/nar/gkt660)) framework
 has advantages that we outline in 
 [`qusage_single_dataset`](./qusage_single_dataset.nb.html), including the 
 fact that it returns more than just a p-value.
@@ -21,7 +21,7 @@ If we're interested in pathway analysis of multiple datasets, QuSAGE allows
 us to perform a _meta-analysis_ by combining distributions from the QuSAGE 
 results from each dataset.
 Meta-analysis with QuSAGE is described in 
-[Meng et al. _PLoS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)
+[ et al. _PLOS Comp Bio._ 2019.](https://doi.org/10.1371/journal.pcbi.1006899)
 and implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html). 
 The [`qusage` vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf)
 contains a section on meta-analysis.
@@ -472,7 +472,7 @@ We can look into what genes are driving the pathway activity with the
 `plotCIsGenes` function.
 Gene activity, which will be plotted on the y-axis, is difference between the 
 two groups.
-The _pathway_ CI will also be displayed on the plot as a grey band by default.
+The _pathway_ CI will also be displayed on the plot as a gray band by default.
 
 ```{r}
 plotCIsGenes(northcott_results,

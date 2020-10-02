@@ -43,6 +43,7 @@ RUN Rscript -e  "install.packages( \
       'RColorBrewer', \
       'rprojroot', \
       'viridis', \
+      'spelling', \
       'styler'))"
 
 # Install bioconductor packages

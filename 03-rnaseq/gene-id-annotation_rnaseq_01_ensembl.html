@@ -1773,8 +1773,8 @@ file.exists(file.path(data_dir, &quot;metadata_SRP040561.tsv&quot;))</code></pre
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
-<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>eg</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>eg</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>, a Mouse (<i>Mus musculus</i>) dataset is used, meaning <code>org.Mm.eg.db</code> or <code>Mm</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
+<p>refine.bio data comes with gene level data with Ensembl IDs. Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Dr.eg.db</code> or <code>Dr</code> is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene identifier annotation example notebook</a>, a Mouse (<i>Mus musculus</i>) dataset is used, meaning <code>org.Mm.eg.db</code> or <code>Mm</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -1960,7 +1960,7 @@ summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function
 ##         2         2         2         2         2         2         2         2 
 ##    569452    570815   (Other)      NA&#39;s 
 ##         2         2     22821      9102</code></pre>
-<p>There are 9102 NA’s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
+<p>There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <pre class="r"><code>multi_mapped_df &lt;- mapped_df %&gt;%
   # Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column
@@ -2094,7 +2094,7 @@ readr::write_tsv(final_mapped_df, file.path(
 </div>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
-<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of softwares and packages you used to run this.</p>
+<p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <pre class="r"><code># Print session info
 sessionInfo()</code></pre>
 <pre><code>## R version 4.0.2 (2020-06-22)
@@ -2126,12 +2126,12 @@ sessionInfo()</code></pre>
 ##  [5] R.utils_2.10.1    tools_4.0.2       bit_4.0.4         digest_0.6.25    
 ##  [9] memoise_1.1.0     RSQLite_2.2.0     evaluate_0.14     lifecycle_0.2.0  
 ## [13] tibble_3.0.3      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.7      
-## [17] DBI_1.1.0         cli_2.0.2         yaml_2.2.1        xfun_0.17        
-## [21] dplyr_1.0.2       styler_1.3.2      stringr_1.4.0     knitr_1.30       
-## [25] generics_0.0.2    vctrs_0.3.4       hms_0.5.3         tidyselect_1.1.0 
-## [29] bit64_4.0.5       getopt_1.20.3     glue_1.4.2        R6_2.4.1         
-## [33] fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2       blob_1.2.1       
-## [37] purrr_0.3.4       readr_1.3.1       rematch2_2.1.2    backports_1.1.10 
+## [17] DBI_1.1.0         cli_2.0.2         rstudioapi_0.11   yaml_2.2.1       
+## [21] xfun_0.17         dplyr_1.0.2       styler_1.3.2      stringr_1.4.0    
+## [25] knitr_1.30        generics_0.0.2    vctrs_0.3.4       hms_0.5.3        
+## [29] tidyselect_1.1.0  bit64_4.0.5       getopt_1.20.3     glue_1.4.2       
+## [33] R6_2.4.1          fansi_0.4.1       rmarkdown_2.3     tidyr_1.1.2      
+## [37] blob_1.2.1        purrr_0.3.4       readr_1.3.1       backports_1.1.10 
 ## [41] ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1  utf8_1.1.4       
 ## [45] stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">

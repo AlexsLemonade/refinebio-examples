@@ -31,7 +31,7 @@ This tutorial has follow-along examples for use with refine.bio downloads.
 
 ## About how this tutorial book is structured 
 
-This tutorial contains follow-along analysis examples for refinebio gene expression data.
+This tutorial contains follow-along analysis examples for refine.bio gene expression data.
 The analysis examples are organized by technology: ["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
 Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. 
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
@@ -41,7 +41,7 @@ We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and foll
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.  
 - An R Notebook which consists of:  
     - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio.   
-    - An nb.html file that is the resulting output of the Rmd file rendered as an HTML file.  
+    - An nb.html file that is the resulting output of the `.Rmd` file rendered as an HTML file.  
 
 ## What you need to install to run the examples 
 
@@ -87,12 +87,12 @@ Saving one of our R Markdowns (the files that end in `.Rmd`) on your computer wi
 
 See [this guide using to R Notebooks](https://bookdown.org/yihui/rmarkdown/notebook.html#using-notebooks) for more information about inserting and executing code chunks.
 
-## An important note about file paths and Rmds
+## An important note about file paths and `.Rmd`s
 
 A `current directory` refers to where R will look for files or otherwise operate. 
 Directories are the folders of files on your computer; a file path is the series of folders leading to the file you are referring to.
 R Markdown documents have the `current directory` always set as wherever the `.Rmd` file itself is saved. 
-This means all file paths specified in the `.Rmd` must be specified _relative_ to the location of the Rmd. 
+This means all file paths specified in the `.Rmd` must be specified _relative_ to the location of the `.Rmd`. 
 
 For more practice with setting file paths in `.Rmd` files see these:  
 
