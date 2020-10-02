@@ -19,12 +19,12 @@ jobs:
         with:
           # get the full repo
           fetch-depth: 0
-      - name: Checkout pages branch and sync with master
+      - name: Checkout pages branch and sync with changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git checkout gh-pages
-          git rebase origin/master
+          git rebase ${{ github.event.after }}
 
       # Test if Dockerfile has changed 
       # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
