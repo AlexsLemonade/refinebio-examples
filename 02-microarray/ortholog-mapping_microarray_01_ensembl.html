@@ -2020,7 +2020,6 @@ human_zebrafish_mapped_df %&gt;%
 </div>
 <div id="sort-out-multi-mappings" class="section level2">
 <h2><span class="header-section-number">4.4</span> Sort out multi-mappings</h2>
-<p>Multiple zebrafish Ensembl gene IDs map to the same human symbol which results in duplicated human gene symbols. Some downstream tools may require the data be simplified to 1:1 mappings. Using another gene identifier may result in a better 1:1 ratio to the zebrafish Ensembl IDs, <em>i.e.</em> human Ensembl IDs instead of human gene symbols. See our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarrary/gene-id-annotation_microarray_01_ensembl.html">gene ID annotation microarray notebook</a> for an example of mapping between gene identifiers.</p>
 <p>If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSDARG00000069142</code> example below.</p>
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(Gene == &quot;ENSDARG00000069142&quot;)</code></pre>
