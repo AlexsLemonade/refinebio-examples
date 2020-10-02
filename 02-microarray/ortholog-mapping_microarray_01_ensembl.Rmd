@@ -214,7 +214,7 @@ df <- df %>%
   tibble::rownames_to_column("Gene")
 ```
 
-## Mapping zebrafish Ensembl gene IDs to human symbols
+## Mapping human gene symbols to zebrafish Ensembl gene IDs
 
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
@@ -226,7 +226,7 @@ head(df$Gene)
 Ensembl gene identifiers have different species-specific prefixes. 
 In zebrafish, Ensembl gene identifiers begin with `ENSDARG` (in human, `ENSG`, etc.).
 
-Now let's do the conversion!
+Now let's do the mapping!
 We'll use the `zebrafish` data from `hcop`; this is what `zebrafish` looks like.
 
 ```{r}
@@ -268,10 +268,10 @@ Here's what the new data frame looks like:
 head(human_zebrafish_mapped_df, n = 25)
 ```
 
-Let's get a summary of the gene symbols returned in the `human_symbol` column of our mapped data frame.
+Let's get a summary of the human gene symbols returned in our mapped data frame, `human_zebrafish_mapped_df`. 
 
 ```{r}
-# We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+# We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s 
 human_zebrafish_mapped_df %>%
   dplyr::group_by(human_symbol) %>%
   dplyr::count() %>%
@@ -290,7 +290,7 @@ sum(is.na(human_zebrafish_mapped_df$human_symbol))
 We have 415 NAs, which means we have 415 zebrafish Ensembl IDs that were not mapped to human gene symbols.
 This is okay because we do not expect everything to map across species.
 
-## Sort out multi-mappings
+## Take a look at some multi-mappings
 
 If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
 Let's look at the `ENSDARG00000069142` example below.
@@ -300,7 +300,7 @@ human_zebrafish_mapped_df %>%
   dplyr::filter(Gene == "ENSDARG00000069142")
 ```
 
-Remember that our original data is associate to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
+Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
 Let's look at the `A1BG` example below.
 
 ```{r}
