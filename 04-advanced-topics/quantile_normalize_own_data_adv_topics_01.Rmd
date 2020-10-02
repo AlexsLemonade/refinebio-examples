@@ -34,7 +34,7 @@ from the refine.bio API and apply it to your own data in R.
 We used [`GSE39842`](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE39842) 
 in another module of the GitHub repository of examples: [`AlexsLemonade/refinebio-examples/compare-processing`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/compare-processing).
 
-The submitters used RMA to process their data. 
+The authors used RMA to process their data. 
 We have already converted the gene identifiers to Ensembl gene ids and can
 obtain the TSV file with these data from GitHub, placing it in the `data` 
 directory we create below with `bash`.

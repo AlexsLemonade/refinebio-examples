@@ -1,6 +1,6 @@
 ---
 title: "Over-representation analysis with WebGestaltR"
-output: 
+output:
   html_notebook:
     toc: TRUE
     toc_float: TRUE
@@ -15,25 +15,25 @@ where one can ask if a set of genes (e.g., those differentially expressed
 using some cutoff) shares more or less genes with gene sets/pathways than
 we would expect at random.
 The other methodologies introduced throughout this module such as QuSAGE and
-GSEA can require more samples than a different expression analysis. 
+GSEA can require more samples than a different expression analysis.
 For instance, the sample label permutation step of GSEA is reported to
-perform poorly with 7 samples or less in each group 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
-It is not uncommon to have n ~ 3 for each group in a treatment-control 
+perform poorly with 7 samples or less in each group
+([](https://doi.org/10.1093/nar/gkt660)).
+It is not uncommon to have n ~ 3 for each group in a treatment-control
 transcriptomic study, at which point identifying differentially expressed genes
 is possible.
 If you are interested in performing pathway analysis on a small study, ORA may
 be your best bet.
-There are some limitations to ORA methods to be aware such as ignoring 
+There are some limitations to ORA methods to be aware such as ignoring
 gene-gene correlation.
-See [Khatri et al. _PLoS Comp Bio._ 2012.](https://doi.org/10.1371/journal.pcbi.1002375) 
-to learn more about the different types of pathway analysis and their 
+See [](https://doi.org/10.1371/journal.pcbi.1002375) 
+to learn more about the different types of pathway analysis and their
 limitations.
 
 ## Data
 
 In this example, we will use a table of differential expression analysis results
-from another one of the example modules 
+from another one of the example modules
 ([`validate-differential-expression`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/validate-differential-expression)).
 Genes were tested for differential expression between the SHH and Groups 3 and
 4 subgroups of medulloblastoma in refine.bio-processed data from
@@ -76,7 +76,7 @@ if (!dir.exists(results_dir)) {
 ### Differentially expressed genes from Robinson et al.
 
 We will read in the differential expression results from GitHub.
-These results are from a two group comparison using 
+These results are from a two group comparison using
 [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html).
 The table contains Ensembl gene IDs, log fold-change, and adjusted p-values
 (FDR in this case).
@@ -91,7 +91,7 @@ dge_url <- "https://github.com/AlexsLemonade/refinebio-examples/raw/10b116dff0d4
 dge_df <- readr::read_tsv(dge_url)
 ```
 
-Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
+Here we'll use log fold-change > 2 and FDR < 0.05 as cutoffs for determining
 what genes are of interest.
 
 ```{r}
@@ -100,10 +100,10 @@ upregulated_genes <- dge_df %>%
   dplyr::pull(ENSEMBL)
 ```
 
-Because we are testing if there is more overlap between a set of genes of 
-interest and gene sets or pathways from some knowledgebase (e.g., KEGG, Gene 
-Ontology (GO)) than we would expect at random, we need to identify an 
-appropriate background set. 
+Because we are testing if there is more overlap between a set of genes of
+interest and gene sets or pathways from some knowledge base (e.g., KEGG, Gene
+Ontology (GO)) than we would expect at random, we need to identify an
+appropriate background set.
 Put another way, if a gene is _not measured_, it can not possibly be in
 our gene set of interest.
 We can provide our analysis method of choice with a reference list, which
@@ -119,7 +119,7 @@ all_genes <- dge_df %>%
 
 We can check whether or not we need to convert to a different gene identifier by
 figuring out what gene identifiers `WebGestaltR` accepts for human.
-We can do this with the `listIdType` function; the first argument is the 
+We can do this with the `listIdType` function; the first argument is the
 organism name.
 
 ```{r}
@@ -130,11 +130,11 @@ We can see that `"ensembl_gene_id"` is a compatible identifier, and therefore
 we do not need to convert to a different identifier.
 
 The `WebGestaltR` function is a wrapper for the [WEB-based GEne SeT
-AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/) 
-([Wang et al. _NAR_. 2017.](https://doi.org/10.1093/nar/gkx356); 
+AnaLysis Toolkit (WebGestalt)](http://www.webgestalt.org/)
+([Wang et al. . 2017.](https://doi.org/10.1093/nar/gkx356);
 note that WebGestalt has a new 2019 version).
 
-WebGestalt can perform multiple _types_ of pathway analysis. 
+WebGestalt can perform multiple _types_ of pathway analysis.
 Here we're using it for ORA and we will use [Gene Ontology (GO)](http://geneontology.org/docs/ontology-documentation/) biological
 processes as our source of gene sets.
 We can see all supported gene sets for humans with `listGeneSet`.
@@ -144,7 +144,7 @@ listGeneSet("hsapiens")
 ```
 
 `WebGestaltR` will generate an HTML file with a report (path specified
-by the `outputDirectory` and `projectName` arguments) _and_ return a 
+by the `outputDirectory` and `projectName` arguments) _and_ return a
 `data.frame`.
 
 ```{r}
@@ -164,15 +164,15 @@ go_enrichment_results <-
 
 As noted in the messages from `WebGestaltR`, the results are in
 `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
-The HTML report is at 
+The HTML report is at
 [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
 
 It looks like there are a lot of pathways associated with ribosomes and
 translation.
 Gene sets, particularly GO gene sets that are of a hierarchical nature, are
-not independent, so it's important to keep in mind that many of these gene sets 
+not independent, so it's important to keep in mind that many of these gene sets
 could be telling us the same thing.
-For more information about WebGestalt output or advanced options, 
+For more information about WebGestalt output or advanced options,
 please see the [WebGestalt 2019 Manual](http://www.webgestalt.org/WebGestalt_2019_Manual.pdf)
 and the [`WebGestaltR` package documentation](https://www.rdocumentation.org/packages/WebGestaltR/versions/0.3.0).
 
