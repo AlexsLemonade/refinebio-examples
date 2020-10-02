@@ -477,5 +477,5 @@ dev.off()
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```
