@@ -1,5 +1,5 @@
 ---
-title: "Introduction to Microarray"
+title: "Introduction to Microarray Data"
 author: "CCDL for ALSF"
 output:   
   html_notebook: 
@@ -7,7 +7,8 @@ output:
     toc_float: true
 ---
 
-Data analyses are generally not "one size fits all"; this is particularly true between RNA-seq vs microarray data.
+Data analyses are generally not "one size fits all"; this is particularly true when with approaches used to analyze RNA-seq and microarray data.
+The characteristics of the data produced by these two technologies can be quite different.
 This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -26,23 +27,29 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 
 ## Introduction to microarray technology
 
-Microarrays measure gene expression using chips filled with probes designed to hybridize to RNA samples that have been reverse transcribed to cDNA. 
-Bound probes give off fluorescence the intensity of which indicates the number of probes bound and therefore the relative quantity of the transcript the probe is designed for. 
+Microarrays measure gene expression using chips filled with oligonucleotide probes designed to hybridize to labeled RNA samples. 
+After hybridization, the microarrays are scanned, and the fluorescence intensity for each probe is measured.
+The fluorescence intensity indicates the number of labeled fragments bound and therefore the relative quantity of the transcript the probe is designed for. 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/microarray-overview.jpg" width=400>  
 
 [@microarray-video]
 
-As with all experimental methods, microarray has strengths and limitations that you should consider in regards to your scientific questions. 
+There are many different kinds of microarray platforms. 
+
+Microarrays can be categorized by their probe chemistry: Affymetrix GeneChips, Illumina Beadarray and etc. all of which supported on refine.bio.
+But, refine.bio only supports single-color arrays, although there are two-color arrays, so our examples and advice are generally from the perspective of using single-color array 
+
+As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
 
 ### Microarray data **strengths**:  
 
-- Less expensive than RNA-seq - can afford more replicates and get higher statistical power [@Tarca2006]. 
-- Microarray has a faster turn-around than RNA-seq [@LCSciences2014].
+- Microarray is generally less expensive than RNA-seq - you can afford more replicates and get higher statistical power [@Tarca2006]. 
+- Microarray often has a faster turn-around than RNA-seq [@LCSciences2014].
 
 ### Microarray data **limitations**:  
 
-- If a transcript doesn't have a probe designed to it, you won't get it measured; can't be used for transcript discovery [@Mantione2014]. 
+- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; microarray can't be used for transcript discovery [@Mantione2014]. 
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
@@ -50,9 +57,10 @@ To help address these probe nucleotide composition biases, refine.bio uses [SCAN
 
 ## About quantile normalization 
 
-Microarray data is generally processed in groups of chips - this can lead to [batch effects](https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment). 
-To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization) which enables more confident comparisons of expression levels between experiments.
-See the refine.bio docs for more about the microarray process steps including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
+Microarray chips are generally experimentally processed in groups of chips - this can lead to [experimental batch effects](https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment). 
+To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization) which enables more confident comparisons of expression levels among experiments.
+Different microarray chips, are also a type of batch effect, but quantile normalizations allows us to compare data from different chips that to a limited degree if we proceed with caution. 
+See the refine.bio docs for more about the microarray processing steps, including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
 ## More resources on microarray technology: 
 
