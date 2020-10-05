@@ -230,7 +230,7 @@ refine.bio data uses Ensembl gene identifiers, which will be in the first column
 head(df$Gene)
 ```
 
-Enembl gene identifiers have different species-specific prefixes. 
+Ensembl gene identifiers have different species-specific prefixes. 
 In mouse, Ensembl gene identifiers begin with `ENSMUSG` (in human, `ENSG`, etc.).
 
 Now let's do the conversion!
@@ -328,8 +328,7 @@ readr::write_tsv(
 Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
 
 A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
-Therefore, we will not add the expression data here since the expression values are not
-the same across Ensembl IDs, despite mapping to the same human gene symbol.
+Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.
 
 ```{r}
 collapsed_mouse_ensembl_df <- human_mouse_mapped_df %>%
