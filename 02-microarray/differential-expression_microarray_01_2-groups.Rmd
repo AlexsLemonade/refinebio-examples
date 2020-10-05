@@ -302,7 +302,7 @@ Now let's plot the data for `ENSDARG00000104315` using our `top_gene_df`.
 
 ```{r}
 ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
-  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  geom_jitter(width = 0.2, height = 0) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
 

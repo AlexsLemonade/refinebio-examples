@@ -376,7 +376,7 @@ We should expect this gene to be expressed at much higher levels in the `WNT` gr
 
 ```{r}
 ggplot(top_gene_df, aes(x = subgroup, y = ENSG00000128683, color = subgroup)) +
-  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  geom_jitter(width = 0.2, height = 0) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
 
