@@ -1,0 +1,370 @@
+---
+title: "Ortholog Mapping with `hcop` - RNA-seq"
+author: "CCDL for ALSF"
+date: "`r format(Sys.time(), '%B %Y')`"
+output:   
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This notebook demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for RNA-seq data obtained from refine.bio.
+In this notebook, we will use mouse data from refine.bio and annotate it with human gene symbols from HGNC Comparison of Orthology Predictions (HCOP).
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.Rmd).
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP070849/combination-targeted-therapy-to-disrupt-aberrant-oncogenic-signaling-and-reverse-epigenetic-dysfunction-in-idh2-and-tet2-mutant-acute-myeloid-leukemia-rna-seq).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute myeloid leukemia sample dataset](https://www.refine.bio/experiments/SRP070849/combination-targeted-therapy-to-disrupt-aberrant-oncogenic-signaling-and-reverse-epigenetic-dysfunction-in-idh2-and-tet2-mutant-acute-myeloid-leukemia-rna-seq).
+
+The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mice with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.
+
+## Place the dataset in your new `data/` folder
+
+refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `SRP070849` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called "data" which contains:
+  - The `SRP070849` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+
+Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+Run this chunk to double check that your files are in the right place. 
+
+```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP070849")
+
+# Check if the gene expression matrix file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "SRP070849.tsv"))
+
+# Check if the metadata file is in the data directory stored as `data_dir`
+file.exists(file.path(data_dir, "metadata_SRP070849.tsv"))
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+
+# Ortholog Mapping with `hcop` - RNA-seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using `hcop` to map between mouse and human identifiers [@Turner2018].
+
+We'll need to use the `devtools` package to install `hcop` from GitHub [@Wickham2020].
+
+```{r}
+if (!("devtools" %in% installed.packages())) {
+  install.packages("devtools")
+}
+```
+
+Now we can install `hcop` from GitHub.
+You can control what version of the package is installed by using the `ref` argument of `devtools::install_github()`.
+Here, we'll use the most recent commit at the time that we are putting together this example.
+
+```{r}
+devtools::install_github("stephenturner/hcop", ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library(hcop)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import and set up data
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your metadata file
+  "metadata_SRP070849.tsv" # Replace with the name of your metadata file
+))
+
+# Read in data TSV file
+df <- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your data file
+  "SRP070849.tsv" # Replace with the name of your data file
+)) %>%
+  # Tuck away the gene ID column as rownames
+  tibble::column_to_rownames("Gene")
+```
+
+Let's ensure that the metadata and data are in the same sample order. 
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>%
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+
+# Bring back the "Gene" column in preparation for mapping
+df <- df %>%
+  tibble::rownames_to_column("Gene")
+```
+
+## Mapping mouse Ensembl gene IDs to human symbols
+
+refine.bio data uses Ensembl gene identifiers, which will be in the first column.
+
+```{r}
+# Let's take a look at the first 6 items in the `Gene` column of `df`
+head(df$Gene)
+```
+
+Enembl gene identifiers have different species-specific prefixes. 
+In mouse, Ensembl gene identifiers begin with `ENSMUSG` (in human, `ENSG`, etc.).
+
+Now let's do the conversion!
+We'll use the `mouse` data from `hcop`; this is what `mouse` looks like.
+
+```{r}
+mouse
+```
+
+We're interested in the `human_symbol` and `mouse_ensembl` columns specifically.
+
+```{r}
+human_mouse_key <- mouse %>%
+  # we'll want to subset mouse to only the columns we're interested in
+  dplyr::select(mouse_ensembl, human_symbol)
+# Now let's join the expression data from `df` for the subset of genes in `df`
+human_mouse_mapped_df <- df %>%
+  dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl"))
+```
+
+Here's what the new data frame looks like:
+
+```{r}
+head(human_mouse_mapped_df, n = 25)
+```
+
+Let's get a summary of the gene symbols returned in the `human_symbol` column of our mapped data frame.
+
+```{r}
+# We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+human_mouse_mapped_df %>%
+  dplyr::group_by(human_symbol) %>%
+  dplyr::count() %>%
+  # Sort by highest `n` which would be the human gene symbol with the most mapped mouse Ensembl IDs
+  dplyr::arrange(desc(n))
+```
+
+Looks like we have mapped symbols!
+We also have 18908 NAs, which is okay, because we do not expect everything to map across species.
+
+## Take a look at some multi-mappings
+
+If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+Let's look at the `ENSMUSG00000000037` example below.
+
+```{r}
+human_mouse_mapped_df %>%
+  dplyr::filter(Gene == "ENSMUSG00000000037") %>%
+  dplyr::select(Gene, human_symbol, dplyr::everything())
+```
+
+Remember that our original data is associated to mouse Ensembl IDs, so when a human gene symbol maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
+Let's look at the `CACNA1B` example below.
+
+```{r}
+human_mouse_mapped_df %>%
+  dplyr::filter(human_symbol == "CACNA1B") %>%
+  dplyr::select(Gene, human_symbol, dplyr::everything())
+```
+
+## Collapse multi-mapped human gene symbols
+
+Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.
+
+In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique mouse Ensembl ID.
+
+```{r}
+collapsed_human_symbol_df <- human_mouse_mapped_df %>%
+  # Group by Ensembl IDs
+  dplyr::group_by(Gene) %>%
+  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_symbols`
+  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
+  # Now we need get the gene expression data back
+  dplyr::left_join(df, by = "Gene")
+head(collapsed_human_symbol_df)
+```
+
+### Write results to file
+
+Now let's write our results to file.
+
+```{r}
+readr::write_tsv(
+  collapsed_human_symbol_df,
+  file.path(
+    results_dir,
+    "SRP070849_mouse_ensembl_to_collapsed_human_gene_symbol.tsv" # Replace with a relevant output file name
+  )
+)
+```
+
+## Collapse multi-mapped mouse Ensembl IDs
+
+Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
+
+A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
+Therefore, we will not add the expression data here since the expression values are not
+the same across Ensembl IDs, despite mapping to the same human gene symbol.
+
+```{r}
+collapsed_mouse_ensembl_df <- human_mouse_mapped_df %>%
+  # Group by human gene symbols
+  dplyr::group_by(human_symbol) %>%
+  # Collapse the Ensembl IDs in `human_mouse_mapped_df` into one column named `all_mouse_ensembl_ids`
+  dplyr::summarize(all_mouse_ensembl_ids = paste(Gene, collapse = ";"))
+head(collapsed_mouse_ensembl_df)
+```
+
+
+### Write results to file
+
+Now let's write our list of collapsed mouse Ensembl IDs for each unique human gene symbol to file.
+
+```{r}
+readr::write_tsv(
+  collapsed_mouse_ensembl_df,
+  file.path(
+    results_dir,
+    "SRP070849_collapsed_mouse_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
+  )
+)
+```
+
+# Resources for further learning
+
+- [HCOP: the HGNC comparison of orthology predictions search tool](https://pubmed.ncbi.nlm.nih.gov/16284797/) [@Wright2005]
+- See our [microarray ortholog mapping notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/ortholog-mapping_microarray_01_ensembl.Rmd) as another applicable example, since the steps for this workflow do not change with technology. 
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessionInfo()
