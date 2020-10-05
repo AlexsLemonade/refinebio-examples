@@ -53,7 +53,7 @@ As with all experimental methods, microarrays have strengths and limitations tha
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
-To help address these probe nucleotide composition biases, refine.bio uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads [@Piccolo2012].
+Refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
 
 ## About quantile normalization 
 
@@ -72,9 +72,11 @@ See the refine.bio docs for more about the microarray processing steps, includin
 
 ### Why doesn't the gene I care about show up in this microarray dataset?
 
-If a gene is not detected in any of the samples in a set through our processing, it is still kept in the `Gene` column, but it will be reported as `0`.
-For microarray data, a `0` is not necessarily indicative of biology; your gene of interest may have not been covered by the [probes designed for the chip that was used](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed). 
+Refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data [@Dai2005]. 
+This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
+This also identifies which probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations). 
+If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used does maintains that it is still accurate, your gene of interest will show up in the Gene column.
 
-If the gene you are interested in does not have an Ensembl ID according to the [version of the annotation](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed) we used, it will not be reported in any refine.bio download.  
+You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and [by following these instructions](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed).
 
 ## References

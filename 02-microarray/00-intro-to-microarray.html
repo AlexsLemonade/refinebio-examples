@@ -1710,7 +1710,7 @@ div.tocify {
 <li>A chip’s probe designs are only as up to date as the genome annotation at the time it was designed <span class="citation">(Mantione <em>et al.</em> 2014)</span>.</li>
 <li>As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias).</li>
 </ul>
-<p>To help address these probe nucleotide composition biases, refine.bio uses <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf">SCAN</a> normalization methods prior to your downloads <span class="citation">(Piccolo <em>et al.</em> 2012)</span>.</p>
+<p>Refine.bio drops outdated probes based on <a href="http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/">Brainarray’s annotation packages</a> and uses <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf">SCAN</a> normalization methods prior to your downloads to help address these probe nucleotide composition biases <span class="citation">(Dai <em>et al.</em> 2005; Piccolo <em>et al.</em> 2012)</span>.</p>
 </div>
 </div>
 <div id="about-quantile-normalization" class="section level2">
@@ -1728,13 +1728,16 @@ div.tocify {
 </ul>
 <div id="why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset" class="section level3">
 <h3><span class="header-section-number">0.3.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h3>
-<p>If a gene is not detected in any of the samples in a set through our processing, it is still kept in the <code>Gene</code> column, but it will be reported as <code>0</code>. For microarray data, a <code>0</code> is not necessarily indicative of biology; your gene of interest may have not been covered by the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">probes designed for the chip that was used</a>.</p>
-<p>If the gene you are interested in does not have an Ensembl ID according to the <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">version of the annotation</a> we used, it will not be reported in any refine.bio download.</p>
+<p>Refine.bio uses <a href="http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/">Brainarray packages</a> to annotate the microarray probe data <span class="citation">(Dai <em>et al.</em> 2005)</span>. This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). This also identifies which probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations). If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used does maintains that it is still accurate, your gene of interest will show up in the Gene column.</p>
+<p>You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">by following these instructions</a>.</p>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
+<div id="ref-Dai2005">
+<p>Dai M., P. Wang, A. D. Boyd, G. Kostov, and B. Athey <em>et al.</em>, 2005 Evolving gene/transcript definitions significantly alter the interpretation of GeneChip data. Nucleic Acids Res 33: e175.</p>
+</div>
 <div id="ref-microarray-video">
 <p>Farina D., 2020 Gene expression analysis and DNA microarray assays</p>
 </div>
