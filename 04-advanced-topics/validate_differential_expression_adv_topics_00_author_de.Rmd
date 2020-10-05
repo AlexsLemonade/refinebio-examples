@@ -205,5 +205,5 @@ readr::write_tsv(stats, file.path(results_dir, "GSE37382_limma_results.tsv"))
 Print session info:
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

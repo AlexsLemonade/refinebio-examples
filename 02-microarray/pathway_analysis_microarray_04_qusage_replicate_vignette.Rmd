@@ -461,5 +461,5 @@ graphics::boxplot(exprs_mat["3665", ] ~ interaction(filtered_metadata_df$timepoi
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

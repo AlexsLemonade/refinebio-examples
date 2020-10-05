@@ -151,5 +151,5 @@ Print session info:
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
