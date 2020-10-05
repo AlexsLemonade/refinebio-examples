@@ -4,7 +4,7 @@ name: Build, Render, and Push
 # events only for the master branch
 on:
   push:
-    branches: [ null ]
+    branches: [ master ]
 
 jobs:
   # This workflow contains a single job called "build-all"
@@ -17,10 +17,18 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          # get the full repo history
+          # get the full repo
           fetch-depth: 0
+          # use alexslemonade-docs-bot
+          token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
+      - name: Checkout pages branch and sync with changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Alex's Lemonade Docs Bot"
+          git checkout gh-pages
+          git merge -s recursive --strategy-option=theirs ${{ github.event.after }}
 
-      # Test if Dockerfile has changed 
+      # Test if Dockerfile has changed
       # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
       - name: Check Dockerfile for changes
         id: check_docker
@@ -59,7 +67,7 @@ jobs:
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
-      # render pages with snakemake in the docker image
+      
       - name: Render all pages to html
         run: |
           docker run \
@@ -69,11 +77,9 @@ jobs:
 
       - name: Commit changed html
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
           git add \*.html
-          git commit -m 'Render Rmd to html' || echo "No changes to commit"
-          git push --force origin || echo "No changes to push"
+          git commit -m 'Render html' || echo "No changes to commit"
+          git push origin gh-pages || echo "No changes to push"
 
 
 
