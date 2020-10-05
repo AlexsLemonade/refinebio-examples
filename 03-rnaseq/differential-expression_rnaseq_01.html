@@ -1782,7 +1782,7 @@ file.exists(file.path(data_dir, &quot;metadata_SRP078441.tsv&quot;))</code></pre
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <code>DESeq2</code> <span class="citation">(Love <em>et al.</em> 2014)</span> for the differential expression testing. We will also use <code>EnhancedVolcano</code> for plotting and <code>apeglm</code> for some log fold change estimates in the results table <span class="citation">(Blighe <em>et al.</em> 2020 p. @Zhu2018)</span></p>
+<p>In this analysis, we will be using <code>DESeq2</code> <span class="citation">(Love <em>et al.</em> 2014)</span> for the differential expression testing. We will also use <code>EnhancedVolcano</code> for plotting and <code>apeglm</code> for some log fold change estimates in the results table <span class="citation">(Zhu <em>et al.</em> 2018; Blighe <em>et al.</em> 2020)</span></p>
 <pre class="r"><code>if (!(&quot;DESeq2&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
   BiocManager::install(&quot;DESeq2&quot;, update = FALSE)
