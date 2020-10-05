@@ -172,7 +172,7 @@ This will help fix some spacing and formatting issues automatically.
 
 #### Session Info
 
-`sessionInfo()` should always be printed out at the end.
+`sessioninfo::session_info()` should always be printed out at the end.
 (It is included in the `.Rmd` template)
 
 ### Notebook text

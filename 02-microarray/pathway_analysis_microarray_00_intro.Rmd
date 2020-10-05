@@ -179,5 +179,5 @@ and the [`WebGestaltR` package documentation](https://www.rdocumentation.org/pac
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

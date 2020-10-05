@@ -1,7 +1,7 @@
 ---
 title: "Clustering Heatmap - RNA-seq"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -415,5 +415,5 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
