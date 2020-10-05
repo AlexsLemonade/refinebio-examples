@@ -187,6 +187,13 @@ library(ggplot2)
 library(magrittr)
 ```
 
+The jitter plot we make later on involves some randomness. 
+As is good practice when our analysis involves randomness, we will [set the seed](TODO: link to glossary about setting the seed).
+
+```{r}
+set.seed(12345)
+```
+
 ## Import data and metadata
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
