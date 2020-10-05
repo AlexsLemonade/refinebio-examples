@@ -541,5 +541,5 @@ data.frame(down.overlap[[3]]) %>%
 Print session info:
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```
