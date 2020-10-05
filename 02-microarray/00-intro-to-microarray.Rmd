@@ -37,8 +37,8 @@ The fluorescence intensity indicates the number of labeled fragments bound and t
 
 There are many different kinds of microarray platforms. 
 
-Microarrays can be categorized by their probe chemistry: Affymetrix GeneChips, Illumina Beadarray and etc. all of which supported on refine.bio.
-But, refine.bio only supports single-color arrays, although there are two-color arrays, so our examples and advice are generally from the perspective of using single-color array 
+Microarrays can be categorized by their probe chemistry and manufacturer: [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html), [Illumina Beadarray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf); all of which supported on refine.bio.
+But, refine.bio only supports single-color arrays, although there are [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays), so our examples and advice are generally from the perspective of using single-color array. 
 
 As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
 
