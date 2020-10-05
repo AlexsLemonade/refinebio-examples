@@ -2029,7 +2029,7 @@ human_zebrafish_mapped_df %&gt;%
 ##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
 ## 1   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502
 ## 2   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502</code></pre>
-<p>Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>A1BG</code> example below.</p>
+<p>Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>MATR3</code> example below.</p>
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(human_symbol == &quot;MATR3&quot;)</code></pre>
 <pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
