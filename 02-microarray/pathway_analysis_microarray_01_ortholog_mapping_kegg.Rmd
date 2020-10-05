@@ -268,5 +268,5 @@ all.equal(mouse_read_list, kegg_mouse_list)
 ## Session Info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```
