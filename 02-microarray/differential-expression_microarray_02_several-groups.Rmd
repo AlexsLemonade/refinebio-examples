@@ -171,7 +171,7 @@ library(magrittr)
 library(ggplot2)
 ```
 
-The jitter plot we make later on involves some randomness. 
+The jitter plot we make later on with `geom_jitter()` involves some randomness. 
 As is good practice when our analysis involves randomness, we will set the seed.
 <!-- TODO: link to glossary about setting the seed -->
 
