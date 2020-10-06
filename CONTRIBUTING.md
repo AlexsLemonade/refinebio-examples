@@ -1,4 +1,3 @@
-# Contributing guidelines - refinebio-examples
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -282,10 +281,13 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 ## Rendering notebooks
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
-`snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
+All notebooks are automatically re-rendered by GitHub actions before merges to master.
+The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
 
-### How to re-render the notebooks
+The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+However, `snakemake` can (and should) be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
+
+### How to re-render the notebooks locally
 
 **Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
 
