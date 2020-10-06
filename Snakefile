@@ -20,7 +20,7 @@ rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
     output:
-       "{basedir}/{basename}.html"
+        "{basedir}/{basename}.html"
     shell:
         "Rscript scripts/render-notebooks.R"
         " --rmd {input.rmd}"
