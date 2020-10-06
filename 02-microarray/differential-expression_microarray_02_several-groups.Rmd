@@ -171,6 +171,14 @@ library(magrittr)
 library(ggplot2)
 ```
 
+The jitter plot we make later on with `geom_jitter()` involves some randomness. 
+As is good practice when our analysis involves randomness, we will set the seed.
+<!-- TODO: link to glossary about setting the seed -->
+
+```{r}
+set.seed(12345)
+```
+
 ## Import and set up data
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
@@ -368,7 +376,7 @@ We should expect this gene to be expressed at much higher levels in the `WNT` gr
 
 ```{r}
 ggplot(top_gene_df, aes(x = subgroup, y = ENSG00000128683, color = subgroup)) +
-  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  geom_jitter(width = 0.2, height = 0) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
 

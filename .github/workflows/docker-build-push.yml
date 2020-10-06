@@ -43,6 +43,7 @@ jobs:
             echo "No change to Dockerfile"
             echo "::set-output name=changed::0"
           fi
+          rm changes.txt
 
       # Login to Dockerhub
       - name: Login to DockerHub
