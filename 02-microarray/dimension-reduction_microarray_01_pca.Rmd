@@ -1,7 +1,7 @@
 ---
 title: "PCA Visualization - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -213,13 +213,14 @@ pca <- prcomp(
 ```
 
 Let's take a preview at the PCA results.
+We are using indexing to only print out the first 10 PCs: `[, 1:10]`.
 
 ```{r}
 # We can access the results from our `pca` object using `$x`
-head(pca$x)
+head(pca$x[, 1:10])
 ```
 
-We can see that we now have 285 principal component values for each of our samples.
+In total, we do have 285 principal component values, because we provided 285 sample's data.
 
 ## Explore Variance in PCA Results
 
@@ -338,5 +339,5 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```

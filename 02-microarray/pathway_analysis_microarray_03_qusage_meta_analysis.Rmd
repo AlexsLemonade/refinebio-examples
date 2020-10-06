@@ -508,5 +508,5 @@ It looks like these two genes promote the polymerization of actin filaments.
 ## Session Info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

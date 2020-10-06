@@ -43,6 +43,7 @@ jobs:
             echo "No change to Dockerfile"
             echo "::set-output name=changed::0"
           fi
+          rm changes.txt
 
       # Login to Dockerhub
       - name: Login to DockerHub
@@ -77,7 +78,7 @@ jobs:
 
       - name: Commit changed html
         run: |
-          git add \*.html
+          git add -A
           git commit -m 'Render html' || echo "No changes to commit"
           git push origin gh-pages || echo "No changes to push"
 
