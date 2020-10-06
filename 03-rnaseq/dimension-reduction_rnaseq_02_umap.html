@@ -1933,7 +1933,7 @@ metadata &lt;- metadata %&gt;%
 </div>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.5</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for normalization, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a>. ) and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
+<p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a>. ) and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <pre class="r"><code># Create a `DESeqDataSet` object
 dds &lt;- DESeqDataSetFromMatrix(
   countData = df, # This is the data frame with the counts values for all replicates in our dataset
@@ -1950,10 +1950,10 @@ dds &lt;- DESeqDataSetFromMatrix(
 genes_to_keep &lt;- rowSums(counts(dds)) &gt;= 10
 dds &lt;- dds[genes_to_keep, ]</code></pre>
 </div>
-<div id="perform-deseq2-normalization" class="section level2">
-<h2><span class="header-section-number">4.7</span> Perform DESeq2 normalization</h2>
-<p>We are going to use the <code>vst()</code> function from the <code>DESeq2</code> package to normalize the data. TODO: Add a note/link to section in documentation on why we use <code>vst()</code> vs <code>rlog()</code> and <code>normTransform()</code>.</p>
-<pre class="r"><code># Normalize the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+<div id="perform-deseq2-normalization-and-transformation" class="section level2">
+<h2><span class="header-section-number">4.7</span> Perform DESeq2 normalization and transformation</h2>
+<p>We are going to use the <code>vst()</code> function from the <code>DESeq2</code> package to normalize and transform the data. For more information about these transformation methods, <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">see here</a>.</p>
+<pre class="r"><code># Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
 dds_norm &lt;- vst(dds)</code></pre>
 </div>
 <div id="perform-umap" class="section level2">
@@ -2067,7 +2067,7 @@ sessioninfo::session_info()</code></pre>
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-10-02                  
+##  date     2020-10-06                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package              * version  date       lib source        
