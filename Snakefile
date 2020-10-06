@@ -19,7 +19,6 @@ rule target:
 rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
-        nav = "{basedir}/_navbar.html",
         bib = "references.bib",
         csl = "components/genetics.csl"
     output:
