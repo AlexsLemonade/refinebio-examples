@@ -288,6 +288,10 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
+Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
+All `.html` files will be re-rendered upon merging to master so the files will be updated.
+But, by not committing your local, unintentionally altered files, the `Files changed` page of your PR on GitHub will be more focused. 
+
 ### How to re-render the notebooks locally
 
 **Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
