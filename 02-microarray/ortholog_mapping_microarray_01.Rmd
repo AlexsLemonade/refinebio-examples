@@ -2,23 +2,23 @@
 title: "Ortholog Mapping with `hcop`"
 author: ALSF CCDL - Jaclyn Taroni
 output:   
-  html_notebook: 
+  html_notebook:
     toc: true
     toc_float: true
 ---
 
-*Purpose*: This notebook demonstrates how you can use the 
-[`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog 
-mapping for data obtained from refine.bio. 
+*Purpose*: This notebook demonstrates how you can use the
+[`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog
+mapping for data obtained from refine.bio.
 HCOP stands for HGNC Comparison of Orthology Predictions.
-You can read more about the package 
+You can read more about the package
 [here](https://stephenturner.github.io/hcop).
 
 ## 1) Install `hcop`
 
-We'll need to use the 
-[`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) 
-package to install `hcop` from Github.
+We'll need to use the
+[`devtools`](https://cran.r-project.org/web/packages/devtools/index.html)
+package to install `hcop` from GitHub.
 `devtools` can be installed using the instructions below.
 Note that this will first check if `devtools` is installed and install it
 if it is not.
@@ -31,15 +31,15 @@ if (!("devtools" %in% installed.packages())) {
 
 _Note:_ `devtools` requires `git2r` which we've encountered trouble installing
 before.
-Specifically, `git2r` requires the [`libgit2`](https://libgit2.org/) and 
+Specifically, `git2r` requires the [`libgit2`](https://libgit2.org/) and
 [`zlib`](https://zlib.net/) system libraries.
-If you're using a Docker image from the 
-[Rocker project](https://www.rocker-project.org/) without these dependencies 
-(e.g., `rocker/rstudio`), follow 
+If you're using a Docker image from the
+[Rocker project](https://www.rocker-project.org/) without these dependencies
+(e.g., `rocker/rstudio`), follow
 [these instructions](https://github.com/rocker-org/rocker/wiki/Using-the-RStudio-image#dependencies-external-to-the-r-system).
 
-Now we'll install `hcop` from Github.
-You can control what version of the package is installed by using the `ref` 
+Now we'll install `hcop` from GitHub.
+You can control what version of the package is installed by using the `ref`
 command of `devtools::install_github`.
 Here, we'll use the most recent commit at the time that we are putting together
 this example.
@@ -64,11 +64,11 @@ if (!dir.exists(results_dir)) {
 
 ## 2) Mapping zebrafish Ensembl gene IDs to human symbols
 
-`hcop` supports mapping between zebrafish and human identifiers. 
+`hcop` supports mapping between zebrafish and human identifiers.
 Here, we'll use zebrafish data from refine.bio and annotate it with human gene
 symbols.
-In keeping with the `hcop` documentation, we'll use tidyverse packages 
-(e.g., [`dplyr`](https://dplyr.tidyverse.org/) and 
+In keeping with the `hcop` documentation, we'll use tidyverse packages
+(e.g., [`dplyr`](https://dplyr.tidyverse.org/) and
 [`readr`](https://readr.tidyverse.org)) below.
 
 ```{r Load hcop and dplyr libraries}
@@ -76,7 +76,7 @@ library(hcop)
 library(dplyr)
 ```
 
-Let's read in the tsv file from refine.bio. 
+Let's read in the TSV file from refine.bio.
 We'll convert _all_ identifiers in the file, rather than selecting a few.
 Because of the formatting of the output of refine.bio, the first column name
 will be filled in with `'X1'`.
@@ -88,7 +88,7 @@ exprs.df <- readr::read_tsv(file.path(
 ))
 ```
 
-refine.bio data uses Ensembl gene identifiers, which will be in the first 
+refine.bio data uses Ensembl gene identifiers, which will be in the first
 column.
 
 ```{r Examine identifiers head}
@@ -121,7 +121,7 @@ Here's what the new data.frame looks like:
 head(human.symbol.df, 25)
 ```
 
-## 3) Write newly annotated data to a tsv file
+## 3) Write newly annotated data to a TSV file
 
 ```{r Write to file}
 readr::write_tsv(
@@ -138,8 +138,8 @@ readr::write_tsv(
 * Multiple zebrafish Ensembl gene IDs map to the same human symbol which results
 in duplicated human gene symbols. Some downstream tools may need this to be
 resolved.
-* If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene 
-expression values get duplicated. Let's look at the `ENSDARG00000069142` 
+* If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene
+expression values get duplicated. Let's look at the `ENSDARG00000069142`
 example below.
 
 ```{r}
@@ -151,5 +151,5 @@ Print session info:
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```

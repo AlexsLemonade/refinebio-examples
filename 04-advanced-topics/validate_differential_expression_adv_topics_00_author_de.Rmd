@@ -2,26 +2,26 @@
 title: "Differential Expression Analysis for GSE37382"
 author: "ALSF CCDL - Candace Savonen"
 output:   
-  html_notebook: 
+  html_notebook:
     toc: true
     toc_float: true
 ---
 
-*Purpose*: This notebook tests differential expression in probe data from 
-author-submitted version of GSE37382, a medulloblastoma microarray dataset. 
+*Purpose*: This notebook tests differential expression in probe data from
+author-submitted version of GSE37382, a medulloblastoma microarray dataset.
 
 The results from this differential expression analysis is used in the following
-notebook to compare how the processing of this microarray data affects 
+notebook to compare how the processing of this microarray data affects
 differential expression outcomes.
-The data here are medulloblastoma microarray data produced by [Northcott et al, 2012](https://www.ncbi.nlm.nih.gov/pubmed/22832581) and are obtained from Gene 
+The data here are medulloblastoma microarray data produced by [Northcott et al, 2012](https://www.ncbi.nlm.nih.gov/pubmed/22832581) and are obtained from Gene
 Expression Omnibus (GEO).
 
 ## 1) Install libraries
-This script uses the bioconductor R package limma to identify differentially 
+This script uses the bioconductor R package limma to identify differentially
 expressed genes.  
-The full guide on [limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) 
+The full guide on [limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf)
 shows examples of limma functions.  
-We will also use the library `GEOquery` to obtain the author-processed data. 
+We will also use the library `GEOquery` to obtain the author-processed data.
 
 ```{r Install limma}
 if (!("limma" %in% installed.packages())) {
@@ -73,7 +73,7 @@ if (!dir.exists(data_dir)) {
 ```
 
 ## 2) Import and set up author processed data from GEO
-For more information on how this data was processed, see its 
+For more information on how this data was processed, see its
 [GEO entry](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE37382)
 
 ```{r}
@@ -126,7 +126,7 @@ metadata
 
 ## 4) Set up design matrix
 limma needs a numeric design matrix to signify which are treatment and control
-samples. 
+samples.
 
 ```{r Set up design matrix}
 # Set up group names
@@ -141,7 +141,7 @@ colnames(des.mat)[2] <- paste0(levels(subgroup), collapse = "vs")
 
 ## 5) Apply linear model
 After applying our data to linear model, in this example we apply empirical Bayes
-smoothing and Benjamini-Hochberg multiple testing correction. 
+smoothing and Benjamini-Hochberg multiple testing correction.
 
 ```{r Apply linear model}
 # Initial fit
@@ -169,9 +169,9 @@ Let's pick a probe from the results to double check our output.
 stats[32, ]
 ```
 
-According to the data above, we should see that affy probe id `8154846` should 
+According to the data above, we should see that Affymetrix probe ID `8154846` should
 be higher in `SHH` group data than in `NonSHH` group data.
-Let's extract this data and make a bopxplot to check if that is what we see.
+Let's extract this data and make a boxplot to check if that is what we see.
 
 ```{r}
 # Extract a gene's data from the original refine.bio data.frame
@@ -198,12 +198,12 @@ Looks like what we would expect to see.
 ## 7) Write statistics to output results file
 
 ```{r  Write results}
-# Save summary statistics to a tsv file
+# Save summary statistics to a TSV file
 readr::write_tsv(stats, file.path(results_dir, "GSE37382_limma_results.tsv"))
 ```
 
 Print session info:
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

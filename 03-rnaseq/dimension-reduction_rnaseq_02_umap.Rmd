@@ -1,7 +1,7 @@
 ---
 title: "UMAP Visualization - RNA-seq"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -25,16 +25,16 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/dimension-reduction_rnaseq_02_umap.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
-Clicking this link will most likely send this to your downloads folder on your computer. 
+Clicking this link will most likely send this to your downloads folder on your computer.
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
 ## Set up your analysis folders
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
-Run this next chunk to set up your folders! 
+We have set up some code that will automatically set up a folder structure for you.
+Run this next chunk to set up your folders!
 
-If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations.
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -84,21 +84,21 @@ Note that this option will only be available for RNA-seq datasets.
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
-You will get an email when it is ready. 
+You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
 
-<!--BRIEFLY SUMMARIZE THIS DATASET--> 
+<!--BRIEFLY SUMMARIZE THIS DATASET-->
 
 The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
 Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 
 ## Place the dataset in your new `data/` folder
 
-Refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Refine.bio will send you a download button in the email when it is ready.
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-folder-structure.png" width=400>
@@ -106,15 +106,15 @@ Double clicking should unzip this for you and create a folder of the same name.
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
-Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`.
 
 Copy and paste the `SRP133573` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
-Your new analysis folder should contain: 
+Your new analysis folder should contain:
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `SRP133573` folder which contains:
     - The gene expression  
@@ -122,12 +122,12 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
 
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
-In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
-Run this chunk to double check that your files are in the right place. 
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis.
+Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Define the file path to the data directory
@@ -142,13 +142,13 @@ file.exists(file.path(data_dir, "metadata_SRP133573.tsv"))
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots to the `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
+From here you can customize this analysis example to fit your own scientific questions and preferences.
 
 ***
 
@@ -196,7 +196,7 @@ set.seed(12345)
 
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
 This chunk of code will read the both TSV files and add them as data frames to your environment.
 
 ```{r}
@@ -215,7 +215,7 @@ df <- readr::read_tsv(file.path(
   tibble::column_to_rownames("Gene")
 ```
 
-Let's ensure that the metadata and data are in the same sample order. 
+Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
@@ -300,7 +300,7 @@ dds_norm <- vst(dds)
 ## Perform UMAP
 
 Uniform Manifold Approximation and Projection (UMAP) is a dimension reduction technique proposed by @McInnes2018 ([See associated paper](https://arxiv.org/abs/1802.03426)).
-While PCA assumes that the variation we care about has a particular distribution (normal, broadly speaking), UMAP allows more complicated distributions that it learns from the data. 
+While PCA assumes that the variation we care about has a particular distribution (normal, broadly speaking), UMAP allows more complicated distributions that it learns from the data.
 The advantage of this feature is that UMAP can do a better job separating clusters, especially when some of those clusters may be more similar to each other than others [@CCDL2020].  
 
 In this code chunk, we are going to extract the normalized counts data from the `DESeqDataSet` object and perform UMAP on the normalized data using `umap()` from the `umap` package.
@@ -386,14 +386,14 @@ Although it does appear that majority of the pre-ADT and post-ADT appear to clus
 
 ### Interpretation of UMAP plot and results
 
-1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters  (Also why setting the seed is important). 
-This means that you should not rely too heavily on the exact values of UMAP's output. 
+1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters  (Also why setting the seed is important).
+This means that you should not rely too heavily on the exact values of UMAP's output.
 
   - One particular limitation of UMAP is that while observed clusters have some meaning, the distance *between* clusters usually does not (nor does cluster density). The fact that two clusters are near each other should NOT be interpreted to mean that they are more related to each other than to more distant clusters. (There is some disagreement about whether UMAP distances have more meaning, but it is also probably safer to assume they don't.)
 
 2. Playing with the parameters so you can fine-tune them is a good way to give you more information about a particular analysis as well as the data itself.
 Feel free to try playing with the parameters on your own in the code chunks above!
-   
+
 In summary, a good rule of thumb to remember is: if the results of an analysis can be completely changed by changing its parameters, you should be very cautious when it comes to the conclusions you draw from it as well as having good rationale for the parameters you choose (_adapted from @CCDL2020 training materials_).
 
 ## Save annotated UMAP plot as a PNG
@@ -415,10 +415,10 @@ ggsave(file.path(plots_dir, "SRP133573_umap_plot.png"), # Replace with name rele
 
 # Print session info
 
-At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+At the end of every analysis, before saving your notebook, we recommend printing out your session info.
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```

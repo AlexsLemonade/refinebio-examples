@@ -10,7 +10,7 @@ date: 2019
 
 ## Background
 
-Here, we will replicate the [`qusage` package vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf) (Bolen C.).
+Here, we will replicate the [`qusage` package vignette](https://bioconductor.org/packages/release/bioc/vignettes/qusage/inst/doc/qusage.pdf) ( C.).
 Specifically, we'll use the same dataset and analysis as the vignette, but the 
 expression data and sample metadata we will use is processed with refine.bio.
 This allows us to explore formatting refine.bio datasets for use with 
@@ -75,7 +75,7 @@ data_dir <- "data"
 ### Gene sets
 
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
-[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers genesets in this format.
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
 
 We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs and placed them at the following relative path:
 
@@ -461,5 +461,5 @@ graphics::boxplot(exprs_mat["3665", ] ~ interaction(filtered_metadata_df$timepoi
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

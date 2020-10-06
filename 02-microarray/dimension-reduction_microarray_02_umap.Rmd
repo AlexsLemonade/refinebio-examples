@@ -1,7 +1,7 @@
 ---
 title: "UMAP Visualization - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -106,7 +106,7 @@ Copy and paste the `GSE37382` folder into your newly created `data/` folder.
 
 Your new analysis folder should contain: 
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `GSE37382` folder which contains:
     - The gene expression  
@@ -114,7 +114,7 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
     
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
@@ -201,7 +201,7 @@ df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
   "GSE37382.tsv" # Replace with the name of your data file
 )) %>%
-  # Tuck away the Gene id column as rownames
+  # Tuck away the gene ID  column as rownames
   tibble::column_to_rownames("Gene")
 ```
 
@@ -332,9 +332,9 @@ plot = umap_plot # Here we are giving the function the plot object that we want 
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```

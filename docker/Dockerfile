@@ -26,8 +26,10 @@ RUN apt-get -y --no-install-recommends install \
 RUN apt-get -y --no-install-recommends install \
     python3-pip  python3-dev
 
-RUN pip3 install "setuptools==49.3.0" "six==1.15.0" "wheel==0.34.2"
-
+RUN pip3 install \
+    "setuptools==49.3.0" \
+    "six==1.15.0" \
+    "wheel==0.34.2"
 
 #### R packages
 ###############
@@ -41,9 +43,9 @@ RUN Rscript -e  "install.packages( \
       'RColorBrewer', \
       'rprojroot', \
       'viridis', \
+      'spelling', \
       'styler'))"
 
-##########################
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
 RUN R -e "BiocManager::install( \
@@ -71,7 +73,6 @@ RUN Rscript -e  "install.packages( \
       'umap', \
       'VennDiagram'))"
 
-##########################
 # Install packages from github
 # Need this package to make plots colorblind friendly
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"

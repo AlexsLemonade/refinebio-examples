@@ -4,8 +4,6 @@ name: Style and spell check R markdowns
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -45,7 +43,7 @@ jobs:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
         run: |
           cat spell_check_results.tsv
-          if (( $result > 340 )); then
+          if (( $result > 2 )); then
             echo Too many spelling errors, $result
             exit 1
           fi

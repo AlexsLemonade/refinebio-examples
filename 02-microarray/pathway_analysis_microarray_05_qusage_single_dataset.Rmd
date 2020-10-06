@@ -1,6 +1,6 @@
 ---
 title: "Pathway analysis with QuSAGE: Single dataset"
-output: 
+output:
   html_notebook:
     toc: TRUE
     toc_float: TRUE
@@ -11,42 +11,42 @@ date: 2019
 ## Background
 
 In this module, we'll demonstrate how to perform pathway analysis using
-Quantitative Set Analysis of Gene Expression (QuSAGE) 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)).
+Quantitative Set Analysis of Gene Expression (QuSAGE)
+([](https://doi.org/10.1093/nar/gkt660)).
 QuSAGE, implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html),
 has some nice features:
 
 * It takes into account inter-gene correlation (a source of type I error).
-* It returns more information than just a p-value. 
+* It returns more information than just a p-value.
 That's useful for analyses you might want to perform downstream.
 * Built-in visualization functionality.
 
-We recommend taking a look at the original publication (Yaari et al.) and 
+We recommend taking a look at the original publication (Yaari et al.) and
 the R package documentation to learn more.
 
 ## Gene sets
 
 `qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
-[Curated gene sets from MSigDB](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2) 
+[Curated gene sets from MSigDB](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2)
 like [KEGG](https://www.genome.jp/kegg/) are popular for pathway analysis, but
 MSigDB only distributes human pathway data.
 Here, we'll work with a mouse dataset.
 
-In the [`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook in 
-this module, we mapped human Entrez IDs to mouse symbols using the 
+In the [`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook in
+this module, we mapped human Entrez IDs to mouse symbols using the
 [`hcop` package](https://github.com/stephenturner/hcop).
 When there was a 1:many mapping between human Entrez IDs and mouse gene symbols,
-we selected the mouse gene symbol with the highest number of resources 
+we selected the mouse gene symbol with the highest number of resources
 supporting the mapping.
 This decision might not be suitable for every experiment and may result in
 some loss of information.
 
 ## Dataset
 
-We're using [`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction) in this notebook. 
+We're using [`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction) in this notebook.
 This dataset assays the gene expression response to short-term calorie
 restriction in multiple tissues from multiple mouse strains.
-We'll test for pathways that change in response to short-term calorie 
+We'll test for pathways that change in response to short-term calorie
 restriction.
 
 ## Set up
@@ -102,7 +102,7 @@ data_dir <- "data"
 
 ## Read in refine.bio data
 
-The gene expression matrix of the dataset we'll be working with is too large 
+The gene expression matrix of the dataset we'll be working with is too large
 to be tracked with git without compression, so we need to unzip it if we have
 not already.
 
@@ -135,10 +135,10 @@ exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
 colnames(exprs_df)[1] <- "ENSEMBL"
 ```
 
-Because our gene sets use gene symbols and expression data from refine.bio uses 
+Because our gene sets use gene symbols and expression data from refine.bio uses
 Ensembl IDs, we need to do a conversion.
-We're using the default behavior for 1:many mappings here, where only the first 
-one is selected 
+We're using the default behavior for 1:many mappings here, where only the first
+one is selected
 ([docs](https://www.rdocumentation.org/packages/AnnotationDbi/versions/1.30.1/topics/AnnotationDb-objects)).
 
 ```{r}
@@ -221,7 +221,7 @@ metadata_df <- metadata_df %>%
 ```
 
 This particular accession ([`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction)) is a SuperSeries comprised of experiments
-in multiple tissues from multiple mouse strains. 
+in multiple tissues from multiple mouse strains.
 We'll use white adipose tissue for all strains in this example.
 
 ```{r}
@@ -247,8 +247,8 @@ metadata_df <- metadata_df %>%
 ### Read in KEGG pathways
 
 First, we need the sets of genes that represent pathways.
-Again, these were prepared in the 
-[`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook (see 
+Again, these were prepared in the
+[`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook (see
 [Gene Sets](#gene-sets) above).
 
 ```{r}
@@ -296,12 +296,12 @@ readr::write_rds(
 
 ### Overall results
 
-We can get a look at the general trend of the results with the `plotCIs` 
-function. 
-This plots the means and 95% confidence intervals of each pathway we tested, 
-sorted such that the gene sets with the highest mean will be on the left of the 
+We can get a look at the general trend of the results with the `plotCIs`
+function.
+This plots the means and 95% confidence intervals of each pathway we tested,
+sorted such that the gene sets with the highest mean will be on the left of the
 plot.
-These are gene sets that are elevated in calorie restricted mice. 
+These are gene sets that are elevated in calorie restricted mice.
 Error bars are colored by the directionality and corrected p-value (FDR by
 default).
 Unfortunately the p-value color scheme is red-green, which does not work well
@@ -325,7 +325,7 @@ dev.off()
 ```
 
 We can also look at the log fold-change and FDR values for pathways with the
-`qsTable` function. 
+`qsTable` function.
 By default, this function shows you the top 20 pathways sorted by FDR.
 We can change the `number` argument to `qsTable` to decrease or increase the
 number of pathways returned.
@@ -351,7 +351,7 @@ groups.
 
 ### KEGG ECM Receptor Interaction
 
-The KEGG ECM Receptor Interation pathway expression is reduced in response
+The KEGG ECM Receptor Interaction pathway expression is reduced in response
 to calorie restriction.
 
 We can look at the distribution of genes in this pathway with the
@@ -381,7 +381,7 @@ Let's look at another example with the opposite directionality.
 
 ### KEGG Steroid Biosynthesis
 
-The KEGG Steroid Biosynthesis pathway expression is increased in calorie 
+The KEGG Steroid Biosynthesis pathway expression is increased in calorie
 restricted adipose tissue.
 
 ```{r}
@@ -477,5 +477,5 @@ dev.off()
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

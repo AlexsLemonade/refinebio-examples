@@ -12,9 +12,9 @@ date: 2019
 
 Pathway or gene set analysis methods like Quantitative Set Analysis of Gene 
 Expression (QuSAGE) 
-([Yaari et al. _NAR_. 2013.](https://doi.org/10.1093/nar/gkt660)) or Gene Set
+([](https://doi.org/10.1093/nar/gkt660)) or Gene Set
 Enrichment Analysis (GSEA)
-([Subramanian et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102))
+([ et al. _PNAS_. 2005.](https://doi.org/10.1073/pnas.0506580102))
 require us to specify group labels.
 We may want a better idea of what pathways are up- or down-regulated in 
 _individual samples_ if we, for example, suspect that there are subgroups of
@@ -441,5 +441,5 @@ Note how a smaller gene set results in a larger range of scores.
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```

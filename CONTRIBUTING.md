@@ -28,8 +28,10 @@
       - [Key naming](#key-naming)
     - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
-  - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
+  - [Mechanics of the rendering](#mechanics-of-the-rendering)
+  - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
   - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
@@ -64,7 +66,7 @@ Login to the RStudio server with the username `rstudio` and the password you set
 ### Docker image updates
 
 All necessary packages needed for running all analyses should be added to the `Dockerfile` and it should be re-built to make sure it builds successfully.
-Successful building of the `Dockerfile` will also be checked when the PR is filed by Github Actions.
+Successful building of the `Dockerfile` will also be checked when the PR is filed by GitHub Actions.
 
 In the `refinebio-examples` repository:
 ```
@@ -91,7 +93,7 @@ Click on the links to go to the detailed instructions for each step.
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
+- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
 
 ### Setting up a new analysis file
 
@@ -172,19 +174,25 @@ This will help fix some spacing and formatting issues automatically.
 
 #### Session Info
 
-`sessionInfo()` should always be printed out at the end.
+`sessioninfo::session_info()` should always be printed out at the end.
 (It is included in the `.Rmd` template)
 
 ### Notebook text
 
 #### Formatting of typical words/items:
 
+  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
+  - Use _e.g._, NOT "eg" or "_eg_" or "e.g."
+  - Use et al., NOT et. al.
+  - Use "gene sets", NOT "genesets"
+  - Use "IDs" or "ID", NOT "ids"/"id" or "Ids"/"Ids"
+  - Use "NA" or "NAs", NOT na/nas or Na or `NA` or `NA`s or NA's
+  - Use "PNG", NOT png or `png` or .png (and etc.)
+  - Use "probe sets", NOT "probesets"
   - Use "refine.bio", NOT "refinebio"
   - Use `.Rmd`,  NOT "Rmd" or ".Rmd"
   - Use "tidyverse", NOT "Tidyverse"
-  - Use "TSV",  NOT tsv or `tsv` or .tsv
-  - Use "PNG", NOT png or `png` or .png (and etc.)
-  - Use "data frame" NOT data.frame or `data frame` (unless referring to the function which should be `data.frame()`)
+  - Use "TSV",  NOT "tsv" or `tsv` or ".tsv"
 
   - **Functions**: For function references in paragraph, use `getwd()`; with backticks and empty parentheses.
   Since function calls always involve `()` being consistent about this adding in this notation might be helpful for beginning R users referencing our examples.  
@@ -261,9 +269,9 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using Github actions upon opening a PR for master or prior to merging to master.
-Github actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
-You can obtain the list of spelling errors on Github by going to `Actions` and clicking the workflow of PR you are working on.
+Spell checks are run automatically using GitHub actions upon opening a PR for master or prior to merging to master.
+GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
+You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
 Click on `spell-check-results` to download a zip file that contains the list of misspelled words.
 Alternatively, click on the "Check on spell check results" step in the workflow log to see the misspellings.
@@ -275,11 +283,15 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 
 ## Rendering notebooks
 
-This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
-`snakemake` should be ran after changes have been made and before any `Pull Request` are filed.
+### Mechanics of the rendering
 
-### How to re-render the notebooks
+The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
+
+Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
+All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers. 
+
+### How to re-render the notebooks locally
 
 **Step 1)** Make sure you are running this from a [`ccdl/refinebio-examples` Docker container](#setting-up-the-docker-container).
 
@@ -301,6 +313,18 @@ If you already have the `refinebio-examples` docker image:
 ```
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
+
+### Automatic rendering using GitHub actions
+
+This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
+All notebooks are automatically re-rendered by GitHub actions upon merges to master.
+The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
+
+If this automatic rendering fails, you will see a failed check at at the bottom of your PR on GitHub (and probably an email).
+You can see the details of this error on  by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
+Click on `build` on the left bar and click on the step that has failed to see the error message.
+Hopefully the error message helps you track down the problem, but you can also contact this repo's maintainers for support.
+
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.

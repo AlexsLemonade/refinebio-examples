@@ -1,7 +1,7 @@
 ---
 title: "Differential Expression - 2 groups - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -11,30 +11,30 @@ output:
 
 # Purpose of this analysis
 
-This notebook takes data and metadata from refine.bio and identifies differentially expressed genes. 
+This notebook takes data and metadata from refine.bio and identifies differentially expressed genes.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
 
 ## Obtain the `.Rmd` file
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.Rmd).
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
-Clicking this link will most likely send this to your downloads folder on your computer. 
+Clicking this link will most likely send this to your downloads folder on your computer.
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
-## Set up your analysis folders 
+## Set up your analysis folders
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
-Run this next chunk to set up your folders! 
+We have set up some code that will automatically set up a folder structure for you.
+Run this next chunk to set up your folders!
 
-If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations.
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -63,7 +63,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## Obtain the dataset from refine.bio
 
-For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data).
 
 Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
 
@@ -76,7 +76,7 @@ Fill out the pop up window with your email and our Terms and Conditions:
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
 
 It may take a few minutes for the dataset to process.
-You will get an email when it is ready. 
+You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
@@ -86,37 +86,37 @@ In this analysis, we will test differential expression between the control and C
 
 ## Place the dataset in your new `data/` folder
 
-refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+refine.bio will send you a download button in the email when it is ready.
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400>
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
-Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`.
 
 Copy and paste the `GSE71270` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
-Your new analysis folder should contain: 
+Your new analysis folder should contain:
 
-- The example analysis Rmd you downloaded  
+- The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
   - The `GSE71270` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-    
-Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
+
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
 
-In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
-Run this chunk to double check that your files are in the right place. 
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis.
+Run this chunk to double check that your files are in the right place.
 
 ```{r}
 # Define the file path to the data directory
@@ -131,13 +131,13 @@ file.exists(file.path(data_dir, "metadata_GSE71270.tsv"))
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
+From here you can customize this analysis example to fit your own scientific questions and preferences.
 
 ***
 
@@ -150,7 +150,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `limma` for differential expression [@Ritchie2015].
-We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020, @Zhu2018].
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020; @Zhu2018].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
@@ -180,9 +180,17 @@ library(magrittr)
 library(ggplot2)
 ```
 
+The jitter plot we make later on with `geom_jitter()` involves some randomness. 
+As is good practice when our analysis involves randomness, we will set the seed.
+<!-- TODO: link to glossary about setting the seed -->
+
+```{r}
+set.seed(12345)
+```
+
 ## Import and set up data
 
-Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
 This chunk of code will read the both TSV files and add them as data frames to your environment.
 
 ```{r}
@@ -197,11 +205,11 @@ df <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
   "GSE71270.tsv" # Replace with the name of your data file
 )) %>%
-  # Tuck away the Gene id column as rownames
+  # Tuck away the Gene ID column as rownames
   tibble::column_to_rownames("Gene")
 ```
 
-Let's ensure that the metadata and data are in the same sample order. 
+Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
@@ -214,11 +222,11 @@ all.equal(colnames(df), metadata$geo_accession)
 
 ## Set up design matrix
 
-`limma` needs a numeric design matrix to signify which are CREB and control samples. 
+`limma` needs a numeric design matrix to signify which are CREB and control samples.
 Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
 Note that the metadata variables that signify the treatment groups might be different across datasets and might not always be underneath the category.
 
-The `genotype/variation` column contains group information we will be using for differential expression. 
+The `genotype/variation` column contains group information we will be using for differential expression.
 But the `/` it contains in its column name makes it more annoying to access.  
 Accessing variable that have names with special characters like `/`, or spaces, require extra work-arounds to ignore R's normal interpretations of these characters.
 
@@ -227,7 +235,7 @@ metadata <- metadata %>%
   dplyr::rename("genotype" = `genotype/variation`) # This step will not be the same (or might not be needed at all) with a different dataset
 ```
 
-Now we will create a model matrix based on our newly renamed `genotype` variable. 
+Now we will create a model matrix based on our newly renamed `genotype` variable.
 
 ```{r}
 # Create the design matrix from the genotype information
@@ -236,7 +244,7 @@ des_mat <- model.matrix(~ metadata$genotype)
 
 ## Perform differential expression
 
-After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction. 
+After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction.
 The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
 
 ```{r}
@@ -251,20 +259,20 @@ stats_df <- topTable(fit, number = nrow(df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-Let's take a peek at what our results table looks like. 
+Let's take a peek at what our results table looks like.
 
 ```{r}
 head(stats_df)
 ```
 
-By default, results are ordered by largest `B` (the log odds value) to the smallest, which means your most differentially expressed genes should be toward the top. 
+By default, results are ordered by largest `B` (the log odds value) to the smallest, which means your most differentially expressed genes should be toward the top.
 
 See the help page by using `?topTable` for more information and options for this table.
 
 ## Check results by plotting one gene
 
-To test if these results make sense, we can make a plot of one of top genes. 
-Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes. 
+To test if these results make sense, we can make a plot of one of top genes.
+Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes.
 
 ```{r}
 top_gene_df <- df %>%
@@ -284,7 +292,7 @@ top_gene_df <- df %>%
   ))
 ```
 
-Let's take a sneak peek at what our `top_gene_df` looks like. 
+Let's take a sneak peek at what our `top_gene_df` looks like.
 
 ```{r}
 top_gene_df
@@ -294,16 +302,16 @@ Now let's plot the data for `ENSDARG00000104315` using our `top_gene_df`.
 
 ```{r}
 ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
-  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  geom_jitter(width = 0.2, height = 0) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
 
 These results make sense.
-The overexpressing CREB group samples have much higher expression values for ENSDARG00000104315 than the control samples do. 
+The overexpressing CREB group samples have much higher expression values for ENSDARG00000104315 than the control samples do.
 
 ## Write results to file
 
-The results in `stats_df` will be saved to our `results/` directory. 
+The results in `stats_df` will be saved to our `results/` directory.
 
 ```{r}
 readr::write_tsv(stats_df, file.path(
@@ -325,10 +333,10 @@ EnhancedVolcano::EnhancedVolcano(stats_df,
 ```
 
 In this plot, green points represent genes that meet the log2 fold change, by default the cutoff is absolute value of 1.  
-But there are no genes that meet the p value cutoff, which by default is `1e-05`. 
+But there are no genes that meet the p value cutoff, which by default is `1e-05`.
 We used the adjusted p values for our plot above, so you may want to adjust this with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
 
-Let's make the same plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values, and this time we will assign the plot to our environment as `volcano_plot`. 
+Let's make the same plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values, and this time we will assign the plot to our environment as `volcano_plot`.
 
 ```{r}
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(stats_df,
@@ -342,7 +350,7 @@ volcano_plot <- EnhancedVolcano::EnhancedVolcano(stats_df,
 volcano_plot
 ```
 
-Let's save this plot to a PNG file. 
+Let's save this plot to a PNG file.
 
 ```{r}
 ggsave(
@@ -353,7 +361,7 @@ ggsave(
 
 # Resources for further learning
 
-- [The refinebio example for differential expression with more than 2 groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html)
+- [The refine.bio example for differential expression with more than 2 groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html)
 - [The full users guide on limma](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) shows examples of limma functions for different experimental models [@Ritchie2015].
 - [A general guide to differential expression, including a section about interpreting results](http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf) [@Gonzalez2014].
 - [End to End workflow for Affymetrix microarray data](https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html) [@Klaus2018].
@@ -361,11 +369,10 @@ ggsave(
 
 # Session info
 
-At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of softwares and packages you used to run this. 
+At the end of every analysis, before saving your notebook, we recommend printing out your session info.
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
-
