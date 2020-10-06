@@ -25,4 +25,4 @@ What things should reviewers look out for?
 
 ### Docker/Snakemake rendering components
 * [ ] Added the `.html` [link to the navigation bar](https://github.com/AlexsLemonade/refinebio-examples/blob/master/CONTRIBUTING.md#add-new-analyses-to-the-navbar).
-* [ ] Any not yet added packages needed for this analysis have been added to the Dockerfile (this will be built and pushed by GitHub actions).
+* [ ] Any not yet added packages needed for this analysis have been added to the Dockerfile and it successfully builds.

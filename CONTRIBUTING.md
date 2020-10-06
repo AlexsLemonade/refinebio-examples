@@ -27,10 +27,10 @@
       - [Key naming](#key-naming)
     - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
-  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [Mechanics of the rendering](#mechanics-of-the-rendering)
   - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
   - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
@@ -92,7 +92,7 @@ Click on the links to go to the detailed instructions for each step.
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks)
+- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
 
 ### Setting up a new analysis file
 
@@ -282,19 +282,10 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 
 ## Rendering notebooks
 
-### Automatic rendering using GitHub actions
-
-This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-All notebooks are automatically re-rendered by GitHub actions before merges to master.
-The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
-
-If this automatic rendering fails, you can see the errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
-Click on `build` on the left bar and click on the step that has failed to see the error message.
-
 ### Mechanics of the rendering
 
 The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
-However, `snakemake` can (and should) be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
+However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 ### How to re-render the notebooks locally
 
@@ -318,6 +309,18 @@ If you already have the `refinebio-examples` docker image:
 ```
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
+
+### Automatic rendering using GitHub actions
+
+This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
+All notebooks are automatically re-rendered by GitHub actions upon merges to master.
+The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
+
+If this automatic rendering fails, you will see a failed check at at the bottom of your PR on GitHub (and probably an email).
+You can see the details of this error on  by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
+Click on `build` on the left bar and click on the step that has failed to see the error message.
+Hopefully the error message helps you track down the problem, but you can also contact this repo's maintainers for support.
+
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
