@@ -1,7 +1,7 @@
 ---
 title: "Differential Expression - 2 groups - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -150,7 +150,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `limma` for differential expression [@Ritchie2015].
-We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020, @Zhu2018].
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020; @Zhu2018].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
@@ -178,6 +178,14 @@ library(magrittr)
 
 # We'll use this for plotting
 library(ggplot2)
+```
+
+The jitter plot we make later on with `geom_jitter()` involves some randomness. 
+As is good practice when our analysis involves randomness, we will set the seed.
+<!-- TODO: link to glossary about setting the seed -->
+
+```{r}
+set.seed(12345)
 ```
 
 ## Import and set up data
@@ -294,7 +302,7 @@ Now let's plot the data for `ENSDARG00000104315` using our `top_gene_df`.
 
 ```{r}
 ggplot(top_gene_df, aes(x = genotype, y = ENSDARG00000104315, color = genotype)) +
-  geom_jitter(width = 0.2) + # We'll make this a jitter plot
+  geom_jitter(width = 0.2, height = 0) + # We'll make this a jitter plot
   theme_classic() # This makes some aesthetic changes
 ```
 
@@ -366,5 +374,5 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```

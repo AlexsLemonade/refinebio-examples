@@ -441,5 +441,5 @@ Note how a smaller gene set results in a larger range of scores.
 ## Session info
 
 ```{r}
-sessionInfo()
+sessioninfo::session_info()
 ```
