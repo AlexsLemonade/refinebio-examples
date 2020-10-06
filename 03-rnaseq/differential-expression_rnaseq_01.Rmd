@@ -157,7 +157,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `DESeq2` [@Love2014] for the differential expression testing.
-We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates  in the results table [@Blighe2020, @Zhu2018]
+We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates  in the results table [@Blighe2020; @Zhu2018]
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -185,6 +185,14 @@ library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
+```
+
+The jitter plot we make later on with the `DESeq2::plotCounts()` function involves some randomness. 
+As is good practice when our analysis involves randomness, we will set the seed.
+<!-- TODO: link to glossary about setting the seed -->
+
+```{r}
+set.seed(12345)
 ```
 
 ## Import data and metadata
