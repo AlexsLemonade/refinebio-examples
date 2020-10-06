@@ -17,9 +17,6 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-        with:
-          # get the full repo
-          fetch-depth: 0
       # Test if Dockerfile has changed
       # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
       - name: Check Dockerfile for changes
@@ -27,7 +24,7 @@ jobs:
         env:
           BEFORE: ${{ github.base_ref }}
         run: |
-          git diff-index --name-only $BEFORE > changes.txt
+          git diff-index --name-only origin/$BEFORE > changes.txt
           if grep "docker/Dockerfile" changes.txt ; then
             echo "Dockerfile changed"
             echo "::set-output name=changed::1"
