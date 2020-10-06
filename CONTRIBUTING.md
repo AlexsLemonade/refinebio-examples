@@ -27,7 +27,9 @@
       - [Key naming](#key-naming)
     - [Spell checking](#spell-checking)
 - [Rendering notebooks](#rendering-notebooks)
-  - [How to re-render the notebooks](#how-to-re-render-the-notebooks)
+  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
+  - [Mechanics of the rendering](#mechanics-of-the-rendering)
+  - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
@@ -280,9 +282,16 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 
 ## Rendering notebooks
 
+### Automatic rendering using GitHub actions
+
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
 All notebooks are automatically re-rendered by GitHub actions before merges to master.
 The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
+
+If this automatic rendering fails, you can see the errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
+Click on `build` on the left bar and click on the step that has failed to see the error message.
+
+### Mechanics of the rendering
 
 The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
 However, `snakemake` can (and should) be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
