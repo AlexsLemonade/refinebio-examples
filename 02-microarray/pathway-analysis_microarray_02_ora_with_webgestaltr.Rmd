@@ -102,13 +102,15 @@ From here you can customize this analysis example to fit your own scientific que
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-# Over-Representation Analysis with `WebGestaltR`
+# Over-Representation Analysis with `clusterProfiler`
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using [clusterProfiler package](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) to perform ORA and the [msigdbr package](https://cran.r-project.org/web/packages/msigdbr/index.html) which contains gene datasets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Subramanian2005].
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene datasets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
+
+We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to do some gene identifier conversion [@Carlson2020-human]. 
 
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
@@ -119,6 +121,11 @@ if (!("clusterProfiler" %in% installed.packages())) {
 if (!("msigdbr" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("msigdbr", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
 }
 ```
 
@@ -131,6 +138,9 @@ library(clusterProfiler)
 # Package that contains MSigDB gene sets in tidy format
 library(msigdbr)
 
+# Homo sapiens annotation package we'll use for gene identifier conversion
+library(org.Hs.eg.db)
+
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```
@@ -141,6 +151,8 @@ We will read in the differential expression results we will download from online
 These results are from a four group comparison we completed in the [microarray differential expression analysis for several groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
 We can identify upregulated genes by filtering these results and use this list as input to ORA.
+
+Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 
 ```{r}
 # Define the url to your differential expression results file
@@ -156,8 +168,6 @@ dge_df <- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path 
 ```
 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
-However, should you decide you want to download the file to your `data/` directory, you can use `download.file(dge_url, destfile = file.path(data_dir, "GSE37418_limma_results.tsv"))`.
-
 Let's take a look at what these differential expression results look like. 
 
 ```{r}
@@ -169,25 +179,22 @@ what genes are of interest.
 
 ```{r}
 upregulated_genes <- dge_df %>%
-  dplyr::filter(SHHvsOther > 2, adj.P.Val < 0.05) %>%
-  dplyr::pull(Gene)
+  dplyr::filter(SHHvsOther > 2, adj.P.Val < 0.05)
 ```
 
 Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledge base (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. 
 Put another way, if a gene is _not measured_, it can not possibly be in our gene set of interest.
 We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.
 
-```{r}
-all_genes <- dge_df %>%
-  dplyr::pull(Gene)
-```
+In our table of genes, we use Ensembl gene identifiers. 
+So we will need to convert our marker genes into either gene symbols or Entrez IDs.
 
-## clusterProfiler
+## Getting familiar with `clusterProfiler`
 
 Let's take a look at what organisms the package supports.
 
 ```{r}
-msigdbr_show_species()
+msigdbr_species()
 ```
 
 The data we're interested in here comes from human samples, so we can obtain just the gene sets relevant to _H. sapiens_ with the `species` argument to `msigdbr()`.
@@ -196,7 +203,7 @@ The data we're interested in here comes from human samples, so we can obtain jus
 hs_msigdb_df <- msigdbr(species = "Homo sapiens")
 ```
 
-MSigDB contains 8 different gene set collections.
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp).
 
     H: hallmark gene sets
     C1: positional gene sets
@@ -222,45 +229,219 @@ hs_kegg_df <- hs_msigdb_df %>%
                 gs_subcat == "CP:KEGG")  # KEGG pathways 
 ```
 
-The `WebGestaltR()` function will generate an HTML file with a report (path specified by the `outputDirectory` and `projectName` arguments) _and_ return a data frame.
+*Note: We could specified that we wanted the KEGG gene sets using the `category` and `subcategory` arguments of `msigdbr()`, but we're going for general steps!*
 
-```{r}
-go_enrichment_results <-
-  WebGestaltR(
-    enrichMethod = "ORA",
-    organism = "hsapiens",
-    enrichDatabase = "geneontology_Biological_Process", # What categories we'd like enrichment results for
-    interestGene = upregulated_genes, # The vector of our genes of interest
-    interestGeneType = "ensembl_gene_id",
-    referenceGene = all_genes, # The vector of all the genes originally in our set
-    referenceGeneType = "ensembl_gene_id",
-    outputDirectory = results_dir, # Replace with the directory you would like your results saved to
-    projectName = "GSE37418_up_SHH_lfc2_fdr0_05" # Replace with a relevant output name for the HTML file
-  )
+```{r hs_kegg_columns}
+colnames(hs_kegg_df)
 ```
 
-As noted in the messages from `WebGestaltR`, the results are in `results/Project_GSE37418_up_SHH_lfc2_fdr0_05`.
-The HTML report is at [`results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html`](./results/Project_GSE37418_up_SHH_lfc2_fdr0_05/Report_GSE37418_up_SHH_lfc2_fdr0_05.html).
+The `clusterProfiler()` function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.
 
-## Read in a results table
+Our data frame with KEGG terms contains Entrez IDs and gene symbols.
 
-Let's take a look at one of the results tables look like by reading it into R. 
-It is a `.txt` file, however its values are separated by tabs, making it a TSV; hence we can read it in with `readr::read_tsv()` function. 
+### Gene identifier conversion
+
+We're going to convert our identifiers to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+
+The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2020-human].
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
+
+Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+We can see what types of IDs are available to us in an annotation package with `keytypes()`.
 
 ```{r}
-results_df <- readr::read_tsv(
-  file.path(
-    results_dir,
-    "Project_GSE37418_up_SHH_lfc2_fdr0_05", # This will need to change depending on what you supply to `projectName` argument in `WebGestaltR()` function
-    "enrichment_results_GSE37418_up_SHH_lfc2_fdr0_05.txt" # Same here, but the prefix is different
-  )
+keytypes(org.Hs.eg.db)
+```
+
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to Entrez IDs (`ENTREZID`).
+
+The function we will use to map from Ensembl gene IDs to gene symbols is called `mapIds()`.
+
+```{r}
+# This returns a named vector which we can convert to a data frame, where
+# the keys (Ensembl IDs) are the names
+symbols_vector <- mapIds(org.Hs.eg.db,  # Specify the annotation package
+                         # The vector of gene identifiers we want to map
+                         keys = dge_df$Gene, 
+                         # The type of gene identifier we want returned
+                         column = "SYMBOL", 
+                         # What type of gene identifiers we're starting with
+                         keytype = "ENSEMBL", 
+                         # In the case of 1:many mappings, return the
+                         # first one. This is default behavior!
+                         multiVals = "first") 
+```
+
+This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols.
+In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
+For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+
+Let's create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.
+
+```{r}
+# We would like a data frame we can join to the differential expression stats
+gene_key_df <- data.frame(
+  ensembl_id = names(symbols_vector),
+  gene_symbol = symbols_vector,
+  stringsAsFactors = FALSE
+) %>%
+  # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
+  # from the data frame
+  dplyr::filter(!is.na(gene_symbol))
+
+# Let's print our a preview of this
+head(gene_key_df)
+```
+
+Now we are ready to add the `gene_key_df` to our data frame with the diffential expression stats, `dge_df`. 
+Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `dge_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
+
+```{r}
+dge_annot_df <- gene_symbols_df %>%
+  # Using a left join removes the rows without gene symbols because those rows
+  # have already been removed in `gene_symbols_df`
+  dplyr::left_join(dge_df,
+                   # The name of the column that contains the Ensembl gene IDs
+                   # in the left data frame and right data frame
+                   by = c("ensembl_id" = "Gene"))
+```
+
+## Over-representation Analysis (ORA)
+
+To test for over-representation using `clusterProfiler`, we can calculate a p-value with a hypergeometric test [@clusterProfiler-book].
+
+\(p = 1 - \displaystyle\sum_{i = 0}^{k-1}\frac{ {M \choose i}{ {N-M} \choose {n-i} } } { {N \choose n} }\)
+
+Where `N` is the number of genes in the background distribution, `M` is the number of genes in a pathway, `n` is the number of genes we are interested in (our marker genes), and `k` is the number of genes that overlap between the pathway and our marker genes.
+
+Borrowing an example from [_clusterProfiler: universal enrichment tool for functional and comparative study_](https://yulab-smu.github.io/clusterProfiler-book/chapter2.html#fn2):
+
+> **Example**: Suppose we have 17,980 genes detected in a Microarray study and 57 genes were differentially expressed. Among the differential expressed genes, 28 are annotated to a gene set.
+
+We'll call genes that are differentially expressed `gene_in_interest` and genes that are in the gene set `in_gene_set`.
+
+```{r}
+gene_table <- data.frame(
+  gene_not_interest = c(2613, 15310),
+  gene_in_interest = c(28, 29)
+)
+rownames(gene_table) <- c("in_gene_set", "not_in_gene_set")
+
+gene_table
+```
+
+We can assess if the 28 overlapping genes mean that the differentially expressed genes are over-represented in the gene set with the hypergeometric distribution.
+This corresponds to a one-sided Fisher's exact test.
+
+```{r}
+fisher.test(gene_table, alternative = "greater")
+```
+
+When we test **multiple pathways or gene sets**, the p-values then need to be **adjusted** for multiple hypothesis testing.
+
+### Medulloblastoma SHH subtype ORA
+
+Let's generate a list of genes that are indicative of the SHH subtype in medulloblastoma data.
+We need to use the gene symbols, rather than the Ensembl gene IDs.
+
+```{r}
+# Select genes that are in the top 200 for at least one comparison to other
+# cell types
+top_shh_genes <- dge_annot_df %>%
+  dplyr::filter(SHHvsOther <= 200) %>%
+  dplyr::pull(gene_symbol)
+```
+
+Maybe you're thinking, "Hey, picking the top 100 genes for each comparison seems kind of arbitrary."
+You are correct!
+When we generate lists of genes of interest for ORA, we typically pick an arbitrary cutoff.
+This is one of the approach's weaknesses -- we've removed all other context.
+
+Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list. 
+
+```{r}
+# Reduce to only unique gene symbols
+top_shh_genes <- unique(as.character(top_shh_genes))
+
+# Let's print out some of these genes
+head(top_shh_genes)
+```
+
+#### Background set
+
+As we saw above, calculating the p-value relies on the number of genes in the background distribution.
+Sometimes folks consider genes from the entire genome to comprise the background, but in the example borrowed from the `clusterProfiler` authors, they state:
+
+> 17,980 genes detected in a Microarray study 
+
+Where the key phrase is **genes detected**. 
+If we are unable to detect a gene, we should remove it from our background set.
+In the scRNA-seq module (`01-filtering_scRNA-seq.Rmd` specifically), we filtered out genes that were expressed in less than 200 cells, but all genes that were _detected_ should be in our marker data frame.
+
+```{r}
+detected_genes <- unique(as.character(dge_annot_df$gene_symbol))
+```
+
+#### Run `enricher()`
+
+Now that we have our background set, our genes of interest, and our pathway information, we're ready to run ORA using the `enricher()` function.
+
+```{r}
+kegg_ora_results <- enricher(
+  gene = top_shh_genes,# Genes of interest
+  pvalueCutoff = 0.1,  
+  pAdjustMethod = "BH",  # FDR
+  universe = detected_genes,  # Background set
+  # The pathway information should be a data frame with a term name or 
+  # identifier and the gene identifiers
+  TERM2GENE = dplyr::select(hs_kegg_df,  
+                            gs_name,
+                            gene_symbol)
 )
 ```
 
-Let's print out a preview of it.   
+*Note: using `enrichKEGG()` is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you'd like!*
+
+What is returned by `enricher()`? 
+You can run `View(kegg_ora_results)` or click on the object in your Environment panel. 
+
+The information we're most likely interested in is in the `results` slot.
+Let's convert this into a data frame that we can write to file.
 
 ```{r}
-head(as.data.frame(results_df)) # We are coercing to a data frame (from a tibble) so all results are rendered a bit more clearly
+kegg_result_df <- data.frame(kegg_ora_results@result)
+```
+
+Let's print out a sneak peek of it here.
+
+```{r}
+head(kegg_result_df)
+```
+
+#### Visualizing results
+
+We can use a dot plot to visualize our significant enrichment results.
+
+```{r}
+enrichplot::dotplot(kegg_ora_results)
+```
+
+This is arguably more useful when we have a large number of significant pathways.
+
+We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
+
+```{r}
+enrichplot::upsetplot(kegg_ora_results)
+```
+
+Gene sets or pathways aren't independent, either!
+
+#### Write results to file
+
+```{r write_results, live = TRUE}
+readr::write_tsv(kegg_result_df, path = kegg_results_file)
 ```
 
 # Resources for further learning
