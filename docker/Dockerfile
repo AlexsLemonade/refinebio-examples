@@ -53,11 +53,13 @@ RUN R -e "BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
+      'clusterProfiler', \
       'ComplexHeatmap', \
       'DESeq2', \
       'EnhancedVolcano', \
       'limma', \
       'marray', \
+      'msigdbr', \
       'org.Mm.eg.db', \
       'org.Dr.eg.db'), \
      update = FALSE)"
@@ -72,7 +74,8 @@ RUN Rscript -e  "install.packages( \
       'pheatmap', \
       'Rtsne', \
       'umap', \
-      'VennDiagram'))"
+      'VennDiagram', \
+      'WebGestaltR'))"
 
 # Install packages from github
 # Need this package to make plots colorblind friendly
