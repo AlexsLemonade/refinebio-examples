@@ -1,24 +1,44 @@
-p {
-  color: blue;
-  font-family: Lato,sans-serif;
+html,
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
 }
-
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rubik', sans-serif;
+}
 h1 {
-  color: blue;
-  font-family: Lato,sans-serif;
+  font-size: 1.625rem;
 }
-
 h2 {
-  color: blue;
-  font-family: Lato,sans-serif;
+  font-size: 1.375rem;
 }
-
 h3 {
-  color: blue;
-  font-family: Lato,sans-serif;
+  font-size: 1.25rem
 }
-
 h4 {
-  color: blue;
-  font-family: Lato,sans-serif;
+  font-size: 1.125rem;
+}
+h5, h6 {
+  font-size: 1rem
+}
+p {
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+a {
+  text-decoration: none;
+  color: #386db0;
+  line-height: 1;
+}
+.navbar-default {
+  background-color: white !important;
+}
+.navbar-brand, nav a {
+  color: #386db0 !important;
+}
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+  background-color: #386db0 !important;
 }
