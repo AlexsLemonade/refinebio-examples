@@ -57,6 +57,7 @@ RUN R -e "BiocManager::install( \
       'ComplexHeatmap', \
       'DESeq2', \
       'EnhancedVolcano', \
+      'ggupset', \
       'limma', \
       'marray', \
       'msigdbr', \

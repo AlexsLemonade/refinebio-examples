@@ -118,6 +118,11 @@ if (!("clusterProfiler" %in% installed.packages())) {
   BiocManager::install("clusterProfiler", update = FALSE)
 }
 
+if (!("ggupset" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("ggupset", update = FALSE)
+}
+
 if (!("msigdbr" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("msigdbr", update = FALSE)
@@ -174,21 +179,6 @@ Let's take a look at what these differential expression results look like.
 dge_df
 ```
 
-Here we'll use the `SHH` groups' log fold-change > 2 and FDR < 0.05 as cutoffs for determining 
-what genes are of interest.
-
-```{r}
-upregulated_genes <- dge_df %>%
-  dplyr::filter(SHHvsOther > 2, adj.P.Val < 0.05)
-```
-
-Because we are testing if there is more overlap between a set of genes of interest and gene sets or pathways from some knowledge base (e.g., KEGG, Gene Ontology (GO)) than we would expect at random, we need to identify an appropriate background set. 
-Put another way, if a gene is _not measured_, it can not possibly be in our gene set of interest.
-We can provide our analysis method of choice with a reference list, which we will generate by selecting all the genes in the table of differential expression results.
-
-In our table of genes, we use Ensembl gene identifiers. 
-So we will need to convert our marker genes into either gene symbols or Entrez IDs.
-
 ## Getting familiar with `clusterProfiler`
 
 Let's take a look at what organisms the package supports.
@@ -241,9 +231,12 @@ The `clusterProfiler()` function we will use requires a data frame with two colu
 
 Our data frame with KEGG terms contains Entrez IDs and gene symbols.
 
+In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
+So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.
+
 ### Gene identifier conversion
 
-We're going to convert our identifiers to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+We're going to convert our identifiers in `dge_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
 The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2020-human].
 `org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
@@ -293,8 +286,11 @@ gene_key_df <- data.frame(
   # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
   # from the data frame
   dplyr::filter(!is.na(gene_symbol))
+```
 
-# Let's print our a preview of this
+Let's see a preview of `gene_key_df`. 
+
+```{r}
 head(gene_key_df)
 ```
 
@@ -302,7 +298,7 @@ Now we are ready to add the `gene_key_df` to our data frame with the diffential 
 Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `dge_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
 
 ```{r}
-dge_annot_df <- gene_symbols_df %>%
+dge_annot_df <- gene_key_df %>%
   # Using a left join removes the rows without gene symbols because those rows
   # have already been removed in `gene_symbols_df`
   dplyr::left_join(dge_df,
@@ -310,6 +306,13 @@ dge_annot_df <- gene_symbols_df %>%
     # in the left data frame and right data frame
     by = c("ensembl_id" = "Gene")
   )
+```
+
+Let's take a look at what this data frame looks like. 
+
+```{r}
+# Print out a preview
+head(dge_annot_df)
 ```
 
 ## Over-representation Analysis (ORA)
@@ -345,16 +348,16 @@ fisher.test(gene_table, alternative = "greater")
 
 When we test **multiple pathways or gene sets**, the p-values then need to be **adjusted** for multiple hypothesis testing.
 
-### Medulloblastoma SHH subtype ORA
+### Medulloblastoma WNT subtype ORA
 
-Let's generate a list of genes that are indicative of the SHH subtype in medulloblastoma data.
+Let's generate a list of genes that are indicative of the WNT subtype in medulloblastoma data.
 We need to use the gene symbols, rather than the Ensembl gene IDs.
 
 ```{r}
 # Select genes that are in the top 200 for at least one comparison to other
 # cell types
-top_shh_genes <- dge_annot_df %>%
-  dplyr::filter(SHHvsOther <= 200) %>%
+top_wnt_genes <- dge_annot_df %>%
+  dplyr::top_n(WNTvsOther, n = -100) %>%
   dplyr::pull(gene_symbol)
 ```
 
@@ -367,10 +370,10 @@ Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure 
 
 ```{r}
 # Reduce to only unique gene symbols
-top_shh_genes <- unique(as.character(top_shh_genes))
+top_wnt_genes <- unique(as.character(top_wnt_genes))
 
 # Let's print out some of these genes
-head(top_shh_genes)
+head(top_wnt_genes)
 ```
 
 #### Background set
@@ -394,7 +397,7 @@ Now that we have our background set, our genes of interest, and our pathway info
 
 ```{r}
 kegg_ora_results <- enricher(
-  gene = top_shh_genes, # Genes of interest
+  gene = top_wnt_genes, # Genes of interest
   pvalueCutoff = 0.1,
   pAdjustMethod = "BH", # FDR
   universe = detected_genes, # Background set
