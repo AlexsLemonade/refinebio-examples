@@ -34,10 +34,16 @@ a {
   line-height: 1;
 }
 .navbar-default {
-  background-color: white !important;
+  font-size: 1.625rem;
+  background-color: #002F6C !important;
+  color: #FDFDFD;
 }
 .navbar-brand, nav a {
-  color: #386db0 !important;
+  color: #FDFDFD !important;
+}
+ul.dropdown-menu {
+  background-color: #002F6C !important;
+  color: #FDFDFD;
 }
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
   background-color: #386db0 !important;
