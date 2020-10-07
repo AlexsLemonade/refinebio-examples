@@ -20,15 +20,12 @@ rule target:
 rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
-        nav = "{basedir}/_navbar.html",
-        bib = "references.bib",
-        csl = "components/genetics.csl"
     output:
-       "{basedir}/{basename}.html"
+        "{basedir}/{basename}.html"
     shell:
         "Rscript scripts/render-notebooks.R"
         " --rmd {input.rmd}"
-        " --bib_file {input.bib}"
-        " --cite_style {input.csl}"
+        " --bib_file references.bib"
+        " --cite_style components/genetics.csl"
         " --html {output}"
         " --style"
