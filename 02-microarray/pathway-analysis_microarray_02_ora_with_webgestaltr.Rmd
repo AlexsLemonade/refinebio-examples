@@ -218,8 +218,10 @@ Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](h
 # Filter the human data frame to the KEGG pathways that are included in the
 # curated gene sets
 hs_kegg_df <- hs_msigdb_df %>%
-  dplyr::filter(gs_cat == "C2",  # curated gene sets 
-                gs_subcat == "CP:KEGG")  # KEGG pathways 
+  dplyr::filter(
+    gs_cat == "C2", # curated gene sets
+    gs_subcat == "CP:KEGG"
+  ) # KEGG pathways
 ```
 
 The `WebGestaltR()` function will generate an HTML file with a report (path specified by the `outputDirectory` and `projectName` arguments) _and_ return a data frame.
