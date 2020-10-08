@@ -73,7 +73,7 @@ We have provided this file for you and the code in this notebook will read in th
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpressing zebrafish experimeent](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+For this example analysis, we will use this [CREB overexpressing zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Trenago2016].
 @Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
 
 ## Check out our file structure!
@@ -85,9 +85,7 @@ Your new analysis folder should contain:
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
     
-Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
-
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
 
@@ -398,12 +396,7 @@ Let's convert this into a data frame that we can write to file.
 kegg_result_df <- data.frame(kegg_ora_results@result)
 ```
 
-Let's print out a sneak peek of it here.
-
-```{r}
-head(kegg_result_df)
-```
-How many sets do we have here that fit out cutoff of `0.1` FDR? 
+Let's print out a sneak peek of it here and take a look at how many sets do we have that fit out cutoff of `0.1` FDR? 
 
 ```{r}
 kegg_result_df %>%
@@ -412,24 +405,44 @@ kegg_result_df %>%
 
 Looks like there are KEGG sets returned as significant at FDR of `0.1`. 
 
-#### Visualizing results
+## Visualizing results
 
 We can use a dot plot to visualize our significant enrichment results.
 The `enrichplot::dotplot()` function will only plot gene sets that are significant according to the multiple testing corrected p values (in the `p.adjust` column) and the `pvalueCutoff` you provided in the [`enricher()` step](#run-ora-using-the-enricher-function). 
 
 ```{r}
-enrichplot::dotplot(kegg_ora_results)
+enrich_plot <- enrichplot::dotplot(kegg_ora_results)
+
+# Print out the plot here
+enrich_plot
 ```
 
 This plot is arguably more useful when we have a large number of significant pathways.
+
+Let's save it to a PNG. 
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_enrich_plot.png"),
+  plot = enrich_plot
+)
+```
 
 We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
 
 ```{r}
 enrichplot::upsetplot(kegg_ora_results)
 ```
+
 See that `KEGG_SMALL_CELL_LUNG_CANCER` and `KEGG_APOPTOSIS` have genes in common. 
 Gene sets or pathways aren't independent!
+
+Let's also save this to a PNG. 
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_upset_plot.png"),
+  plot = enrich_plot
+)
+```
 
 ## Write results to file
 
