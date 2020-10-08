@@ -1,5 +1,5 @@
 ---
-title: "Ortholog Mapping with `hcop` - Microarray"
+title: "Ortholog Mapping - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -11,8 +11,8 @@ output:
 
 # Purpose of this analysis
 
-This notebook demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for microarray data obtained from refine.bio.
-In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC Comparison of Orthology Predictions (HCOP).
+This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for microarray data obtained from refine.bio.
+In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -144,38 +144,41 @@ From here you can customize this analysis example to fit your own scientific que
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
 
-# Ortholog Mapping with `hcop` - Microarray
+# Ortholog Mapping - Microarray
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using `hcop` to map between zebrafish and human identifiers [@Turner2018].
-
-We'll need to use the `devtools` package to install `hcop` from GitHub [@Wickham2020].
+Attach the package we need for this analysis.
 
 ```{r}
-if (!("devtools" %in% installed.packages())) {
-  install.packages("devtools")
-}
-```
-
-Now we can install `hcop` from Github.
-You can control what version of the package is installed by using the `ref` argument of `devtools::install_github()`.
-Here, we'll use the most recent commit at the time that we are putting together this example.
-
-```{r}
-devtools::install_github("stephenturner/hcop", ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
-```
-
-Attach the packages we need for this analysis.
-
-```{r}
-# Attach the library
-library(hcop)
-
 # We will need this so we can use the pipe: %>%
 library(magrittr)
+```
+
+## Import data from HGNC
+
+The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene.
+The [HGNC database](https://www.genenames.org/) currently contains over 39000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
+
+The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data [@Wright2005].
+The prediction with the most number of databases which concur is considered the most reliable.
+HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including zebrafish, which we will use in this notebook [@hcop-help].
+
+In the next chunk, we have adapted code from the [`hcop` package R script](https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R) to retrieve the zebrafish and human mapped data from the HGNC database [@Turner2018].
+
+```{r}
+# Read in the data from HGNC
+zebrafish <-
+  paste0(
+    "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
+    "human_",
+    "zebrafish", # Replace with the organism you have data for
+    "_hcop_fifteen_column.txt.gz"
+  ) %>%
+  data.table::fread() %>%
+  set_names(names(.) %>% gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
 ```
 
 ## Import and set up data
@@ -227,18 +230,20 @@ Ensembl gene identifiers have different species-specific prefixes.
 In zebrafish, Ensembl gene identifiers begin with `ENSDARG` (in human, `ENSG`, etc.).
 
 Now let's do the mapping!
-We'll use the `zebrafish` data from `hcop`; this is what `zebrafish` looks like.
+We'll use the `zebrafish` data from the HGNC database; this is what `zebrafish` looks like.
 
 ```{r}
 zebrafish
 ```
 
-We're interested in the `human_symbol` and `zebrafish_ensembl` columns specifically.
+We're interested in the `human_symbol`, `zebrafish_ensembl`, and `support` columns specifically.
+The `support` column contains a list of associated databases that support each assertion.
+This column may assist with addressing some of the multi-mappings that we will talk about later.
 
 ```{r}
 human_zebrafish_key <- zebrafish %>%
   # We'll want to subset zebrafish to only the columns we're interested in
-  dplyr::select(zebrafish_ensembl, human_symbol)
+  dplyr::select(zebrafish_ensembl, human_symbol, support)
 
 # Since we ignored the additional columns in `zebrafish`, let's check to see if we have any duplicates in our `human_zebrafish_key`
 any(duplicated(human_zebrafish_key))
@@ -287,7 +292,7 @@ Now, let's get an idea of how many zebrafish Ensembl IDs we have that were not m
 sum(is.na(human_zebrafish_mapped_df$human_symbol))
 ```
 
-We have 415 NAs, which means we have 415 zebrafish Ensembl IDs that were not mapped to human gene symbols.
+We have 464 NAs, which means we have 464 zebrafish Ensembl IDs that were not mapped to human gene symbols.
 This is okay because we do not expect everything to map across species.
 
 ## Take a look at some multi-mappings
@@ -349,34 +354,38 @@ A known issue in ortholog mapping is how to handle this data because combining v
 Therefore, we will not add the expression data here since the expression values are not
 the same across Ensembl IDs, despite mapping to the same human gene symbol.
 
+Instead, we will use the `support` column to decide which mappings to retain.
+As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable.
+Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mapping with the most databases that concur acccording to the `support` column.
+
 ```{r}
-collapsed_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
-  # Group by human gene symbols
-  dplyr::group_by(human_symbol) %>%
-  # Collapse the Ensembl IDs in `human_zebrafish_mapped_df` into one column named `all_zebrafish_ensembl_ids`
-  dplyr::summarize(all_zebrafish_ensembl_ids = paste(Gene, collapse = ";"))
+filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
+  dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>% # Count the number of databases in the support column for each prediction
+  dplyr::group_by(human_symbol) %>% # Group by human gene symbols
+  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
 
-head(collapsed_zebrafish_ensembl_df)
+head(filtered_zebrafish_ensembl_df)
 ```
-
 
 ### Write results to file
 
-Now let's write our list of collapsed zebrafish Ensembl IDs for each unique human gene symbol to file.
+Now let's write our list of filtered zebrafish Ensembl IDs for each unique human gene symbol to file.
 
 ```{r}
 readr::write_tsv(
-  collapsed_zebrafish_ensembl_df,
+  filtered_zebrafish_ensembl_df,
   file.path(
     results_dir,
-    "GSE71270_collapsed_zebrafish_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
+    "GSE71270_filtered_zebrafish_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
   )
 )
 ```
 
 # Resources for further learning
 
+- [Genenames.org: the HGNC resources in 2015](https://pubmed.ncbi.nlm.nih.gov/25361968/) [@Gray2015]
 - [HCOP: the HGNC comparison of orthology predictions search tool](https://pubmed.ncbi.nlm.nih.gov/16284797/) [@Wright2005]
+- See more on [HCOP and interpreting the data in HGNC](https://www.genenames.org/help/hcop/)[@hcop-help]
 - See our [RNA-seq ortholog mapping notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.Rmd) as another applicable example, since the steps for this workflow do not change with technology. 
 
 # Session info
