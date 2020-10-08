@@ -14,7 +14,6 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     zlib1g \
     libbz2-dev \
     liblzma-dev \
-    libglpk40 \
     libreadline-dev
 
 # libmagick++-dev is needed for coloblindr to install
@@ -75,8 +74,7 @@ RUN Rscript -e  "install.packages( \
       'pheatmap', \
       'Rtsne', \
       'umap', \
-      'VennDiagram', \
-      'WebGestaltR'))"
+      'VennDiagram'))"
 
 # Install packages from github
 # Need this package to make plots colorblind friendly

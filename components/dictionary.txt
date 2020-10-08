@@ -46,7 +46,6 @@ et
 FACS
 functionalize
 FPKM
-GEne
 generalizable
 ggplot
 GitHub
@@ -100,7 +99,6 @@ ribosomes
 RMA
 RPKMs
 RStudio
-SeT
 ssGSEA
 StatQuest
 SuperSeries
@@ -121,8 +119,6 @@ UMAP's
 unmapped
 upregulated
 vivo
-WebGestalt
-WebGestaltR
 WNT
 Yaari
 zebrafish
