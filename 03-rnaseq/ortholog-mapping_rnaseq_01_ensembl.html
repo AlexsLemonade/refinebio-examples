@@ -1645,6 +1645,7 @@ div.tocify {
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
+            <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -1682,7 +1683,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC.</p>
+<p>This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use zebrafish data from refine.bio and annotate it with human Ensembl IDs from HGNC.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1958,8 +1959,8 @@ all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
 df &lt;- df %&gt;%
   tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
 </div>
-<div id="mapping-mouse-ensembl-gene-ids-to-human-symbols" class="section level2">
-<h2><span class="header-section-number">4.4</span> Mapping mouse Ensembl gene IDs to human symbols</h2>
+<div id="mapping-mouse-ensembl-gene-ids-to-human-ensembl-gene-ids" class="section level2">
+<h2><span class="header-section-number">4.4</span> Mapping mouse Ensembl gene IDs to human Ensembl gene IDs</h2>
 <p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
 <pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
 head(df$Gene)</code></pre>
@@ -1967,10 +1968,10 @@ head(df$Gene)</code></pre>
 ## [4] &quot;ENSMUSG00000000031&quot; &quot;ENSMUSG00000000037&quot; &quot;ENSMUSG00000000049&quot;</code></pre>
 <p>Ensembl gene identifiers have different species-specific prefixes. In mouse, Ensembl gene identifiers begin with <code>ENSMUSG</code> (in human, <code>ENSG</code>, etc.).</p>
 <p>Now let’s do the mapping!</p>
-<p>We’re interested in the <code>human_symbol</code>, <code>mouse_ensembl</code>, and <code>support</code> columns specifically. The <code>support</code> column contains a list of associated databases that support each assertion. This column may assist with addressing some of the multi-mappings that we will talk about later.</p>
+<p>We’re interested in the <code>human_ensembl</code>, <code>mouse_ensembl</code>, and <code>support</code> columns specifically. The <code>support</code> column contains a list of associated databases that support each assertion. This column may assist with addressing some of the multi-mappings that we will talk about later.</p>
 <pre class="r"><code>human_mouse_key &lt;- mouse %&gt;%
   # We&#39;ll want to subset mouse to only the columns we&#39;re interested in
-  dplyr::select(mouse_ensembl, human_symbol, support)
+  dplyr::select(mouse_ensembl, human_ensembl, support)
 
 # Since we ignored the additional columns in `mouse`, let&#39;s check to see if we have any duplicates in our `human_mouse_key`
 any(duplicated(human_mouse_key))</code></pre>
@@ -1982,36 +1983,36 @@ any(duplicated(human_mouse_key))</code></pre>
 <p>Now let’s join the mapped data from <code>human_mouse_key</code> with the expression data in <code>df</code>.</p>
 <pre class="r"><code>human_mouse_mapped_df &lt;- df %&gt;%
   dplyr::left_join(human_mouse_key, by = c(&quot;Gene&quot; = &quot;mouse_ensembl&quot;)) %&gt;%
-  # Sort so that the columns with the mouse Ensembl IDs and human gene symbols are first
-  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
+  # Sort so that the columns with the mouse Ensembl IDs and human Ensembl IDs are first
+  dplyr::select(Gene, human_ensembl, dplyr::everything())</code></pre>
 <p>Here’s what the new data frame looks like:</p>
 <pre class="r"><code>head(human_mouse_mapped_df, n = 25)</code></pre>
-<pre><code>##                  Gene human_symbol  SRR3189684  SRR3189690 SRR3189691
-## 1  ENSMUSG00000000001        GNAI1 4674.715000 2396.038800 3490.06500
-## 2  ENSMUSG00000000001        GNAI2 4674.715000 2396.038800 3490.06500
-## 3  ENSMUSG00000000001        GNAI3 4674.715000 2396.038800 3490.06500
-## 4  ENSMUSG00000000003         &lt;NA&gt;    0.000000    0.000000    0.00000
-## 5  ENSMUSG00000000028        CDC45 2198.448200 1349.962200  788.64215
-## 6  ENSMUSG00000000031          H19    0.000000    4.506556   33.21141
-## 7  ENSMUSG00000000037        SCML2  104.589485  183.688870   33.93041
-## 8  ENSMUSG00000000049         APOH    0.000000    0.000000    0.00000
-## 9  ENSMUSG00000000056        CIAO3 2165.895500  475.578800  407.86655
-## 10 ENSMUSG00000000056         NARF 2165.895500  475.578800  407.86655
-## 11 ENSMUSG00000000058         CAV2   99.250490   45.941875  106.46240
-## 12 ENSMUSG00000000078         KLF6 3851.928700  640.549900  812.91930
-## 13 ENSMUSG00000000085        SCMH1  587.146700 1104.573200  625.32404
-## 14 ENSMUSG00000000088        COX5A  697.522200 3876.586000 6501.89750
-## 15 ENSMUSG00000000093         TBX2    0.000000    0.000000    0.00000
-## 16 ENSMUSG00000000093         TBX3    0.000000    0.000000    0.00000
-## 17 ENSMUSG00000000094         TBX4    1.221391    2.219869    0.00000
-## 18 ENSMUSG00000000094         TBX5    1.221391    2.219869    0.00000
-## 19 ENSMUSG00000000103   AC003002.1    0.000000    2.541095    0.00000
-## 20 ENSMUSG00000000103   AC003005.1    0.000000    2.541095    0.00000
-## 21 ENSMUSG00000000103   AC004076.1    0.000000    2.541095    0.00000
-## 22 ENSMUSG00000000103          ZFX    0.000000    2.541095    0.00000
-## 23 ENSMUSG00000000103          ZFY    0.000000    2.541095    0.00000
-## 24 ENSMUSG00000000103       ZNF134    0.000000    2.541095    0.00000
-## 25 ENSMUSG00000000103       ZNF154    0.000000    2.541095    0.00000
+<pre><code>##                  Gene   human_ensembl  SRR3189684  SRR3189690 SRR3189691
+## 1  ENSMUSG00000000001 ENSG00000127955 4674.715000 2396.038800 3490.06500
+## 2  ENSMUSG00000000001 ENSG00000114353 4674.715000 2396.038800 3490.06500
+## 3  ENSMUSG00000000001 ENSG00000065135 4674.715000 2396.038800 3490.06500
+## 4  ENSMUSG00000000003            &lt;NA&gt;    0.000000    0.000000    0.00000
+## 5  ENSMUSG00000000028 ENSG00000093009 2198.448200 1349.962200  788.64215
+## 6  ENSMUSG00000000031 ENSG00000130600    0.000000    4.506556   33.21141
+## 7  ENSMUSG00000000037 ENSG00000102098  104.589485  183.688870   33.93041
+## 8  ENSMUSG00000000049 ENSG00000091583    0.000000    0.000000    0.00000
+## 9  ENSMUSG00000000056 ENSG00000103245 2165.895500  475.578800  407.86655
+## 10 ENSMUSG00000000056 ENSG00000141562 2165.895500  475.578800  407.86655
+## 11 ENSMUSG00000000058 ENSG00000105971   99.250490   45.941875  106.46240
+## 12 ENSMUSG00000000078 ENSG00000067082 3851.928700  640.549900  812.91930
+## 13 ENSMUSG00000000085 ENSG00000010803  587.146700 1104.573200  625.32404
+## 14 ENSMUSG00000000088 ENSG00000178741  697.522200 3876.586000 6501.89750
+## 15 ENSMUSG00000000093 ENSG00000121068    0.000000    0.000000    0.00000
+## 16 ENSMUSG00000000093 ENSG00000135111    0.000000    0.000000    0.00000
+## 17 ENSMUSG00000000094 ENSG00000121075    1.221391    2.219869    0.00000
+## 18 ENSMUSG00000000094 ENSG00000089225    1.221391    2.219869    0.00000
+## 19 ENSMUSG00000000103 ENSG00000268133    0.000000    2.541095    0.00000
+## 20 ENSMUSG00000000103 ENSG00000268107    0.000000    2.541095    0.00000
+## 21 ENSMUSG00000000103 ENSG00000268163    0.000000    2.541095    0.00000
+## 22 ENSMUSG00000000103 ENSG00000005889    0.000000    2.541095    0.00000
+## 23 ENSMUSG00000000103 ENSG00000067646    0.000000    2.541095    0.00000
+## 24 ENSMUSG00000000103 ENSG00000213762    0.000000    2.541095    0.00000
+## 25 ENSMUSG00000000103 ENSG00000179909    0.000000    2.541095    0.00000
 ##      SRR3189683 SRR3189693 SRR3189692  SRR3189682   SRR3189696   SRR3189687
 ## 1  1.095965e+04 4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000
 ## 2  1.095965e+04 4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000
@@ -2116,119 +2117,85 @@ any(duplicated(human_mouse_key))</code></pre>
 ## 23                                                                    OrthoMCL,PhylomeDB,Treefam
 ## 24                                                                                       Ensembl
 ## 25                                                                                       Ensembl</code></pre>
-<p>Let’s get a summary of the gene symbols returned in the <code>human_symbol</code> column of our mapped data frame.</p>
-<pre class="r"><code># We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+<p>Let’s get a summary of the Ensembl IDs returned in the <code>human_ensembl</code> column of our mapped data frame.</p>
+<pre class="r"><code># We can use this `count()` function after `group_by()`to get a count of how many `mouse_ensembl` IDs there are per `human_ensembl` IDs
 human_mouse_mapped_df %&gt;%
-  dplyr::group_by(human_symbol) %&gt;%
+  dplyr::group_by(human_ensembl) %&gt;%
   dplyr::count() %&gt;%
-  # Sort by highest `n` which would be the human gene symbol with the most mapped mouse Ensembl IDs
+  # Sort by highest `n` which would be the human Ensembl ID with the most mapped mouse Ensembl IDs
   dplyr::arrange(desc(n))</code></pre>
-<pre><code>## # A tibble: 21,546 x 2
-## # Groups:   human_symbol [21,546]
-##    human_symbol     n
-##    &lt;chr&gt;        &lt;int&gt;
-##  1 &lt;NA&gt;         18801
-##  2 SYCP3          101
-##  3 PRAMEF1         88
-##  4 PRAMEF10        88
-##  5 PRAMEF11        88
-##  6 PRAMEF12        88
-##  7 PRAMEF13        88
-##  8 PRAMEF14        88
-##  9 PRAMEF15        88
-## 10 PRAMEF17        88
-## # … with 21,536 more rows</code></pre>
-<p>Looks like we have mapped symbols! Now, let’s get an idea of how many mouse Ensembl IDs we have that were not mapped to human gene symbols.</p>
-<pre class="r"><code>sum(is.na(human_mouse_mapped_df$human_symbol))</code></pre>
+<pre><code>## # A tibble: 21,620 x 2
+## # Groups:   human_ensembl [21,620]
+##    human_ensembl       n
+##    &lt;chr&gt;           &lt;int&gt;
+##  1 &lt;NA&gt;            18801
+##  2 ENSG00000139351   101
+##  3 ENSG00000116721    88
+##  4 ENSG00000116726    88
+##  5 ENSG00000120952    88
+##  6 ENSG00000182330    88
+##  7 ENSG00000187545    88
+##  8 ENSG00000204478    88
+##  9 ENSG00000204479    88
+## 10 ENSG00000204480    88
+## # … with 21,610 more rows</code></pre>
+<p>Looks like we have mapped IDs! Now, let’s get an idea of how many mouse Ensembl IDs we have that were not mapped to human Ensembl IDs.</p>
+<pre class="r"><code>sum(is.na(human_mouse_mapped_df$human_ensembl))</code></pre>
 <pre><code>## [1] 18801</code></pre>
-<p>We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human gene symbols. This is okay because we do not expect everything to map across species.</p>
+<p>We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human Ensembl IDs. This is okay because we do not expect everything to map across species.</p>
 </div>
 <div id="take-a-look-at-some-multi-mappings" class="section level2">
 <h2><span class="header-section-number">4.5</span> Take a look at some multi-mappings</h2>
-<p>If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSMUSG00000000290</code> example below.</p>
+<p>If a mouse Ensembl gene ID maps to multiple human Ensembl IDs, the gene expression values get duplicated. Let’s look at the <code>ENSMUSG00000000290</code> example below.</p>
 <pre class="r"><code>human_mouse_mapped_df %&gt;%
   dplyr::filter(Gene == &quot;ENSMUSG00000000290&quot;)</code></pre>
-<pre><code>##                 Gene human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683
-## 1 ENSMUSG00000000290        ITGB2   5211.996   833.6398   805.8741   6372.115
-## 2 ENSMUSG00000000290        ITGB7   5211.996   833.6398   805.8741   6372.115
-##   SRR3189693 SRR3189692 SRR3189682 SRR3189696 SRR3189687 SRR3189680 SRR3189697
-## 1   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329   369.9394
-## 2   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329   369.9394
-##   SRR3189685 SRR3189695 SRR3189688 SRR3189694 SRR3189679 SRR3189686 SRR3189689
-## 1   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129    1051.29
-## 2   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129    1051.29
-##   SRR3189681
-## 1   744.5746
-## 2   744.5746
+<pre><code>##                 Gene   human_ensembl SRR3189684 SRR3189690 SRR3189691
+## 1 ENSMUSG00000000290 ENSG00000160255   5211.996   833.6398   805.8741
+## 2 ENSMUSG00000000290 ENSG00000139626   5211.996   833.6398   805.8741
+##   SRR3189683 SRR3189693 SRR3189692 SRR3189682 SRR3189696 SRR3189687 SRR3189680
+## 1   6372.115   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329
+## 2   6372.115   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329
+##   SRR3189697 SRR3189685 SRR3189695 SRR3189688 SRR3189694 SRR3189679 SRR3189686
+## 1   369.9394   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129
+## 2   369.9394   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129
+##   SRR3189689 SRR3189681
+## 1    1051.29   744.5746
+## 2    1051.29   744.5746
 ##                                                                               support
 ## 1 Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
 ## 2                                                                            OrthoMCL</code></pre>
-<p>Remember that our original data is associated to mouse Ensembl IDs, so when a human gene symbol maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>CACNA1B</code> example below.</p>
+<p>Remember that our original data is associated to mouse Ensembl IDs, so when a human Ensembl ID maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>CACNA1B</code> example below.</p>
 <pre class="r"><code>human_mouse_mapped_df %&gt;%
-  dplyr::filter(human_symbol == &quot;CACNA1B&quot;)</code></pre>
-<pre><code>##                 Gene human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683
-## 1 ENSMUSG00000004110      CACNA1B  64.386610   62.03160   5.704462 78.1114100
-## 2 ENSMUSG00000004113      CACNA1B   8.027397   22.30250  10.371996 31.7198300
-## 3 ENSMUSG00000015968      CACNA1B 120.986670   32.93995   2.316668 61.4174230
-## 4 ENSMUSG00000026407      CACNA1B   9.695647   15.34610  15.015261 10.1450350
-## 5 ENSMUSG00000031142      CACNA1B  63.828888   43.92981  21.094933 42.6635130
-## 6 ENSMUSG00000034656      CACNA1B 194.257680  344.31577 168.783160 94.3189240
-## 7 ENSMUSG00000051331      CACNA1B  36.621136   26.47730   4.512230  0.8104655
-##   SRR3189693 SRR3189692 SRR3189682 SRR3189696 SRR3189687 SRR3189680 SRR3189697
-## 1   29.33778  79.886894  155.54729   46.31989 138.936160   90.85447   32.97788
-## 2   38.35156  26.916290   18.81904   35.76338   8.662825  106.84357   32.15427
-## 3   34.38685  20.490047  114.15093   56.99050  97.806625  144.02042  137.43925
-## 4   37.03633  29.457691    0.00000    0.00000  82.171585   14.67139    0.00000
-## 5   27.09561  18.979546   26.61411   40.59662   8.687406   37.20193   11.87342
-## 6  147.29240 278.739260  300.24860  224.33270 329.317870  360.79294  237.96777
-## 7   36.71360   1.740046  149.95990   58.54933  52.309612   83.78445   40.43368
-##   SRR3189685 SRR3189695 SRR3189688 SRR3189694 SRR3189679 SRR3189686 SRR3189689
-## 1  102.66795  28.013832  69.978000  38.562702 158.176130   53.54486  63.198612
-## 2   61.00688  10.864648   4.882482   7.815108 162.064240   17.43467  37.390255
-## 3  102.01406  63.624504  24.376560  35.440186 124.037900  153.52360  70.062836
-## 4   60.55447   0.217768   0.000000   0.000000   4.746011   17.48240   7.692953
-## 5   32.37407  32.802315  13.336410  23.625856  41.427000   22.87507  22.368479
-## 6  130.72460 336.566100 196.887560 238.102570 435.237240  195.11191 301.922400
-## 7   67.18051 190.384800  73.420654  40.094784 145.783260   61.64490 109.651350
-##   SRR3189681
-## 1  137.23341
-## 2   17.50374
-## 3  152.13698
-## 4    0.00000
-## 5   38.34911
-## 6  419.92944
-## 7   90.53610
-##                                                                                support
-## 1                                                                             OrthoMCL
-## 2 Inparanoid,HomoloGene,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
-## 3                                                                             OrthoMCL
-## 4                                                                             OrthoMCL
-## 5                                                                             OrthoMCL
-## 6                                                                     OrthoMCL,OrthoDB
-## 7                                                                             OrthoMCL</code></pre>
+  dplyr::filter(human_ensembl == &quot;CACNA1B&quot;)</code></pre>
+<pre><code>##  [1] Gene          human_ensembl SRR3189684    SRR3189690    SRR3189691   
+##  [6] SRR3189683    SRR3189693    SRR3189692    SRR3189682    SRR3189696   
+## [11] SRR3189687    SRR3189680    SRR3189697    SRR3189685    SRR3189695   
+## [16] SRR3189688    SRR3189694    SRR3189679    SRR3189686    SRR3189689   
+## [21] SRR3189681    support      
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
 </div>
-<div id="collapse-multi-mapped-human-gene-symbols" class="section level2">
-<h2><span class="header-section-number">4.6</span> Collapse multi-mapped human gene symbols</h2>
+<div id="collapse-multi-mapped-human-ensembl-ids" class="section level2">
+<h2><span class="header-section-number">4.6</span> Collapse multi-mapped human Ensembl IDs</h2>
 <p>Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.</p>
-<p>In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique mouse Ensembl ID.</p>
-<pre class="r"><code>collapsed_human_symbol_df &lt;- human_mouse_mapped_df %&gt;%
+<p>In the next chunk, we show how we can collapse all the human Ensembl IDs into one column where we store them all for each unique mouse Ensembl ID.</p>
+<pre class="r"><code>collapsed_human_ensembl_df &lt;- human_mouse_mapped_df %&gt;%
   # Group by Ensembl IDs
   dplyr::group_by(Gene) %&gt;%
-  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_symbols`
-  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = &quot;;&quot;)) %&gt;%
+  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_ensembls`
+  dplyr::summarize(all_human_ensembls = paste(human_ensembl, collapse = &quot;;&quot;)) %&gt;%
   # Now we need get the gene expression data back
   dplyr::left_join(df, by = &quot;Gene&quot;)</code></pre>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>head(collapsed_human_symbol_df)</code></pre>
+<pre class="r"><code>head(collapsed_human_ensembl_df)</code></pre>
 <pre><code>## # A tibble: 6 x 21
-##   Gene  all_human_symbo… SRR3189684 SRR3189690 SRR3189691 SRR3189683 SRR3189693
+##   Gene  all_human_ensem… SRR3189684 SRR3189690 SRR3189691 SRR3189683 SRR3189693
 ##   &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 ENSM… GNAI1;GNAI2;GNA…      4675.    2396.       3490.      10960.     4041. 
+## 1 ENSM… ENSG00000127955…      4675.    2396.       3490.      10960.     4041. 
 ## 2 ENSM… NA                       0        0           0           0         0  
-## 3 ENSM… CDC45                 2198.    1350.        789.       3282.     1646. 
-## 4 ENSM… H19                      0        4.51       33.2         0        12.4
-## 5 ENSM… SCML2                  105.     184.         33.9       446.      291. 
-## 6 ENSM… APOH                     0        0           0           0         0  
+## 3 ENSM… ENSG00000093009       2198.    1350.        789.       3282.     1646. 
+## 4 ENSM… ENSG00000130600          0        4.51       33.2         0        12.4
+## 5 ENSM… ENSG00000102098        105.     184.         33.9       446.      291. 
+## 6 ENSM… ENSG00000091583          0        0           0           0         0  
 ## # … with 14 more variables: SRR3189692 &lt;dbl&gt;, SRR3189682 &lt;dbl&gt;,
 ## #   SRR3189696 &lt;dbl&gt;, SRR3189687 &lt;dbl&gt;, SRR3189680 &lt;dbl&gt;, SRR3189697 &lt;dbl&gt;,
 ## #   SRR3189685 &lt;dbl&gt;, SRR3189695 &lt;dbl&gt;, SRR3189688 &lt;dbl&gt;, SRR3189694 &lt;dbl&gt;,
@@ -2237,7 +2204,7 @@ human_mouse_mapped_df %&gt;%
 <h3><span class="header-section-number">4.6.1</span> Write results to file</h3>
 <p>Now let’s write our results to file.</p>
 <pre class="r"><code>readr::write_tsv(
-  collapsed_human_symbol_df,
+  collapsed_human_ensembl_df,
   file.path(
     results_dir,
     &quot;SRP070849_mouse_ensembl_to_collapsed_human_gene_symbol.tsv&quot; # Replace with a relevant output file name
@@ -2247,25 +2214,25 @@ human_mouse_mapped_df %&gt;%
 </div>
 <div id="collapse-multi-mapped-mouse-ensembl-ids" class="section level2">
 <h2><span class="header-section-number">4.7</span> Collapse multi-mapped mouse Ensembl IDs</h2>
-<p>Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.</p>
-<p>A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology. Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.</p>
+<p>Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique human Ensembl ID mapped to.</p>
+<p>A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology. Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human Ensembl ID.</p>
 <p>Instead, we will use the <code>support</code> column to decide which mappings to retain. As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable. Therefore, where we have multi-mapped mouse Ensembl gene IDs, we will take the mapping with the most databases that concur according to the <code>support</code> column.</p>
 <pre class="r"><code>filtered_mouse_ensembl_df &lt;- human_mouse_mapped_df %&gt;%
   dplyr::mutate(n_databases = stringr::str_count(support, &quot;,&quot;) + 1) %&gt;% # Count the number of databases in the support column for each prediction
-  dplyr::group_by(human_symbol) %&gt;% # Group by human gene symbols
-  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
+  dplyr::group_by(human_ensembl) %&gt;% # Group by human Ensembl IDs
+  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human Ensembl ID
 
 head(filtered_mouse_ensembl_df)</code></pre>
 <pre><code>## # A tibble: 6 x 23
-## # Groups:   human_symbol [6]
-##   Gene  human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683 SRR3189693
-##   &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 ENSM… GNAI3             4675.    2396.       3490.      10960.     4041. 
-## 2 ENSM… CDC45             2198.    1350.        789.       3282.     1646. 
-## 3 ENSM… H19                  0        4.51       33.2         0        12.4
-## 4 ENSM… SCML2              105.     184.         33.9       446.      291. 
-## 5 ENSM… APOH                 0        0           0           0         0  
-## 6 ENSM… NARF              2166.     476.        408.       1804.     1207. 
+## # Groups:   human_ensembl [6]
+##   Gene  human_ensembl SRR3189684 SRR3189690 SRR3189691 SRR3189683 SRR3189693
+##   &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 ENSM… ENSG00000065…      4675.    2396.       3490.      10960.     4041. 
+## 2 ENSM… ENSG00000093…      2198.    1350.        789.       3282.     1646. 
+## 3 ENSM… ENSG00000130…         0        4.51       33.2         0        12.4
+## 4 ENSM… ENSG00000102…       105.     184.         33.9       446.      291. 
+## 5 ENSM… ENSG00000091…         0        0           0           0         0  
+## 6 ENSM… ENSG00000141…      2166.     476.        408.       1804.     1207. 
 ## # … with 16 more variables: SRR3189692 &lt;dbl&gt;, SRR3189682 &lt;dbl&gt;,
 ## #   SRR3189696 &lt;dbl&gt;, SRR3189687 &lt;dbl&gt;, SRR3189680 &lt;dbl&gt;, SRR3189697 &lt;dbl&gt;,
 ## #   SRR3189685 &lt;dbl&gt;, SRR3189695 &lt;dbl&gt;, SRR3189688 &lt;dbl&gt;, SRR3189694 &lt;dbl&gt;,
@@ -2273,7 +2240,7 @@ head(filtered_mouse_ensembl_df)</code></pre>
 ## #   support &lt;chr&gt;, n_databases &lt;dbl&gt;</code></pre>
 <div id="write-results-to-file-1" class="section level3">
 <h3><span class="header-section-number">4.7.1</span> Write results to file</h3>
-<p>Now let’s write our list of collapsed mouse Ensembl IDs for each unique human gene symbol to file.</p>
+<p>Now let’s write our list of collapsed mouse Ensembl IDs for each unique human Ensembl ID to file.</p>
 <pre class="r"><code>readr::write_tsv(
   filtered_mouse_ensembl_df,
   file.path(

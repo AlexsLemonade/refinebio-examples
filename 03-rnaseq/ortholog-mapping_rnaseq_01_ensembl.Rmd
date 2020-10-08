@@ -12,7 +12,7 @@ output:
 # Purpose of this analysis
 
 This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio.
-In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC.
+In this notebook, we will use zebrafish data from refine.bio and annotate it with human Ensembl IDs from HGNC.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -236,7 +236,7 @@ df <- df %>%
   tibble::rownames_to_column("Gene")
 ```
 
-## Mapping mouse Ensembl gene IDs to human symbols
+## Mapping mouse Ensembl gene IDs to human Ensembl gene IDs
 
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
@@ -250,14 +250,14 @@ In mouse, Ensembl gene identifiers begin with `ENSMUSG` (in human, `ENSG`, etc.)
 
 Now let's do the mapping!
 
-We're interested in the `human_symbol`, `mouse_ensembl`, and `support` columns specifically.
+We're interested in the `human_ensembl`, `mouse_ensembl`, and `support` columns specifically.
 The `support` column contains a list of associated databases that support each assertion.
 This column may assist with addressing some of the multi-mappings that we will talk about later.
 
 ```{r}
 human_mouse_key <- mouse %>%
   # We'll want to subset mouse to only the columns we're interested in
-  dplyr::select(mouse_ensembl, human_symbol, support)
+  dplyr::select(mouse_ensembl, human_ensembl, support)
 
 # Since we ignored the additional columns in `mouse`, let's check to see if we have any duplicates in our `human_mouse_key`
 any(duplicated(human_mouse_key))
@@ -277,8 +277,8 @@ Now let's join the mapped data from `human_mouse_key` with the expression data i
 ```{r}
 human_mouse_mapped_df <- df %>%
   dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl")) %>%
-  # Sort so that the columns with the mouse Ensembl IDs and human gene symbols are first
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+  # Sort so that the columns with the mouse Ensembl IDs and human Ensembl IDs are first
+  dplyr::select(Gene, human_ensembl, dplyr::everything())
 ```
 
 Here's what the new data frame looks like:
@@ -287,30 +287,30 @@ Here's what the new data frame looks like:
 head(human_mouse_mapped_df, n = 25)
 ```
 
-Let's get a summary of the gene symbols returned in the `human_symbol` column of our mapped data frame.
+Let's get a summary of the Ensembl IDs returned in the `human_ensembl` column of our mapped data frame.
 
 ```{r}
-# We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
+# We can use this `count()` function after `group_by()`to get a count of how many `mouse_ensembl` IDs there are per `human_ensembl` IDs
 human_mouse_mapped_df %>%
-  dplyr::group_by(human_symbol) %>%
+  dplyr::group_by(human_ensembl) %>%
   dplyr::count() %>%
-  # Sort by highest `n` which would be the human gene symbol with the most mapped mouse Ensembl IDs
+  # Sort by highest `n` which would be the human Ensembl ID with the most mapped mouse Ensembl IDs
   dplyr::arrange(desc(n))
 ```
 
-Looks like we have mapped symbols!
-Now, let's get an idea of how many mouse Ensembl IDs we have that were not mapped to human gene symbols.
+Looks like we have mapped IDs!
+Now, let's get an idea of how many mouse Ensembl IDs we have that were not mapped to human Ensembl IDs.
 
 ```{r}
-sum(is.na(human_mouse_mapped_df$human_symbol))
+sum(is.na(human_mouse_mapped_df$human_ensembl))
 ```
 
-We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human gene symbols.
+We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human Ensembl IDs.
 This is okay because we do not expect everything to map across species.
 
 ## Take a look at some multi-mappings
 
-If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+If a mouse Ensembl gene ID maps to multiple human Ensembl IDs, the gene expression values get duplicated.
 Let's look at the `ENSMUSG00000000290` example below.
 
 ```{r}
@@ -318,31 +318,31 @@ human_mouse_mapped_df %>%
   dplyr::filter(Gene == "ENSMUSG00000000290")
 ```
 
-Remember that our original data is associated to mouse Ensembl IDs, so when a human gene symbol maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
+Remember that our original data is associated to mouse Ensembl IDs, so when a human Ensembl ID maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
 Let's look at the `CACNA1B` example below.
 
 ```{r}
 human_mouse_mapped_df %>%
-  dplyr::filter(human_symbol == "CACNA1B")
+  dplyr::filter(human_ensembl == "CACNA1B")
 ```
 
-## Collapse multi-mapped human gene symbols
+## Collapse multi-mapped human Ensembl IDs
 
 Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
 We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.
 
-In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique mouse Ensembl ID.
+In the next chunk, we show how we can collapse all the human Ensembl IDs into one column where we store them all for each unique mouse Ensembl ID.
 
 ```{r}
-collapsed_human_symbol_df <- human_mouse_mapped_df %>%
+collapsed_human_ensembl_df <- human_mouse_mapped_df %>%
   # Group by Ensembl IDs
   dplyr::group_by(Gene) %>%
-  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_symbols`
-  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
+  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_ensembls`
+  dplyr::summarize(all_human_ensembls = paste(human_ensembl, collapse = ";")) %>%
   # Now we need get the gene expression data back
   dplyr::left_join(df, by = "Gene")
 
-head(collapsed_human_symbol_df)
+head(collapsed_human_ensembl_df)
 ```
 
 ### Write results to file
@@ -351,7 +351,7 @@ Now let's write our results to file.
 
 ```{r}
 readr::write_tsv(
-  collapsed_human_symbol_df,
+  collapsed_human_ensembl_df,
   file.path(
     results_dir,
     "SRP070849_mouse_ensembl_to_collapsed_human_gene_symbol.tsv" # Replace with a relevant output file name
@@ -361,10 +361,10 @@ readr::write_tsv(
 
 ## Collapse multi-mapped mouse Ensembl IDs
 
-Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
+Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique human Ensembl ID mapped to.
 
 A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
-Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.
+Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human Ensembl ID.
 
 Instead, we will use the `support` column to decide which mappings to retain.
 As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable.
@@ -373,15 +373,15 @@ Therefore, where we have multi-mapped mouse Ensembl gene IDs, we will take the m
 ```{r}
 filtered_mouse_ensembl_df <- human_mouse_mapped_df %>%
   dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>% # Count the number of databases in the support column for each prediction
-  dplyr::group_by(human_symbol) %>% # Group by human gene symbols
-  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
+  dplyr::group_by(human_ensembl) %>% # Group by human Ensembl IDs
+  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human Ensembl ID
 
 head(filtered_mouse_ensembl_df)
 ```
 
 ### Write results to file
 
-Now let's write our list of collapsed mouse Ensembl IDs for each unique human gene symbol to file.
+Now let's write our list of collapsed mouse Ensembl IDs for each unique human Ensembl ID to file.
 
 ```{r}
 readr::write_tsv(
