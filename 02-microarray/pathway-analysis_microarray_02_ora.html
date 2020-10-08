@@ -1942,7 +1942,7 @@ hs_kegg_df &lt;- hs_msigdb_df %&gt;%
 <div id="gene-identifier-conversion" class="section level2">
 <h2><span class="header-section-number">4.4</span> Gene identifier conversion</h2>
 <p>We’re going to convert our identifiers in <code>dge_df</code> to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!</p>
-<p>The annotation package <code>org.Dr.eg.db</code> contains information for different identifiers <span class="citation">(<span class="citeproc-not-found" data-reference-id="Carlson2020-zebrafish"><strong>???</strong></span>)</span>. <code>org.Dr.eg.db</code> is specific to <em>Danio rerio</em> – this is what the <code>Dr</code> in the package name is referencing.</p>
+<p>The annotation package <code>org.Dr.eg.db</code> contains information for different identifiers <span class="citation">(Carlson 2019)</span>. <code>org.Dr.eg.db</code> is specific to <em>Danio rerio</em> – this is what the <code>Dr</code> in the package name is referencing.</p>
 <p>Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <pre class="r"><code>keytypes(org.Dr.eg.db)</code></pre>

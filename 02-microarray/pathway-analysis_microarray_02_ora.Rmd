@@ -237,7 +237,7 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 
 We're going to convert our identifiers in `dge_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
-The annotation package `org.Dr.eg.db` contains information for different identifiers [@Carlson2020-zebrafish].
+The annotation package `org.Dr.eg.db` contains information for different identifiers [@Carlson2019-zebrafish].
 `org.Dr.eg.db` is specific to _Danio rerio_ -- this is what the `Dr` in the package name is referencing.
 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
