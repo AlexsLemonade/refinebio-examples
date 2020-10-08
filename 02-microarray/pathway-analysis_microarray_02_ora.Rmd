@@ -431,7 +431,7 @@ enrichplot::upsetplot(kegg_ora_results)
 See that `KEGG_SMALL_CELL_LUNG_CANCER` and `KEGG_APOPTOSIS` have genes in common. 
 Gene sets or pathways aren't independent!
 
-#### Write results to file
+## Write results to file
 
 ```{r}
 readr::write_tsv(
