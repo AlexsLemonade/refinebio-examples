@@ -89,7 +89,9 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [acute myeloid leukemia sample dataset](https://www.refine.bio/experiments/SRP070849/combination-targeted-therapy-to-disrupt-aberrant-oncogenic-signaling-and-reverse-epigenetic-dysfunction-in-idh2-and-tet2-mutant-acute-myeloid-leukemia-rna-seq).
 
-The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mice with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.
+The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mouse models with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.
+More specifically, IDH2-mutant AML mouse models were treated with either vehicle or AG-221 (the first small molecule in-vivo inhibitor of IDH2 to enter clinical trials).
+While, the TET2-mutant AML mouse models were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).
 
 ## Place the dataset in your new `data/` folder
 
@@ -176,16 +178,26 @@ HCOP was originally designed to show orthology predictions between human and mou
 In the next chunk, we have adapted code from the [`hcop` package R script](https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R) to retrieve the mouse and human mapped data from the HGNC database [@Turner2018].
 
 ```{r}
-# Read in the data from HGNC
-mouse <-
-  paste0(
+# Define URL to desired organism ortholog mapping file from the HGNC database
+mouse_hgnc_url <- paste0(
     "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
     "human_",
-    "mouse", # Replace with the organism you have data for
+    "mouse", # Replace with the organism you have data for; see the list of possible files from the HGNC at this link: ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/
     "_hcop_fifteen_column.txt.gz"
-  ) %>%
-  data.table::fread() %>%
-  set_names(names(.) %>% gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+  )
+```
+
+```{r}
+# Read in the data from HGNC
+mouse <- data.table::fread(mouse_hgnc_url) %>% # Here we use `data.table::fread()` instead of `readr::read_tsv()` because we expect this file to be large so the `fread()` function is faster/more efficient here
+  set_names(names(.) %>%
+  gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+```
+
+Let's take a look at what `mouse` looks like.
+
+```{r}
+mouse
 ```
 
 ## Import and set up data
@@ -236,12 +248,7 @@ head(df$Gene)
 Ensembl gene identifiers have different species-specific prefixes. 
 In mouse, Ensembl gene identifiers begin with `ENSMUSG` (in human, `ENSG`, etc.).
 
-Now let's do the conversion!
-We'll use the `mouse` data from the HGNC database; this is what `mouse` looks like.
-
-```{r}
-mouse
-```
+Now let's do the mapping!
 
 We're interested in the `human_symbol`, `mouse_ensembl`, and `support` columns specifically.
 The `support` column contains a list of associated databases that support each assertion.

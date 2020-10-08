@@ -1734,7 +1734,7 @@ if (!dir.exists(results_dir)) {
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
 <p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/SRP070849/combination-targeted-therapy-to-disrupt-aberrant-oncogenic-signaling-and-reverse-epigenetic-dysfunction-in-idh2-and-tet2-mutant-acute-myeloid-leukemia-rna-seq">acute myeloid leukemia sample dataset</a>.</p>
-<p>The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mice with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions.</p>
+<p>The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 mouse models with acute myeloid leukemia (AML)), containing RNA-sequencing results for types of AML under controlled treatment conditions. More specifically, IDH2-mutant AML mouse models were treated with either vehicle or AG-221 (the first small molecule in-vivo inhibitor of IDH2 to enter clinical trials). While, the TET2-mutant AML mouse models were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).</p>
 </div>
 <div id="place-the-dataset-in-your-new-data-folder" class="section level2">
 <h2><span class="header-section-number">2.5</span> Place the dataset in your new <code>data/</code> folder</h2>
@@ -1801,73 +1801,18 @@ library(magrittr)</code></pre>
 <p>The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene. The <a href="https://www.genenames.org/">HGNC database</a> currently contains over 39000 public records containing approved human gene nomenclature and associated gene information <span class="citation">(Gray <em>et al.</em> 2015)</span>.</p>
 <p>The <a href="https://www.genenames.org/tools/hcop/">HGNC Comparison of Orthology Predictions (HCOP)</a> is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data <span class="citation">(Wright <em>et al.</em> 2005)</span>. The prediction with the most number of databases which concur is considered the most reliable. HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes <span class="citation">(HGNC team 2020)</span>.</p>
 <p>In the next chunk, we have adapted code from the <a href="https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R"><code>hcop</code> package R script</a> to retrieve the mouse and human mapped data from the HGNC database <span class="citation">(Turner 2018)</span>.</p>
-<pre class="r"><code># Read in the data from HGNC
-mouse &lt;-
-  paste0(
+<pre class="r"><code># Define URL to desired organism ortholog mapping file from the HGNC database
+mouse_hgnc_url &lt;- paste0(
     &quot;ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/&quot;,
     &quot;human_&quot;,
-    &quot;mouse&quot;, # Replace with the organism you have data for
+    &quot;mouse&quot;, # Replace with the organism you have data for; see the list of possible files from the HGNC at this link: ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/
     &quot;_hcop_fifteen_column.txt.gz&quot;
-  ) %&gt;%
-  data.table::fread() %&gt;%
-  set_names(names(.) %&gt;% gsub(&quot;_gene$&quot;, &quot;&quot;, .)) # Removing some extra wording in some of the column names</code></pre>
-</div>
-<div id="import-and-set-up-data" class="section level2">
-<h2><span class="header-section-number">4.3</span> Import and set up data</h2>
-<p>Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. This chunk of code will read the both TSV files and add them as data frames to your environment.</p>
-<pre class="r"><code># Read in metadata TSV file
-metadata &lt;- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your metadata file
-  &quot;metadata_SRP070849.tsv&quot; # Replace with the name of your metadata file
-))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_logical(),
-##   refinebio_accession_code = col_character(),
-##   experiment_accession = col_character(),
-##   refinebio_organism = col_character(),
-##   refinebio_platform = col_character(),
-##   refinebio_source_database = col_character(),
-##   refinebio_specimen_part = col_character(),
-##   refinebio_subject = col_character(),
-##   refinebio_title = col_character(),
-##   refinebio_treatment = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code># Read in data TSV file
-df &lt;- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your data file
-  &quot;SRP070849.tsv&quot; # Replace with the name of your data file
-)) %&gt;%
-  # Tuck away the gene ID column as rownames
-  tibble::column_to_rownames(&quot;Gene&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_double(),
-##   Gene = col_character()
-## )
-## See spec(...) for full column specifications.</code></pre>
-<p>Let’s ensure that the metadata and data are in the same sample order.</p>
-<pre class="r"><code># Make the data in the order of the metadata
-df &lt;- df %&gt;%
-  dplyr::select(metadata$refinebio_accession_code)
-
-# Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code># Bring back the &quot;Gene&quot; column in preparation for mapping
-df &lt;- df %&gt;%
-  tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
-</div>
-<div id="mapping-mouse-ensembl-gene-ids-to-human-symbols" class="section level2">
-<h2><span class="header-section-number">4.4</span> Mapping mouse Ensembl gene IDs to human symbols</h2>
-<p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
-<pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
-head(df$Gene)</code></pre>
-<pre><code>## [1] &quot;ENSMUSG00000000001&quot; &quot;ENSMUSG00000000003&quot; &quot;ENSMUSG00000000028&quot;
-## [4] &quot;ENSMUSG00000000031&quot; &quot;ENSMUSG00000000037&quot; &quot;ENSMUSG00000000049&quot;</code></pre>
-<p>Ensembl gene identifiers have different species-specific prefixes. In mouse, Ensembl gene identifiers begin with <code>ENSMUSG</code> (in human, <code>ENSG</code>, etc.).</p>
-<p>Now let’s do the conversion! We’ll use the <code>mouse</code> data from the HGNC database; this is what <code>mouse</code> looks like.</p>
+  )</code></pre>
+<pre class="r"><code># Read in the data from HGNC
+mouse &lt;- data.table::fread(mouse_hgnc_url) %&gt;% # Here we use `data.table::fread()` instead of `readr::read_tsv()` because we expect this file to be large so the `fread()` function is faster/more efficient here
+  set_names(names(.) %&gt;%
+  gsub(&quot;_gene$&quot;, &quot;&quot;, .)) # Removing some extra wording in some of the column names</code></pre>
+<p>Let’s take a look at what <code>mouse</code> looks like.</p>
 <pre class="r"><code>mouse</code></pre>
 <pre><code>##        human_entrez   human_ensembl    hgnc_id
 ##     1:            - ENSG00000277411          -
@@ -1965,6 +1910,63 @@ head(df$Gene)</code></pre>
 ## 47184:           Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB,OrthoDB
 ## 47185: Inparanoid,HomoloGene,HGNC,OrthoMCL,PhylomeDB,OMA,EggNOG,Panther,Treefam,Ensembl,NCBI,OrthoDB,OrthoDB
 ## 47186:         Inparanoid,HGNC,OrthoMCL,HomoloGene,PhylomeDB,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB</code></pre>
+</div>
+<div id="import-and-set-up-data" class="section level2">
+<h2><span class="header-section-number">4.3</span> Import and set up data</h2>
+<p>Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. This chunk of code will read the both TSV files and add them as data frames to your environment.</p>
+<pre class="r"><code># Read in metadata TSV file
+metadata &lt;- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your metadata file
+  &quot;metadata_SRP070849.tsv&quot; # Replace with the name of your metadata file
+))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_logical(),
+##   refinebio_accession_code = col_character(),
+##   experiment_accession = col_character(),
+##   refinebio_organism = col_character(),
+##   refinebio_platform = col_character(),
+##   refinebio_source_database = col_character(),
+##   refinebio_specimen_part = col_character(),
+##   refinebio_subject = col_character(),
+##   refinebio_title = col_character(),
+##   refinebio_treatment = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code># Read in data TSV file
+df &lt;- readr::read_tsv(file.path(
+  data_dir, # Replace with path to your data file
+  &quot;SRP070849.tsv&quot; # Replace with the name of your data file
+)) %&gt;%
+  # Tuck away the gene ID column as rownames
+  tibble::column_to_rownames(&quot;Gene&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Gene = col_character()
+## )
+## See spec(...) for full column specifications.</code></pre>
+<p>Let’s ensure that the metadata and data are in the same sample order.</p>
+<pre class="r"><code># Make the data in the order of the metadata
+df &lt;- df %&gt;%
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># Bring back the &quot;Gene&quot; column in preparation for mapping
+df &lt;- df %&gt;%
+  tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
+</div>
+<div id="mapping-mouse-ensembl-gene-ids-to-human-symbols" class="section level2">
+<h2><span class="header-section-number">4.4</span> Mapping mouse Ensembl gene IDs to human symbols</h2>
+<p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
+<pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
+head(df$Gene)</code></pre>
+<pre><code>## [1] &quot;ENSMUSG00000000001&quot; &quot;ENSMUSG00000000003&quot; &quot;ENSMUSG00000000028&quot;
+## [4] &quot;ENSMUSG00000000031&quot; &quot;ENSMUSG00000000037&quot; &quot;ENSMUSG00000000049&quot;</code></pre>
+<p>Ensembl gene identifiers have different species-specific prefixes. In mouse, Ensembl gene identifiers begin with <code>ENSMUSG</code> (in human, <code>ENSG</code>, etc.).</p>
+<p>Now let’s do the mapping!</p>
 <p>We’re interested in the <code>human_symbol</code>, <code>mouse_ensembl</code>, and <code>support</code> columns specifically. The <code>support</code> column contains a list of associated databases that support each assertion. This column may assist with addressing some of the multi-mappings that we will talk about later.</p>
 <pre class="r"><code>human_mouse_key &lt;- mouse %&gt;%
   # We&#39;ll want to subset mouse to only the columns we&#39;re interested in
