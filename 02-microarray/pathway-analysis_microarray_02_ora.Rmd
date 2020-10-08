@@ -159,14 +159,14 @@ Instead of using the URL below, you can use a file path to a TSV file with your 
 ```{r}
 # Define the url to your differential expression results file
 dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv"
-# Replace with a link to your desired differential expression results TSV file
 ```
 
-Read in the online file that has differential expression results. 
+Read in the file that has differential expression results. 
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "GSE71270_limma_results.tsv")`.
 
 ```{r}
 # Read in the contents of your differential expression results file
-dge_df <- readr::read_tsv(file.path(results_dir, "GSE71270_limma_results.tsv")) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results
+dge_df <- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results
 ```
 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
