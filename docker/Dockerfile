@@ -77,9 +77,6 @@ RUN Rscript -e  "install.packages( \
 # Need this package to make plots colorblind friendly
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
 
-# Need this package for ortholog mapping
-RUN R -e "remotes::install_github('stephenturner/hcop', ref = '0985fddc91a6ef2308f4800958dfd11c25fe6a98', dependencies = TRUE)"
-
 # Install python libraries
 ##########################
 

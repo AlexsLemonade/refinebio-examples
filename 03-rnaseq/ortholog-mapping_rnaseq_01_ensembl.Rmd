@@ -1,5 +1,5 @@
 ---
-title: "Ortholog Mapping with `hcop` - RNA-seq"
+title: "Ortholog Mapping - RNA-seq"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
 output:   
@@ -11,8 +11,8 @@ output:
 
 # Purpose of this analysis
 
-This notebook demonstrates how you can use the [`hcop`](https://github.com/stephenturner/hcop) package to perform ortholog mapping for RNA-seq data obtained from refine.bio.
-In this notebook, we will use mouse data from refine.bio and annotate it with human gene symbols from HGNC Comparison of Orthology Predictions (HCOP).
+This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio.
+In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -151,38 +151,41 @@ From here you can customize this analysis example to fit your own scientific que
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
 
-# Ortholog Mapping with `hcop` - RNA-seq
+# Ortholog Mapping - RNA-seq
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using `hcop` to map between mouse and human identifiers [@Turner2018].
-
-We'll need to use the `devtools` package to install `hcop` from GitHub [@Wickham2020].
+Attach the package we need for this analysis.
 
 ```{r}
-if (!("devtools" %in% installed.packages())) {
-  install.packages("devtools")
-}
-```
-
-Now we can install `hcop` from GitHub.
-You can control what version of the package is installed by using the `ref` argument of `devtools::install_github()`.
-Here, we'll use the most recent commit at the time that we are putting together this example.
-
-```{r}
-devtools::install_github("stephenturner/hcop", ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98")
-```
-
-Attach the packages we need for this analysis.
-
-```{r}
-# Attach the library
-library(hcop)
-
 # We will need this so we can use the pipe: %>%
 library(magrittr)
+```
+
+## Import data from HGNC
+
+The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene.
+The [HGNC database](https://www.genenames.org/) currently contains over 39000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
+
+The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data [@Wright2005].
+The prediction with the most number of databases which concur is considered the most reliable.
+HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes [@hcop-help].
+
+In the next chunk, we have adapted code from the [`hcop` package R script](https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R) to retrieve the mouse and human mapped data from the HGNC database [@Turner2018].
+
+```{r}
+# Read in the data from HGNC
+mouse <-
+  paste0(
+    "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
+    "human_",
+    "mouse", # Replace with the organism you have data for
+    "_hcop_fifteen_column.txt.gz"
+  ) %>%
+  data.table::fread() %>%
+  set_names(names(.) %>% gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
 ```
 
 ## Import and set up data
@@ -234,21 +237,41 @@ Ensembl gene identifiers have different species-specific prefixes.
 In mouse, Ensembl gene identifiers begin with `ENSMUSG` (in human, `ENSG`, etc.).
 
 Now let's do the conversion!
-We'll use the `mouse` data from `hcop`; this is what `mouse` looks like.
+We'll use the `mouse` data from the HGNC database; this is what `mouse` looks like.
 
 ```{r}
 mouse
 ```
 
-We're interested in the `human_symbol` and `mouse_ensembl` columns specifically.
+We're interested in the `human_symbol`, `mouse_ensembl`, and `support` columns specifically.
+The `support` column contains a list of associated databases that support each assertion.
+This column may assist with addressing some of the multi-mappings that we will talk about later.
 
 ```{r}
 human_mouse_key <- mouse %>%
-  # we'll want to subset mouse to only the columns we're interested in
-  dplyr::select(mouse_ensembl, human_symbol)
-# Now let's join the expression data from `df` for the subset of genes in `df`
+  # We'll want to subset mouse to only the columns we're interested in
+  dplyr::select(mouse_ensembl, human_symbol, support)
+
+# Since we ignored the additional columns in `mouse`, let's check to see if we have any duplicates in our `human_mouse_key`
+any(duplicated(human_mouse_key))
+```
+
+We do have duplicates!
+We don't want to handle duplicate data, so let's remove those duplicates before moving forward.
+
+```{r}
+human_mouse_key <- human_mouse_key %>%
+  # We need to use the `distinct()` function to remove duplicates resulted from ignoring the additional columns in the `mouse` object
+  dplyr::distinct()
+```
+
+Now let's join the mapped data from `human_mouse_key` with the expression data in `df`.
+
+```{r}
 human_mouse_mapped_df <- df %>%
-  dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl"))
+  dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl")) %>%
+  # Sort so that the columns with the mouse Ensembl IDs and human gene symbols are first
+  dplyr::select(Gene, human_symbol, dplyr::everything())
 ```
 
 Here's what the new data frame looks like:
@@ -269,17 +292,23 @@ human_mouse_mapped_df %>%
 ```
 
 Looks like we have mapped symbols!
-We also have 18908 NAs, which is okay, because we do not expect everything to map across species.
+Now, let's get an idea of how many mouse Ensembl IDs we have that were not mapped to human gene symbols.
+
+```{r}
+sum(is.na(human_mouse_mapped_df$human_symbol))
+```
+
+We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human gene symbols.
+This is okay because we do not expect everything to map across species.
 
 ## Take a look at some multi-mappings
 
 If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
-Let's look at the `ENSMUSG00000000037` example below.
+Let's look at the `ENSMUSG00000000290` example below.
 
 ```{r}
 human_mouse_mapped_df %>%
-  dplyr::filter(Gene == "ENSMUSG00000000037") %>%
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+  dplyr::filter(Gene == "ENSMUSG00000000290")
 ```
 
 Remember that our original data is associated to mouse Ensembl IDs, so when a human gene symbol maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
@@ -287,8 +316,7 @@ Let's look at the `CACNA1B` example below.
 
 ```{r}
 human_mouse_mapped_df %>%
-  dplyr::filter(human_symbol == "CACNA1B") %>%
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+  dplyr::filter(human_symbol == "CACNA1B")
 ```
 
 ## Collapse multi-mapped human gene symbols
@@ -306,6 +334,7 @@ collapsed_human_symbol_df <- human_mouse_mapped_df %>%
   dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
   # Now we need get the gene expression data back
   dplyr::left_join(df, by = "Gene")
+
 head(collapsed_human_symbol_df)
 ```
 
@@ -330,15 +359,18 @@ Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also 
 A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
 Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.
 
-```{r}
-collapsed_mouse_ensembl_df <- human_mouse_mapped_df %>%
-  # Group by human gene symbols
-  dplyr::group_by(human_symbol) %>%
-  # Collapse the Ensembl IDs in `human_mouse_mapped_df` into one column named `all_mouse_ensembl_ids`
-  dplyr::summarize(all_mouse_ensembl_ids = paste(Gene, collapse = ";"))
-head(collapsed_mouse_ensembl_df)
-```
+Instead, we will use the `support` column to decide which mappings to retain.
+As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable.
+Therefore, where we have multi-mapped mouse Ensembl gene IDs, we will take the mapping with the most databases that concur according to the `support` column.
 
+```{r}
+filtered_mouse_ensembl_df <- human_mouse_mapped_df %>%
+  dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>% # Count the number of databases in the support column for each prediction
+  dplyr::group_by(human_symbol) %>% # Group by human gene symbols
+  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
+
+head(filtered_mouse_ensembl_df)
+```
 
 ### Write results to file
 
@@ -346,17 +378,19 @@ Now let's write our list of collapsed mouse Ensembl IDs for each unique human ge
 
 ```{r}
 readr::write_tsv(
-  collapsed_mouse_ensembl_df,
+  filtered_mouse_ensembl_df,
   file.path(
     results_dir,
-    "SRP070849_collapsed_mouse_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
+    "SRP070849_filtered_mouse_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
   )
 )
 ```
 
 # Resources for further learning
 
+- [Genenames.org: the HGNC resources in 2015](https://pubmed.ncbi.nlm.nih.gov/25361968/) [@Gray2015]
 - [HCOP: the HGNC comparison of orthology predictions search tool](https://pubmed.ncbi.nlm.nih.gov/16284797/) [@Wright2005]
+- See more on [HCOP and interpreting the data in HGNC](https://www.genenames.org/help/hcop/)[@hcop-help]
 - See our [microarray ortholog mapping notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/ortholog-mapping_microarray_01_ensembl.Rmd) as another applicable example, since the steps for this workflow do not change with technology. 
 
 # Session info

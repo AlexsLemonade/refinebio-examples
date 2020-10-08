@@ -12,7 +12,7 @@
 <meta name="author" content="CCDL for ALSF" />
 
 
-<title>Ortholog Mapping with hcop - RNA-seq</title>
+<title>Ortholog Mapping - RNA-seq</title>
 
 <script>/*! jQuery v1.11.3 | (c) 2005, 2015 jQuery Foundation, Inc. | jquery.org/license */
 !function(a,b){"object"==typeof module&&"object"==typeof module.exports?module.exports=a.document?b(a,!0):function(a){if(!a.document)throw new Error("jQuery requires a window with a document");return b(a)}:b(a)}("undefined"!=typeof window?window:this,function(a,b){var c=[],d=c.slice,e=c.concat,f=c.push,g=c.indexOf,h={},i=h.toString,j=h.hasOwnProperty,k={},l="1.11.3",m=function(a,b){return new m.fn.init(a,b)},n=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,o=/^-ms-/,p=/-([\da-z])/gi,q=function(a,b){return b.toUpperCase()};m.fn=m.prototype={jquery:l,constructor:m,selector:"",length:0,toArray:function(){return d.call(this)},get:function(a){return null!=a?0>a?this[a+this.length]:this[a]:d.call(this)},pushStack:function(a){var b=m.merge(this.constructor(),a);return b.prevObject=this,b.context=this.context,b},each:function(a,b){return m.each(this,a,b)},map:function(a){return this.pushStack(m.map(this,function(b,c){return a.call(b,c,b)}))},slice:function(){return this.pushStack(d.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(a){var b=this.length,c=+a+(0>a?b:0);return this.pushStack(c>=0&&b>c?[this[c]]:[])},end:function(){return this.prevObject||this.constructor(null)},push:f,sort:c.sort,splice:c.splice},m.extend=m.fn.extend=function(){var a,b,c,d,e,f,g=arguments[0]||{},h=1,i=arguments.length,j=!1;for("boolean"==typeof g&&(j=g,g=arguments[h]||{},h++),"object"==typeof g||m.isFunction(g)||(g={}),h===i&&(g=this,h--);i>h;h++)if(null!=(e=arguments[h]))for(d in e)a=g[d],c=e[d],g!==c&&(j&&c&&(m.isPlainObject(c)||(b=m.isArray(c)))?(b?(b=!1,f=a&&m.isArray(a)?a:[]):f=a&&m.isPlainObject(a)?a:{},g[d]=m.extend(j,f,c)):void 0!==c&&(g[d]=c));return g},m.extend({expando:"jQuery"+(l+Math.random()).replace(/\D/g,""),isReady:!0,error:function(a){throw new Error(a)},noop:function(){},isFunction:function(a){return"function"===m.type(a)},isArray:Array.isArray||function(a){return"array"===m.type(a)},isWindow:function(a){return null!=a&&a==a.window},isNumeric:function(a){return!m.isArray(a)&&a-parseFloat(a)+1>=0},isEmptyObject:function(a){var b;for(b in a)return!1;return!0},isPlainObject:function(a){var b;if(!a||"object"!==m.type(a)||a.nodeType||m.isWindow(a))return!1;try{if(a.constructor&&!j.call(a,"constructor")&&!j.call(a.constructor.prototype,"isPrototypeOf"))return!1}catch(c){return!1}if(k.ownLast)for(b in a)return j.call(a,b);for(b in a);return void 0===b||j.call(a,b)},type:function(a){return null==a?a+"":"object"==typeof a||"function"==typeof a?h[i.call(a)]||"object":typeof a},globalEval:function(b){b&&m.trim(b)&&(a.execScript||function(b){a.eval.call(a,b)})(b)},camelCase:function(a){return a.replace(o,"ms-").replace(p,q)},nodeName:function(a,b){return a.nodeName&&a.nodeName.toLowerCase()===b.toLowerCase()},each:function(a,b,c){var d,e=0,f=a.length,g=r(a);if(c){if(g){for(;f>e;e++)if(d=b.apply(a[e],c),d===!1)break}else for(e in a)if(d=b.apply(a[e],c),d===!1)break}else if(g){for(;f>e;e++)if(d=b.call(a[e],e,a[e]),d===!1)break}else for(e in a)if(d=b.call(a[e],e,a[e]),d===!1)break;return a},trim:function(a){return null==a?"":(a+"").replace(n,"")},makeArray:function(a,b){var c=b||[];return null!=a&&(r(Object(a))?m.merge(c,"string"==typeof a?[a]:a):f.call(c,a)),c},inArray:function(a,b,c){var d;if(b){if(g)return g.call(b,a,c);for(d=b.length,c=c?0>c?Math.max(0,d+c):c:0;d>c;c++)if(c in b&&b[c]===a)return c}return-1},merge:function(a,b){var c=+b.length,d=0,e=a.length;while(c>d)a[e++]=b[d++];if(c!==c)while(void 0!==b[d])a[e++]=b[d++];return a.length=e,a},grep:function(a,b,c){for(var d,e=[],f=0,g=a.length,h=!c;g>f;f++)d=!b(a[f],f),d!==h&&e.push(a[f]);return e},map:function(a,b,c){var d,f=0,g=a.length,h=r(a),i=[];if(h)for(;g>f;f++)d=b(a[f],f,c),null!=d&&i.push(d);else for(f in a)d=b(a[f],f,c),null!=d&&i.push(d);return e.apply([],i)},guid:1,proxy:function(a,b){var c,e,f;return"string"==typeof b&&(f=a[b],b=a,a=f),m.isFunction(a)?(c=d.call(arguments,2),e=function(){return a.apply(b||this,c.concat(d.call(arguments)))},e.guid=a.guid=a.guid||m.guid++,e):void 0},now:function(){return+new Date},support:k}),m.each("Boolean Number String Function Array Date RegExp Object Error".split(" "),function(a,b){h["[object "+b+"]"]=b.toLowerCase()});function r(a){var b="length"in a&&a.length,c=m.type(a);return"function"===c||m.isWindow(a)?!1:1===a.nodeType&&b?!0:"array"===c||0===b||"number"==typeof b&&b>0&&b-1 in a}var s=function(a){var b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u="sizzle"+1*new Date,v=a.document,w=0,x=0,y=ha(),z=ha(),A=ha(),B=function(a,b){return a===b&&(l=!0),0},C=1<<31,D={}.hasOwnProperty,E=[],F=E.pop,G=E.push,H=E.push,I=E.slice,J=function(a,b){for(var c=0,d=a.length;d>c;c++)if(a[c]===b)return c;return-1},K="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",L="[\\x20\\t\\r\\n\\f]",M="(?:\\\\.|[\\w-]|[^\\x00-\\xa0])+",N=M.replace("w","w#"),O="\\["+L+"*("+M+")(?:"+L+"*([*^$|!~]?=)"+L+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+N+"))|)"+L+"*\\]",P=":("+M+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+O+")*)|.*)\\)|)",Q=new RegExp(L+"+","g"),R=new RegExp("^"+L+"+|((?:^|[^\\\\])(?:\\\\.)*)"+L+"+$","g"),S=new RegExp("^"+L+"*,"+L+"*"),T=new RegExp("^"+L+"*([>+~]|"+L+")"+L+"*"),U=new RegExp("="+L+"*([^\\]'\"]*?)"+L+"*\\]","g"),V=new RegExp(P),W=new RegExp("^"+N+"$"),X={ID:new RegExp("^#("+M+")"),CLASS:new RegExp("^\\.("+M+")"),TAG:new RegExp("^("+M.replace("w","w*")+")"),ATTR:new RegExp("^"+O),PSEUDO:new RegExp("^"+P),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+L+"*(even|odd|(([+-]|)(\\d*)n|)"+L+"*(?:([+-]|)"+L+"*(\\d+)|))"+L+"*\\)|)","i"),bool:new RegExp("^(?:"+K+")$","i"),needsContext:new RegExp("^"+L+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+L+"*((?:-\\d)?\\d*)"+L+"*\\)|)(?=[^-]|$)","i")},Y=/^(?:input|select|textarea|button)$/i,Z=/^h\d$/i,$=/^[^{]+\{\s*\[native \w/,_=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,aa=/[+~]/,ba=/'|\\/g,ca=new RegExp("\\\\([\\da-f]{1,6}"+L+"?|("+L+")|.)","ig"),da=function(a,b,c){var d="0x"+b-65536;return d!==d||c?b:0>d?String.fromCharCode(d+65536):String.fromCharCode(d>>10|55296,1023&d|56320)},ea=function(){m()};try{H.apply(E=I.call(v.childNodes),v.childNodes),E[v.childNodes.length].nodeType}catch(fa){H={apply:E.length?function(a,b){G.apply(a,I.call(b))}:function(a,b){var c=a.length,d=0;while(a[c++]=b[d++]);a.length=c-1}}}function ga(a,b,d,e){var f,h,j,k,l,o,r,s,w,x;if((b?b.ownerDocument||b:v)!==n&&m(b),b=b||n,d=d||[],k=b.nodeType,"string"!=typeof a||!a||1!==k&&9!==k&&11!==k)return d;if(!e&&p){if(11!==k&&(f=_.exec(a)))if(j=f[1]){if(9===k){if(h=b.getElementById(j),!h||!h.parentNode)return d;if(h.id===j)return d.push(h),d}else if(b.ownerDocument&&(h=b.ownerDocument.getElementById(j))&&t(b,h)&&h.id===j)return d.push(h),d}else{if(f[2])return H.apply(d,b.getElementsByTagName(a)),d;if((j=f[3])&&c.getElementsByClassName)return H.apply(d,b.getElementsByClassName(j)),d}if(c.qsa&&(!q||!q.test(a))){if(s=r=u,w=b,x=1!==k&&a,1===k&&"object"!==b.nodeName.toLowerCase()){o=g(a),(r=b.getAttribute("id"))?s=r.replace(ba,"\\$&"):b.setAttribute("id",s),s="[id='"+s+"'] ",l=o.length;while(l--)o[l]=s+ra(o[l]);w=aa.test(a)&&pa(b.parentNode)||b,x=o.join(",")}if(x)try{return H.apply(d,w.querySelectorAll(x)),d}catch(y){}finally{r||b.removeAttribute("id")}}}return i(a.replace(R,"$1"),b,d,e)}function ha(){var a=[];function b(c,e){return a.push(c+" ")>d.cacheLength&&delete b[a.shift()],b[c+" "]=e}return b}function ia(a){return a[u]=!0,a}function ja(a){var b=n.createElement("div");try{return!!a(b)}catch(c){return!1}finally{b.parentNode&&b.parentNode.removeChild(b),b=null}}function ka(a,b){var c=a.split("|"),e=a.length;while(e--)d.attrHandle[c[e]]=b}function la(a,b){var c=b&&a,d=c&&1===a.nodeType&&1===b.nodeType&&(~b.sourceIndex||C)-(~a.sourceIndex||C);if(d)return d;if(c)while(c=c.nextSibling)if(c===b)return-1;return a?1:-1}function ma(a){return function(b){var c=b.nodeName.toLowerCase();return"input"===c&&b.type===a}}function na(a){return function(b){var c=b.nodeName.toLowerCase();return("input"===c||"button"===c)&&b.type===a}}function oa(a){return ia(function(b){return b=+b,ia(function(c,d){var e,f=a([],c.length,b),g=f.length;while(g--)c[e=f[g]]&&(c[e]=!(d[e]=c[e]))})})}function pa(a){return a&&"undefined"!=typeof a.getElementsByTagName&&a}c=ga.support={},f=ga.isXML=function(a){var b=a&&(a.ownerDocument||a).documentElement;return b?"HTML"!==b.nodeName:!1},m=ga.setDocument=function(a){var b,e,g=a?a.ownerDocument||a:v;return g!==n&&9===g.nodeType&&g.documentElement?(n=g,o=g.documentElement,e=g.defaultView,e&&e!==e.top&&(e.addEventListener?e.addEventListener("unload",ea,!1):e.attachEvent&&e.attachEvent("onunload",ea)),p=!f(g),c.attributes=ja(function(a){return a.className="i",!a.getAttribute("className")}),c.getElementsByTagName=ja(function(a){return a.appendChild(g.createComment("")),!a.getElementsByTagName("*").length}),c.getElementsByClassName=$.test(g.getElementsByClassName),c.getById=ja(function(a){return o.appendChild(a).id=u,!g.getElementsByName||!g.getElementsByName(u).length}),c.getById?(d.find.ID=function(a,b){if("undefined"!=typeof b.getElementById&&p){var c=b.getElementById(a);return c&&c.parentNode?[c]:[]}},d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){return a.getAttribute("id")===b}}):(delete d.find.ID,d.filter.ID=function(a){var b=a.replace(ca,da);return function(a){var c="undefined"!=typeof a.getAttributeNode&&a.getAttributeNode("id");return c&&c.value===b}}),d.find.TAG=c.getElementsByTagName?function(a,b){return"undefined"!=typeof b.getElementsByTagName?b.getElementsByTagName(a):c.qsa?b.querySelectorAll(a):void 0}:function(a,b){var c,d=[],e=0,f=b.getElementsByTagName(a);if("*"===a){while(c=f[e++])1===c.nodeType&&d.push(c);return d}return f},d.find.CLASS=c.getElementsByClassName&&function(a,b){return p?b.getElementsByClassName(a):void 0},r=[],q=[],(c.qsa=$.test(g.querySelectorAll))&&(ja(function(a){o.appendChild(a).innerHTML="<a id='"+u+"'></a><select id='"+u+"-\f]' msallowcapture=''><option selected=''></option></select>",a.querySelectorAll("[msallowcapture^='']").length&&q.push("[*^$]="+L+"*(?:''|\"\")"),a.querySelectorAll("[selected]").length||q.push("\\["+L+"*(?:value|"+K+")"),a.querySelectorAll("[id~="+u+"-]").length||q.push("~="),a.querySelectorAll(":checked").length||q.push(":checked"),a.querySelectorAll("a#"+u+"+*").length||q.push(".#.+[+~]")}),ja(function(a){var b=g.createElement("input");b.setAttribute("type","hidden"),a.appendChild(b).setAttribute("name","D"),a.querySelectorAll("[name=d]").length&&q.push("name"+L+"*[*^$|!~]?="),a.querySelectorAll(":enabled").length||q.push(":enabled",":disabled"),a.querySelectorAll("*,:x"),q.push(",.*:")})),(c.matchesSelector=$.test(s=o.matches||o.webkitMatchesSelector||o.mozMatchesSelector||o.oMatchesSelector||o.msMatchesSelector))&&ja(function(a){c.disconnectedMatch=s.call(a,"div"),s.call(a,"[s!='']:x"),r.push("!=",P)}),q=q.length&&new RegExp(q.join("|")),r=r.length&&new RegExp(r.join("|")),b=$.test(o.compareDocumentPosition),t=b||$.test(o.contains)?function(a,b){var c=9===a.nodeType?a.documentElement:a,d=b&&b.parentNode;return a===d||!(!d||1!==d.nodeType||!(c.contains?c.contains(d):a.compareDocumentPosition&&16&a.compareDocumentPosition(d)))}:function(a,b){if(b)while(b=b.parentNode)if(b===a)return!0;return!1},B=b?function(a,b){if(a===b)return l=!0,0;var d=!a.compareDocumentPosition-!b.compareDocumentPosition;return d?d:(d=(a.ownerDocument||a)===(b.ownerDocument||b)?a.compareDocumentPosition(b):1,1&d||!c.sortDetached&&b.compareDocumentPosition(a)===d?a===g||a.ownerDocument===v&&t(v,a)?-1:b===g||b.ownerDocument===v&&t(v,b)?1:k?J(k,a)-J(k,b):0:4&d?-1:1)}:function(a,b){if(a===b)return l=!0,0;var c,d=0,e=a.parentNode,f=b.parentNode,h=[a],i=[b];if(!e||!f)return a===g?-1:b===g?1:e?-1:f?1:k?J(k,a)-J(k,b):0;if(e===f)return la(a,b);c=a;while(c=c.parentNode)h.unshift(c);c=b;while(c=c.parentNode)i.unshift(c);while(h[d]===i[d])d++;return d?la(h[d],i[d]):h[d]===v?-1:i[d]===v?1:0},g):n},ga.matches=function(a,b){return ga(a,null,null,b)},ga.matchesSelector=function(a,b){if((a.ownerDocument||a)!==n&&m(a),b=b.replace(U,"='$1']"),!(!c.matchesSelector||!p||r&&r.test(b)||q&&q.test(b)))try{var d=s.call(a,b);if(d||c.disconnectedMatch||a.document&&11!==a.document.nodeType)return d}catch(e){}return ga(b,n,null,[a]).length>0},ga.contains=function(a,b){return(a.ownerDocument||a)!==n&&m(a),t(a,b)},ga.attr=function(a,b){(a.ownerDocument||a)!==n&&m(a);var e=d.attrHandle[b.toLowerCase()],f=e&&D.call(d.attrHandle,b.toLowerCase())?e(a,b,!p):void 0;return void 0!==f?f:c.attributes||!p?a.getAttribute(b):(f=a.getAttributeNode(b))&&f.specified?f.value:null},ga.error=function(a){throw new Error("Syntax error, unrecognized expression: "+a)},ga.uniqueSort=function(a){var b,d=[],e=0,f=0;if(l=!c.detectDuplicates,k=!c.sortStable&&a.slice(0),a.sort(B),l){while(b=a[f++])b===a[f]&&(e=d.push(f));while(e--)a.splice(d[e],1)}return k=null,a},e=ga.getText=function(a){var b,c="",d=0,f=a.nodeType;if(f){if(1===f||9===f||11===f){if("string"==typeof a.textContent)return a.textContent;for(a=a.firstChild;a;a=a.nextSibling)c+=e(a)}else if(3===f||4===f)return a.nodeValue}else while(b=a[d++])c+=e(b);return c},d=ga.selectors={cacheLength:50,createPseudo:ia,match:X,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(a){return a[1]=a[1].replace(ca,da),a[3]=(a[3]||a[4]||a[5]||"").replace(ca,da),"~="===a[2]&&(a[3]=" "+a[3]+" "),a.slice(0,4)},CHILD:function(a){return a[1]=a[1].toLowerCase(),"nth"===a[1].slice(0,3)?(a[3]||ga.error(a[0]),a[4]=+(a[4]?a[5]+(a[6]||1):2*("even"===a[3]||"odd"===a[3])),a[5]=+(a[7]+a[8]||"odd"===a[3])):a[3]&&ga.error(a[0]),a},PSEUDO:function(a){var b,c=!a[6]&&a[2];return X.CHILD.test(a[0])?null:(a[3]?a[2]=a[4]||a[5]||"":c&&V.test(c)&&(b=g(c,!0))&&(b=c.indexOf(")",c.length-b)-c.length)&&(a[0]=a[0].slice(0,b),a[2]=c.slice(0,b)),a.slice(0,3))}},filter:{TAG:function(a){var b=a.replace(ca,da).toLowerCase();return"*"===a?function(){return!0}:function(a){return a.nodeName&&a.nodeName.toLowerCase()===b}},CLASS:function(a){var b=y[a+" "];return b||(b=new RegExp("(^|"+L+")"+a+"("+L+"|$)"))&&y(a,function(a){return b.test("string"==typeof a.className&&a.className||"undefined"!=typeof a.getAttribute&&a.getAttribute("class")||"")})},ATTR:function(a,b,c){return function(d){var e=ga.attr(d,a);return null==e?"!="===b:b?(e+="","="===b?e===c:"!="===b?e!==c:"^="===b?c&&0===e.indexOf(c):"*="===b?c&&e.indexOf(c)>-1:"$="===b?c&&e.slice(-c.length)===c:"~="===b?(" "+e.replace(Q," ")+" ").indexOf(c)>-1:"|="===b?e===c||e.slice(0,c.length+1)===c+"-":!1):!0}},CHILD:function(a,b,c,d,e){var f="nth"!==a.slice(0,3),g="last"!==a.slice(-4),h="of-type"===b;return 1===d&&0===e?function(a){return!!a.parentNode}:function(b,c,i){var j,k,l,m,n,o,p=f!==g?"nextSibling":"previousSibling",q=b.parentNode,r=h&&b.nodeName.toLowerCase(),s=!i&&!h;if(q){if(f){while(p){l=b;while(l=l[p])if(h?l.nodeName.toLowerCase()===r:1===l.nodeType)return!1;o=p="only"===a&&!o&&"nextSibling"}return!0}if(o=[g?q.firstChild:q.lastChild],g&&s){k=q[u]||(q[u]={}),j=k[a]||[],n=j[0]===w&&j[1],m=j[0]===w&&j[2],l=n&&q.childNodes[n];while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if(1===l.nodeType&&++m&&l===b){k[a]=[w,n,m];break}}else if(s&&(j=(b[u]||(b[u]={}))[a])&&j[0]===w)m=j[1];else while(l=++n&&l&&l[p]||(m=n=0)||o.pop())if((h?l.nodeName.toLowerCase()===r:1===l.nodeType)&&++m&&(s&&((l[u]||(l[u]={}))[a]=[w,m]),l===b))break;return m-=e,m===d||m%d===0&&m/d>=0}}},PSEUDO:function(a,b){var c,e=d.pseudos[a]||d.setFilters[a.toLowerCase()]||ga.error("unsupported pseudo: "+a);return e[u]?e(b):e.length>1?(c=[a,a,"",b],d.setFilters.hasOwnProperty(a.toLowerCase())?ia(function(a,c){var d,f=e(a,b),g=f.length;while(g--)d=J(a,f[g]),a[d]=!(c[d]=f[g])}):function(a){return e(a,0,c)}):e}},pseudos:{not:ia(function(a){var b=[],c=[],d=h(a.replace(R,"$1"));return d[u]?ia(function(a,b,c,e){var f,g=d(a,null,e,[]),h=a.length;while(h--)(f=g[h])&&(a[h]=!(b[h]=f))}):function(a,e,f){return b[0]=a,d(b,null,f,c),b[0]=null,!c.pop()}}),has:ia(function(a){return function(b){return ga(a,b).length>0}}),contains:ia(function(a){return a=a.replace(ca,da),function(b){return(b.textContent||b.innerText||e(b)).indexOf(a)>-1}}),lang:ia(function(a){return W.test(a||"")||ga.error("unsupported lang: "+a),a=a.replace(ca,da).toLowerCase(),function(b){var c;do if(c=p?b.lang:b.getAttribute("xml:lang")||b.getAttribute("lang"))return c=c.toLowerCase(),c===a||0===c.indexOf(a+"-");while((b=b.parentNode)&&1===b.nodeType);return!1}}),target:function(b){var c=a.location&&a.location.hash;return c&&c.slice(1)===b.id},root:function(a){return a===o},focus:function(a){return a===n.activeElement&&(!n.hasFocus||n.hasFocus())&&!!(a.type||a.href||~a.tabIndex)},enabled:function(a){return a.disabled===!1},disabled:function(a){return a.disabled===!0},checked:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&!!a.checked||"option"===b&&!!a.selected},selected:function(a){return a.parentNode&&a.parentNode.selectedIndex,a.selected===!0},empty:function(a){for(a=a.firstChild;a;a=a.nextSibling)if(a.nodeType<6)return!1;return!0},parent:function(a){return!d.pseudos.empty(a)},header:function(a){return Z.test(a.nodeName)},input:function(a){return Y.test(a.nodeName)},button:function(a){var b=a.nodeName.toLowerCase();return"input"===b&&"button"===a.type||"button"===b},text:function(a){var b;return"input"===a.nodeName.toLowerCase()&&"text"===a.type&&(null==(b=a.getAttribute("type"))||"text"===b.toLowerCase())},first:oa(function(){return[0]}),last:oa(function(a,b){return[b-1]}),eq:oa(function(a,b,c){return[0>c?c+b:c]}),even:oa(function(a,b){for(var c=0;b>c;c+=2)a.push(c);return a}),odd:oa(function(a,b){for(var c=1;b>c;c+=2)a.push(c);return a}),lt:oa(function(a,b,c){for(var d=0>c?c+b:c;--d>=0;)a.push(d);return a}),gt:oa(function(a,b,c){for(var d=0>c?c+b:c;++d<b;)a.push(d);return a})}},d.pseudos.nth=d.pseudos.eq;for(b in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})d.pseudos[b]=ma(b);for(b in{submit:!0,reset:!0})d.pseudos[b]=na(b);function qa(){}qa.prototype=d.filters=d.pseudos,d.setFilters=new qa,g=ga.tokenize=function(a,b){var c,e,f,g,h,i,j,k=z[a+" "];if(k)return b?0:k.slice(0);h=a,i=[],j=d.preFilter;while(h){(!c||(e=S.exec(h)))&&(e&&(h=h.slice(e[0].length)||h),i.push(f=[])),c=!1,(e=T.exec(h))&&(c=e.shift(),f.push({value:c,type:e[0].replace(R," ")}),h=h.slice(c.length));for(g in d.filter)!(e=X[g].exec(h))||j[g]&&!(e=j[g](e))||(c=e.shift(),f.push({value:c,type:g,matches:e}),h=h.slice(c.length));if(!c)break}return b?h.length:h?ga.error(a):z(a,i).slice(0)};function ra(a){for(var b=0,c=a.length,d="";c>b;b++)d+=a[b].value;return d}function sa(a,b,c){var d=b.dir,e=c&&"parentNode"===d,f=x++;return b.first?function(b,c,f){while(b=b[d])if(1===b.nodeType||e)return a(b,c,f)}:function(b,c,g){var h,i,j=[w,f];if(g){while(b=b[d])if((1===b.nodeType||e)&&a(b,c,g))return!0}else while(b=b[d])if(1===b.nodeType||e){if(i=b[u]||(b[u]={}),(h=i[d])&&h[0]===w&&h[1]===f)return j[2]=h[2];if(i[d]=j,j[2]=a(b,c,g))return!0}}}function ta(a){return a.length>1?function(b,c,d){var e=a.length;while(e--)if(!a[e](b,c,d))return!1;return!0}:a[0]}function ua(a,b,c){for(var d=0,e=b.length;e>d;d++)ga(a,b[d],c);return c}function va(a,b,c,d,e){for(var f,g=[],h=0,i=a.length,j=null!=b;i>h;h++)(f=a[h])&&(!c||c(f,d,e))&&(g.push(f),j&&b.push(h));return g}function wa(a,b,c,d,e,f){return d&&!d[u]&&(d=wa(d)),e&&!e[u]&&(e=wa(e,f)),ia(function(f,g,h,i){var j,k,l,m=[],n=[],o=g.length,p=f||ua(b||"*",h.nodeType?[h]:h,[]),q=!a||!f&&b?p:va(p,m,a,h,i),r=c?e||(f?a:o||d)?[]:g:q;if(c&&c(q,r,h,i),d){j=va(r,n),d(j,[],h,i),k=j.length;while(k--)(l=j[k])&&(r[n[k]]=!(q[n[k]]=l))}if(f){if(e||a){if(e){j=[],k=r.length;while(k--)(l=r[k])&&j.push(q[k]=l);e(null,r=[],j,i)}k=r.length;while(k--)(l=r[k])&&(j=e?J(f,l):m[k])>-1&&(f[j]=!(g[j]=l))}}else r=va(r===g?r.splice(o,r.length):r),e?e(null,g,r,i):H.apply(g,r)})}function xa(a){for(var b,c,e,f=a.length,g=d.relative[a[0].type],h=g||d.relative[" "],i=g?1:0,k=sa(function(a){return a===b},h,!0),l=sa(function(a){return J(b,a)>-1},h,!0),m=[function(a,c,d){var e=!g&&(d||c!==j)||((b=c).nodeType?k(a,c,d):l(a,c,d));return b=null,e}];f>i;i++)if(c=d.relative[a[i].type])m=[sa(ta(m),c)];else{if(c=d.filter[a[i].type].apply(null,a[i].matches),c[u]){for(e=++i;f>e;e++)if(d.relative[a[e].type])break;return wa(i>1&&ta(m),i>1&&ra(a.slice(0,i-1).concat({value:" "===a[i-2].type?"*":""})).replace(R,"$1"),c,e>i&&xa(a.slice(i,e)),f>e&&xa(a=a.slice(e)),f>e&&ra(a))}m.push(c)}return ta(m)}function ya(a,b){var c=b.length>0,e=a.length>0,f=function(f,g,h,i,k){var l,m,o,p=0,q="0",r=f&&[],s=[],t=j,u=f||e&&d.find.TAG("*",k),v=w+=null==t?1:Math.random()||.1,x=u.length;for(k&&(j=g!==n&&g);q!==x&&null!=(l=u[q]);q++){if(e&&l){m=0;while(o=a[m++])if(o(l,g,h)){i.push(l);break}k&&(w=v)}c&&((l=!o&&l)&&p--,f&&r.push(l))}if(p+=q,c&&q!==p){m=0;while(o=b[m++])o(r,s,g,h);if(f){if(p>0)while(q--)r[q]||s[q]||(s[q]=F.call(i));s=va(s)}H.apply(i,s),k&&!f&&s.length>0&&p+b.length>1&&ga.uniqueSort(i)}return k&&(w=v,j=t),r};return c?ia(f):f}return h=ga.compile=function(a,b){var c,d=[],e=[],f=A[a+" "];if(!f){b||(b=g(a)),c=b.length;while(c--)f=xa(b[c]),f[u]?d.push(f):e.push(f);f=A(a,ya(e,d)),f.selector=a}return f},i=ga.select=function(a,b,e,f){var i,j,k,l,m,n="function"==typeof a&&a,o=!f&&g(a=n.selector||a);if(e=e||[],1===o.length){if(j=o[0]=o[0].slice(0),j.length>2&&"ID"===(k=j[0]).type&&c.getById&&9===b.nodeType&&p&&d.relative[j[1].type]){if(b=(d.find.ID(k.matches[0].replace(ca,da),b)||[])[0],!b)return e;n&&(b=b.parentNode),a=a.slice(j.shift().value.length)}i=X.needsContext.test(a)?0:j.length;while(i--){if(k=j[i],d.relative[l=k.type])break;if((m=d.find[l])&&(f=m(k.matches[0].replace(ca,da),aa.test(j[0].type)&&pa(b.parentNode)||b))){if(j.splice(i,1),a=f.length&&ra(j),!a)return H.apply(e,f),e;break}}}return(n||h(a,o))(f,b,!p,e,aa.test(a)&&pa(b.parentNode)||b),e},c.sortStable=u.split("").sort(B).join("")===u,c.detectDuplicates=!!l,m(),c.sortDetached=ja(function(a){return 1&a.compareDocumentPosition(n.createElement("div"))}),ja(function(a){return a.innerHTML="<a href='#'></a>","#"===a.firstChild.getAttribute("href")})||ka("type|href|height|width",function(a,b,c){return c?void 0:a.getAttribute(b,"type"===b.toLowerCase()?1:2)}),c.attributes&&ja(function(a){return a.innerHTML="<input/>",a.firstChild.setAttribute("value",""),""===a.firstChild.getAttribute("value")})||ka("value",function(a,b,c){return c||"input"!==a.nodeName.toLowerCase()?void 0:a.defaultValue}),ja(function(a){return null==a.getAttribute("disabled")})||ka(K,function(a,b,c){var d;return c?void 0:a[b]===!0?b.toLowerCase():(d=a.getAttributeNode(b))&&d.specified?d.value:null}),ga}(a);m.find=s,m.expr=s.selectors,m.expr[":"]=m.expr.pseudos,m.unique=s.uniqueSort,m.text=s.getText,m.isXMLDoc=s.isXML,m.contains=s.contains;var t=m.expr.match.needsContext,u=/^<(\w+)\s*\/?>(?:<\/\1>|)$/,v=/^.[^:#\[\.,]*$/;function w(a,b,c){if(m.isFunction(b))return m.grep(a,function(a,d){return!!b.call(a,d,a)!==c});if(b.nodeType)return m.grep(a,function(a){return a===b!==c});if("string"==typeof b){if(v.test(b))return m.filter(b,a,c);b=m.filter(b,a)}return m.grep(a,function(a){return m.inArray(a,b)>=0!==c})}m.filter=function(a,b,c){var d=b[0];return c&&(a=":not("+a+")"),1===b.length&&1===d.nodeType?m.find.matchesSelector(d,a)?[d]:[]:m.find.matches(a,m.grep(b,function(a){return 1===a.nodeType}))},m.fn.extend({find:function(a){var b,c=[],d=this,e=d.length;if("string"!=typeof a)return this.pushStack(m(a).filter(function(){for(b=0;e>b;b++)if(m.contains(d[b],this))return!0}));for(b=0;e>b;b++)m.find(a,d[b],c);return c=this.pushStack(e>1?m.unique(c):c),c.selector=this.selector?this.selector+" "+a:a,c},filter:function(a){return this.pushStack(w(this,a||[],!1))},not:function(a){return this.pushStack(w(this,a||[],!0))},is:function(a){return!!w(this,"string"==typeof a&&t.test(a)?m(a):a||[],!1).length}});var x,y=a.document,z=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]*))$/,A=m.fn.init=function(a,b){var c,d;if(!a)return this;if("string"==typeof a){if(c="<"===a.charAt(0)&&">"===a.charAt(a.length-1)&&a.length>=3?[null,a,null]:z.exec(a),!c||!c[1]&&b)return!b||b.jquery?(b||x).find(a):this.constructor(b).find(a);if(c[1]){if(b=b instanceof m?b[0]:b,m.merge(this,m.parseHTML(c[1],b&&b.nodeType?b.ownerDocument||b:y,!0)),u.test(c[1])&&m.isPlainObject(b))for(c in b)m.isFunction(this[c])?this[c](b[c]):this.attr(c,b[c]);return this}if(d=y.getElementById(c[2]),d&&d.parentNode){if(d.id!==c[2])return x.find(a);this.length=1,this[0]=d}return this.context=y,this.selector=a,this}return a.nodeType?(this.context=this[0]=a,this.length=1,this):m.isFunction(a)?"undefined"!=typeof x.ready?x.ready(a):a(m):(void 0!==a.selector&&(this.selector=a.selector,this.context=a.context),m.makeArray(a,this))};A.prototype=m.fn,x=m(y);var B=/^(?:parents|prev(?:Until|All))/,C={children:!0,contents:!0,next:!0,prev:!0};m.extend({dir:function(a,b,c){var d=[],e=a[b];while(e&&9!==e.nodeType&&(void 0===c||1!==e.nodeType||!m(e).is(c)))1===e.nodeType&&d.push(e),e=e[b];return d},sibling:function(a,b){for(var c=[];a;a=a.nextSibling)1===a.nodeType&&a!==b&&c.push(a);return c}}),m.fn.extend({has:function(a){var b,c=m(a,this),d=c.length;return this.filter(function(){for(b=0;d>b;b++)if(m.contains(this,c[b]))return!0})},closest:function(a,b){for(var c,d=0,e=this.length,f=[],g=t.test(a)||"string"!=typeof a?m(a,b||this.context):0;e>d;d++)for(c=this[d];c&&c!==b;c=c.parentNode)if(c.nodeType<11&&(g?g.index(c)>-1:1===c.nodeType&&m.find.matchesSelector(c,a))){f.push(c);break}return this.pushStack(f.length>1?m.unique(f):f)},index:function(a){return a?"string"==typeof a?m.inArray(this[0],m(a)):m.inArray(a.jquery?a[0]:a,this):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(a,b){return this.pushStack(m.unique(m.merge(this.get(),m(a,b))))},addBack:function(a){return this.add(null==a?this.prevObject:this.prevObject.filter(a))}});function D(a,b){do a=a[b];while(a&&1!==a.nodeType);return a}m.each({parent:function(a){var b=a.parentNode;return b&&11!==b.nodeType?b:null},parents:function(a){return m.dir(a,"parentNode")},parentsUntil:function(a,b,c){return m.dir(a,"parentNode",c)},next:function(a){return D(a,"nextSibling")},prev:function(a){return D(a,"previousSibling")},nextAll:function(a){return m.dir(a,"nextSibling")},prevAll:function(a){return m.dir(a,"previousSibling")},nextUntil:function(a,b,c){return m.dir(a,"nextSibling",c)},prevUntil:function(a,b,c){return m.dir(a,"previousSibling",c)},siblings:function(a){return m.sibling((a.parentNode||{}).firstChild,a)},children:function(a){return m.sibling(a.firstChild)},contents:function(a){return m.nodeName(a,"iframe")?a.contentDocument||a.contentWindow.document:m.merge([],a.childNodes)}},function(a,b){m.fn[a]=function(c,d){var e=m.map(this,b,c);return"Until"!==a.slice(-5)&&(d=c),d&&"string"==typeof d&&(e=m.filter(d,e)),this.length>1&&(C[a]||(e=m.unique(e)),B.test(a)&&(e=e.reverse())),this.pushStack(e)}});var E=/\S+/g,F={};function G(a){var b=F[a]={};return m.each(a.match(E)||[],function(a,c){b[c]=!0}),b}m.Callbacks=function(a){a="string"==typeof a?F[a]||G(a):m.extend({},a);var b,c,d,e,f,g,h=[],i=!a.once&&[],j=function(l){for(c=a.memory&&l,d=!0,f=g||0,g=0,e=h.length,b=!0;h&&e>f;f++)if(h[f].apply(l[0],l[1])===!1&&a.stopOnFalse){c=!1;break}b=!1,h&&(i?i.length&&j(i.shift()):c?h=[]:k.disable())},k={add:function(){if(h){var d=h.length;!function f(b){m.each(b,function(b,c){var d=m.type(c);"function"===d?a.unique&&k.has(c)||h.push(c):c&&c.length&&"string"!==d&&f(c)})}(arguments),b?e=h.length:c&&(g=d,j(c))}return this},remove:function(){return h&&m.each(arguments,function(a,c){var d;while((d=m.inArray(c,h,d))>-1)h.splice(d,1),b&&(e>=d&&e--,f>=d&&f--)}),this},has:function(a){return a?m.inArray(a,h)>-1:!(!h||!h.length)},empty:function(){return h=[],e=0,this},disable:function(){return h=i=c=void 0,this},disabled:function(){return!h},lock:function(){return i=void 0,c||k.disable(),this},locked:function(){return!i},fireWith:function(a,c){return!h||d&&!i||(c=c||[],c=[a,c.slice?c.slice():c],b?i.push(c):j(c)),this},fire:function(){return k.fireWith(this,arguments),this},fired:function(){return!!d}};return k},m.extend({Deferred:function(a){var b=[["resolve","done",m.Callbacks("once memory"),"resolved"],["reject","fail",m.Callbacks("once memory"),"rejected"],["notify","progress",m.Callbacks("memory")]],c="pending",d={state:function(){return c},always:function(){return e.done(arguments).fail(arguments),this},then:function(){var a=arguments;return m.Deferred(function(c){m.each(b,function(b,f){var g=m.isFunction(a[b])&&a[b];e[f[1]](function(){var a=g&&g.apply(this,arguments);a&&m.isFunction(a.promise)?a.promise().done(c.resolve).fail(c.reject).progress(c.notify):c[f[0]+"With"](this===d?c.promise():this,g?[a]:arguments)})}),a=null}).promise()},promise:function(a){return null!=a?m.extend(a,d):d}},e={};return d.pipe=d.then,m.each(b,function(a,f){var g=f[2],h=f[3];d[f[1]]=g.add,h&&g.add(function(){c=h},b[1^a][2].disable,b[2][2].lock),e[f[0]]=function(){return e[f[0]+"With"](this===e?d:this,arguments),this},e[f[0]+"With"]=g.fireWith}),d.promise(e),a&&a.call(e,e),e},when:function(a){var b=0,c=d.call(arguments),e=c.length,f=1!==e||a&&m.isFunction(a.promise)?e:0,g=1===f?a:m.Deferred(),h=function(a,b,c){return function(e){b[a]=this,c[a]=arguments.length>1?d.call(arguments):e,c===i?g.notifyWith(b,c):--f||g.resolveWith(b,c)}},i,j,k;if(e>1)for(i=new Array(e),j=new Array(e),k=new Array(e);e>b;b++)c[b]&&m.isFunction(c[b].promise)?c[b].promise().done(h(b,k,c)).fail(g.reject).progress(h(b,j,i)):--f;return f||g.resolveWith(k,c),g.promise()}});var H;m.fn.ready=function(a){return m.ready.promise().done(a),this},m.extend({isReady:!1,readyWait:1,holdReady:function(a){a?m.readyWait++:m.ready(!0)},ready:function(a){if(a===!0?!--m.readyWait:!m.isReady){if(!y.body)return setTimeout(m.ready);m.isReady=!0,a!==!0&&--m.readyWait>0||(H.resolveWith(y,[m]),m.fn.triggerHandler&&(m(y).triggerHandler("ready"),m(y).off("ready")))}}});function I(){y.addEventListener?(y.removeEventListener("DOMContentLoaded",J,!1),a.removeEventListener("load",J,!1)):(y.detachEvent("onreadystatechange",J),a.detachEvent("onload",J))}function J(){(y.addEventListener||"load"===event.type||"complete"===y.readyState)&&(I(),m.ready())}m.ready.promise=function(b){if(!H)if(H=m.Deferred(),"complete"===y.readyState)setTimeout(m.ready);else if(y.addEventListener)y.addEventListener("DOMContentLoaded",J,!1),a.addEventListener("load",J,!1);else{y.attachEvent("onreadystatechange",J),a.attachEvent("onload",J);var c=!1;try{c=null==a.frameElement&&y.documentElement}catch(d){}c&&c.doScroll&&!function e(){if(!m.isReady){try{c.doScroll("left")}catch(a){return setTimeout(e,50)}I(),m.ready()}}()}return H.promise(b)};var K="undefined",L;for(L in m(k))break;k.ownLast="0"!==L,k.inlineBlockNeedsLayout=!1,m(function(){var a,b,c,d;c=y.getElementsByTagName("body")[0],c&&c.style&&(b=y.createElement("div"),d=y.createElement("div"),d.style.cssText="position:absolute;border:0;width:0;height:0;top:0;left:-9999px",c.appendChild(d).appendChild(b),typeof b.style.zoom!==K&&(b.style.cssText="display:inline;margin:0;border:0;padding:1px;width:1px;zoom:1",k.inlineBlockNeedsLayout=a=3===b.offsetWidth,a&&(c.style.zoom=1)),c.removeChild(d))}),function(){var a=y.createElement("div");if(null==k.deleteExpando){k.deleteExpando=!0;try{delete a.test}catch(b){k.deleteExpando=!1}}a=null}(),m.acceptData=function(a){var b=m.noData[(a.nodeName+" ").toLowerCase()],c=+a.nodeType||1;return 1!==c&&9!==c?!1:!b||b!==!0&&a.getAttribute("classid")===b};var M=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,N=/([A-Z])/g;function O(a,b,c){if(void 0===c&&1===a.nodeType){var d="data-"+b.replace(N,"-$1").toLowerCase();if(c=a.getAttribute(d),"string"==typeof c){try{c="true"===c?!0:"false"===c?!1:"null"===c?null:+c+""===c?+c:M.test(c)?m.parseJSON(c):c}catch(e){}m.data(a,b,c)}else c=void 0}return c}function P(a){var b;for(b in a)if(("data"!==b||!m.isEmptyObject(a[b]))&&"toJSON"!==b)return!1;
@@ -1673,7 +1673,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Ortholog Mapping with <code>hcop</code> - RNA-seq</h1>
+<h1 class="title toc-ignore">Ortholog Mapping - RNA-seq</h1>
 <h4 class="author">CCDL for ALSF</h4>
 <h4 class="date">October 2020</h4>
 
@@ -1682,7 +1682,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>This notebook demonstrates how you can use the <a href="https://github.com/stephenturner/hcop"><code>hcop</code></a> package to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use mouse data from refine.bio and annotate it with human gene symbols from HGNC Comparison of Orthology Predictions (HCOP).</p>
+<p>This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use zebrafish data from refine.bio and annotate it with human gene symbols from HGNC.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1787,29 +1787,33 @@ file.exists(file.path(data_dir, &quot;metadata_SRP070849.tsv&quot;))</code></pre
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
 </div>
-<div id="ortholog-mapping-with-hcop---rna-seq" class="section level1">
-<h1><span class="header-section-number">4</span> Ortholog Mapping with <code>hcop</code> - RNA-seq</h1>
+<div id="ortholog-mapping---rna-seq" class="section level1">
+<h1><span class="header-section-number">4</span> Ortholog Mapping - RNA-seq</h1>
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <code>hcop</code> to map between mouse and human identifiers <span class="citation">(Turner 2018)</span>.</p>
-<p>We’ll need to use the <code>devtools</code> package to install <code>hcop</code> from GitHub <span class="citation">(Wickham <em>et al.</em> 2020)</span>.</p>
-<pre class="r"><code>if (!(&quot;devtools&quot; %in% installed.packages())) {
-  install.packages(&quot;devtools&quot;)
-}</code></pre>
-<p>Now we can install <code>hcop</code> from GitHub. You can control what version of the package is installed by using the <code>ref</code> argument of <code>devtools::install_github()</code>. Here, we’ll use the most recent commit at the time that we are putting together this example.</p>
-<pre class="r"><code>devtools::install_github(&quot;stephenturner/hcop&quot;, ref = &quot;0985fddc91a6ef2308f4800958dfd11c25fe6a98&quot;)</code></pre>
-<pre><code>## Skipping install of &#39;hcop&#39; from a github remote, the SHA1 (0985fddc) has not changed since last install.
-##   Use `force = TRUE` to force installation</code></pre>
-<p>Attach the packages we need for this analysis.</p>
-<pre class="r"><code># Attach the library
-library(hcop)
-
-# We will need this so we can use the pipe: %&gt;%
+<p>Attach the package we need for this analysis.</p>
+<pre class="r"><code># We will need this so we can use the pipe: %&gt;%
 library(magrittr)</code></pre>
 </div>
+<div id="import-data-from-hgnc" class="section level2">
+<h2><span class="header-section-number">4.2</span> Import data from HGNC</h2>
+<p>The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene. The <a href="https://www.genenames.org/">HGNC database</a> currently contains over 39000 public records containing approved human gene nomenclature and associated gene information <span class="citation">(Gray <em>et al.</em> 2015)</span>.</p>
+<p>The <a href="https://www.genenames.org/tools/hcop/">HGNC Comparison of Orthology Predictions (HCOP)</a> is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data <span class="citation">(Wright <em>et al.</em> 2005)</span>. The prediction with the most number of databases which concur is considered the most reliable. HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes <span class="citation">(HGNC team 2020)</span>.</p>
+<p>In the next chunk, we have adapted code from the <a href="https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R"><code>hcop</code> package R script</a> to retrieve the mouse and human mapped data from the HGNC database <span class="citation">(Turner 2018)</span>.</p>
+<pre class="r"><code># Read in the data from HGNC
+mouse &lt;-
+  paste0(
+    &quot;ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/&quot;,
+    &quot;human_&quot;,
+    &quot;mouse&quot;, # Replace with the organism you have data for
+    &quot;_hcop_fifteen_column.txt.gz&quot;
+  ) %&gt;%
+  data.table::fread() %&gt;%
+  set_names(names(.) %&gt;% gsub(&quot;_gene$&quot;, &quot;&quot;, .)) # Removing some extra wording in some of the column names</code></pre>
+</div>
 <div id="import-and-set-up-data" class="section level2">
-<h2><span class="header-section-number">4.2</span> Import and set up data</h2>
+<h2><span class="header-section-number">4.3</span> Import and set up data</h2>
 <p>Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. This chunk of code will read the both TSV files and add them as data frames to your environment.</p>
 <pre class="r"><code># Read in metadata TSV file
 metadata &lt;- readr::read_tsv(file.path(
@@ -1856,143 +1860,260 @@ df &lt;- df %&gt;%
   tibble::rownames_to_column(&quot;Gene&quot;)</code></pre>
 </div>
 <div id="mapping-mouse-ensembl-gene-ids-to-human-symbols" class="section level2">
-<h2><span class="header-section-number">4.3</span> Mapping mouse Ensembl gene IDs to human symbols</h2>
+<h2><span class="header-section-number">4.4</span> Mapping mouse Ensembl gene IDs to human symbols</h2>
 <p>refine.bio data uses Ensembl gene identifiers, which will be in the first column.</p>
 <pre class="r"><code># Let&#39;s take a look at the first 6 items in the `Gene` column of `df`
 head(df$Gene)</code></pre>
 <pre><code>## [1] &quot;ENSMUSG00000000001&quot; &quot;ENSMUSG00000000003&quot; &quot;ENSMUSG00000000028&quot;
 ## [4] &quot;ENSMUSG00000000031&quot; &quot;ENSMUSG00000000037&quot; &quot;ENSMUSG00000000049&quot;</code></pre>
 <p>Ensembl gene identifiers have different species-specific prefixes. In mouse, Ensembl gene identifiers begin with <code>ENSMUSG</code> (in human, <code>ENSG</code>, etc.).</p>
-<p>Now let’s do the conversion! We’ll use the <code>mouse</code> data from <code>hcop</code>; this is what <code>mouse</code> looks like.</p>
+<p>Now let’s do the conversion! We’ll use the <code>mouse</code> data from the HGNC database; this is what <code>mouse</code> looks like.</p>
 <pre class="r"><code>mouse</code></pre>
-<pre><code>## # A tibble: 53,386 x 9
-##    human_symbol mouse_symbol human_ensembl mouse_ensembl human_entrez
-##    &lt;chr&gt;        &lt;chr&gt;        &lt;chr&gt;         &lt;chr&gt;                &lt;int&gt;
-##  1 5S_rRNA      Gm26157      ENSG00000277… ENSMUSG00000…           NA
-##  2 7SK          Gm26069      ENSG00000274… ENSMUSG00000…           NA
-##  3 A1BG         A1bg         ENSG00000121… ENSMUSG00000…            1
-##  4 A1CF         A1cf         ENSG00000148… ENSMUSG00000…        29974
-##  5 A2M          A2m          ENSG00000175… ENSMUSG00000…            2
-##  6 A2M          Mug2         ENSG00000175… ENSMUSG00000…            2
-##  7 A2M          Mug1         ENSG00000175… ENSMUSG00000…            2
-##  8 A2M          Slc16a6      ENSG00000175… ENSMUSG00000…            2
-##  9 A2M          A2ml1        ENSG00000175… ENSMUSG00000…            2
-## 10 A2ML1        Slc16a6      ENSG00000166… ENSMUSG00000…       144568
-## # … with 53,376 more rows, and 4 more variables: mouse_entrez &lt;int&gt;,
-## #   human_name &lt;chr&gt;, mouse_name &lt;chr&gt;, support &lt;chr&gt;</code></pre>
-<p>We’re interested in the <code>human_symbol</code> and <code>mouse_ensembl</code> columns specifically.</p>
+<pre><code>##        human_entrez   human_ensembl    hgnc_id
+##     1:            - ENSG00000277411          -
+##     2:            - ENSG00000276626          -
+##     3:            - ENSG00000276626          -
+##     4:            1 ENSG00000121410     HGNC:5
+##     5:        29974 ENSG00000148584 HGNC:24086
+##    ---                                        
+## 47182:        79699 ENSG00000162378 HGNC:25820
+## 47183:        79699 ENSG00000162378 HGNC:25820
+## 47184:         7791 ENSG00000159840 HGNC:13200
+## 47185:        23140 ENSG00000074755 HGNC:29027
+## 47186:        26009 ENSG00000036549 HGNC:24523
+##                                                 human_name human_symbol
+##     1:          5S ribosomal RNA [Source:RFAM;Acc:RF00001]      5S_rRNA
+##     2:                   7SK RNA [Source:RFAM;Acc:RF00100]          7SK
+##     3:                   7SK RNA [Source:RFAM;Acc:RF00100]          7SK
+##     4:                              alpha-1-B glycoprotein         A1BG
+##     5:                      APOBEC1 complementation factor         A1CF
+##    ---                                                                 
+## 47182:        zyg-11 family member B, cell cycle regulator       ZYG11B
+## 47183:        zyg-11 family member B, cell cycle regulator       ZYG11B
+## 47184:                                               zyxin          ZYX
+## 47185: zinc finger ZZ-type and EF-hand domain containing 1        ZZEF1
+## 47186:                    zinc finger ZZ-type containing 3         ZZZ3
+##        human_chr
+##     1:         6
+##     2:         3
+##     3:         3
+##     4:  19q13.43
+##     5:  10q11.23
+##    ---          
+## 47182:    1p32.3
+## 47183:    1p32.3
+## 47184:      7q34
+## 47185:   17p13.2
+## 47186:    1p31.1
+##                                                                                                                                                                       human_assert_ids
+##     1:                                                                                                                                                                 ENSG00000277411
+##     2:                                                                                                                                                                 ENSG00000276626
+##     3:                                                                                                                                                                 ENSG00000276626
+##     4:                        P04217,11167,ENSP00000263100,HGNC:5,ENOG411AVYB,Phy00089XY_HUMAN,HUMAN16529,HUMAN|HGNC=5|UniProtKB=P04217,ENSP00000263100,ENSG00000121410,1,141638at9347
+##     5:                                         Q9NQ94,16363,HGNC:24086,ENSP00000363107,ENOG411AT3B,HUMAN|HGNC=24086|UniProtKB=Q9NQ94,ENSG00000148584,ENSP00000363105,29974,67756at9347
+##    ---                                                                                                                                                                                
+## 47182: Q9C0D3,14600,ENSP00000294353,HGNC:25820,ENOG411B36Q,Phy0024HF6_HUMAN,HUMAN01014,ENSP00000294353,HUMAN|HGNC=25820|UniProtKB=Q9C0D3,ENSG00000162378,79699,37828at9347,37828at9347
+## 47183:                                                                                                                                         ENSP00000294353,37828at9347,37828at9347
+## 47184:                 Q15942,31164,HGNC:13200,ENSP00000324422,ENOG411AZ7U,HUMAN27166,ENSP00000324422,HUMAN|HGNC=13200|UniProtKB=Q15942,ENSG00000159840,7791,139677at9347,139677at9347
+## 47185:    O43149,9027,HGNC:29027,ENSP00000371051,Phy00086OA_HUMAN,HUMAN11777,ENOG411B1QK,HUMAN|HGNC=29027|UniProtKB=O43149,ENSP00000371051,ENSG00000074755,23140,1810at9347,1810at9347
+## 47186:              Q8IYH5,HGNC:24523,ENSP00000359837,9182,Phy0007YAQ_HUMAN,ENOG411AYBK,HUMAN01182,HUMAN|HGNC=24523|UniProtKB=Q8IYH5,ENSP00000359837,ENSG00000036549,26009,29099at9347
+##        mouse_entrez      mouse_ensembl      mgi_id
+##     1:            - ENSMUSG00000065806 MGI:4421914
+##     2:            - ENSMUSG00000087909 MGI:5451812
+##     3:            - ENSMUSG00000089090 MGI:5455432
+##     4:       117586 ENSMUSG00000022347 MGI:2152878
+##     5:        69865 ENSMUSG00000052595 MGI:1917115
+##    ---                                            
+## 47182:       414872 ENSMUSG00000034636 MGI:2685277
+## 47183:       230590 ENSMUSG00000034645 MGI:2446208
+## 47184:        22793 ENSMUSG00000029860  MGI:103072
+## 47185:       195018 ENSMUSG00000055670 MGI:2444286
+## 47186:       108946 ENSMUSG00000039068 MGI:1920453
+##                                          mouse_name mouse_symbol mouse_chr
+##     1:                   nuclear encoded rRNA 5S 69      n-R5s69         -
+##     2:                        predicted gene, 22035      Gm22035         -
+##     3:                        predicted gene, 25655      Gm25655         -
+##     4:                       alpha-1-B glycoprotein         A1bg        15
+##     5:               APOBEC1 complementation factor         A1cf        19
+##    ---                                                                    
+## 47182: zyg-ll family member B, cell cycle regulator       Zyg11b         4
+## 47183: zyg-11 family member A, cell cycle regulator       Zyg11a         4
+## 47184:                                        zyxin          Zyx         6
+## 47185:   zinc finger, ZZ-type with EF hand domain 1        Zzef1        11
+## 47186:          zinc finger, ZZ domain containing 3         Zzz3         3
+##                                                                                                                                                                                       mouse_assert_ids
+##     1:                                                                                                                                                                              ENSMUSG00000065806
+##     2:                                                                                                                                                                              ENSMUSG00000087909
+##     3:                                                                                                                                                                              ENSMUSG00000089090
+##     4:            Q19LI2,11167,ENSMUSP00000094151,MGI:2152878,ENOG411AVYB,Phy001S3S6_MOUSE,MOUSE13641,MOUSE|MGI=MGI=2152878|UniProtKB=Q19LI2,ENSMUSP00000094151,ENSMUSG00000022347,117586,141638at9347
+##     5:                                          Q5YD48,16363,MGI:1917115,ENSMUSP00000075235,ENOG411AT3B,MOUSE|MGI=MGI=1917115|UniProtKB=Q5YD48,ENSMUSG00000052595,ENSMUSP00000075235,69865,67756at9347
+##    ---                                                                                                                                                                                                
+## 47182: Q3UFS0,14600,ENSMUSP00000043844,MGI:2685277,ENOG411B36Q,Phy0038ZHS_MOUSE,MOUSE33397,ENSMUSP00000043844,MOUSE|MGI=MGI=2685277|UniProtKB=Q3UFS0,ENSMUSG00000034636,414872,37828at9347,37828at9347
+## 47183:                                                                                                                                                      ENSMUSP00000102301,37828at9347,37828at9347
+## 47184:                   Q62523,31164,MGI:103072,ENSMUSP00000070427,ENOG411AZ7U,MOUSE39598,ENSMUSP00000070427,MOUSE|MGI=MGI=103072|UniProtKB=Q62523,ENSMUSG00000029860,22793,139677at9347,139677at9347
+## 47185:    Q5SSH7,9027,MGI:2444286,ENSMUSP00000068790,Phy001RTCU_MOUSE,MOUSE04369,ENOG411B1QK,MOUSE|MGI=MGI=2444286|UniProtKB=Q5SSH7,ENSMUSP00000068790,ENSMUSG00000055670,195018,1810at9347,1810at9347
+## 47186:              Q6KAQ7,MGI:1920453,ENSMUSP00000101706,9182,Phy001RTCV_MOUSE,ENOG411AYBK,MOUSE31887,MOUSE|MGI=MGI=1920453|UniProtKB=Q6KAQ7,ENSMUSP00000101706,ENSMUSG00000039068,108946,29099at9347
+##                                                                                                      support
+##     1:                                                                                               Ensembl
+##     2:                                                                                               Ensembl
+##     3:                                                                                               Ensembl
+##     4:         Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+##     5:                       Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,Panther,Ensembl,Treefam,NCBI,OrthoDB
+##    ---                                                                                                      
+## 47182: Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,PhylomeDB,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB,OrthoDB
+## 47183:                                                                              OrthoMCL,OrthoDB,OrthoDB
+## 47184:           Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB,OrthoDB
+## 47185: Inparanoid,HomoloGene,HGNC,OrthoMCL,PhylomeDB,OMA,EggNOG,Panther,Treefam,Ensembl,NCBI,OrthoDB,OrthoDB
+## 47186:         Inparanoid,HGNC,OrthoMCL,HomoloGene,PhylomeDB,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB</code></pre>
+<p>We’re interested in the <code>human_symbol</code>, <code>mouse_ensembl</code>, and <code>support</code> columns specifically. The <code>support</code> column contains a list of associated databases that support each assertion. This column may assist with addressing some of the multi-mappings that we will talk about later.</p>
 <pre class="r"><code>human_mouse_key &lt;- mouse %&gt;%
-  # we&#39;ll want to subset mouse to only the columns we&#39;re interested in
-  dplyr::select(mouse_ensembl, human_symbol)
-# Now let&#39;s join the expression data from `df` for the subset of genes in `df`
-human_mouse_mapped_df &lt;- df %&gt;%
-  dplyr::left_join(human_mouse_key, by = c(&quot;Gene&quot; = &quot;mouse_ensembl&quot;))</code></pre>
+  # We&#39;ll want to subset mouse to only the columns we&#39;re interested in
+  dplyr::select(mouse_ensembl, human_symbol, support)
+
+# Since we ignored the additional columns in `mouse`, let&#39;s check to see if we have any duplicates in our `human_mouse_key`
+any(duplicated(human_mouse_key))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>We do have duplicates! We don’t want to handle duplicate data, so let’s remove those duplicates before moving forward.</p>
+<pre class="r"><code>human_mouse_key &lt;- human_mouse_key %&gt;%
+  # We need to use the `distinct()` function to remove duplicates resulted from ignoring the additional columns in the `mouse` object
+  dplyr::distinct()</code></pre>
+<p>Now let’s join the mapped data from <code>human_mouse_key</code> with the expression data in <code>df</code>.</p>
+<pre class="r"><code>human_mouse_mapped_df &lt;- df %&gt;%
+  dplyr::left_join(human_mouse_key, by = c(&quot;Gene&quot; = &quot;mouse_ensembl&quot;)) %&gt;%
+  # Sort so that the columns with the mouse Ensembl IDs and human gene symbols are first
+  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
 <p>Here’s what the new data frame looks like:</p>
 <pre class="r"><code>head(human_mouse_mapped_df, n = 25)</code></pre>
-<pre><code>##                  Gene  SRR3189684  SRR3189690 SRR3189691   SRR3189683
-## 1  ENSMUSG00000000001 4674.715000 2396.038800 3490.06500 1.095965e+04
-## 2  ENSMUSG00000000001 4674.715000 2396.038800 3490.06500 1.095965e+04
-## 3  ENSMUSG00000000001 4674.715000 2396.038800 3490.06500 1.095965e+04
-## 4  ENSMUSG00000000003    0.000000    0.000000    0.00000 0.000000e+00
-## 5  ENSMUSG00000000028 2198.448200 1349.962200  788.64215 3.281865e+03
-## 6  ENSMUSG00000000031    0.000000    4.506556   33.21141 0.000000e+00
-## 7  ENSMUSG00000000037  104.589485  183.688870   33.93041 4.460952e+02
-## 8  ENSMUSG00000000037  104.589485  183.688870   33.93041 4.460952e+02
-## 9  ENSMUSG00000000037  104.589485  183.688870   33.93041 4.460952e+02
-## 10 ENSMUSG00000000049    0.000000    0.000000    0.00000 0.000000e+00
-## 11 ENSMUSG00000000056 2165.895500  475.578800  407.86655 1.804020e+03
-## 12 ENSMUSG00000000056 2165.895500  475.578800  407.86655 1.804020e+03
-## 13 ENSMUSG00000000056 2165.895500  475.578800  407.86655 1.804020e+03
-## 14 ENSMUSG00000000058   99.250490   45.941875  106.46240 1.486330e+02
-## 15 ENSMUSG00000000078 3851.928700  640.549900  812.91930 1.703491e+03
-## 16 ENSMUSG00000000085  587.146700 1104.573200  625.32404 1.175744e+03
-## 17 ENSMUSG00000000085  587.146700 1104.573200  625.32404 1.175744e+03
-## 18 ENSMUSG00000000085  587.146700 1104.573200  625.32404 1.175744e+03
-## 19 ENSMUSG00000000088  697.522200 3876.586000 6501.89750 5.585659e+03
-## 20 ENSMUSG00000000093    0.000000    0.000000    0.00000 9.551365e-01
-## 21 ENSMUSG00000000093    0.000000    0.000000    0.00000 9.551365e-01
-## 22 ENSMUSG00000000094    1.221391    2.219869    0.00000 4.203715e+00
-## 23 ENSMUSG00000000103    0.000000    2.541095    0.00000 0.000000e+00
-## 24 ENSMUSG00000000103    0.000000    2.541095    0.00000 0.000000e+00
-## 25 ENSMUSG00000000103    0.000000    2.541095    0.00000 0.000000e+00
-##    SRR3189693 SRR3189692  SRR3189682   SRR3189696   SRR3189687  SRR3189680
-## 1  4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000 2499.876500
-## 2  4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000 2499.876500
-## 3  4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000 2499.876500
-## 4     0.00000    0.00000    0.000000    0.0000000    0.0000000    0.000000
-## 5  1646.38220 2114.83470  585.004460 1379.4908000  568.2427000 1156.093100
-## 6    12.37970   10.87936    2.560542    0.4776471    0.0000000    3.993340
-## 7   291.26138  475.20734  180.394010   92.4056900  102.8902400  151.298250
-## 8   291.26138  475.20734  180.394010   92.4056900  102.8902400  151.298250
-## 9   291.26138  475.20734  180.394010   92.4056900  102.8902400  151.298250
-## 10    0.00000    0.00000    2.515131    0.0000000    0.0000000    0.000000
-## 11 1206.77590 1375.58630 1006.366760  721.6127000  660.1940300  890.838200
-## 12 1206.77590 1375.58630 1006.366760  721.6127000  660.1940300  890.838200
-## 13 1206.77590 1375.58630 1006.366760  721.6127000  660.1940300  890.838200
-## 14  235.09329  566.56580  319.317570  244.7360000  115.0628050  106.607300
-## 15 5078.81800 1721.42240 1484.206700 1951.4525000 2330.8193000 1604.624800
-## 16  650.80410 1153.46850  863.878660  580.6676000  619.5304600  813.741460
-## 17  650.80410 1153.46850  863.878660  580.6676000  619.5304600  813.741460
-## 18  650.80410 1153.46850  863.878660  580.6676000  619.5304600  813.741460
-## 19 1198.88780 6732.26900  856.504500 1802.1333000 1751.4371000 1269.468100
-## 20    0.00000    0.00000    3.484104    1.0161881    2.0450757    2.628284
-## 21    0.00000    0.00000    3.484104    1.0161881    2.0450757    2.628284
-## 22   28.13714   18.17271   15.093188   16.0776250    0.9840013    3.107493
-## 23    0.00000    0.00000    0.000000    0.0000000    0.9673991    0.000000
-## 24    0.00000    0.00000    0.000000    0.0000000    0.9673991    0.000000
-## 25    0.00000    0.00000    0.000000    0.0000000    0.9673991    0.000000
-##      SRR3189697  SRR3189685  SRR3189695   SRR3189688  SRR3189694   SRR3189679
-## 1  2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500 2751.4810000
-## 2  2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500 2751.4810000
-## 3  2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500 2751.4810000
-## 4     0.0000000    0.000000    0.000000    0.0000000    0.000000    0.0000000
-## 5   822.9032000 1341.148000 1186.279900  897.7348600 1381.199600  650.9605000
-## 6     0.0000000   12.550478    5.025919   13.1234350    0.000000   11.6788630
-## 7   118.4677800   87.330630  185.994190  287.8892200  122.319176  162.0057500
-## 8   118.4677800   87.330630  185.994190  287.8892200  122.319176  162.0057500
-## 9   118.4677800   87.330630  185.994190  287.8892200  122.319176  162.0057500
-## 10    0.0000000    0.000000    0.000000    0.0000000    0.000000    1.8946546
-## 11  293.2772200 1362.550500  816.040950  459.1423000  440.171720  757.0847000
-## 12  293.2772200 1362.550500  816.040950  459.1423000  440.171720  757.0847000
-## 13  293.2772200 1362.550500  816.040950  459.1423000  440.171720  757.0847000
-## 14  102.4805700  131.757630  115.677290  161.8326000  218.697170  246.4140500
-## 15  491.2427400 4068.772500 1262.433600  541.3108500  840.298770 1453.9221000
-## 16  588.3026000  603.933040  925.814000  934.6100500 1052.905600  983.0403000
-## 17  588.3026000  603.933040  925.814000  934.6100500 1052.905600  983.0403000
-## 18  588.3026000  603.933040  925.814000  934.6100500 1052.905600  983.0403000
-## 19 3333.4197000 1375.912400 2213.584200 2553.5527000 3181.674300 1495.4874000
-## 20    0.7980946    0.000000    0.000000    0.0000000    1.307419    0.9081845
-## 21    0.7980946    0.000000    0.000000    0.0000000    1.307419    0.9081845
-## 22    9.7519710    4.377477   30.635038    0.9879276   13.818909    3.8192750
-## 23    0.0000000    1.790180    0.000000    2.4217832    0.000000    0.0000000
-## 24    0.0000000    1.790180    0.000000    2.4217832    0.000000    0.0000000
-## 25    0.0000000    1.790180    0.000000    2.4217832    0.000000    0.0000000
-##    SRR3189686  SRR3189689  SRR3189681 human_symbol
-## 1  2721.30220 2066.600800 2572.734400        GNAI1
-## 2  2721.30220 2066.600800 2572.734400        GNAI2
-## 3  2721.30220 2066.600800 2572.734400        GNAI3
-## 4     0.00000    0.000000    1.897186         &lt;NA&gt;
-## 5  1065.51490 1634.367000  719.457000        CDC45
-## 6     2.44272    2.646524    0.000000          H19
-## 7    96.80698   53.983250  137.165310        SCMH1
-## 8    96.80698   53.983250  137.165310        SCML1
-## 9    96.80698   53.983250  137.165310        SCML2
-## 10    0.00000    0.000000    0.000000         APOH
-## 11  948.84610 1069.868000  759.642600         NARF
-## 12  948.84610 1069.868000  759.642600        NARFL
-## 13  948.84610 1069.868000  759.642600       NDUFS1
-## 14   82.12666  223.465910  237.105350         CAV2
-## 15 2214.45210 3520.514600 1379.165200         KLF6
-## 16  711.19810  397.209960  861.833800        SCMH1
-## 17  711.19810  397.209960  861.833800        SCML1
-## 18  711.19810  397.209960  861.833800        SCML2
-## 19 1459.51400 1016.689500 1290.855100        COX5A
-## 20    0.00000    2.208946    1.070911         TBX2
-## 21    0.00000    2.208946    1.070911         TBX3
-## 22   11.15165    2.991374   13.171133         TBX4
-## 23    0.00000    0.000000    0.000000          ZFX
-## 24    0.00000    0.000000    0.000000          ZFY
-## 25    0.00000    0.000000    0.000000       ZNF696</code></pre>
+<pre><code>##                  Gene human_symbol  SRR3189684  SRR3189690 SRR3189691
+## 1  ENSMUSG00000000001        GNAI1 4674.715000 2396.038800 3490.06500
+## 2  ENSMUSG00000000001        GNAI2 4674.715000 2396.038800 3490.06500
+## 3  ENSMUSG00000000001        GNAI3 4674.715000 2396.038800 3490.06500
+## 4  ENSMUSG00000000003         &lt;NA&gt;    0.000000    0.000000    0.00000
+## 5  ENSMUSG00000000028        CDC45 2198.448200 1349.962200  788.64215
+## 6  ENSMUSG00000000031          H19    0.000000    4.506556   33.21141
+## 7  ENSMUSG00000000037        SCML2  104.589485  183.688870   33.93041
+## 8  ENSMUSG00000000049         APOH    0.000000    0.000000    0.00000
+## 9  ENSMUSG00000000056        CIAO3 2165.895500  475.578800  407.86655
+## 10 ENSMUSG00000000056         NARF 2165.895500  475.578800  407.86655
+## 11 ENSMUSG00000000058         CAV2   99.250490   45.941875  106.46240
+## 12 ENSMUSG00000000078         KLF6 3851.928700  640.549900  812.91930
+## 13 ENSMUSG00000000085        SCMH1  587.146700 1104.573200  625.32404
+## 14 ENSMUSG00000000088        COX5A  697.522200 3876.586000 6501.89750
+## 15 ENSMUSG00000000093         TBX2    0.000000    0.000000    0.00000
+## 16 ENSMUSG00000000093         TBX3    0.000000    0.000000    0.00000
+## 17 ENSMUSG00000000094         TBX4    1.221391    2.219869    0.00000
+## 18 ENSMUSG00000000094         TBX5    1.221391    2.219869    0.00000
+## 19 ENSMUSG00000000103   AC003002.1    0.000000    2.541095    0.00000
+## 20 ENSMUSG00000000103   AC003005.1    0.000000    2.541095    0.00000
+## 21 ENSMUSG00000000103   AC004076.1    0.000000    2.541095    0.00000
+## 22 ENSMUSG00000000103          ZFX    0.000000    2.541095    0.00000
+## 23 ENSMUSG00000000103          ZFY    0.000000    2.541095    0.00000
+## 24 ENSMUSG00000000103       ZNF134    0.000000    2.541095    0.00000
+## 25 ENSMUSG00000000103       ZNF154    0.000000    2.541095    0.00000
+##      SRR3189683 SRR3189693 SRR3189692  SRR3189682   SRR3189696   SRR3189687
+## 1  1.095965e+04 4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000
+## 2  1.095965e+04 4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000
+## 3  1.095965e+04 4041.34100 8633.71800 1991.381100 3700.4570000 2003.9950000
+## 4  0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.0000000
+## 5  3.281865e+03 1646.38220 2114.83470  585.004460 1379.4908000  568.2427000
+## 6  0.000000e+00   12.37970   10.87936    2.560542    0.4776471    0.0000000
+## 7  4.460952e+02  291.26138  475.20734  180.394010   92.4056900  102.8902400
+## 8  0.000000e+00    0.00000    0.00000    2.515131    0.0000000    0.0000000
+## 9  1.804020e+03 1206.77590 1375.58630 1006.366760  721.6127000  660.1940300
+## 10 1.804020e+03 1206.77590 1375.58630 1006.366760  721.6127000  660.1940300
+## 11 1.486330e+02  235.09329  566.56580  319.317570  244.7360000  115.0628050
+## 12 1.703491e+03 5078.81800 1721.42240 1484.206700 1951.4525000 2330.8193000
+## 13 1.175744e+03  650.80410 1153.46850  863.878660  580.6676000  619.5304600
+## 14 5.585659e+03 1198.88780 6732.26900  856.504500 1802.1333000 1751.4371000
+## 15 9.551365e-01    0.00000    0.00000    3.484104    1.0161881    2.0450757
+## 16 9.551365e-01    0.00000    0.00000    3.484104    1.0161881    2.0450757
+## 17 4.203715e+00   28.13714   18.17271   15.093188   16.0776250    0.9840013
+## 18 4.203715e+00   28.13714   18.17271   15.093188   16.0776250    0.9840013
+## 19 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 20 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 21 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 22 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 23 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 24 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+## 25 0.000000e+00    0.00000    0.00000    0.000000    0.0000000    0.9673991
+##     SRR3189680   SRR3189697  SRR3189685  SRR3189695   SRR3189688  SRR3189694
+## 1  2499.876500 2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500
+## 2  2499.876500 2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500
+## 3  2499.876500 2710.1833000 3242.194300 2570.170700 3177.6470000 3615.426500
+## 4     0.000000    0.0000000    0.000000    0.000000    0.0000000    0.000000
+## 5  1156.093100  822.9032000 1341.148000 1186.279900  897.7348600 1381.199600
+## 6     3.993340    0.0000000   12.550478    5.025919   13.1234350    0.000000
+## 7   151.298250  118.4677800   87.330630  185.994190  287.8892200  122.319176
+## 8     0.000000    0.0000000    0.000000    0.000000    0.0000000    0.000000
+## 9   890.838200  293.2772200 1362.550500  816.040950  459.1423000  440.171720
+## 10  890.838200  293.2772200 1362.550500  816.040950  459.1423000  440.171720
+## 11  106.607300  102.4805700  131.757630  115.677290  161.8326000  218.697170
+## 12 1604.624800  491.2427400 4068.772500 1262.433600  541.3108500  840.298770
+## 13  813.741460  588.3026000  603.933040  925.814000  934.6100500 1052.905600
+## 14 1269.468100 3333.4197000 1375.912400 2213.584200 2553.5527000 3181.674300
+## 15    2.628284    0.7980946    0.000000    0.000000    0.0000000    1.307419
+## 16    2.628284    0.7980946    0.000000    0.000000    0.0000000    1.307419
+## 17    3.107493    9.7519710    4.377477   30.635038    0.9879276   13.818909
+## 18    3.107493    9.7519710    4.377477   30.635038    0.9879276   13.818909
+## 19    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 20    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 21    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 22    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 23    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 24    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+## 25    0.000000    0.0000000    1.790180    0.000000    2.4217832    0.000000
+##      SRR3189679 SRR3189686  SRR3189689  SRR3189681
+## 1  2751.4810000 2721.30220 2066.600800 2572.734400
+## 2  2751.4810000 2721.30220 2066.600800 2572.734400
+## 3  2751.4810000 2721.30220 2066.600800 2572.734400
+## 4     0.0000000    0.00000    0.000000    1.897186
+## 5   650.9605000 1065.51490 1634.367000  719.457000
+## 6    11.6788630    2.44272    2.646524    0.000000
+## 7   162.0057500   96.80698   53.983250  137.165310
+## 8     1.8946546    0.00000    0.000000    0.000000
+## 9   757.0847000  948.84610 1069.868000  759.642600
+## 10  757.0847000  948.84610 1069.868000  759.642600
+## 11  246.4140500   82.12666  223.465910  237.105350
+## 12 1453.9221000 2214.45210 3520.514600 1379.165200
+## 13  983.0403000  711.19810  397.209960  861.833800
+## 14 1495.4874000 1459.51400 1016.689500 1290.855100
+## 15    0.9081845    0.00000    2.208946    1.070911
+## 16    0.9081845    0.00000    2.208946    1.070911
+## 17    3.8192750   11.15165    2.991374   13.171133
+## 18    3.8192750   11.15165    2.991374   13.171133
+## 19    0.0000000    0.00000    0.000000    0.000000
+## 20    0.0000000    0.00000    0.000000    0.000000
+## 21    0.0000000    0.00000    0.000000    0.000000
+## 22    0.0000000    0.00000    0.000000    0.000000
+## 23    0.0000000    0.00000    0.000000    0.000000
+## 24    0.0000000    0.00000    0.000000    0.000000
+## 25    0.0000000    0.00000    0.000000    0.000000
+##                                                                                          support
+## 1                                                                               OrthoMCL,OrthoDB
+## 2                                                                                        OrthoDB
+## 3         Inparanoid,HomoloGene,OrthoMCL,HGNC,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 4                                                                                           &lt;NA&gt;
+## 5           Inparanoid,HomoloGene,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 6                                                                                           NCBI
+## 7                                           Inparanoid,HGNC,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 8  Inparanoid,OrthoMCL,HomoloGene,HGNC,PhylomeDB,OMA,EggNOG,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 9                                                                                        OrthoDB
+## 10 Inparanoid,HomoloGene,OrthoMCL,HGNC,OMA,EggNOG,PhylomeDB,Treefam,Panther,Ensembl,NCBI,OrthoDB
+## 11 Inparanoid,OrthoMCL,HGNC,HomoloGene,EggNOG,PhylomeDB,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB
+## 12           Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,OMA,Panther,Ensembl,Treefam,NCBI,OrthoDB
+## 13 Inparanoid,HomoloGene,OrthoMCL,HGNC,PhylomeDB,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 14         Inparanoid,OrthoMCL,HGNC,HomoloGene,PhylomeDB,EggNOG,OMA,Panther,Treefam,NCBI,OrthoDB
+## 15           Inparanoid,OrthoMCL,HGNC,HomoloGene,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 16                                                                              OrthoMCL,OrthoDB
+## 17                    Inparanoid,HomoloGene,HGNC,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 18                                                                                       OrthoDB
+## 19                                                                                       Ensembl
+## 20                                                                                       Ensembl
+## 21                                                                                       Ensembl
+## 22                                                                              OrthoMCL,Treefam
+## 23                                                                    OrthoMCL,PhylomeDB,Treefam
+## 24                                                                                       Ensembl
+## 25                                                                                       Ensembl</code></pre>
 <p>Let’s get a summary of the gene symbols returned in the <code>human_symbol</code> column of our mapped data frame.</p>
 <pre class="r"><code># We can use the `count()` function to get a count of the distribution of values in the `human_symbol` column
 human_mouse_mapped_df %&gt;%
@@ -2000,49 +2121,49 @@ human_mouse_mapped_df %&gt;%
   dplyr::count() %&gt;%
   # Sort by highest `n` which would be the human gene symbol with the most mapped mouse Ensembl IDs
   dplyr::arrange(desc(n))</code></pre>
-<pre><code>## # A tibble: 21,301 x 2
-## # Groups:   human_symbol [21,301]
+<pre><code>## # A tibble: 21,546 x 2
+## # Groups:   human_symbol [21,546]
 ##    human_symbol     n
 ##    &lt;chr&gt;        &lt;int&gt;
-##  1 &lt;NA&gt;         18908
-##  2 SNORA48        120
-##  3 SNORA17        117
-##  4 PRAME           97
-##  5 PRAMEF1         88
-##  6 PRAMEF10        88
-##  7 PRAMEF11        88
-##  8 PRAMEF12        88
-##  9 PRAMEF13        88
-## 10 PRAMEF14        88
-## # … with 21,291 more rows</code></pre>
-<p>Looks like we have mapped symbols! We also have 18908 NAs, which is okay, because we do not expect everything to map across species.</p>
+##  1 &lt;NA&gt;         18801
+##  2 SYCP3          101
+##  3 PRAMEF1         88
+##  4 PRAMEF10        88
+##  5 PRAMEF11        88
+##  6 PRAMEF12        88
+##  7 PRAMEF13        88
+##  8 PRAMEF14        88
+##  9 PRAMEF15        88
+## 10 PRAMEF17        88
+## # … with 21,536 more rows</code></pre>
+<p>Looks like we have mapped symbols! Now, let’s get an idea of how many mouse Ensembl IDs we have that were not mapped to human gene symbols.</p>
+<pre class="r"><code>sum(is.na(human_mouse_mapped_df$human_symbol))</code></pre>
+<pre><code>## [1] 18801</code></pre>
+<p>We have 18801 NAs, which means we have 18801 mouse Ensembl IDs that were not mapped to human gene symbols. This is okay because we do not expect everything to map across species.</p>
 </div>
 <div id="take-a-look-at-some-multi-mappings" class="section level2">
-<h2><span class="header-section-number">4.4</span> Take a look at some multi-mappings</h2>
-<p>If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSMUSG00000000037</code> example below.</p>
+<h2><span class="header-section-number">4.5</span> Take a look at some multi-mappings</h2>
+<p>If a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. Let’s look at the <code>ENSMUSG00000000290</code> example below.</p>
 <pre class="r"><code>human_mouse_mapped_df %&gt;%
-  dplyr::filter(Gene == &quot;ENSMUSG00000000037&quot;) %&gt;%
-  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
+  dplyr::filter(Gene == &quot;ENSMUSG00000000290&quot;)</code></pre>
 <pre><code>##                 Gene human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683
-## 1 ENSMUSG00000000037        SCMH1   104.5895   183.6889   33.93041   446.0952
-## 2 ENSMUSG00000000037        SCML1   104.5895   183.6889   33.93041   446.0952
-## 3 ENSMUSG00000000037        SCML2   104.5895   183.6889   33.93041   446.0952
+## 1 ENSMUSG00000000290        ITGB2   5211.996   833.6398   805.8741   6372.115
+## 2 ENSMUSG00000000290        ITGB7   5211.996   833.6398   805.8741   6372.115
 ##   SRR3189693 SRR3189692 SRR3189682 SRR3189696 SRR3189687 SRR3189680 SRR3189697
-## 1   291.2614   475.2073    180.394   92.40569   102.8902   151.2982   118.4678
-## 2   291.2614   475.2073    180.394   92.40569   102.8902   151.2982   118.4678
-## 3   291.2614   475.2073    180.394   92.40569   102.8902   151.2982   118.4678
+## 1   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329   369.9394
+## 2   2393.837   4058.179   504.7343   655.9665    1746.39   1001.329   369.9394
 ##   SRR3189685 SRR3189695 SRR3189688 SRR3189694 SRR3189679 SRR3189686 SRR3189689
-## 1   87.33063   185.9942   287.8892   122.3192   162.0058   96.80698   53.98325
-## 2   87.33063   185.9942   287.8892   122.3192   162.0058   96.80698   53.98325
-## 3   87.33063   185.9942   287.8892   122.3192   162.0058   96.80698   53.98325
+## 1   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129    1051.29
+## 2   2465.537   586.0372   354.0996   537.8514   645.7802   1558.129    1051.29
 ##   SRR3189681
-## 1   137.1653
-## 2   137.1653
-## 3   137.1653</code></pre>
+## 1   744.5746
+## 2   744.5746
+##                                                                               support
+## 1 Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 2                                                                            OrthoMCL</code></pre>
 <p>Remember that our original data is associated to mouse Ensembl IDs, so when a human gene symbol maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>CACNA1B</code> example below.</p>
 <pre class="r"><code>human_mouse_mapped_df %&gt;%
-  dplyr::filter(human_symbol == &quot;CACNA1B&quot;) %&gt;%
-  dplyr::select(Gene, human_symbol, dplyr::everything())</code></pre>
+  dplyr::filter(human_symbol == &quot;CACNA1B&quot;)</code></pre>
 <pre><code>##                 Gene human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683
 ## 1 ENSMUSG00000004110      CACNA1B  64.386610   62.03160   5.704462 78.1114100
 ## 2 ENSMUSG00000004113      CACNA1B   8.027397   22.30250  10.371996 31.7198300
@@ -2074,10 +2195,18 @@ human_mouse_mapped_df %&gt;%
 ## 4    0.00000
 ## 5   38.34911
 ## 6  419.92944
-## 7   90.53610</code></pre>
+## 7   90.53610
+##                                                                                support
+## 1                                                                             OrthoMCL
+## 2 Inparanoid,HomoloGene,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 3                                                                             OrthoMCL
+## 4                                                                             OrthoMCL
+## 5                                                                             OrthoMCL
+## 6                                                                     OrthoMCL,OrthoDB
+## 7                                                                             OrthoMCL</code></pre>
 </div>
 <div id="collapse-multi-mapped-human-gene-symbols" class="section level2">
-<h2><span class="header-section-number">4.5</span> Collapse multi-mapped human gene symbols</h2>
+<h2><span class="header-section-number">4.6</span> Collapse multi-mapped human gene symbols</h2>
 <p>Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated. We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.</p>
 <p>In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique mouse Ensembl ID.</p>
 <pre class="r"><code>collapsed_human_symbol_df &lt;- human_mouse_mapped_df %&gt;%
@@ -2096,14 +2225,14 @@ human_mouse_mapped_df %&gt;%
 ## 2 ENSM… NA                       0        0           0           0         0  
 ## 3 ENSM… CDC45                 2198.    1350.        789.       3282.     1646. 
 ## 4 ENSM… H19                      0        4.51       33.2         0        12.4
-## 5 ENSM… SCMH1;SCML1;SCM…       105.     184.         33.9       446.      291. 
+## 5 ENSM… SCML2                  105.     184.         33.9       446.      291. 
 ## 6 ENSM… APOH                     0        0           0           0         0  
 ## # … with 14 more variables: SRR3189692 &lt;dbl&gt;, SRR3189682 &lt;dbl&gt;,
 ## #   SRR3189696 &lt;dbl&gt;, SRR3189687 &lt;dbl&gt;, SRR3189680 &lt;dbl&gt;, SRR3189697 &lt;dbl&gt;,
 ## #   SRR3189685 &lt;dbl&gt;, SRR3189695 &lt;dbl&gt;, SRR3189688 &lt;dbl&gt;, SRR3189694 &lt;dbl&gt;,
 ## #   SRR3189679 &lt;dbl&gt;, SRR3189686 &lt;dbl&gt;, SRR3189689 &lt;dbl&gt;, SRR3189681 &lt;dbl&gt;</code></pre>
 <div id="write-results-to-file" class="section level3">
-<h3><span class="header-section-number">4.5.1</span> Write results to file</h3>
+<h3><span class="header-section-number">4.6.1</span> Write results to file</h3>
 <p>Now let’s write our results to file.</p>
 <pre class="r"><code>readr::write_tsv(
   collapsed_human_symbol_df,
@@ -2115,33 +2244,39 @@ human_mouse_mapped_df %&gt;%
 </div>
 </div>
 <div id="collapse-multi-mapped-mouse-ensembl-ids" class="section level2">
-<h2><span class="header-section-number">4.6</span> Collapse multi-mapped mouse Ensembl IDs</h2>
+<h2><span class="header-section-number">4.7</span> Collapse multi-mapped mouse Ensembl IDs</h2>
 <p>Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.</p>
 <p>A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology. Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.</p>
-<pre class="r"><code>collapsed_mouse_ensembl_df &lt;- human_mouse_mapped_df %&gt;%
-  # Group by human gene symbols
-  dplyr::group_by(human_symbol) %&gt;%
-  # Collapse the Ensembl IDs in `human_mouse_mapped_df` into one column named `all_mouse_ensembl_ids`
-  dplyr::summarize(all_mouse_ensembl_ids = paste(Gene, collapse = &quot;;&quot;))</code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>head(collapsed_mouse_ensembl_df)</code></pre>
-<pre><code>## # A tibble: 6 x 2
-##   human_symbol all_mouse_ensembl_ids                                            
-##   &lt;chr&gt;        &lt;chr&gt;                                                            
-## 1 5S_rRNA      ENSMUSG00000089599                                               
-## 2 7SK          ENSMUSG00000088122                                               
-## 3 A1BG         ENSMUSG00000022347                                               
-## 4 A1CF         ENSMUSG00000052595                                               
-## 5 A2M          ENSMUSG00000030111;ENSMUSG00000030131;ENSMUSG00000041920;ENSMUSG…
-## 6 A2ML1        ENSMUSG00000030111;ENSMUSG00000030131;ENSMUSG00000041920;ENSMUSG…</code></pre>
+<p>Instead, we will use the <code>support</code> column to decide which mappings to retain. As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable. Therefore, where we have multi-mapped mouse Ensembl gene IDs, we will take the mapping with the most databases that concur according to the <code>support</code> column.</p>
+<pre class="r"><code>filtered_mouse_ensembl_df &lt;- human_mouse_mapped_df %&gt;%
+  dplyr::mutate(n_databases = stringr::str_count(support, &quot;,&quot;) + 1) %&gt;% # Count the number of databases in the support column for each prediction
+  dplyr::group_by(human_symbol) %&gt;% # Group by human gene symbols
+  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
+
+head(filtered_mouse_ensembl_df)</code></pre>
+<pre><code>## # A tibble: 6 x 23
+## # Groups:   human_symbol [6]
+##   Gene  human_symbol SRR3189684 SRR3189690 SRR3189691 SRR3189683 SRR3189693
+##   &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 ENSM… GNAI3             4675.    2396.       3490.      10960.     4041. 
+## 2 ENSM… CDC45             2198.    1350.        789.       3282.     1646. 
+## 3 ENSM… H19                  0        4.51       33.2         0        12.4
+## 4 ENSM… SCML2              105.     184.         33.9       446.      291. 
+## 5 ENSM… APOH                 0        0           0           0         0  
+## 6 ENSM… NARF              2166.     476.        408.       1804.     1207. 
+## # … with 16 more variables: SRR3189692 &lt;dbl&gt;, SRR3189682 &lt;dbl&gt;,
+## #   SRR3189696 &lt;dbl&gt;, SRR3189687 &lt;dbl&gt;, SRR3189680 &lt;dbl&gt;, SRR3189697 &lt;dbl&gt;,
+## #   SRR3189685 &lt;dbl&gt;, SRR3189695 &lt;dbl&gt;, SRR3189688 &lt;dbl&gt;, SRR3189694 &lt;dbl&gt;,
+## #   SRR3189679 &lt;dbl&gt;, SRR3189686 &lt;dbl&gt;, SRR3189689 &lt;dbl&gt;, SRR3189681 &lt;dbl&gt;,
+## #   support &lt;chr&gt;, n_databases &lt;dbl&gt;</code></pre>
 <div id="write-results-to-file-1" class="section level3">
-<h3><span class="header-section-number">4.6.1</span> Write results to file</h3>
+<h3><span class="header-section-number">4.7.1</span> Write results to file</h3>
 <p>Now let’s write our list of collapsed mouse Ensembl IDs for each unique human gene symbol to file.</p>
 <pre class="r"><code>readr::write_tsv(
-  collapsed_mouse_ensembl_df,
+  filtered_mouse_ensembl_df,
   file.path(
     results_dir,
-    &quot;SRP070849_collapsed_mouse_ensembl_to_human_gene_symbol_list.tsv&quot; # Replace with a relevant output file name
+    &quot;SRP070849_filtered_mouse_ensembl_to_human_gene_symbol_list.tsv&quot; # Replace with a relevant output file name
   )
 )</code></pre>
 </div>
@@ -2150,7 +2285,9 @@ human_mouse_mapped_df %&gt;%
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/25361968/">Genenames.org: the HGNC resources in 2015</a> <span class="citation">(Gray <em>et al.</em> 2015)</span></li>
 <li><a href="https://pubmed.ncbi.nlm.nih.gov/16284797/">HCOP: the HGNC comparison of orthology predictions search tool</a> <span class="citation">(Wright <em>et al.</em> 2005)</span></li>
+<li>See more on <a href="https://www.genenames.org/help/hcop/">HCOP and interpreting the data in HGNC</a><span class="citation">(HGNC team 2020)</span></li>
 <li>See our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/ortholog-mapping_microarray_01_ensembl.Rmd">microarray ortholog mapping notebook</a> as another applicable example, since the steps for this workflow do not change with technology.</li>
 </ul>
 </div>
@@ -2178,29 +2315,28 @@ sessionInfo()</code></pre>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] magrittr_1.5   hcop_0.1.1     optparse_1.6.6
+## [1] magrittr_1.5   optparse_1.6.6
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    remotes_2.2.0    
-##  [5] prettyunits_1.1.1 tools_4.0.2       testthat_2.3.2    pkgload_1.1.0    
-##  [9] digest_0.6.25     pkgbuild_1.1.0    evaluate_0.14     memoise_1.1.0    
-## [13] lifecycle_0.2.0   tibble_3.0.3      pkgconfig_2.0.3   rlang_0.4.7      
-## [17] cli_2.0.2         rstudioapi_0.11   curl_4.3          yaml_2.2.1       
-## [21] xfun_0.18         dplyr_1.0.2       withr_2.3.0       styler_1.3.2     
-## [25] stringr_1.4.0     knitr_1.30        generics_0.0.2    fs_1.5.0         
-## [29] desc_1.2.0        vctrs_0.3.4       hms_0.5.3         devtools_2.3.2   
-## [33] tidyselect_1.1.0  rprojroot_1.3-2   getopt_1.20.3     glue_1.4.2       
-## [37] R6_2.4.1          processx_3.4.4    fansi_0.4.1       rmarkdown_2.4    
-## [41] sessioninfo_1.1.1 readr_1.3.1       purrr_0.3.4       callr_3.4.4      
-## [45] usethis_1.6.3     backports_1.1.10  ps_1.3.4          ellipsis_0.3.1   
-## [49] htmltools_0.5.0   assertthat_0.2.1  utf8_1.1.4        stringi_1.5.3    
-## [53] crayon_1.3.4</code></pre>
+##  [1] Rcpp_1.0.5        pillar_1.4.6      compiler_4.0.2    R.methodsS3_1.8.1
+##  [5] R.utils_2.10.1    tools_4.0.2       digest_0.6.25     evaluate_0.14    
+##  [9] lifecycle_0.2.0   tibble_3.0.3      pkgconfig_2.0.3   rlang_0.4.7      
+## [13] cli_2.0.2         rstudioapi_0.11   yaml_2.2.1        xfun_0.18        
+## [17] styler_1.3.2      stringr_1.4.0     dplyr_1.0.2       knitr_1.30       
+## [21] generics_0.0.2    vctrs_0.3.4       hms_0.5.3         getopt_1.20.3    
+## [25] tidyselect_1.1.0  glue_1.4.2        data.table_1.13.0 R6_2.4.1         
+## [29] fansi_0.4.1       rmarkdown_2.4     readr_1.3.1       purrr_0.3.4      
+## [33] backports_1.1.10  ellipsis_0.3.1    htmltools_0.5.0   assertthat_0.2.1 
+## [37] utf8_1.1.4        stringi_1.5.3     crayon_1.3.4      R.oo_1.24.0</code></pre>
 <div id="refs" class="references">
+<div id="ref-Gray2015">
+<p>Gray K. A., B. Yates, R. L. Seal, M. W. Wright, and E. A. Bruford, 2015 Genenames.org: The hgnc resources in 2015. Nucleic Acids Res 43. <a href="https://doi.org/10.1038/nature11327">https://doi.org/10.1038/nature11327</a></p>
+</div>
+<div id="ref-hcop-help">
+<p>HGNC team, 2020 HCOP help</p>
+</div>
 <div id="ref-Turner2018">
 <p>Turner S., 2018 <em>Hcop: HGNC comparison of orthology predictions</em>.</p>
-</div>
-<div id="ref-Wickham2020">
-<p>Wickham H., J. Hester, and W. Chang, 2020 <em>Devtools: Tools to make developing r packages easier</em>.</p>
 </div>
 <div id="ref-Wright2005">
 <p>Wright M. W., T. A. Eyre, M. J. Lush, S. Povey, and E. A. Bruford, 2005 HCOP: The hgnc comparison of orthology predictions search tool. Mammalian Genome 16: 827–8. <a href="https://doi.org/10.1007/s00335-005-0103-2">https://doi.org/10.1007/s00335-005-0103-2</a></p>
