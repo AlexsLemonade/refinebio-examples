@@ -351,12 +351,11 @@ readr::write_tsv(
 Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
 
 A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
-Therefore, we will not add the expression data here since the expression values are not
-the same across Ensembl IDs, despite mapping to the same human gene symbol.
+Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.
 
 Instead, we will use the `support` column to decide which mappings to retain.
 As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable.
-Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mapping with the most databases that concur acccording to the `support` column.
+Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mapping with the most databases that concur according to the `support` column.
 
 ```{r}
 filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
