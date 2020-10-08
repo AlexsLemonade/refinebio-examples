@@ -1724,7 +1724,7 @@ if (!dir.exists(results_dir)) {
 <div id="obtain-the-gene-set-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the gene set for this example</h2>
 <p>In this example, we are using differential expression results table we obtained from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html">example analysis of zebrafish samples overexpressing human CREB experiment</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes, and adjusted p-values (FDR in this case).</p>
-<p>We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you’d like to follow the steps for obtaining this results file yourself, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">that differential expression example analysis</a>.</p>
+<p>We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you’d like to follow the steps for obtaining this results file yourself, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html">that differential expression example analysis</a>.</p>
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
@@ -1758,12 +1758,13 @@ if (!dir.exists(results_dir)) {
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
 <p>In this analysis, we will be using <a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html"><code>clusterProfiler</code></a> package to perform ORA and the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package which contains gene datasets from the <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">Molecular Signatures Database (MSigDB)</a> already in the tidy format required by <code>clusterProfiler</code> <span class="citation">(Dolgalev 2020; Subramanian <em>et al.</em> 2005)</span>.</p>
-<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html"><code>org.Dr.eg.db</code></a> package to do some gene identifier conversion <span class="citation">(Carlson 2019)</span>.</p>
+<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html"><code>org.Dr.eg.db</code></a> package to do some gene identifier conversion and <a href="https://cran.r-project.org/web/packages/ggupset/readme/README.html"><code>ggupset</code></a> to make an upset plot <span class="citation">(Carlson 2019; Ahlmann-Eltze 2020)</span>.</p>
 <pre class="r"><code>if (!(&quot;clusterProfiler&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
   BiocManager::install(&quot;clusterProfiler&quot;, update = FALSE)
 }
 
+# This is required to make one of the plots that clusterProfiler will make
 if (!(&quot;ggupset&quot; %in% installed.packages())) {
   # Install this package if it isn&#39;t installed yet
   BiocManager::install(&quot;ggupset&quot;, update = FALSE)
@@ -1904,7 +1905,7 @@ dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file pa
 ## 11 Sus scrofa               pig</code></pre>
 <p>The data we’re interested in here comes from zebrafish samples, so we can obtain just the gene sets relevant to <em>D. rerio</em> with the <code>species</code> argument to <code>msigdbr()</code>.</p>
 <pre class="r"><code>hs_msigdb_df &lt;- msigdbr(species = &quot;Danio rerio&quot;)</code></pre>
-<p>MSigDB contains <a href="https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp">8 different gene set collections</a>.</p>
+<p>MSigDB contains <a href="https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp">8 different gene set collections</a> <span class="citation">(Subramanian <em>et al.</em> 2005)</span>.</p>
 <pre><code>H: hallmark gene sets
 C1: positional gene sets
 C2: curated gene sets
@@ -1913,11 +1914,8 @@ C4: computational gene sets
 C5: GO gene sets
 C6: oncogenic signatures
 C7: immunologic signatures</code></pre>
-<p>In this example, we will use canonical pathways which are (<a href="https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp">ref</a>):</p>
-<blockquote>
-<p>Gene sets from pathway databases. Usually, these gene sets are canonical representations of a biological process compiled by domain experts.</p>
-</blockquote>
-<p>And are a subset of <code>C2: curated gene sets</code>. Specifically, we will use the <a href="https://www.genome.jp/kegg/">KEGG (Kyoto Encyclopedia of Genes and Genomes)</a> pathways.</p>
+<p>In this example, we will use pathways that are gene sets considered to be “canonical representations of a biological process compiled by domain experts” and are a subset of <code>C2: curated gene sets</code> <span class="citation">(Subramanian <em>et al.</em> 2005)</span>.</p>
+<p>Specifically, we will use the <a href="https://www.genome.jp/kegg/">KEGG (Kyoto Encyclopedia of Genes and Genomes)</a> pathways <span class="citation">(Kanehisa and Goto 2000)</span>.</p>
 <pre class="r"><code># Filter the zebrafish data frame to the KEGG pathways that are included in the
 # curated gene sets
 hs_kegg_df &lt;- hs_msigdb_df %&gt;%
@@ -2213,6 +2211,9 @@ sessionInfo()</code></pre>
 ##  [97] tidygraph_1.2.0     viridisLite_0.3.0   tibble_3.0.3       
 ## [100] rvcheck_0.1.8       memoise_1.1.0       ellipsis_0.3.1</code></pre>
 <div id="refs" class="references">
+<div id="ref-Ahlmann-Eltze2020">
+<p>Ahlmann-Eltze C., 2020 <em>Ggupset: Combination matrix axis for ’ggplot2’ to create ’upset’ plots</em>.</p>
+</div>
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish</p>
 </div>
@@ -2221,6 +2222,9 @@ sessionInfo()</code></pre>
 </div>
 <div id="ref-clusterProfiler-book">
 <p>Guangchuang Yu, ClusterProfiler: Universal enrichment tool for functional and comparative study</p>
+</div>
+<div id="ref-Kanehisa2000">
+<p>Kanehisa M., and S. Goto, 2000 KEGG: kyoto encyclopedia of genes and genomes. Nucleic Acids Res 28: 27–30.</p>
 </div>
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: current approaches and outstanding challenges. PLoS Comput. Biol. 8: e1002375.</p>

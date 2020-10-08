@@ -69,7 +69,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 In this example, we are using differential expression results table we obtained from an [example analysis of zebrafish samples overexpressing human CREB experiment](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes, and adjusted p-values (FDR in this case).
 
-We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html).
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html).
 
 ## About the dataset we are using for this example
 
@@ -107,7 +107,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene datasets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
 
-We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to do some gene identifier conversion [@Carlson2019-zebrafish]. 
+We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to do some gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an upset plot [@Carlson2019-zebrafish; @Ahlmann-Eltze2020].
 
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
@@ -115,6 +115,7 @@ if (!("clusterProfiler" %in% installed.packages())) {
   BiocManager::install("clusterProfiler", update = FALSE)
 }
 
+# This is required to make one of the plots that clusterProfiler will make
 if (!("ggupset" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("ggupset", update = FALSE)
@@ -190,7 +191,7 @@ The data we're interested in here comes from zebrafish samples, so we can obtain
 hs_msigdb_df <- msigdbr(species = "Danio rerio")
 ```
 
-MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp).
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005].
 
     H: hallmark gene sets
     C1: positional gene sets
@@ -201,12 +202,9 @@ MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/g
     C6: oncogenic signatures
     C7: immunologic signatures
 
-In this example, we will use canonical pathways which are ([ref](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp)):
+In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005].
 
-> Gene sets from pathway databases. Usually, these gene sets are canonical representations of a biological process compiled by domain experts.
-
-And are a subset of `C2: curated gene sets`.
-Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways. 
+Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000]. 
 
 ```{r}
 # Filter the zebrafish data frame to the KEGG pathways that are included in the
