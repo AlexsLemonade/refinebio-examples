@@ -325,27 +325,6 @@ Where `N` is the number of genes in the background distribution, `M` is the numb
 
 Borrowing an example from [_clusterProfiler: universal enrichment tool for functional and comparative study_](https://yulab-smu.github.io/clusterProfiler-book/chapter2.html#fn2):
 
-> **Example**: Suppose we have 17,980 genes detected in a Microarray study and 57 genes were differentially expressed. Among the differential expressed genes, 28 are annotated to a gene set.
-
-We'll call genes that are differentially expressed `gene_in_interest` and genes that are in the gene set `in_gene_set`.
-
-```{r}
-gene_table <- data.frame(
-  gene_not_interest = c(2613, 15310),
-  gene_in_interest = c(28, 29)
-)
-rownames(gene_table) <- c("in_gene_set", "not_in_gene_set")
-
-gene_table
-```
-
-We can assess if the 28 overlapping genes mean that the differentially expressed genes are over-represented in the gene set with the hypergeometric distribution.
-This corresponds to a one-sided Fisher's exact test.
-
-```{r}
-fisher.test(gene_table, alternative = "greater")
-```
-
 When we test **multiple pathways or gene sets**, the p-values then need to be **adjusted** for multiple hypothesis testing.
 
 ### Medulloblastoma WNT subtype ORA
@@ -354,10 +333,12 @@ Let's generate a list of genes that are indicative of the WNT subtype in medullo
 We need to use the gene symbols, rather than the Ensembl gene IDs.
 
 ```{r}
-# Select genes that are in the top 200 for at least one comparison to other
+# Select genes that are in the top 100 for at least one comparison to other
 # cell types
 top_wnt_genes <- dge_annot_df %>%
+  # Here we want the 100 smallest p values which will be the biggest changes
   dplyr::top_n(WNTvsOther, n = -100) %>%
+  # We are extracting the gene symbols as a vector
   dplyr::pull(gene_symbol)
 ```
 
