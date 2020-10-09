@@ -169,16 +169,27 @@ HCOP was originally designed to show orthology predictions between human and mou
 In the next chunk, we have adapted code from the [`hcop` package R script](https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R) to retrieve the zebrafish and human mapped data from the HGNC database [@Turner2018].
 
 ```{r}
+# Define URL to desired organism ortholog mapping file from the HGNC database
+zebrafish_hgnc_url <- paste0(
+  "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
+  "human_",
+  "zebrafish",
+  # Replace with the organism you have data for; see the list of possible files from the HGNC at this link: ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/
+  "_hcop_fifteen_column.txt.gz"
+)
+```
+
+```{r}
 # Read in the data from HGNC
-zebrafish <-
-  paste0(
-    "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
-    "human_",
-    "zebrafish", # Replace with the organism you have data for
-    "_hcop_fifteen_column.txt.gz"
-  ) %>%
-  data.table::fread() %>%
-  set_names(names(.) %>% gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+zebrafish <- data.table::fread(zebrafish_hgnc_url) %>% # Here we use `data.table::fread()` instead of `readr::read_tsv()` because we expect this file to be large so the `fread()` function is faster/more efficient here
+  set_names(names(.) %>%
+    gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+```
+
+Let's take a look at what `zebrafish` looks like.
+
+```{r}
+zebrafish
 ```
 
 ## Import and set up data
@@ -230,11 +241,6 @@ Ensembl gene identifiers have different species-specific prefixes.
 In zebrafish, Ensembl gene identifiers begin with `ENSDARG` (in human, `ENSG`, etc.).
 
 Now let's do the mapping!
-We'll use the `zebrafish` data from the HGNC database; this is what `zebrafish` looks like.
-
-```{r}
-zebrafish
-```
 
 We're interested in the `human_symbol`, `zebrafish_ensembl`, and `support` columns specifically.
 The `support` column contains a list of associated databases that support each assertion.

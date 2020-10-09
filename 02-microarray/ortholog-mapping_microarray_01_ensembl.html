@@ -1798,16 +1798,104 @@ library(magrittr)</code></pre>
 <p>The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene. The <a href="https://www.genenames.org/">HGNC database</a> currently contains over 39000 public records containing approved human gene nomenclature and associated gene information <span class="citation">(Gray <em>et al.</em> 2015)</span>.</p>
 <p>The <a href="https://www.genenames.org/tools/hcop/">HGNC Comparison of Orthology Predictions (HCOP)</a> is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data <span class="citation">(Wright <em>et al.</em> 2005)</span>. The prediction with the most number of databases which concur is considered the most reliable. HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including zebrafish, which we will use in this notebook <span class="citation">(HGNC team 2020)</span>.</p>
 <p>In the next chunk, we have adapted code from the <a href="https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R"><code>hcop</code> package R script</a> to retrieve the zebrafish and human mapped data from the HGNC database <span class="citation">(Turner 2018)</span>.</p>
+<pre class="r"><code># Define URL to desired organism ortholog mapping file from the HGNC database
+zebrafish_hgnc_url &lt;- paste0(
+  &quot;ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/&quot;,
+  &quot;human_&quot;,
+  &quot;zebrafish&quot;,
+  # Replace with the organism you have data for; see the list of possible files from the HGNC at this link: ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/
+  &quot;_hcop_fifteen_column.txt.gz&quot;
+)</code></pre>
 <pre class="r"><code># Read in the data from HGNC
-zebrafish &lt;-
-  paste0(
-    &quot;ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/&quot;,
-    &quot;human_&quot;,
-    &quot;zebrafish&quot;, # Replace with the organism you have data for
-    &quot;_hcop_fifteen_column.txt.gz&quot;
-  ) %&gt;%
-  data.table::fread() %&gt;%
-  set_names(names(.) %&gt;% gsub(&quot;_gene$&quot;, &quot;&quot;, .)) # Removing some extra wording in some of the column names</code></pre>
+zebrafish &lt;- data.table::fread(zebrafish_hgnc_url) %&gt;% # Here we use `data.table::fread()` instead of `readr::read_tsv()` because we expect this file to be large so the `fread()` function is faster/more efficient here
+  set_names(names(.) %&gt;%
+    gsub(&quot;_gene$&quot;, &quot;&quot;, .)) # Removing some extra wording in some of the column names</code></pre>
+<p>Let’s take a look at what <code>zebrafish</code> looks like.</p>
+<pre class="r"><code>zebrafish</code></pre>
+<pre><code>##        human_entrez   human_ensembl    hgnc_id
+##     1:            - ENSG00000277739          -
+##     2:            - ENSG00000277739          -
+##     3:            - ENSG00000277739          -
+##     4:            - ENSG00000277739          -
+##     5:        29974 ENSG00000148584 HGNC:24086
+##    ---                                        
+## 89099:        11130 ENSG00000122952 HGNC:13195
+## 89100:         7789 ENSG00000198205 HGNC:13198
+## 89101:         7789 ENSG00000198205 HGNC:13198
+## 89102:       158586 ENSG00000198455 HGNC:13199
+## 89103:       158586 ENSG00000198455 HGNC:13199
+##                                          human_name human_symbol human_chr
+##     1: 5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA        21
+##     2: 5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA        21
+##     3: 5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA        21
+##     4: 5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA        21
+##     5:               APOBEC1 complementation factor         A1CF  10q11.23
+##    ---                                                                    
+## 89099:         ZW10 interacting kinetochore protein        ZWINT   10q21.1
+## 89100:            zinc finger X-linked duplicated A         ZXDA   Xp11.21
+## 89101:            zinc finger X-linked duplicated A         ZXDA   Xp11.21
+## 89102:            zinc finger X-linked duplicated B         ZXDB   Xp11.21
+## 89103:            zinc finger X-linked duplicated B         ZXDB   Xp11.21
+##                                                                                         human_assert_ids
+##     1:                                                                                   ENSG00000277739
+##     2:                                                                                   ENSG00000277739
+##     3:                                                                                   ENSG00000277739
+##     4:                                                                                   ENSG00000277739
+##     5: Q9NQ94,16363,29974,ENSG00000148584,HUMAN03134,ZDB-GENE-060824-3,HUMAN|HGNC=24086|UniProtKB=Q9NQ94
+##    ---                                                                                                  
+## 89099:                                                      HUMAN03146,HUMAN|HGNC=13195|UniProtKB=O95229
+## 89100: P98168,ENOG411CT6P,ENSP00000351530,ENSG00000198205,HUMAN|HGNC=13198|UniProtKB=P98168,140175at7742
+## 89101:                                                                                   ENSG00000198205
+## 89102:                    ENSP00000364023,ENSG00000198455,HUMAN|HGNC=13199|UniProtKB=P98169,140175at7742
+## 89103:                                                                                   ENSG00000198455
+##        zebrafish_entrez  zebrafish_ensembl              zfin_id
+##     1:                - ENSDARG00000110135                    -
+##     2:                - ENSDARG00000111902                    -
+##     3:                - ENSDARG00000114355                    -
+##     4:                - ENSDARG00000115847                    -
+##     5:           562916 ENSDARG00000002968    ZDB-GENE-060824-3
+##    ---                                                         
+## 89099:        100000219 ENSDARG00000101975  ZDB-GENE-030131-305
+## 89100:           326091 ENSDARG00000052351 ZDB-GENE-030131-4816
+## 89101:           415097 ENSDARG00000071496    ZDB-GENE-061207-1
+## 89102:           326091 ENSDARG00000052351 ZDB-GENE-030131-4816
+## 89103:           415097 ENSDARG00000071496    ZDB-GENE-061207-1
+##                        zebrafish_name zebrafish_symbol zebrafish_chr
+##     1:                              -      CT583728.10             4
+##     2:                              -       FO704772.1             7
+##     3:                              -       BX537263.4             5
+##     4:                              -       BX548011.6             4
+##     5: apobec1 complementation factor             a1cf            12
+##    ---                                                              
+## 89099:                si:dkey-225f5.4  si:dkey-225f5.4             3
+## 89100:               si:dkey-156n14.3 si:dkey-156n14.3             6
+## 89101:            zic family member 6             zic6            14
+## 89102:               si:dkey-156n14.3 si:dkey-156n14.3             6
+## 89103:            zic family member 6             zic6            14
+##                                                                                                          zebrafish_assert_ids
+##     1:                                                                                                     ENSDARG00000110135
+##     2:                                                                                                     ENSDARG00000111902
+##     3:                                                                                                     ENSDARG00000114355
+##     4:                                                                                                     ENSDARG00000115847
+##     5:      E7F6B7,16363,562916,ENSDARG00000002968,DANRE03269,ZDB-GENE-060824-3,DANRE|ZFIN=ZDB-GENE-060824-3|UniProtKB=R4GEC2
+##    ---                                                                                                                       
+## 89099:                                                       DANRE29229,DANRE|Ensembl=ENSDARG00000101975|UniProtKB=A0A0G2L5W1
+## 89100: I3IT94,ENOG411CT6P,ENSDARP00000126156,ENSDARG00000052351,DANRE|ZFIN=ZDB-GENE-030131-4816|UniProtKB=I3IT94,140175at7742
+## 89101:                                                                                                     ENSDARG00000071496
+## 89102:                    ENSDARP00000126156,ENSDARG00000052351,DANRE|ZFIN=ZDB-GENE-030131-4816|UniProtKB=I3IT94,140175at7742
+## 89103:                                                                                                     ENSDARG00000071496
+##                                                    support
+##     1:                                             Ensembl
+##     2:                                             Ensembl
+##     3:                                             Ensembl
+##     4:                                             Ensembl
+##     5: Inparanoid,HomoloGene,NCBI,Ensembl,OMA,ZFIN,Panther
+##    ---                                                    
+## 89099:                                         OMA,Panther
+## 89100:   Inparanoid,EggNOG,Treefam,Ensembl,Panther,OrthoDB
+## 89101:                                             Ensembl
+## 89102:                     Treefam,Ensembl,Panther,OrthoDB
+## 89103:                                             Ensembl</code></pre>
 </div>
 <div id="import-and-set-up-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Import and set up data</h2>
@@ -1880,116 +1968,7 @@ head(df$Gene)</code></pre>
 <pre><code>## [1] &quot;ENSDARG00000000018&quot; &quot;ENSDARG00000000019&quot; &quot;ENSDARG00000000068&quot;
 ## [4] &quot;ENSDARG00000000069&quot; &quot;ENSDARG00000000103&quot; &quot;ENSDARG00000000151&quot;</code></pre>
 <p>Ensembl gene identifiers have different species-specific prefixes. In zebrafish, Ensembl gene identifiers begin with <code>ENSDARG</code> (in human, <code>ENSG</code>, etc.).</p>
-<p>Now let’s do the mapping! We’ll use the <code>zebrafish</code> data from the HGNC database; this is what <code>zebrafish</code> looks like.</p>
-<pre class="r"><code>zebrafish</code></pre>
-<pre><code>##         human_entrez   human_ensembl    hgnc_id
-##      1:            - ENSG00000277488          -
-##      2:            - ENSG00000277488          -
-##      3:            - ENSG00000277739          -
-##      4:            - ENSG00000277739          -
-##      5:            - ENSG00000277739          -
-##     ---                                        
-## 135963:        79699 ENSG00000162378 HGNC:25820
-## 135964:         7791 ENSG00000159840 HGNC:13200
-## 135965:         7791 ENSG00000159840 HGNC:13200
-## 135966:        23140 ENSG00000074755 HGNC:29027
-## 135967:        26009 ENSG00000036549 HGNC:24523
-##                                                  human_name human_symbol
-##      1:          5S ribosomal RNA [Source:RFAM;Acc:RF00001]      5S_rRNA
-##      2:          5S ribosomal RNA [Source:RFAM;Acc:RF00001]      5S_rRNA
-##      3:        5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA
-##      4:        5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA
-##      5:        5.8S ribosomal RNA [Source:RFAM;Acc:RF00002]    5_8S_rRNA
-##     ---                                                                 
-## 135963:        zyg-11 family member B, cell cycle regulator       ZYG11B
-## 135964:                                               zyxin          ZYX
-## 135965:                                               zyxin          ZYX
-## 135966: zinc finger ZZ-type and EF-hand domain containing 1        ZZEF1
-## 135967:                    zinc finger ZZ-type containing 3         ZZZ3
-##         human_chr
-##      1:        17
-##      2:        17
-##      3:        21
-##      4:        21
-##      5:        21
-##     ---          
-## 135963:    1p32.3
-## 135964:      7q34
-## 135965:      7q34
-## 135966:   17p13.2
-## 135967:    1p31.1
-##                                                                                                                                                    human_assert_ids
-##      1:                                                                                                                                             ENSG00000277488
-##      2:                                                                                                                                             ENSG00000277488
-##      3:                                                                                                                                             ENSG00000277739
-##      4:                                                                                                                                             ENSG00000277739
-##      5:                                                                                                                                             ENSG00000277739
-##     ---                                                                                                                                                            
-## 135963:                                                                                 ENSG00000162378,HUMAN|HGNC=25820|UniProtKB=Q9C0D3,101020at7742,101020at7742
-## 135964:                                            Q15942,HUMAN27166,ENSG00000159840,ZDB-GENE-070928-18,HUMAN|HGNC=13200|UniProtKB=Q15942,296011at7742,296011at7742
-## 135965:                                                                                                                                   296011at7742,296011at7742
-## 135966:                            9027,ENOG411CTWY,HUMAN11777,ENSP00000371051,ENSG00000074755,23140,ZDB-GENE-041222-2,HUMAN|HGNC=29027|UniProtKB=O43149,3190at7742
-## 135967: Q8IYH5,9182,ENOG411CVPY,ENSP00000359837,ENSP00000359837,HUMAN01182,26009,ENSG00000036549,ZDB-GENE-030131-6450,HUMAN|HGNC=24523|UniProtKB=Q8IYH5,64807at7742
-##         zebrafish_entrez  zebrafish_ensembl              zfin_id
-##      1:                - ENSDARG00000084476                    -
-##      2:                - ENSDARG00000104544                    -
-##      3:                - ENSDARG00000110135                    -
-##      4:                - ENSDARG00000111902                    -
-##      5:                - ENSDARG00000114355                    -
-##     ---                                                         
-## 135963:           567429 ENSDARG00000101799 ZDB-GENE-030131-5941
-## 135964:           564246 ENSDARG00000075733   ZDB-GENE-070928-18
-## 135965:           768160 ENSDARG00000071558  ZDB-GENE-061013-662
-## 135966:           566682 ENSDARG00000094380    ZDB-GENE-041222-2
-## 135967:           567022 ENSDARG00000077581 ZDB-GENE-030131-6450
-##                                     zebrafish_name  zebrafish_symbol
-##      1:                                          -        CR854833.1
-##      2:                                          -        CR533578.2
-##      3:                                          -       CT583728.10
-##      4:                                          -        FO704772.1
-##      5:                                          -        BX537263.4
-##     ---                                                             
-## 135963:                          si:ch1073-82l19.1 si:ch1073-82l19.1
-## 135964:                                      zyxin               zyx
-## 135965:              filamin binding LIM protein 1            fblim1
-## 135966: zinc finger, ZZ-type with EF hand domain 1             zzef1
-## 135967:          zinc finger, ZZ-type containing 3              zzz3
-##         zebrafish_chr
-##      1:            14
-##      2:            16
-##      3:             4
-##      4:             7
-##      5:             5
-##     ---              
-## 135963:             2
-## 135964:            16
-## 135965:            22
-## 135966:             5
-## 135967:             2
-##                                                                                                                                                                         zebrafish_assert_ids
-##      1:                                                                                                                                                                   ENSDARG00000084476
-##      2:                                                                                                                                                                   ENSDARG00000104544
-##      3:                                                                                                                                                                   ENSDARG00000110135
-##      4:                                                                                                                                                                   ENSDARG00000111902
-##      5:                                                                                                                                                                   ENSDARG00000114355
-##     ---                                                                                                                                                                                     
-## 135963:                                                                                    ENSDARG00000101799,DANRE|ZFIN=ZDB-GENE-030131-5941|UniProtKB=A0A0R4IGL5,101020at7742,101020at7742
-## 135964:                                                     F1QC03,DANRE09462,ENSDARG00000075733,ZDB-GENE-070928-18,DANRE|ZFIN=ZDB-GENE-070928-18|UniProtKB=F1QC03,296011at7742,296011at7742
-## 135965:                                                                                                                                                            296011at7742,296011at7742
-## 135966:                              9027,ENOG411CTWY,DANRE34177,ENSDARP00000114487,ENSDARG00000094380,566682,ZDB-GENE-041222-2,DANRE|ZFIN=ZDB-GENE-041222-2|UniProtKB=A0A0R4IX34,3190at7742
-## 135967: A5PMR0,9182,ENOG411CVPY,ENSDARP00000101210,ENSDARP00000119233,DANRE26554,567022,ENSDARG00000077581,ZDB-GENE-030131-6450,DANRE|ZFIN=ZDB-GENE-030131-6450|UniProtKB=A5PMR0,64807at7742
-##                                                                                     support
-##      1:                                                                             Ensembl
-##      2:                                                                             Ensembl
-##      3:                                                                             Ensembl
-##      4:                                                                             Ensembl
-##      5:                                                                             Ensembl
-##     ---                                                                                    
-## 135963:                                                     Ensembl,Panther,OrthoDB,OrthoDB
-## 135964:                                 Inparanoid,OMA,Ensembl,ZFIN,Panther,OrthoDB,OrthoDB
-## 135965:                                                                     OrthoDB,OrthoDB
-## 135966:                     HomoloGene,EggNOG,OMA,Treefam,Ensembl,NCBI,ZFIN,Panther,OrthoDB
-## 135967: Inparanoid,HomoloGene,EggNOG,OrthoMCL,Treefam,OMA,NCBI,Ensembl,ZFIN,Panther,OrthoDB</code></pre>
+<p>Now let’s do the mapping!</p>
 <p>We’re interested in the <code>human_symbol</code>, <code>zebrafish_ensembl</code>, and <code>support</code> columns specifically. The <code>support</code> column contains a list of associated databases that support each assertion. This column may assist with addressing some of the multi-mappings that we will talk about later.</p>
 <pre class="r"><code>human_zebrafish_key &lt;- zebrafish %&gt;%
   # We&#39;ll want to subset zebrafish to only the columns we&#39;re interested in
@@ -2010,109 +1989,109 @@ any(duplicated(human_zebrafish_key))</code></pre>
 <p>Here’s what the new data frame looks like:</p>
 <pre class="r"><code>head(human_zebrafish_mapped_df, n = 25)</code></pre>
 <pre><code>##                  Gene human_symbol   GSM1831675  GSM1831677  GSM1831680
-## 1  ENSDARG00000000018         NRF1  0.517670753  0.35842940  0.63073566
-## 2  ENSDARG00000000019        UBE2H  0.277703590  0.32893008  0.71364377
-## 3  ENSDARG00000000068     SLC9A3R1  1.717454760  1.94375581  1.45578401
-## 4  ENSDARG00000000068     SLC9A3R2  1.717454760  1.94375581  1.45578401
-## 5  ENSDARG00000000069          DAP  0.759764255  0.93489218  1.21284010
-## 6  ENSDARG00000000103        MYH10  0.637398537  0.29535821  0.15907420
-## 7  ENSDARG00000000103        MYH11  0.637398537  0.29535821  0.15907420
-## 8  ENSDARG00000000103         MYH9  0.637398537  0.29535821  0.15907420
-## 9  ENSDARG00000000151         THRA  0.315776447  0.26964895  0.15400521
-## 10 ENSDARG00000000151         THRB  0.315776447  0.26964895  0.15400521
-## 11 ENSDARG00000000161        ITSN1 -0.216037963 -0.14677372 -0.26589953
-## 12 ENSDARG00000000161        ITSN2 -0.216037963 -0.14677372 -0.26589953
-## 13 ENSDARG00000000175        HOXA2  0.008775981  0.05290532 -0.18556095
-## 14 ENSDARG00000000175        HOXB2  0.008775981  0.05290532 -0.18556095
-## 15 ENSDARG00000000183        PTPN3 -0.059098517 -0.13752464  0.02049271
-## 16 ENSDARG00000000183        PTPN4 -0.059098517 -0.13752464  0.02049271
-## 17 ENSDARG00000000229        USP44 -0.281377279 -0.28738544 -0.36246941
-## 18 ENSDARG00000000229        USP49 -0.281377279 -0.28738544 -0.36246941
-## 19 ENSDARG00000000241      SLC40A1  1.119281296  0.81578295  1.53586371
-## 20 ENSDARG00000000380        PDE6A -0.189654060 -0.14947385 -0.27637856
-## 21 ENSDARG00000000380        PDE6B -0.189654060 -0.14947385 -0.27637856
-## 22 ENSDARG00000000380        PDE6C -0.189654060 -0.14947385 -0.27637856
-## 23 ENSDARG00000000394        MATR3  1.227190101  1.50293221  1.26390113
-## 24 ENSDARG00000000394        MATR3  1.227190101  1.50293221  1.26390113
-## 25 ENSDARG00000000394        RBM20  1.227190101  1.50293221  1.26390113
-##     GSM1831678  GSM1831684  GSM1831681  GSM1831679  GSM1831676  GSM1831682
-## 1   0.61292939  0.76406550  0.70469629  0.41969729  0.43419316  0.83722430
-## 2   0.19725973  0.89630771  0.82899513  0.43989193  0.61531854  0.87118805
-## 3   1.43987504  1.08587796  1.54498010  1.83859688  1.53342370  1.11883428
-## 4   1.43987504  1.08587796  1.54498010  1.83859688  1.53342370  1.11883428
-## 5   0.71364377  1.06765088  0.95821499  0.93668421  0.81824026  1.01935888
-## 6   0.44848868  0.24625466  0.36871311  0.42069631  0.58157993  0.28607316
-## 7   0.44848868  0.24625466  0.36871311  0.42069631  0.58157993  0.28607316
-## 8   0.44848868  0.24625466  0.36871311  0.42069631  0.58157993  0.28607316
-## 9   0.14656368  0.20610040  0.13757963  0.25877469  0.30764238  0.08802174
-## 10  0.14656368  0.20610040  0.13757963  0.25877469  0.30764238  0.08802174
-## 11 -0.26329751 -0.21306591 -0.17484074 -0.10972459 -0.24194037 -0.27771537
-## 12 -0.26329751 -0.21306591 -0.17484074 -0.10972459 -0.24194037 -0.27771537
-## 13 -0.09942205 -0.18164948 -0.15024340 -0.06877355 -0.08367656 -0.18506496
-## 14 -0.09942205 -0.18164948 -0.15024340 -0.06877355 -0.08367656 -0.18506496
-## 15 -0.10902348 -0.06154869 -0.08047214 -0.09192863 -0.06321798 -0.02519205
-## 16 -0.10902348 -0.06154869 -0.08047214 -0.09192863 -0.06321798 -0.02519205
-## 17 -0.29534542 -0.32204694 -0.29381225 -0.20725069 -0.24381469 -0.26608866
-## 18 -0.29534542 -0.32204694 -0.29381225 -0.20725069 -0.24381469 -0.26608866
-## 19  0.87918037  0.84641545  1.60099526  0.80874245  0.74271037  0.70903649
-## 20 -0.27550894 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051
-## 21 -0.27550894 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051
-## 22 -0.27550894 -0.25374300 -0.21893606 -0.17405280 -0.19058640 -0.24280051
-## 23  1.21600126  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703
-## 24  1.21600126  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703
-## 25  1.21600126  1.16741997  1.20508865  1.35093078  1.27179196  1.13988703
+## 1  ENSDARG00000000018         &lt;NA&gt;  0.517670753  0.35842940  0.63073566
+## 2  ENSDARG00000000019         &lt;NA&gt;  0.277703590  0.32893008  0.71364377
+## 3  ENSDARG00000000068         &lt;NA&gt;  1.717454760  1.94375581  1.45578401
+## 4  ENSDARG00000000069         &lt;NA&gt;  0.759764255  0.93489218  1.21284010
+## 5  ENSDARG00000000103         MYH9  0.637398537  0.29535821  0.15907420
+## 6  ENSDARG00000000151         &lt;NA&gt;  0.315776447  0.26964895  0.15400521
+## 7  ENSDARG00000000161        ITSN1 -0.216037963 -0.14677372 -0.26589953
+## 8  ENSDARG00000000161        ITSN2 -0.216037963 -0.14677372 -0.26589953
+## 9  ENSDARG00000000175         &lt;NA&gt;  0.008775981  0.05290532 -0.18556095
+## 10 ENSDARG00000000183        PTPN3 -0.059098517 -0.13752464  0.02049271
+## 11 ENSDARG00000000183        PTPN4 -0.059098517 -0.13752464  0.02049271
+## 12 ENSDARG00000000229        USP49 -0.281377279 -0.28738544 -0.36246941
+## 13 ENSDARG00000000241      SLC40A1  1.119281296  0.81578295  1.53586371
+## 14 ENSDARG00000000380        PDE6B -0.189654060 -0.14947385 -0.27637856
+## 15 ENSDARG00000000380        PDE6C -0.189654060 -0.14947385 -0.27637856
+## 16 ENSDARG00000000394        RBM20  1.227190101  1.50293221  1.26390113
+## 17 ENSDARG00000000442     SLC39A13  0.407174594  0.36301351  0.22114532
+## 18 ENSDARG00000000442      SLC39A7  0.407174594  0.36301351  0.22114532
+## 19 ENSDARG00000000460      TRAV1-1 -0.252316006 -0.21432658  0.20050137
+## 20 ENSDARG00000000460      TRAV1-2 -0.252316006 -0.21432658  0.20050137
+## 21 ENSDARG00000000460       TRAV10 -0.252316006 -0.21432658  0.20050137
+## 22 ENSDARG00000000460     TRAV13-1 -0.252316006 -0.21432658  0.20050137
+## 23 ENSDARG00000000460     TRAV13-2 -0.252316006 -0.21432658  0.20050137
+## 24 ENSDARG00000000460       TRAV17 -0.252316006 -0.21432658  0.20050137
+## 25 ENSDARG00000000460       TRAV20 -0.252316006 -0.21432658  0.20050137
+##     GSM1831678  GSM1831684  GSM1831681  GSM1831679    GSM1831676  GSM1831682
+## 1   0.61292939  0.76406550  0.70469629  0.41969729  0.4341931597  0.83722430
+## 2   0.19725973  0.89630771  0.82899513  0.43989193  0.6153185358  0.87118805
+## 3   1.43987504  1.08587796  1.54498010  1.83859688  1.5334237001  1.11883428
+## 4   0.71364377  1.06765088  0.95821499  0.93668421  0.8182402638  1.01935888
+## 5   0.44848868  0.24625466  0.36871311  0.42069631  0.5815799343  0.28607316
+## 6   0.14656368  0.20610040  0.13757963  0.25877469  0.3076423763  0.08802174
+## 7  -0.26329751 -0.21306591 -0.17484074 -0.10972459 -0.2419403722 -0.27771537
+## 8  -0.26329751 -0.21306591 -0.17484074 -0.10972459 -0.2419403722 -0.27771537
+## 9  -0.09942205 -0.18164948 -0.15024340 -0.06877355 -0.0836765585 -0.18506496
+## 10 -0.10902348 -0.06154869 -0.08047214 -0.09192863 -0.0632179793 -0.02519205
+## 11 -0.10902348 -0.06154869 -0.08047214 -0.09192863 -0.0632179793 -0.02519205
+## 12 -0.29534542 -0.32204694 -0.29381225 -0.20725069 -0.2438146883 -0.26608866
+## 13  0.87918037  0.84641545  1.60099526  0.80874245  0.7427103683  0.70903649
+## 14 -0.27550894 -0.25374300 -0.21893606 -0.17405280 -0.1905863958 -0.24280051
+## 15 -0.27550894 -0.25374300 -0.21893606 -0.17405280 -0.1905863958 -0.24280051
+## 16  1.21600126  1.16741997  1.20508865  1.35093078  1.2717919610  1.13988703
+## 17  0.26946329  0.79423571  0.29243663  0.37118605  0.1746802876  0.70014967
+## 18  0.26946329  0.79423571  0.29243663  0.37118605  0.1746802876  0.70014967
+## 19 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 20 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 21 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 22 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 23 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 24 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
+## 25 -0.13694094 -0.17924368 -0.05140283 -0.18446210  0.0006232022 -0.20658534
 ##     GSM1831683
 ## 1   0.66800742
 ## 2   0.81762658
 ## 3   1.39279199
-## 4   1.39279199
-## 5   1.11473509
-## 6   0.20220976
-## 7   0.20220976
-## 8   0.20220976
-## 9   0.09237853
-## 10  0.09237853
-## 11 -0.29010393
-## 12 -0.29010393
-## 13 -0.19007209
-## 14 -0.19007209
-## 15 -0.04861886
-## 16 -0.04861886
-## 17 -0.33269122
-## 18 -0.33269122
-## 19  1.45805976
-## 20 -0.23001865
-## 21 -0.23001865
-## 22 -0.23001865
-## 23  1.23356710
-## 24  1.23356710
-## 25  1.23356710
+## 4   1.11473509
+## 5   0.20220976
+## 6   0.09237853
+## 7  -0.29010393
+## 8  -0.29010393
+## 9  -0.19007209
+## 10 -0.04861886
+## 11 -0.04861886
+## 12 -0.33269122
+## 13  1.45805976
+## 14 -0.23001865
+## 15 -0.23001865
+## 16  1.23356710
+## 17  0.53082141
+## 18  0.53082141
+## 19 -0.10303408
+## 20 -0.10303408
+## 21 -0.10303408
+## 22 -0.10303408
+## 23 -0.10303408
+## 24 -0.10303408
+## 25 -0.10303408
 ##                                                                         support
-## 1         Inparanoid,HomoloGene,PhylomeDB,OMA,NCBI,Ensembl,ZFIN,Panther,OrthoDB
-## 2    Inparanoid,HomoloGene,EggNOG,Treefam,OMA,NCBI,Ensembl,ZFIN,Panther,OrthoDB
-## 3                      HomoloGene,OrthoMCL,Treefam,Ensembl,ZFIN,Panther,OrthoDB
-## 4                                                                       OrthoDB
-## 5                        Inparanoid,HomoloGene,EggNOG,Treefam,NCBI,ZFIN,Panther
-## 6                Inparanoid,HomoloGene,Treefam,OMA,Ensembl,ZFIN,Panther,OrthoDB
-## 7                                                                EggNOG,OrthoDB
-## 8                                                                       OrthoDB
-## 9                     HomoloGene,PhylomeDB,Ensembl,Treefam,ZFIN,Panther,OrthoDB
-## 10                                                             OrthoMCL,OrthoDB
-## 11                                                     OrthoMCL,OrthoDB,OrthoDB
-## 12  HomoloGene,EggNOG,OrthoMCL,Treefam,OMA,Ensembl,ZFIN,Panther,OrthoDB,OrthoDB
-## 13                                                                      OrthoDB
-## 14   Inparanoid,HomoloGene,EggNOG,Treefam,OMA,Ensembl,NCBI,ZFIN,Panther,OrthoDB
-## 15                                                                      OrthoDB
-## 16                      PhylomeDB,OrthoMCL,Treefam,Ensembl,ZFIN,Panther,OrthoDB
-## 17                                                      EggNOG,OrthoMCL,OrthoDB
-## 18  HomoloGene,PhylomeDB,OrthoMCL,OMA,Treefam,Ensembl,NCBI,ZFIN,Panther,OrthoDB
-## 19 Inparanoid,HomoloGene,OrthoMCL,Treefam,OMA,Ensembl,NCBI,ZFIN,Panther,OrthoDB
-## 20               HomoloGene,PhylomeDB,OrthoMCL,OMA,Treefam,ZFIN,Panther,OrthoDB
-## 21                                             OrthoMCL,Ensembl,OrthoDB,OrthoDB
-## 22                                                             OrthoMCL,OrthoDB
-## 23                                                                      Ensembl
-## 24                                                       EggNOG,Ensembl,Treefam
-## 25                                                                          OMA</code></pre>
+## 1                                                                          &lt;NA&gt;
+## 2                                                                          &lt;NA&gt;
+## 3                                                                          &lt;NA&gt;
+## 4                                                                          &lt;NA&gt;
+## 5                                                                       OrthoDB
+## 6                                                                          &lt;NA&gt;
+## 7                                                      OrthoMCL,OrthoDB,OrthoDB
+## 8   EggNOG,HomoloGene,OrthoMCL,Treefam,Ensembl,OMA,ZFIN,Panther,OrthoDB,OrthoDB
+## 9                                                                          &lt;NA&gt;
+## 10                                                                      OrthoDB
+## 11                      PhylomeDB,OrthoMCL,Treefam,Ensembl,ZFIN,Panther,OrthoDB
+## 12  PhylomeDB,HomoloGene,OrthoMCL,NCBI,Treefam,Ensembl,OMA,ZFIN,Panther,OrthoDB
+## 13 Inparanoid,HomoloGene,OrthoMCL,NCBI,Treefam,Ensembl,OMA,ZFIN,Panther,OrthoDB
+## 14                                             OrthoMCL,Ensembl,OrthoDB,OrthoDB
+## 15                                                             OrthoMCL,OrthoDB
+## 16                                                                          OMA
+## 17   Inparanoid,EggNOG,HomoloGene,NCBI,Treefam,Ensembl,OMA,ZFIN,Panther,OrthoDB
+## 18                                                                      OrthoDB
+## 19                                                                      Panther
+## 20                                                                      Panther
+## 21                                                                      Panther
+## 22                                                                      Panther
+## 23                                                                      Panther
+## 24                                                                      Panther
+## 25                                                                      Panther</code></pre>
 <p>Let’s get a summary of the human gene symbols returned in our mapped data frame, <code>human_zebrafish_mapped_df</code>.</p>
 <pre class="r"><code># We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s
 human_zebrafish_mapped_df %&gt;%
@@ -2120,25 +2099,25 @@ human_zebrafish_mapped_df %&gt;%
   dplyr::count() %&gt;%
   # Sort by highest `n` which would be the human gene symbol with the most mapped zebrafish Ensembl IDs
   dplyr::arrange(desc(n))</code></pre>
-<pre><code>## # A tibble: 11,665 x 2
-## # Groups:   human_symbol [11,665]
+<pre><code>## # A tibble: 6,190 x 2
+## # Groups:   human_symbol [6,190]
 ##    human_symbol     n
 ##    &lt;chr&gt;        &lt;int&gt;
-##  1 &lt;NA&gt;           463
+##  1 &lt;NA&gt;          3538
 ##  2 ZNF729          16
 ##  3 ZNF134          15
 ##  4 ZNF865          14
-##  5 GLI4            13
-##  6 ZFP1            13
-##  7 ZFP92           13
-##  8 ZIM3            13
-##  9 ZNF12           13
-## 10 ZNF135          13
-## # … with 11,655 more rows</code></pre>
+##  5 ZFP92           13
+##  6 ZIM3            13
+##  7 ZNF135          13
+##  8 ZNF146          13
+##  9 ZNF155          13
+## 10 ZNF157          13
+## # … with 6,180 more rows</code></pre>
 <p>Looks like we have mapped symbols!</p>
 <p>Now, let’s get an idea of how many zebrafish Ensembl IDs we have that were not mapped to human gene symbols.</p>
 <pre class="r"><code>sum(is.na(human_zebrafish_mapped_df$human_symbol))</code></pre>
-<pre><code>## [1] 463</code></pre>
+<pre><code>## [1] 3538</code></pre>
 <p>We have 464 NAs, which means we have 464 zebrafish Ensembl IDs that were not mapped to human gene symbols. This is okay because we do not expect everything to map across species.</p>
 </div>
 <div id="take-a-look-at-some-multi-mappings" class="section level2">
@@ -2147,41 +2126,18 @@ human_zebrafish_mapped_df %&gt;%
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(Gene == &quot;ENSDARG00000069142&quot;)</code></pre>
 <pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
-## 1 ENSDARG00000069142        AARS1   1.926439   2.187861    1.95831   2.221289
-## 2 ENSDARG00000069142        AARS2   1.926439   2.187861    1.95831   2.221289
+## 1 ENSDARG00000069142        AARS2   1.926439   2.187861    1.95831   2.221289
 ##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
 ## 1   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502
-## 2   1.828721   1.982383   2.000993   1.813945   1.933648   2.104502
-##                                                                     support
-## 1 HomoloGene,PhylomeDB,EggNOG,OMA,Treefam,NCBI,Ensembl,ZFIN,Panther,OrthoDB
-## 2                                                          OrthoMCL,OrthoDB</code></pre>
+##            support
+## 1 OrthoMCL,OrthoDB</code></pre>
 <p>Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>MATR3</code> example below.</p>
 <pre class="r"><code>human_zebrafish_mapped_df %&gt;%
   dplyr::filter(human_symbol == &quot;MATR3&quot;)</code></pre>
-<pre><code>##                 Gene human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678
-## 1 ENSDARG00000000394        MATR3  1.2271901  1.5029322  1.2639011  1.2160013
-## 2 ENSDARG00000000394        MATR3  1.2271901  1.5029322  1.2639011  1.2160013
-## 3 ENSDARG00000001162        MATR3  1.2293416  1.4669775  1.3024408  1.1883847
-## 4 ENSDARG00000001162        MATR3  1.2293416  1.4669775  1.3024408  1.1883847
-## 5 ENSDARG00000101808        MATR3  0.2441498  0.3500758  0.2300314  0.2575420
-## 6 ENSDARG00000101808        MATR3  0.2441498  0.3500758  0.2300314  0.2575420
-## 7 ENSDARG00000104169        MATR3  0.7927356  0.7951872  0.4846576  0.6662095
-##   GSM1831684 GSM1831681 GSM1831679 GSM1831676 GSM1831682 GSM1831683
-## 1  1.1674200  1.2050887  1.3509308  1.2717920  1.1398870  1.2335671
-## 2  1.1674200  1.2050887  1.3509308  1.2717920  1.1398870  1.2335671
-## 3  1.2192026  1.2931079  1.2277305  1.1743127  1.2757582  1.2931079
-## 4  1.2192026  1.2931079  1.2277305  1.1743127  1.2757582  1.2931079
-## 5  0.1240822  0.2460772  0.2689210  0.2284626  0.1950655  0.1878759
-## 6  0.1240822  0.2460772  0.2689210  0.2284626  0.1950655  0.1878759
-## 7  0.3858910  0.5355053  0.7486323  0.6253056  0.3337947  0.5792599
-##                  support
-## 1                Ensembl
-## 2 EggNOG,Ensembl,Treefam
-## 3     Inparanoid,Panther
-## 4                   ZFIN
-## 5        Ensembl,Panther
-## 6            Ensembl,OMA
-## 7                Panther</code></pre>
+<pre><code>##  [1] Gene         human_symbol GSM1831675   GSM1831677   GSM1831680  
+##  [6] GSM1831678   GSM1831684   GSM1831681   GSM1831679   GSM1831676  
+## [11] GSM1831682   GSM1831683   support     
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
 </div>
 <div id="collapse-multi-mapped-human-gene-symbols" class="section level2">
 <h2><span class="header-section-number">4.6</span> Collapse multi-mapped human gene symbols</h2>
@@ -2199,12 +2155,12 @@ human_zebrafish_mapped_df %&gt;%
 <pre><code>## # A tibble: 6 x 12
 ##   Gene  all_human_symbo… GSM1831675 GSM1831677 GSM1831680 GSM1831678 GSM1831684
 ##   &lt;chr&gt; &lt;chr&gt;                 &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 ENSD… NRF1                  0.518      0.358      0.631      0.613      0.764
-## 2 ENSD… UBE2H                 0.278      0.329      0.714      0.197      0.896
-## 3 ENSD… SLC9A3R1;SLC9A3…      1.72       1.94       1.46       1.44       1.09 
-## 4 ENSD… DAP                   0.760      0.935      1.21       0.714      1.07 
-## 5 ENSD… MYH10;MYH11;MYH9      0.637      0.295      0.159      0.448      0.246
-## 6 ENSD… THRA;THRB             0.316      0.270      0.154      0.147      0.206
+## 1 ENSD… NA                    0.518      0.358      0.631      0.613      0.764
+## 2 ENSD… NA                    0.278      0.329      0.714      0.197      0.896
+## 3 ENSD… NA                    1.72       1.94       1.46       1.44       1.09 
+## 4 ENSD… NA                    0.760      0.935      1.21       0.714      1.07 
+## 5 ENSD… MYH9                  0.637      0.295      0.159      0.448      0.246
+## 6 ENSD… NA                    0.316      0.270      0.154      0.147      0.206
 ## # … with 5 more variables: GSM1831681 &lt;dbl&gt;, GSM1831679 &lt;dbl&gt;,
 ## #   GSM1831676 &lt;dbl&gt;, GSM1831682 &lt;dbl&gt;, GSM1831683 &lt;dbl&gt;</code></pre>
 <div id="write-results-to-file" class="section level3">
@@ -2234,12 +2190,12 @@ head(filtered_zebrafish_ensembl_df)</code></pre>
 ## # Groups:   human_symbol [6]
 ##   Gene  human_symbol GSM1831675 GSM1831677 GSM1831680 GSM1831678 GSM1831684
 ##   &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-## 1 ENSD… NRF1              0.518      0.358      0.631      0.613      0.764
-## 2 ENSD… UBE2H             0.278      0.329      0.714      0.197      0.896
-## 3 ENSD… SLC9A3R1          1.72       1.94       1.46       1.44       1.09 
-## 4 ENSD… SLC9A3R2          1.72       1.94       1.46       1.44       1.09 
-## 5 ENSD… DAP               0.760      0.935      1.21       0.714      1.07 
-## 6 ENSD… MYH10             0.637      0.295      0.159      0.448      0.246
+## 1 ENSD… ITSN1            -0.216     -0.147     -0.266     -0.263     -0.213
+## 2 ENSD… ITSN2            -0.216     -0.147     -0.266     -0.263     -0.213
+## 3 ENSD… USP49            -0.281     -0.287     -0.362     -0.295     -0.322
+## 4 ENSD… SLC40A1           1.12       0.816      1.54       0.879      0.846
+## 5 ENSD… PDE6B            -0.190     -0.149     -0.276     -0.276     -0.254
+## 6 ENSD… PDE6C            -0.190     -0.149     -0.276     -0.276     -0.254
 ## # … with 7 more variables: GSM1831681 &lt;dbl&gt;, GSM1831679 &lt;dbl&gt;,
 ## #   GSM1831676 &lt;dbl&gt;, GSM1831682 &lt;dbl&gt;, GSM1831683 &lt;dbl&gt;, support &lt;chr&gt;,
 ## #   n_databases &lt;dbl&gt;</code></pre>
