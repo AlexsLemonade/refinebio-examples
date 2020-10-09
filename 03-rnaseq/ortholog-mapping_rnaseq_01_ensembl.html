@@ -1683,7 +1683,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use zebrafish data from refine.bio and annotate it with human Ensembl IDs from HGNC.</p>
+<p>This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio. In this notebook, we will use mouse data from refine.bio and annotate it with human Ensembl IDs from HGNC.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -1855,14 +1855,14 @@ mouse &lt;- data.table::fread(mouse_hgnc_url) %&gt;% # Here we use `data.table::
 ##     1:                                                                                                                                                                 ENSG00000277411
 ##     2:                                                                                                                                                                 ENSG00000276626
 ##     3:                                                                                                                                                                 ENSG00000276626
-##     4:                        P04217,11167,ENSP00000263100,HGNC:5,ENOG411AVYB,Phy00089XY_HUMAN,HUMAN16529,HUMAN|HGNC=5|UniProtKB=P04217,ENSP00000263100,ENSG00000121410,1,141638at9347
-##     5:                                         Q9NQ94,16363,HGNC:24086,ENSP00000363107,ENOG411AT3B,HUMAN|HGNC=24086|UniProtKB=Q9NQ94,ENSG00000148584,ENSP00000363105,29974,67756at9347
+##     4:                        Phy00089XY_HUMAN,11167,ENOG411AVYB,1,HGNC:5,ENSP00000263100,ENSP00000263100,HUMAN16529,HUMAN|HGNC=5|UniProtKB=P04217,ENSG00000121410,141638at9347,P04217
+##     5:                                         16363,ENOG411AT3B,29974,HGNC:24086,ENSP00000363107,ENSP00000363105,HUMAN|HGNC=24086|UniProtKB=Q9NQ94,ENSG00000148584,67756at9347,Q9NQ94
 ##    ---                                                                                                                                                                                
-## 47182: Q9C0D3,14600,ENSP00000294353,HGNC:25820,ENOG411B36Q,Phy0024HF6_HUMAN,HUMAN01014,ENSP00000294353,HUMAN|HGNC=25820|UniProtKB=Q9C0D3,ENSG00000162378,79699,37828at9347,37828at9347
+## 47182: Phy0024HF6_HUMAN,14600,ENOG411B36Q,79699,HGNC:25820,ENSP00000294353,ENSP00000294353,HUMAN01014,HUMAN|HGNC=25820|UniProtKB=Q9C0D3,ENSG00000162378,37828at9347,37828at9347,Q9C0D3
 ## 47183:                                                                                                                                         ENSP00000294353,37828at9347,37828at9347
-## 47184:                 Q15942,31164,HGNC:13200,ENSP00000324422,ENOG411AZ7U,HUMAN27166,ENSP00000324422,HUMAN|HGNC=13200|UniProtKB=Q15942,ENSG00000159840,7791,139677at9347,139677at9347
-## 47185:    O43149,9027,HGNC:29027,ENSP00000371051,Phy00086OA_HUMAN,HUMAN11777,ENOG411B1QK,HUMAN|HGNC=29027|UniProtKB=O43149,ENSP00000371051,ENSG00000074755,23140,1810at9347,1810at9347
-## 47186:              Q8IYH5,HGNC:24523,ENSP00000359837,9182,Phy0007YAQ_HUMAN,ENOG411AYBK,HUMAN01182,HUMAN|HGNC=24523|UniProtKB=Q8IYH5,ENSP00000359837,ENSG00000036549,26009,29099at9347
+## 47184:                 31164,ENOG411AZ7U,7791,HGNC:13200,ENSP00000324422,ENSP00000324422,HUMAN27166,HUMAN|HGNC=13200|UniProtKB=Q15942,ENSG00000159840,139677at9347,139677at9347,Q15942
+## 47185:    Phy00086OA_HUMAN,9027,ENOG411B1QK,23140,HGNC:29027,ENSP00000371051,ENSP00000371051,HUMAN11777,HUMAN|HGNC=29027|UniProtKB=O43149,ENSG00000074755,1810at9347,1810at9347,O43149
+## 47186:              Phy0007YAQ_HUMAN,9182,ENOG411AYBK,26009,HGNC:24523,ENSP00000359837,ENSP00000359837,HUMAN01182,HUMAN|HGNC=24523|UniProtKB=Q8IYH5,ENSG00000036549,29099at9347,Q8IYH5
 ##        mouse_entrez      mouse_ensembl      mgi_id
 ##     1:            - ENSMUSG00000065806 MGI:4421914
 ##     2:            - ENSMUSG00000087909 MGI:5451812
@@ -1891,26 +1891,26 @@ mouse &lt;- data.table::fread(mouse_hgnc_url) %&gt;% # Here we use `data.table::
 ##     1:                                                                                                                                                                              ENSMUSG00000065806
 ##     2:                                                                                                                                                                              ENSMUSG00000087909
 ##     3:                                                                                                                                                                              ENSMUSG00000089090
-##     4:            Q19LI2,11167,ENSMUSP00000094151,MGI:2152878,ENOG411AVYB,Phy001S3S6_MOUSE,MOUSE13641,MOUSE|MGI=MGI=2152878|UniProtKB=Q19LI2,ENSMUSP00000094151,ENSMUSG00000022347,117586,141638at9347
-##     5:                                          Q5YD48,16363,MGI:1917115,ENSMUSP00000075235,ENOG411AT3B,MOUSE|MGI=MGI=1917115|UniProtKB=Q5YD48,ENSMUSG00000052595,ENSMUSP00000075235,69865,67756at9347
+##     4:            Phy001S3S6_MOUSE,11167,ENOG411AVYB,117586,MGI:2152878,ENSMUSP00000094151,ENSMUSP00000094151,MOUSE13641,MOUSE|MGI=MGI=2152878|UniProtKB=Q19LI2,ENSMUSG00000022347,141638at9347,Q19LI2
+##     5:                                          16363,ENOG411AT3B,69865,MGI:1917115,ENSMUSP00000075235,ENSMUSP00000075235,MOUSE|MGI=MGI=1917115|UniProtKB=Q5YD48,ENSMUSG00000052595,67756at9347,Q5YD48
 ##    ---                                                                                                                                                                                                
-## 47182: Q3UFS0,14600,ENSMUSP00000043844,MGI:2685277,ENOG411B36Q,Phy0038ZHS_MOUSE,MOUSE33397,ENSMUSP00000043844,MOUSE|MGI=MGI=2685277|UniProtKB=Q3UFS0,ENSMUSG00000034636,414872,37828at9347,37828at9347
+## 47182: Phy0038ZHS_MOUSE,14600,ENOG411B36Q,414872,MGI:2685277,ENSMUSP00000043844,ENSMUSP00000043844,MOUSE33397,MOUSE|MGI=MGI=2685277|UniProtKB=Q3UFS0,ENSMUSG00000034636,37828at9347,37828at9347,Q3UFS0
 ## 47183:                                                                                                                                                      ENSMUSP00000102301,37828at9347,37828at9347
-## 47184:                   Q62523,31164,MGI:103072,ENSMUSP00000070427,ENOG411AZ7U,MOUSE39598,ENSMUSP00000070427,MOUSE|MGI=MGI=103072|UniProtKB=Q62523,ENSMUSG00000029860,22793,139677at9347,139677at9347
-## 47185:    Q5SSH7,9027,MGI:2444286,ENSMUSP00000068790,Phy001RTCU_MOUSE,MOUSE04369,ENOG411B1QK,MOUSE|MGI=MGI=2444286|UniProtKB=Q5SSH7,ENSMUSP00000068790,ENSMUSG00000055670,195018,1810at9347,1810at9347
-## 47186:              Q6KAQ7,MGI:1920453,ENSMUSP00000101706,9182,Phy001RTCV_MOUSE,ENOG411AYBK,MOUSE31887,MOUSE|MGI=MGI=1920453|UniProtKB=Q6KAQ7,ENSMUSP00000101706,ENSMUSG00000039068,108946,29099at9347
+## 47184:                   31164,ENOG411AZ7U,22793,MGI:103072,ENSMUSP00000070427,ENSMUSP00000070427,MOUSE39598,MOUSE|MGI=MGI=103072|UniProtKB=Q62523,ENSMUSG00000029860,139677at9347,139677at9347,Q62523
+## 47185:    Phy001RTCU_MOUSE,9027,ENOG411B1QK,195018,MGI:2444286,ENSMUSP00000068790,ENSMUSP00000068790,MOUSE04369,MOUSE|MGI=MGI=2444286|UniProtKB=Q5SSH7,ENSMUSG00000055670,1810at9347,1810at9347,Q5SSH7
+## 47186:              Phy001RTCV_MOUSE,9182,ENOG411AYBK,108946,MGI:1920453,ENSMUSP00000101706,ENSMUSP00000101706,MOUSE31887,MOUSE|MGI=MGI=1920453|UniProtKB=Q6KAQ7,ENSMUSG00000039068,29099at9347,Q6KAQ7
 ##                                                                                                      support
 ##     1:                                                                                               Ensembl
 ##     2:                                                                                               Ensembl
 ##     3:                                                                                               Ensembl
-##     4:         Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
-##     5:                       Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,Panther,Ensembl,Treefam,NCBI,OrthoDB
+##     4:         PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
+##     5:                       HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,Panther,Ensembl,OrthoDB,Inparanoid
 ##    ---                                                                                                      
-## 47182: Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,PhylomeDB,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB,OrthoDB
+## 47182: PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,OrthoDB,Inparanoid
 ## 47183:                                                                              OrthoMCL,OrthoDB,OrthoDB
-## 47184:           Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB,OrthoDB
-## 47185: Inparanoid,HomoloGene,HGNC,OrthoMCL,PhylomeDB,OMA,EggNOG,Panther,Treefam,Ensembl,NCBI,OrthoDB,OrthoDB
-## 47186:         Inparanoid,HGNC,OrthoMCL,HomoloGene,PhylomeDB,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB</code></pre>
+## 47184:           HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,OrthoDB,Inparanoid
+## 47185: PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,OrthoDB,Inparanoid
+## 47186:         PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid</code></pre>
 </div>
 <div id="import-and-set-up-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Import and set up data</h2>
@@ -2094,27 +2094,27 @@ any(duplicated(human_mouse_key))</code></pre>
 ##                                                                                          support
 ## 1                                                                               OrthoMCL,OrthoDB
 ## 2                                                                                        OrthoDB
-## 3         Inparanoid,HomoloGene,OrthoMCL,HGNC,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 3         PhylomeDB,HomoloGene,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
 ## 4                                                                                           &lt;NA&gt;
-## 5           Inparanoid,HomoloGene,HGNC,EggNOG,PhylomeDB,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 5           PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
 ## 6                                                                                           NCBI
-## 7                                           Inparanoid,HGNC,Panther,Treefam,Ensembl,NCBI,OrthoDB
-## 8  Inparanoid,OrthoMCL,HomoloGene,HGNC,PhylomeDB,OMA,EggNOG,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 7                                           NCBI,HGNC,Treefam,Panther,Ensembl,OrthoDB,Inparanoid
+## 8  PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
 ## 9                                                                                        OrthoDB
-## 10 Inparanoid,HomoloGene,OrthoMCL,HGNC,OMA,EggNOG,PhylomeDB,Treefam,Panther,Ensembl,NCBI,OrthoDB
-## 11 Inparanoid,OrthoMCL,HGNC,HomoloGene,EggNOG,PhylomeDB,OMA,Treefam,Panther,Ensembl,NCBI,OrthoDB
-## 12           Inparanoid,HomoloGene,HGNC,OrthoMCL,EggNOG,OMA,Panther,Ensembl,Treefam,NCBI,OrthoDB
-## 13 Inparanoid,HomoloGene,OrthoMCL,HGNC,PhylomeDB,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
-## 14         Inparanoid,OrthoMCL,HGNC,HomoloGene,PhylomeDB,EggNOG,OMA,Panther,Treefam,NCBI,OrthoDB
-## 15           Inparanoid,OrthoMCL,HGNC,HomoloGene,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 10 PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
+## 11 PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
+## 12           HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
+## 13 PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,Ensembl,OrthoDB,Inparanoid
+## 14         PhylomeDB,HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,Treefam,OMA,Panther,OrthoDB,Inparanoid
+## 15           HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,OMA,Treefam,Panther,Ensembl,OrthoDB,Inparanoid
 ## 16                                                                              OrthoMCL,OrthoDB
-## 17                    Inparanoid,HomoloGene,HGNC,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 17                    HomoloGene,EggNOG,NCBI,HGNC,OMA,Treefam,Panther,Ensembl,OrthoDB,Inparanoid
 ## 18                                                                                       OrthoDB
 ## 19                                                                                       Ensembl
 ## 20                                                                                       Ensembl
 ## 21                                                                                       Ensembl
 ## 22                                                                              OrthoMCL,Treefam
-## 23                                                                    OrthoMCL,PhylomeDB,Treefam
+## 23                                                                    PhylomeDB,OrthoMCL,Treefam
 ## 24                                                                                       Ensembl
 ## 25                                                                                       Ensembl</code></pre>
 <p>Let’s get a summary of the Ensembl IDs returned in the <code>human_ensembl</code> column of our mapped data frame.</p>
@@ -2162,7 +2162,7 @@ human_mouse_mapped_df %&gt;%
 ## 1    1051.29   744.5746
 ## 2    1051.29   744.5746
 ##                                                                               support
-## 1 Inparanoid,HomoloGene,OrthoMCL,HGNC,EggNOG,OMA,Panther,Treefam,Ensembl,NCBI,OrthoDB
+## 1 HomoloGene,EggNOG,NCBI,HGNC,OrthoMCL,OMA,Treefam,Panther,Ensembl,OrthoDB,Inparanoid
 ## 2                                                                            OrthoMCL</code></pre>
 <p>Remember that our original data is associated to mouse Ensembl IDs, so when a human Ensembl ID maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol. Let’s look at the <code>CACNA1B</code> example below.</p>
 <pre class="r"><code>human_mouse_mapped_df %&gt;%

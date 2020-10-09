@@ -12,7 +12,7 @@ output:
 # Purpose of this analysis
 
 This notebook demonstrates how you can use data from the HUGO Gene Nomenclature Committee (HGNC) database to perform ortholog mapping for RNA-seq data obtained from refine.bio.
-In this notebook, we will use zebrafish data from refine.bio and annotate it with human Ensembl IDs from HGNC.
+In this notebook, we will use mouse data from refine.bio and annotate it with human Ensembl IDs from HGNC.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
