@@ -35,21 +35,22 @@ The fluorescence intensity indicates the number of labeled fragments bound and t
 
 [@microarray-video]
 
-There are many different kinds of microarray platforms. 
+There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays). 
+At this time, refine.bio only supports single-color arrays, so our examples and advice are generally from the perspective of using single-color array.
 
-Microarrays can be categorized by their probe chemistry and manufacturer: [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html), [Illumina Beadarray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf); all of which supported on refine.bio.
-But, refine.bio only supports single-color arrays, although there are [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays), so our examples and advice are generally from the perspective of using single-color array. 
+The two most common microarray platforms on refine.bio are [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html) and [Illumina Beadarray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf). 
+A longer list of specific arrays that are supported by refine.bio can be found [here](https://github.com/AlexsLemonade/refinebio/blob/dev/config/supported_microarray_platforms.csv). 
 
 As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
 
 ### Microarray data **strengths**:  
 
 - Microarray is generally less expensive than RNA-seq - you can afford more replicates and get higher statistical power [@Tarca2006]. 
-- Microarray often has a faster turn-around than RNA-seq [@LCSciences2014].
+- Microarray has generally had a faster turn-around than RNA-seq [@LCSciences2014].
 
 ### Microarray data **limitations**:  
 
-- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; microarray can't be used for transcript discovery [@Mantione2014]. 
+- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014]. 
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
@@ -59,7 +60,7 @@ Refine.bio drops outdated probes based on [Brainarray’s annotation packages](h
 
 Microarray chips are generally experimentally processed in groups of chips - this can lead to [experimental batch effects](https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment). 
 To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization) which enables more confident comparisons of expression levels among experiments.
-Different microarray chips, are also a type of batch effect, but quantile normalizations allows us to compare data from different chips that to a limited degree if we proceed with caution. 
+Different microarray chips are also a type of batch effect, but quantile normalization allows us to compare data from different chips that to a limited degree if we proceed with caution. 
 See the refine.bio docs for more about the microarray processing steps, including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
 ## More resources on microarray technology: 
@@ -72,11 +73,16 @@ See the refine.bio docs for more about the microarray processing steps, includin
 
 ### Why doesn't the gene I care about show up in this microarray dataset?
 
-Refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data [@Dai2005]. 
+A common and simple reason you may not see your gene of interest is that the microarrray chip did not originally have probes designed to it. 
+
+Refine.bio also uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
 This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
 This also identifies which probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations). 
-If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used does maintains that it is still accurate, your gene of interest will show up in the Gene column.
+If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column.
 
 You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and [by following these instructions](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed).
+
+One additionaly reason you may not see a gene of interest applies only if you are refine.bio's [aggregatee by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
+When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept. 
 
 ## References
