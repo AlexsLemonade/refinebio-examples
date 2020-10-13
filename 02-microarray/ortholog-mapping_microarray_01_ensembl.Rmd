@@ -178,7 +178,7 @@ To download a file, click the file name.
 For this notebook, you will want to download the file named `human_zebrafish_hcop_fifteen_column.txt.gz`.
 If you are using a different dataset, you can replace `zebrafish` in `human_zebrafish_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
 
-<img src=../template/screenshots/download-hgnc-zebrafish-file.png width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/07499927a22ed7aa045245e40d692f8e49d7ba52/template/screenshots/download-hgnc-zebrafish-file.png" width=400>
 
 Now copy and paste the `human_zebrafish_hcop_fifteen_column.txt.gz` file into your `data/` folder.
 
