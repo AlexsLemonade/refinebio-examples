@@ -206,13 +206,12 @@ In this example, we will use pathways that are gene sets considered to be "canon
 
 Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000]. 
 
-First, let's take a look at what this data frame looks like. 
+First, let's take a look at what information is included in this data frame. 
 
 ```{r}
 head(hs_msigdb_df)
 ```
-
-Now let's construct a filter step that will only keep curated gene sets and KEGG pathways. 
+We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways. 
 
 ```{r}
 # Filter the zebrafish data frame to the KEGG pathways that are included in the
@@ -225,10 +224,6 @@ hs_kegg_df <- hs_msigdb_df %>%
 ```
 
 Note: We could have specified that we wanted the KEGG gene sets using the `category` and `subcategory` arguments of `msigdbr()`, but we're going for general steps! -- use `?msigdbr` to see more information.
-
-```{r}
-colnames(hs_kegg_df)
-```
 
 The `clusterProfiler()` function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.
 

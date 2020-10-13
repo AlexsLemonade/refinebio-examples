@@ -1916,7 +1916,7 @@ C6: oncogenic signatures
 C7: immunologic signatures</code></pre>
 <p>In this example, we will use pathways that are gene sets considered to be “canonical representations of a biological process compiled by domain experts” and are a subset of <code>C2: curated gene sets</code> <span class="citation">(Subramanian <em>et al.</em> 2005)</span>.</p>
 <p>Specifically, we will use the <a href="https://www.genome.jp/kegg/">KEGG (Kyoto Encyclopedia of Genes and Genomes)</a> pathways <span class="citation">(Kanehisa and Goto 2000)</span>.</p>
-<p>First, let’s take a look at what this data frame looks like.</p>
+<p>First, let’s take a look at what information is included in this data frame.</p>
 <pre class="r"><code>head(hs_msigdb_df)</code></pre>
 <pre><code>## # A tibble: 6 x 17
 ##   gs_cat gs_subcat gs_name entrez_gene gene_symbol human_entrez_ge…
@@ -1931,7 +1931,7 @@ C7: immunologic signatures</code></pre>
 ## #   gs_pmid &lt;chr&gt;, gs_geoid &lt;chr&gt;, gs_exact_source &lt;chr&gt;, gs_url &lt;chr&gt;,
 ## #   gs_description &lt;chr&gt;, species_name &lt;chr&gt;, species_common_name &lt;chr&gt;,
 ## #   ortholog_sources &lt;chr&gt;, num_ortholog_sources &lt;dbl&gt;</code></pre>
-<p>Now let’s construct a filter step that will only keep curated gene sets and KEGG pathways.</p>
+<p>We will need to use <code>gs_cat</code> and <code>gs_subcat</code> columns to construct a filter step that will only keep curated gene sets and KEGG pathways.</p>
 <pre class="r"><code># Filter the zebrafish data frame to the KEGG pathways that are included in the
 # curated gene sets
 hs_kegg_df &lt;- hs_msigdb_df %&gt;%
@@ -1940,13 +1940,6 @@ hs_kegg_df &lt;- hs_msigdb_df %&gt;%
     gs_subcat == &quot;CP:KEGG&quot; # This is because we only want KEGG pathways
   )</code></pre>
 <p>Note: We could have specified that we wanted the KEGG gene sets using the <code>category</code> and <code>subcategory</code> arguments of <code>msigdbr()</code>, but we’re going for general steps! – use <code>?msigdbr</code> to see more information.</p>
-<pre class="r"><code>colnames(hs_kegg_df)</code></pre>
-<pre><code>##  [1] &quot;gs_cat&quot;               &quot;gs_subcat&quot;            &quot;gs_name&quot;             
-##  [4] &quot;entrez_gene&quot;          &quot;gene_symbol&quot;          &quot;human_entrez_gene&quot;   
-##  [7] &quot;human_gene_symbol&quot;    &quot;gs_id&quot;                &quot;gs_pmid&quot;             
-## [10] &quot;gs_geoid&quot;             &quot;gs_exact_source&quot;      &quot;gs_url&quot;              
-## [13] &quot;gs_description&quot;       &quot;species_name&quot;         &quot;species_common_name&quot; 
-## [16] &quot;ortholog_sources&quot;     &quot;num_ortholog_sources&quot;</code></pre>
 <p>The <code>clusterProfiler()</code> function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.</p>
 <p>Our data frame with KEGG terms contains Entrez IDs and gene symbols.</p>
 <p>In our differential expression results data frame, <code>dge_df</code> we have Ensembl gene identifiers. So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.</p>
