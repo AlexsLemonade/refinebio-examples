@@ -162,26 +162,36 @@ library(magrittr)
 The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene.
 The [HGNC database](https://www.genenames.org/) currently contains over 39000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
 
-The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data [@Wright2005].
-The prediction with the most number of databases which concur is considered the most reliable.
+The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes from a variety of sources, including Ensembl Compara, HGNC, and NCBI Gene Orthology.
+Thus allowing users to obtain and compare orthology data [@Wright2005].
+In general, an orthology prediction where most of the databases concur would be considered the reliable, and we will use this to prioritize mapping in cases where there is more than one possible ortholog for a gene.
 HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including zebrafish, which we will use in this notebook [@hcop-help].
 
-In the next chunk, we have adapted code from the [`hcop` package R script](https://github.com/stephenturner/hcop/blob/master/data-raw/hcop.R) to retrieve the zebrafish and human mapped data from the HGNC database [@Turner2018].
+First, we need to download the file from the FTP server holding the HGNC data.
+Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
+
+This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
+The files available for download include files that have been mapped between human and another species using the [`hcop` package](https://github.com/stephenturner/hcop/) [@Turner2018].
+Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
+
+To download a file, click the file name.
+For this notebook, you will want to download the file named `human_zebrafish_hcop_fifteen_column.txt.gz`.
+If you are using a different dataset, you can replace `zebrafish` in `human_zebrafish_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
+
+<img src=../template/screenshots/download-hgnc-zebrafish-file.png width=400>
+
+Now copy and paste the `human_zebrafish_hcop_fifteen_column.txt.gz` file into your `data/` folder.
+
+In the next chunk, we will read in the orthology file that was just downloaded.
 
 ```{r}
-# Define URL to desired organism ortholog mapping file from the HGNC database
-zebrafish_hgnc_url <- paste0(
-  "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
-  "human_",
-  "zebrafish",
-  # Replace with the organism you have data for; see the list of possible files from the HGNC at this link: ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/
-  "_hcop_fifteen_column.txt.gz"
-)
+# Define the file path to organism orthology file downloaded from the HGNC database
+zebrafish_hgnc_file <- file.path("data", "human_zebrafish_hcop_fifteen_column.txt.gz")
 ```
 
 ```{r}
 # Read in the data from HGNC
-zebrafish <- data.table::fread(zebrafish_hgnc_url) %>% # Here we use `data.table::fread()` instead of `readr::read_tsv()` because we expect this file to be large so the `fread()` function is faster/more efficient here
+zebrafish <- readr::read_tsv(zebrafish_hgnc_file) %>%
   set_names(names(.) %>%
     gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
 ```
@@ -195,37 +205,16 @@ zebrafish
 ## Import and set up data
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
-This chunk of code will read the both TSV files and add them as data frames to your environment.
+This chunk of code will read the data TSV files and add it as an object to your environment.
 
 ```{r}
-# Read in metadata TSV file
-metadata <- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your metadata file
-  "metadata_GSE71270.tsv" # Replace with the name of your metadata file
-))
-
 # Read in data TSV file
-df <- readr::read_tsv(file.path(
+zebrafish_genes <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
   "GSE71270.tsv" # Replace with the name of your data file
 )) %>%
-  # Tuck away the Gene ID column as rownames
-  tibble::column_to_rownames("Gene")
-```
-
-Let's ensure that the metadata and data are in the same sample order. 
-
-```{r}
-# Make the data in the order of the metadata
-df <- df %>%
-  dplyr::select(metadata$geo_accession)
-
-# Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
-
-# Bring back the "Gene" column in preparation for mapping
-df <- df %>%
-  tibble::rownames_to_column("Gene")
+  # We only want the Gene IDs so let's pull the `Gene` column
+  dplyr::pull("Gene")
 ```
 
 ## Mapping human gene symbols to zebrafish Ensembl gene IDs
@@ -233,8 +222,8 @@ df <- df %>%
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
 ```{r}
-# Let's take a look at the first 6 items in the `Gene` column of `df`
-head(df$Gene)
+# Let's take a look at the first 6 items of `zebrafish_genes`
+head(zebrafish_genes)
 ```
 
 Ensembl gene identifiers have different species-specific prefixes. 
@@ -251,7 +240,8 @@ human_zebrafish_key <- zebrafish %>%
   # We'll want to subset zebrafish to only the columns we're interested in
   dplyr::select(zebrafish_ensembl, human_symbol, support)
 
-# Since we ignored the additional columns in `zebrafish`, let's check to see if we have any duplicates in our `human_zebrafish_key`
+# Since we ignored the additional columns in `zebrafish`, let's check to see if
+# we have any duplicates in our `human_zebrafish_key`
 any(duplicated(human_zebrafish_key))
 ```
 
@@ -260,17 +250,18 @@ We don't want to handle duplicate data, so let's remove those duplicates before 
 
 ```{r}
 human_zebrafish_key <- human_zebrafish_key %>%
-  # We need to use the `distinct()` function to remove duplicates resulted from ignoring the additional columns in the `zebrafish` object
+  # We need to use the `distinct()` function to remove duplicates resulted from
+  # ignoring the additional columns in the `zebrafish` object
   dplyr::distinct()
 ```
 
-Now let's join the mapped data from `human_zebrafish_key` with the expression data in `df`.
+Now let's join the mapped data from `human_zebrafish_key` with the gene data in `zebrafish_genes`.
 
 ```{r}
-human_zebrafish_mapped_df <- df %>%
-  dplyr::left_join(human_zebrafish_key, by = c("Gene" = "zebrafish_ensembl")) %>%
-  # Sort so that the columns with the zebrafish Ensembl IDs and human gene symbols are first
-  dplyr::select(Gene, human_symbol, dplyr::everything())
+# First, we need to convert our vector of zebrafish genes into a data frame
+human_zebrafish_mapped_df <- data.frame("Gene" = zebrafish_genes) %>%
+  # Now we can join the mapped data
+  dplyr::left_join(human_zebrafish_key, by = c("Gene" = "zebrafish_ensembl"))
 ```
 
 Here's what the new data frame looks like:
@@ -282,11 +273,13 @@ head(human_zebrafish_mapped_df, n = 25)
 Let's get a summary of the human gene symbols returned in our mapped data frame, `human_zebrafish_mapped_df`. 
 
 ```{r}
-# We can use this `count()` function after `group_by()`to get a count of how many `zebrafish_ensembl` IDs there are per `human_symbol`s
+# We can use this `count()` function after `group_by()`to get a count of how many
+# `zebrafish_ensembl` IDs there are per `human_symbol`s
 human_zebrafish_mapped_df %>%
   dplyr::group_by(human_symbol) %>%
   dplyr::count() %>%
-  # Sort by highest `n` which would be the human gene symbol with the most mapped zebrafish Ensembl IDs
+  # Sort by highest `n` which would be the human gene symbol with the most
+  # mapped zebrafish Ensembl IDs
   dplyr::arrange(desc(n))
 ```
 
@@ -298,12 +291,12 @@ Now, let's get an idea of how many zebrafish Ensembl IDs we have that were not m
 sum(is.na(human_zebrafish_mapped_df$human_symbol))
 ```
 
-We have 464 NAs, which means we have 464 zebrafish Ensembl IDs that were not mapped to human gene symbols.
+We have 463 NAs, which means we have 463 zebrafish Ensembl IDs that were not mapped to human gene symbols.
 This is okay because we do not expect everything to map across species.
 
 ## Take a look at some multi-mappings
 
-If a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
+If a zebrafish Ensembl gene ID maps to multiple human symbols, the associated values will get duplicated.
 Let's look at the `ENSDARG00000069142` example below.
 
 ```{r}
@@ -311,7 +304,7 @@ human_zebrafish_mapped_df %>%
   dplyr::filter(Gene == "ENSDARG00000069142")
 ```
 
-Remember that our original data is associated to zebrafish Ensembl IDs, so when a human gene symbol maps to multiple zebrafish Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human symbol.
+On the other hand, if you were to look at the original data associated to the zebrafish Ensembl IDs, when a human gene symbol maps to multiple zebrafish Ensembl IDs, the values will not get duplicated, but you will have multiple rows associated with that human symbol.
 Let's look at the `MATR3` example below.
 
 ```{r}
@@ -319,10 +312,10 @@ human_zebrafish_mapped_df %>%
   dplyr::filter(human_symbol == "MATR3")
 ```
 
-## Collapse multi-mapped human gene symbols
+## Collapse zebrafish genes mapping to multiple human genes
 
-Remember that if a zebrafish Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
-We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.
+Remember that if a zebrafish Ensembl gene ID maps to multiple human symbols, the values get duplicated.
+We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate values in our data frame.
 
 In the next chunk, we show how we can collapse all the human gene symbols into one column where we store them all for each unique zebrafish Ensembl ID.
 
@@ -330,44 +323,46 @@ In the next chunk, we show how we can collapse all the human gene symbols into o
 collapsed_human_symbol_df <- human_zebrafish_mapped_df %>%
   # Group by zebrafish Ensembl IDs
   dplyr::group_by(Gene) %>%
-  # Collapse the mapped values in `human_zebrafish_mapped_df` into one column named `all_human_symbols`
-  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";")) %>%
-  # Now we need get the gene expression data back
-  dplyr::left_join(df, by = "Gene")
+  # Collapse the mapped values in `human_zebrafish_mapped_df` into one column named
+  # `all_human_symbols` -- note that we will lose the `support` column in this summarizing step
+  dplyr::summarize(all_human_symbols = paste(human_symbol, collapse = ";"))
 
 head(collapsed_human_symbol_df)
 ```
 
 ### Write results to file
 
-Now let's write our results to file.
+Now let's write our list of human gene symbols for each unique zebrafish Ensembl ID results to file.
 
 ```{r}
 readr::write_tsv(
   collapsed_human_symbol_df,
   file.path(
     results_dir,
-    "GSE71270_zebrafish_ensembl_to_collapsed_human_gene_symbol.tsv" # Replace with a relevant output file name
+    # Replace with a relevant output file name
+    "GSE71270_zebrafish_ensembl_to_collapsed_human_gene_symbol.tsv"
   )
 )
 ```
 
-## Collapse multi-mapped zebrafish Ensembl IDs
+## Collapse human genes mapping to multiple zebrafish genes
 
-Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique gene symbol mapped to.
+Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique human gene symbol mapped to.
 
 A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
-Therefore, we will not add the expression data here since the expression values are not the same across Ensembl IDs, despite mapping to the same human gene symbol.
 
-Instead, we will use the `support` column to decide which mappings to retain.
-As we noted earlier, the prediction with the most number of databases which concur is considered the most reliable.
-Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mapping with the most databases that concur according to the `support` column.
+Therefore, we will use the `support` column to decide which mappings to retain.
+As we noted earlier, an orthology prediction where most of the databases concur would be considered reliable.
+Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mappings with more than one database to support the assertion.
 
 ```{r}
 filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
-  dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>% # Count the number of databases in the support column for each prediction
-  dplyr::group_by(human_symbol) %>% # Group by human gene symbols
-  dplyr::filter(n_databases == max(n_databases)) # Now filter for the row with the largest number of databases in support for each human gene symbol
+  # Count the number of databases in the support column for each prediction
+  dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>%
+  # Group by human gene symbols
+  dplyr::group_by(human_symbol) %>%
+  # Now filter for the rows with more than one database in support for each human gene symbol
+  dplyr::filter(n_databases > 1)
 
 head(filtered_zebrafish_ensembl_df)
 ```
@@ -381,7 +376,8 @@ readr::write_tsv(
   filtered_zebrafish_ensembl_df,
   file.path(
     results_dir,
-    "GSE71270_filtered_zebrafish_ensembl_to_human_gene_symbol_list.tsv" # Replace with a relevant output file name
+    # Replace with a relevant output file name
+    "GSE71270_filtered_zebrafish_ensembl_to_human_gene_symbol_list.tsv"
   )
 )
 ```
