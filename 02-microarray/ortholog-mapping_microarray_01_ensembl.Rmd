@@ -2,11 +2,12 @@
 title: "Ortholog Mapping - Microarray"
 author: "CCDL for ALSF"
 date: "`r format(Sys.time(), '%B %Y')`"
-output:   
+output:
   html_notebook:
     toc: true
     toc_float: true
     number_sections: true
+    df_print: paged
 ---
 
 # Purpose of this analysis
@@ -205,7 +206,7 @@ zebrafish
 ## Import and set up data
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
-This chunk of code will read the data TSV files and add it as an object to your environment.
+This chunk of code will read the data TSV file and add it as an object to your environment.
 
 ```{r}
 # Read in data TSV file
@@ -213,7 +214,7 @@ zebrafish_genes <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
   "GSE71270.tsv" # Replace with the name of your data file
 )) %>%
-  # We only want the Gene IDs so let's pull the `Gene` column
+  # We only want the gene IDs so let's pull the `Gene` column
   dplyr::pull("Gene")
 ```
 
@@ -369,7 +370,7 @@ head(filtered_zebrafish_ensembl_df)
 
 ### Write results to file
 
-Now let's write our list of filtered zebrafish Ensembl IDs for each unique human gene symbol to file.
+Now let's write our `filtered_zebrafish_ensembl_df` object, with the _reliable_ zebrafish Ensembl IDs for each unique human gene symbol, to file.
 
 ```{r}
 readr::write_tsv(
