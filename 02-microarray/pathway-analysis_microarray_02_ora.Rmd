@@ -73,7 +73,7 @@ We have provided this file for you and the code in this notebook will read in th
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpressing zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Trenago2016].
+For this example analysis, we will use this [CREB overexpressing zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Tregnago2016].
 @Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
 
 ## Check out our file structure!
@@ -99,7 +99,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-# Over-Representation Analysis with `clusterProfiler`
+# Over-Representation Analysis with `clusterProfiler` - Microarray
 
 ## Install libraries
 
@@ -206,17 +206,25 @@ In this example, we will use pathways that are gene sets considered to be "canon
 
 Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000]. 
 
+First, let's take a look at what this data frame looks like. 
+
+```{r}
+head(hs_msigdb_df)
+```
+
+Now let's construct a filter step that will only keep curated gene sets and KEGG pathways. 
+
 ```{r}
 # Filter the zebrafish data frame to the KEGG pathways that are included in the
 # curated gene sets
 hs_kegg_df <- hs_msigdb_df %>%
   dplyr::filter(
-    gs_cat == "C2", # curated gene sets
-    gs_subcat == "CP:KEGG"
-  ) # KEGG pathways
+    gs_cat == "C2", # This is to filter only to the C2 curated gene sets
+    gs_subcat == "CP:KEGG" # This is because we only want KEGG pathways
+  )
 ```
 
-*Note: We could specified that we wanted the KEGG gene sets using the `category` and `subcategory` arguments of `msigdbr()`, but we're going for general steps!*
+Note: We could have specified that we wanted the KEGG gene sets using the `category` and `subcategory` arguments of `msigdbr()`, but we're going for general steps! -- use `?msigdbr` to see more information.
 
 ```{r}
 colnames(hs_kegg_df)
@@ -356,7 +364,7 @@ head(genes_of_interest)
 Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set. 
 In other words, if we are unable to detect a gene, it should not be in our background set.
 
-This we can obtain our detected genes list from our data frame, `dge_annot_df` (which we haven't done filtering on).
+We can obtain our detected genes list from our data frame, `dge_annot_df` (which we haven't done filtering on).
 
 ```{r}
 background_set <- unique(as.character(dge_annot_df$gene_symbol))
@@ -394,7 +402,7 @@ Let's convert this into a data frame that we can write to file.
 kegg_result_df <- data.frame(kegg_ora_results@result)
 ```
 
-Let's print out a sneak peek of it here and take a look at how many sets do we have that fit out cutoff of `0.1` FDR? 
+Let's print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of `0.1` FDR? 
 
 ```{r}
 kegg_result_df %>%
@@ -414,6 +422,8 @@ enrich_plot <- enrichplot::dotplot(kegg_ora_results)
 # Print out the plot here
 enrich_plot
 ```
+
+Use `?enrichplot::dotplot` to see the help page for more about how to use this function.
 
 This plot is arguably more useful when we have a large number of significant pathways.
 
