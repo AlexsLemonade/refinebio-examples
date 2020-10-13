@@ -149,9 +149,9 @@ From here you can customize this analysis example to fit your own scientific que
 
 ## Install libraries
 
-See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the software you will need, as well as more tips and resources.
 
-Attach the package we need for this analysis.
+Attach a package we need for this analysis.
 
 ```{r}
 # We will need this so we can use the pipe: %>%
@@ -192,15 +192,20 @@ zebrafish_hgnc_file <- file.path("data", "human_zebrafish_hcop_fifteen_column.tx
 
 ```{r}
 # Read in the data from HGNC
-zebrafish <- readr::read_tsv(zebrafish_hgnc_file) %>%
-  set_names(names(.) %>%
-    gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+zebrafish <- readr::read_tsv(zebrafish_hgnc_file)
 ```
 
 Let's take a look at what `zebrafish` looks like.
 
 ```{r}
 zebrafish
+```
+We are going to manipulate some of the column names to make things easier when calling them downstream.
+
+```{r}
+zebrafish <- zebrafish %>%
+  set_names(names(.) %>%
+    gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
 ```
 
 ## Import and set up data
@@ -353,7 +358,14 @@ Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can a
 A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
 
 Therefore, we will use the `support` column to decide which mappings to retain.
-As we noted earlier, an orthology prediction where most of the databases concur would be considered reliable.
+Let's take a look at `support`.
+
+```{r}
+head(human_zebrafish_mapped_df$support)
+```
+
+Looks like we have a variety of databases for multiple mappings, but we do have some instances of only one database reported in support of the mapping.
+As we noted earlier, an orthology prediction where more than one of the databases concur would be considered reliable.
 Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mappings with more than one database to support the assertion.
 
 ```{r}
@@ -378,7 +390,7 @@ readr::write_tsv(
   file.path(
     results_dir,
     # Replace with a relevant output file name
-    "GSE71270_filtered_zebrafish_ensembl_to_human_gene_symbol_list.tsv"
+    "GSE71270_filtered_zebrafish_ensembl_to_human_gene_symbol.tsv"
   )
 )
 ```
