@@ -12,6 +12,7 @@ BeadArray
 bioconductor
 bioinformatics
 Brainarray
+Brainarray’s
 Brems
 CCDL
 CCDL's
@@ -74,6 +75,7 @@ KEGG
 limma
 logFC
 medulloblastoma
+microarray’s
 molecularly
 musculus
 MSigDB

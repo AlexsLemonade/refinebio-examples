@@ -6,7 +6,7 @@ output:
     toc: true
     toc_float: true
 ---
-asdfgh
+
 Data analyses are generally not "one size fits all"; this is particularly true when with approaches used to analyze RNA-seq and microarray data.
 The characteristics of the data produced by these two technologies can be quite different.
 This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
