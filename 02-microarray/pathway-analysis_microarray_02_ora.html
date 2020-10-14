@@ -1852,12 +1852,14 @@ library(magrittr)</code></pre>
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import data</h2>
 <p>We will read in the differential expression results we will download from online. These results are from a zebrafish microarray experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html">differential expression analysis for two groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case). We can identify upregulated genes by filtering these results and use this list as input to ORA.</p>
-<p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.</p>
+<p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results. First we will assign the URL to its own variable called, <code>dge_url</code>.</p>
 <pre class="r"><code># Define the url to your differential expression results file
 dge_url &lt;- &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv&quot;</code></pre>
 <p>Read in the file that has differential expression results. Here we are using the URL we set up above, but this can be a local file path instead <em>i.e.</em> you can replace <code>dge_url</code> in the code below with a path to file you have on your computer like: <code>file.path(&quot;results&quot;, &quot;GSE71270_limma_results.tsv&quot;)</code>.</p>
 <pre class="r"><code># Read in the contents of your differential expression results file
-dge_df &lt;- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results</code></pre>
+# `dge_url` can be replaced with a file path to a TSV file with your
+# desired gene list results
+dge_df &lt;- readr::read_tsv(dge_url)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   Gene = col_character(),

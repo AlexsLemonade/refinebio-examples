@@ -156,6 +156,7 @@ The table contains Ensembl gene IDs, log fold-changes for each group, and adjust
 We can identify upregulated genes by filtering these results and use this list as input to ORA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
+First we will assign the URL to its own variable called, `dge_url`. 
 
 ```{r}
 # Define the url to your differential expression results file
@@ -167,7 +168,9 @@ Here we are using the URL we set up above, but this can be a local file path ins
 
 ```{r}
 # Read in the contents of your differential expression results file
-dge_df <- readr::read_tsv(dge_url) # `dge_url` can be replaced with a file path to a TSV file with your desired gene list results
+# `dge_url` can be replaced with a file path to a TSV file with your
+# desired gene list results
+dge_df <- readr::read_tsv(dge_url)
 ```
 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
