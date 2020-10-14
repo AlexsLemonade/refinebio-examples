@@ -1,13 +1,12 @@
 ---
 title: "Ortholog Mapping - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:
   html_notebook:
     toc: true
     toc_float: true
     number_sections: true
-    df_print: paged
 ---
 
 # Purpose of this analysis
@@ -171,9 +170,13 @@ HCOP was originally designed to show orthology predictions between human and mou
 First, we need to download the file from the FTP server holding the HGNC data.
 Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
 
+There are the same files you would get from the link above.
 This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
-The files available for download include files that have been mapped between human and another species using the [`hcop` package](https://github.com/stephenturner/hcop/) [@Turner2018].
 Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
+
+*Note:* If you are using Safari (or the above FTP server link does not open in a web browser), you may need to go to the [link for the HCOP search tool](https://www.genenames.org/tools/hcop/) and scroll down to "Bulk Downloads" to choose a file to download.
+Here, you can find the same files you would find at the FTP server linked above.
+
 
 To download a file, click the file name.
 For this notebook, you will want to download the file named `human_zebrafish_hcop_fifteen_column.txt.gz`.
@@ -181,7 +184,9 @@ If you are using a different dataset, you can replace `zebrafish` in `human_zebr
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/07499927a22ed7aa045245e40d692f8e49d7ba52/template/screenshots/download-hgnc-zebrafish-file.png" width=400>
 
-Now copy and paste the `human_zebrafish_hcop_fifteen_column.txt.gz` file into your `data/` folder.
+Next, move the `human_zebrafish_hcop_fifteen_column.txt.gz` file into your `data/` folder.
+
+*Note:* If you are using Safari, this file will automatically be decompressed, so the name of the file would instead be `human_zebrafish_hcop_fifteen_column.txt` (don't forget to change the file name in the chunk below if this is the case).
 
 In the next chunk, we will read in the orthology file that was just downloaded.
 
@@ -205,7 +210,8 @@ We are going to manipulate some of the column names to make things easier when c
 ```{r}
 zebrafish <- zebrafish %>%
   set_names(names(.) %>%
-    gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+    # Removing extra word in some of the column names
+    gsub("_gene$", "", .))
 ```
 
 ## Import and set up data
@@ -280,7 +286,7 @@ Let's get a summary of the human gene symbols returned in our mapped data frame,
 
 ```{r}
 # We can use this `count()` function after `group_by()`to get a count of how many
-# `zebrafish_ensembl` IDs there are per `human_symbol`s
+# `zebrafish_ensembl` IDs there are per `human_symbol`
 human_zebrafish_mapped_df %>%
   dplyr::group_by(human_symbol) %>%
   dplyr::count() %>%
@@ -353,9 +359,13 @@ readr::write_tsv(
 
 ## Collapse human genes mapping to multiple zebrafish genes
 
-Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique human gene symbol mapped to.
+Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we may want to identify which one of these mappings represents the "true" ortholog, i.e. which zebrafish gene is most similar to the human gene we are interested in.
+*This is not at all straightforward!* (see, for just one example, https://doi.org/10.1093/bioinformatics/btaa468) [@Stamboulian2020].
+Gene duplications along the zebrafish lineage may result in complicated relationships among genes, especially with regard to divisions of function.
 
-A known issue in ortholog mapping is how to handle this data because combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
+Simply combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
+One thing we might do to make the problem somewhat simpler is to reduce the number of multi-mapped genes by requiring a certain level of support for each mapping from across the various databases included in `HCOP`.
+This will not fully solve the problem (and may not even be desirable in some cases), but we present it here as an example of an approach one might take.
 
 Therefore, we will use the `support` column to decide which mappings to retain.
 Let's take a look at `support`.
@@ -368,6 +378,21 @@ Looks like we have a variety of databases for multiple mappings, but we do have 
 As we noted earlier, an orthology prediction where more than one of the databases concur would be considered reliable.
 Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mappings with more than one database to support the assertion.
 
+Before we do, let's take a look how many multi-mapped genes there are in the data frame.
+
+```{r}
+human_zebrafish_mapped_df %>%
+  # Group by human gene symbols
+  dplyr::group_by(human_symbol) %>%
+  # Count the number of rows in the dataframe for each symbol
+  dplyr::count() %>%
+  # Filter out the symbols without multimapped genes
+  dplyr::filter(n > 1)
+```
+Looks like we have 4,192 human gene symbols with multiple mappings.
+
+Now let's filter out the less reliable mappings.
+
 ```{r}
 filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
   # Count the number of databases in the support column for each prediction
@@ -379,6 +404,20 @@ filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
 
 head(filtered_zebrafish_ensembl_df)
 ```
+
+Let's count how many multi-mapped genes we have now.
+
+```{r}
+filtered_zebrafish_ensembl_df %>%
+  # Group by human gene symbols
+  dplyr::group_by(human_symbol) %>%
+  # Count the number of rows in the dataframe for each symbol
+  dplyr::count() %>%
+  # Filter out the symbols without multimapped genes
+  dplyr::filter(n > 1)
+```
+Now we only have 1,803 multi-mapped genes, compared to the 4,192 that we began with.
+Although we haven't filter down to zero multi-mapped genes, we were able to filter down to a more reasonable number of _reliable_ mappings.
 
 ### Write results to file
 
@@ -409,5 +448,5 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
