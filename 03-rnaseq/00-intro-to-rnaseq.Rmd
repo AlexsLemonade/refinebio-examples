@@ -24,6 +24,7 @@ This tutorial has example analyses [organized by technology](../01-getting-start
   - [DESeq2 objects](#deseq2-objects)
   - [DESeq2 transformation methods](#deseq2-transformation-methods)
   - [Further resources for DESeq2](#further-resources-for-deseq2)
+- [Common questions](#common-questions)
     - [Why isn't the gene I care about in a refine.bio dataset?](#why-isnt-the-gene-i-care-about-in-a-refinebio-dataset)
     - [What about edgeR?](#what-about-edger)
     - [What if I care about isoforms?](#what-if-i-care-about-isoforms)
@@ -119,6 +120,8 @@ If you end up using a larger dataset and `rlog()` transformation takes a bit too
 - [Introduction to DGE - Count Normalization](https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html) [@dge-workshop-count-normalization]
 - [Introduction to DGE - Using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) [@dge-workshop-deseq2].
 - [RNA-seq workflow with DESeq2](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog)
+
+## Common questions
 
 #### Why isn't the gene I care about in a refine.bio dataset?
 

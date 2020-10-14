@@ -2554,6 +2554,15 @@ window.onload = function() {
 };
 </script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -2957,12 +2966,13 @@ div.tocify {
 <ul>
 <li><a href="#deseq2-objects">DESeq2 objects</a></li>
 <li><a href="#deseq2-transformation-methods">DESeq2 transformation methods</a></li>
-<li><a href="#further-resources-for-deseq2">Further resources for DESeq2</a>
+<li><a href="#further-resources-for-deseq2">Further resources for DESeq2</a></li>
+</ul></li>
+<li><a href="#common-questions">Common questions</a>
 <ul>
 <li><a href="#why-isnt-the-gene-i-care-about-in-a-refinebio-dataset">Why isn’t the gene I care about in a refine.bio dataset?</a></li>
 <li><a href="#what-about-edger">What about edgeR?</a></li>
 <li><a href="#what-if-i-care-about-isoforms">What if I care about isoforms?</a></li>
-</ul></li>
 </ul></li>
 <li><a href="#references">References</a></li>
 </ul>
@@ -3039,21 +3049,24 @@ div.tocify {
 <li><a href="https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html">Introduction to DGE - Using DESeq2</a> <span class="citation">(Harvard Chan Bioinformatics Core (HBC))</span>.</li>
 <li><a href="http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog">RNA-seq workflow with DESeq2</a></li>
 </ul>
+</div>
+</div>
+<div id="common-questions" class="section level2">
+<h2><span class="header-section-number">0.3</span> Common questions</h2>
 <div id="why-isnt-the-gene-i-care-about-in-a-refine.bio-dataset" class="section level4">
-<h4><span class="header-section-number">0.2.3.1</span> Why isn’t the gene I care about in a refine.bio dataset?</h4>
+<h4><span class="header-section-number">0.3.0.1</span> Why isn’t the gene I care about in a refine.bio dataset?</h4>
 <p>If a gene is not detected in any of the samples in a set through our processing, it is still kept in the <code>Gene</code> column, but it will be reported as <code>0</code>. But if the gene you are interested in does not have an Ensembl ID according to the version of the annotation we used, it will not be reported in any refine.bio download.</p>
 <!-- TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed -->
 </div>
 <div id="what-about-edger" class="section level4">
-<h4><span class="header-section-number">0.2.3.2</span> What about edgeR?</h4>
+<h4><span class="header-section-number">0.3.0.2</span> What about edgeR?</h4>
 <p>In short, both edgeR and DESeq2 are good options and we at the CCDL just went with one of our preferences! <a href="https://mikelove.wordpress.com/2016/09/28/deseq2-or-edger/">See this blog that summarizes these – by one of the creators of DESeq2</a> – he agrees edgeR is also great.</p>
 <p>If you have strong preferences for edgeR, you can definitely use your refine.bio data with it, but we currently do not have examples of that. In this case, we’d refer you to <a href="https://kasperdanielhansen.github.io/genbioconductor/html/Count_Based_RNAseq.html">edgeR’s section of this example analysis</a> and wish you the best of luck on your data adventures <span class="citation">(Kasper D. Hansen)</span>!</p>
 </div>
 <div id="what-if-i-care-about-isoforms" class="section level4">
-<h4><span class="header-section-number">0.2.3.3</span> What if I care about isoforms?</h4>
+<h4><span class="header-section-number">0.3.0.3</span> What if I care about isoforms?</h4>
 <p>Unfortunately at this time, all download-ready refine.bio data is summarized to the gene level, and there’s no great way to examine isoforms with this data. If your research needs to know transcript isoform information, you may need to look elsewhere. This <a href="https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-017-4002-1">paper discusses some tools for these kinds of questions</a> <span class="citation">(Zhang <em>et al.</em> 2017)</span>.</p>
 <!-- TODO: Add link to advanced topics section about getting quant files -->
-</div>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

@@ -2961,7 +2961,8 @@ div.tocify {
 <li><a href="#microarray-data-limitations">Microarray data <strong>limitations</strong>:</a></li>
 </ul></li>
 <li><a href="#about-quantile-normalization">About quantile normalization</a></li>
-<li><a href="#more-resources-on-microarray-technology">More resources on microarray technology:</a>
+<li><a href="#more-resources-on-microarray-technology">More resources on microarray technology:</a></li>
+<li><a href="#common-questions">Common questions</a>
 <ul>
 <li><a href="#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset">Why doesn’t the gene I care about show up in this microarray dataset?</a></li>
 </ul></li>
@@ -3006,12 +3007,16 @@ div.tocify {
 <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2435252/">Analysis of microarray experiments of gene expression profiling</a> <span class="citation">(Tarca <em>et al.</em> 2006)</span>.</li>
 <li><a href="http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf">Some nice summary slides about microarray data analysis from Emory</a> <span class="citation">(Wu)</span>.</li>
 </ul>
+</div>
+<div id="common-questions" class="section level2">
+<h2><span class="header-section-number">0.4</span> Common questions</h2>
 <div id="why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset" class="section level3">
-<h3><span class="header-section-number">0.3.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h3>
-<p>A common and simple reason you may not see your gene of interest is that the microarray chip did not originally have probes designed to it.</p>
-<p>Refine.bio also uses <a href="http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/">Brainarray packages</a> to annotate the microarray probe data for microarray platforms that have this available <span class="citation">(Dai <em>et al.</em> 2005)</span>. This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). This also identifies which probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations). If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column.</p>
-<p>You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">by following these instructions</a>.</p>
-<p>One additional reason you may not see a gene of interest applies only if you are refine.bio’s <a href="https://docs.refine.bio/en/latest/main_text.html#aggregations">aggregate by species</a> option. When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept.</p>
+<h3><span class="header-section-number">0.4.1</span> Why doesn’t the gene I care about show up in this microarray dataset?</h3>
+<ul>
+<li><p>A common and simple reason you may not see your gene of interest is that the microarray chip used in the experiment you are analyzing did not originally have probes designed to target that gene.</p></li>
+<li><p>Refine.bio uses <a href="http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/">Brainarray packages</a> to annotate the microarray probe data for microarray platforms that have this available <span class="citation">(Dai <em>et al.</em> 2005)</span>. This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). Some probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations), which may result in the gene they targeted being removed. If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column. You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and <a href="TODO:%20Put%20link%20to%20refine.bio%20docs%20FAQ%20when%20https://github.com/AlexsLemonade/refinebio-docs/issues/137%20is%20addressed">by following these instructions</a>.</p></li>
+<li><p>One additional reason you may not see a gene of interest applies only if you are refine.bio’s <a href="https://docs.refine.bio/en/latest/main_text.html#aggregations">aggregate by species</a> option. When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept.</p></li>
+</ul>
 </div>
 </div>
 <div id="references" class="section level2 unnumbered">

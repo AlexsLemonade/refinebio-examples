@@ -20,6 +20,7 @@ This tutorial has example analyses [organized by technology](../01-getting-start
   - [Microarray data **limitations**:](#microarray-data-limitations)
 - [About quantile normalization](#about-quantile-normalization)
 - [More resources on microarray technology:](#more-resources-on-microarray-technology)
+- [Common questions](#common-questions)
   - [Why doesn't the gene I care about show up in this microarray dataset?](#why-doesnt-the-gene-i-care-about-show-up-in-this-microarray-dataset)
 - [References](#references)
 
@@ -71,18 +72,19 @@ See the refine.bio docs for more about the microarray processing steps, includin
 - [Analysis of microarray experiments of gene expression profiling](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2435252/) [@Tarca2006].
 - [Some nice summary slides about microarray data analysis from Emory](http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf) [@intro-microarray-slides].
 
+## Common questions
+
 ### Why doesn't the gene I care about show up in this microarray dataset?
 
-A common and simple reason you may not see your gene of interest is that the microarray chip did not originally have probes designed to it. 
+- A common and simple reason you may not see your gene of interest is that the microarray chip used in the experiment you are analyzing did not originally have probes designed to target that gene.  
 
-Refine.bio also uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
+- Refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
 This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
-This also identifies which probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations). 
+Some probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations), which may result in the gene they targeted being removed. 
 If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column.
-
 You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and [by following these instructions](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed).
 
-One additional reason you may not see a gene of interest applies only if you are refine.bio's [aggregate by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
+- One additional reason you may not see a gene of interest applies only if you are refine.bio's [aggregate by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
 When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept. 
 
 ## References
