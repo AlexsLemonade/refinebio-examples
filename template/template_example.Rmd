@@ -143,10 +143,10 @@ metadata_file <- file.path(data_dir, {{METADATA_ACCESSION FILENAME}}) # Replace 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is where the file path we specified says
+# Check if the gene expression matrix file is where the file path stored in `data_file` says
 file.exists(data_file)
 
-# Check if the metadata file is where the file path we specified says`
+# Check if the metadata file is where the file path stored in `metadata_file` says
 file.exists(metadata_file)
 ```
 
@@ -196,7 +196,7 @@ library(magrittr)
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
 This chunk of code will read the both TSV files and add them as data frames to your environment.
-We specified our file paths in [this previous step](#check-out-our-file-structure) and have them stored as objects named `metadata_file` and `data_file`. 
+We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
 
 ```{r}
 # Read in metadata TSV file
