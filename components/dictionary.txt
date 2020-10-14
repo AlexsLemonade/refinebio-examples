@@ -121,8 +121,6 @@ UMAP's
 unmapped
 upregulated
 vivo
-WebGestalt
-WebGestaltR
 WNT
 Yaari
 zebrafish
