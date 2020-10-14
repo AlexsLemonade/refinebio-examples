@@ -214,6 +214,7 @@ First, let's take a look at what information is included in this data frame.
 ```{r}
 head(hs_msigdb_df)
 ```
+
 We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways. 
 
 ```{r}
@@ -295,7 +296,7 @@ Let's see a preview of `gene_key_df`.
 head(gene_key_df)
 ```
 
-Now we are ready to add the `gene_key_df` to our data frame with the diffential expression stats, `dge_df`. 
+Now we are ready to add the `gene_key_df` to our data frame with the differential expression stats, `dge_df`. 
 Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `dge_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
 
 ```{r}
@@ -329,7 +330,7 @@ So, we will need to provide to `clusterProfiler` two genes lists:
 1) Our genes of interest (`n`) 
 2) What genes were in our total background set (`N`). (All genes that originally had an opportunity to be measured). 
 
-## Determinine our genes of interest list
+## Determine our genes of interest list
 
 We will use our differential expression results to get a genes of interest list. 
 Let's use our adjusted p values as a cutoff 
