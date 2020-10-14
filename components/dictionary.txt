@@ -65,6 +65,7 @@ Illumina
 IRF
 isoform
 isoforms
+jitter
 JPEG
 KEGG
 limma
