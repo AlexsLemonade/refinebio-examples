@@ -43,8 +43,7 @@ jobs:
           result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
         run: |
           cat spell_check_results.tsv
-          echo $result
-          if (( $result > 2 )); then
+          if (( $((result)) > 2 )); then
             echo Too many spelling errors, $result
             exit 1
           fi
