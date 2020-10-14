@@ -170,7 +170,6 @@ HCOP was originally designed to show orthology predictions between human and mou
 First, we need to download the file from the FTP server holding the HGNC data.
 Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
 
-There are the same files you would get from the link above.
 This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
 Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
 
