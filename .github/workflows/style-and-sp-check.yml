@@ -44,7 +44,7 @@ jobs:
         run: |
           cat spell_check_results.tsv
           echo $result
-          if [ $result \> 2 ];
+          if [ $result gt 2 ];
           then
             echo Too many spelling errors, $result
             exit 1
