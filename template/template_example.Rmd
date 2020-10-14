@@ -134,10 +134,10 @@ This is handy to do because if we want to [switch the dataset](#using-a-differen
 data_dir <- file.path("data", {{experiment_accession}})
 
 # Declare the file path to the gene expression matrix file, stored as `data_dir`
-data_file <- file.path(data_dir, {{DATA_ACCESSION FILENAME}})
+data_file <- file.path(data_dir, {{DATA_ACCESSION FILENAME}}) # Replace with file path to your dataset
 
 # Declare the file path to the metadata file, stored as `data_dir`
-metadata_file <- file.path(data_dir, {{DATA_ACCESSION FILENAME}})
+metadata_file <- file.path(data_dir, {{METADATA_ACCESSION FILENAME}}) # Replace with file path to your metadata
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
