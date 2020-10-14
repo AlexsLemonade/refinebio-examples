@@ -196,6 +196,7 @@ library(magrittr)
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
 This chunk of code will read the both TSV files and add them as data frames to your environment.
+
 We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
 
 ```{r}
