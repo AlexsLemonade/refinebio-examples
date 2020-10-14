@@ -38,7 +38,7 @@ The fluorescence intensity indicates the number of labeled fragments bound and t
 There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays). 
 At this time, refine.bio only supports single-color arrays, so our examples and advice are generally from the perspective of using single-color array.
 
-The two most common microarray platforms on refine.bio are [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html) and [Illumina Beadarray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf). 
+The two most common microarray platforms on refine.bio are [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html) and [Illumina BeadArray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf). 
 A longer list of specific arrays that are supported by refine.bio can be found [here](https://github.com/AlexsLemonade/refinebio/blob/dev/config/supported_microarray_platforms.csv). 
 
 As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
@@ -52,7 +52,7 @@ As with all experimental methods, microarrays have strengths and limitations tha
 
 - If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014]. 
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
-- As is true for all techniques that involve nucleotide hybiridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
+- As is true for all techniques that involve nucleotide hybridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
 Refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
 
@@ -73,7 +73,7 @@ See the refine.bio docs for more about the microarray processing steps, includin
 
 ### Why doesn't the gene I care about show up in this microarray dataset?
 
-A common and simple reason you may not see your gene of interest is that the microarrray chip did not originally have probes designed to it. 
+A common and simple reason you may not see your gene of interest is that the microarray chip did not originally have probes designed to it. 
 
 Refine.bio also uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
 This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
@@ -82,7 +82,7 @@ If your gene of interest was covered by the original probes of the microarray ch
 
 You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and [by following these instructions](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed).
 
-One additionaly reason you may not see a gene of interest applies only if you are refine.bio's [aggregatee by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
+One additional reason you may not see a gene of interest applies only if you are refine.bio's [aggregate by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
 When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept. 
 
 ## References
