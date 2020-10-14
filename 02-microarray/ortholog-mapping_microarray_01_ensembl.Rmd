@@ -416,7 +416,7 @@ filtered_zebrafish_ensembl_df %>%
   dplyr::filter(n > 1)
 ```
 Now we only have 1,803 multi-mapped genes, compared to the 4,192 that we began with.
-Although we haven't filter down to zero multi-mapped genes, we were able to filter down to a more reasonable number of _reliable_ mappings.
+Although we haven't filtered down to zero multi-mapped genes, we have hopefully removed some of the less _reliable_ mappings.
 
 ### Write results to file
 
