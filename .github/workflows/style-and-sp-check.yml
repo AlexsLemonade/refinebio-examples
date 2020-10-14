@@ -30,7 +30,7 @@ jobs:
         run: |
           results=$(Rscript "scripts/spell-check.R")
           echo "::set-output name=sp_chk_results::$results"
-
+          cat spell_check_results.tsv
       - name: Archive spelling errors
         uses: actions/upload-artifact@v2
         with:
@@ -38,16 +38,9 @@ jobs:
           path: spell_check_results.tsv
 
       # If there are too many spelling errors, this will stop the workflow
-      - name: Check on spell check results
-        env:
-          result: ${{ steps.spell_check_run.outputs.sp_chk_results }}
-        run: |
-          cat spell_check_results.tsv
-          if [ $result \> 2 ];
-          then
-            echo Too many spelling errors, $result
-            exit 1
-          fi
+      - name: Check spell check results - fail if too many errors
+        if: ${{ steps.spell_check_run.outputs.sp_chk_results > 3 }}
+        run: exit 1
 
       - name: Run styler
         run: Rscript -e "styler::style_file(list.files(pattern = 'Rmd$', recursive = TRUE, full.names = TRUE));warnings()"
