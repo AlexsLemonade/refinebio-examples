@@ -112,7 +112,7 @@ rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
     toc = TRUE, toc_depth = 2,
     toc_float = TRUE, number_sections = TRUE,
-    df_print = "paged"
+    df_print = "paged",
     css = file.path("..", "components", "styles.css")
   ),
   # Save to original html output file name
