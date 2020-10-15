@@ -15,6 +15,7 @@ rule target:
         "03-rnaseq/dimension-reduction_rnaseq_01_pca.html",
         "03-rnaseq/dimension-reduction_rnaseq_02_umap.html",
         "03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html",
+        "03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html",
         "04-advanced-topics/00-intro-to-advanced-topics.html"
 
 rule render_citations:
