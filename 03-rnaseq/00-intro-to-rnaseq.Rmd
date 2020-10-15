@@ -7,6 +7,10 @@ output:
     toc_float: true
 ---
 
+Data analyses are generally not "one size fits all"; this is particularly true when with approaches used to analyze RNA-seq and microarray data.
+The characteristics of the data produced by these two technologies can be quite different.
+This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -20,6 +24,7 @@ output:
   - [DESeq2 objects](#deseq2-objects)
   - [DESeq2 transformation methods](#deseq2-transformation-methods)
   - [Further resources for DESeq2](#further-resources-for-deseq2)
+- [Common questions](#common-questions)
     - [Why isn't the gene I care about in a refine.bio dataset?](#why-isnt-the-gene-i-care-about-in-a-refinebio-dataset)
     - [What about edgeR?](#what-about-edger)
     - [What if I care about isoforms?](#what-if-i-care-about-isoforms)
@@ -29,8 +34,11 @@ output:
 
 ## Introduction to RNA-seq technology
 
-Data analyses are generally not "one size fits all"; this is particularly true between RNA-seq vs microarray data.
-This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand.
+RNA-sequencing measures gene expression by direct high-throughput sequencing methods after the RNA has been isolated from a sample. 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/rnaseq-overview.png" width=400>  
+
+[@rnaseq-blog]
 
 As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions.
 
@@ -62,7 +70,7 @@ In brief, refine.bio data is quantified by Salmon using their correction algorit
 refine.bio data is available for you [quantile normalized](https://en.wikipedia.org/wiki/Quantile_normalization), which can address some library size biases.
 But more often than not, our example modules will recommend using the option for downloading non-quantile normalized data (note that this is RNA-seq specific, and microarray data does not have this download option).
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
 
 See here for more about the [quantile normalization process in refine.bio](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
@@ -112,6 +120,8 @@ If you end up using a larger dataset and `rlog()` transformation takes a bit too
 - [Introduction to DGE - Count Normalization](https://hbctraining.github.io/DGE_workshop_salmon/lessons/02_DGE_count_normalization.html) [@dge-workshop-count-normalization]
 - [Introduction to DGE - Using DESeq2](https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html) [@dge-workshop-deseq2].
 - [RNA-seq workflow with DESeq2](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html#the-variance-stabilizing-transformation-and-the-rlog)
+
+## Common questions
 
 #### Why isn't the gene I care about in a refine.bio dataset?
 
