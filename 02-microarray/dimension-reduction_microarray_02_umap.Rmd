@@ -24,9 +24,10 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/dimension-reduction_microarray_02_umap.Rmd).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 
 ## Set up your analysis folders 
 
@@ -69,11 +70,11 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>   
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>   
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready.
@@ -93,7 +94,7 @@ refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
@@ -116,7 +117,7 @@ Your new analysis folder should contain:
     
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -338,3 +339,5 @@ This helps make your code more reproducible by recording what versions of softwa
 # Print session info
 sessioninfo::session_info()
 ```
+
+# References
