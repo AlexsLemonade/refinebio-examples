@@ -1,7 +1,7 @@
 ---
 title: "Ortholog Mapping - RNA-seq"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "October 2020"
 output:   
   html_notebook:
     toc: true
@@ -25,9 +25,10 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.Rmd).
 
-You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
-Clicking this link will most likely send this to your downloads folder on your computer. 
+Clicking this link will most likely send this to your downloads folder on your computer.
 Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 
 ## Set up your analysis folders 
 
@@ -70,17 +71,17 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>  
 
 We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready. 
@@ -99,7 +100,7 @@ refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
@@ -122,7 +123,7 @@ Your new analysis folder should contain:
 
 Your example analysis folder should now look something like this (except with respective experiment accession id and analysis notebook name you are using): 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
 Run this chunk to double check that your files are in the right place. 
@@ -171,24 +172,29 @@ library(magrittr)
 The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene.
 The [HGNC database](https://www.genenames.org/) currently contains over 39000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
 
-The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes, by eggNOG, Ensembl Compara, HGNC, HomoloGene, Inparanoid, NCBI Gene Orthology, OMA, OrthoDB, OrthoMCL, Panther, PhylomeDB, PomBase, TreeFam and ZFIN, allowing users to obtain and compare orthology data [@Wright2005].
-The prediction with the most number of databases which concur is considered the most reliable.
+The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes from a variety of sources, including Ensembl Compara, HGNC, and NCBI Gene Orthology.
+Thus allowing users to obtain and compare orthology data [@Wright2005].
+In general, an orthology prediction where most of the databases concur would be considered the reliable, and we will use this to prioritize mapping in cases where there is more than one possible ortholog for a gene.
 HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes [@hcop-help].
 
 First, we need to download the file from the FTP server holding the HGNC data.
 Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
 
 This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
-The files available for download include files that have been mapped between human and another species using the [`hcop` package](https://github.com/stephenturner/hcop/) [@Turner2018].
 Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
+
+*Note:* If you are using Safari (or the above FTP server link does not open in a web browser), you may need to go to the [link for the HCOP search tool](https://www.genenames.org/tools/hcop/) and scroll down to "Bulk Downloads" to choose a file to download.
+Here, you can find the same files you would find at the FTP server linked above.
 
 To download a file, click the file name.
 For this notebook, you will want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
 If you are using a different dataset, you can replace `mouse` in `human_mouse_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/07499927a22ed7aa045245e40d692f8e49d7ba52/template/screenshots/download-hgnc-zebrafish-file.png" width=400>
+<img src=../template/screenshots/download-hgnc-mouse-file.png width=400>
 
-Now copy and paste the `human_mouse_hcop_fifteen_column.txt.gz` file into your `data/` folder.
+Next, move the `human_mouse_hcop_fifteen_column.txt.gz` file into your `data/` folder.
+
+*Note:* If you are using Safari, this file will automatically be decompressed, so the name of the file would instead be `human_mouse_hcop_fifteen_column.txt` (don't forget to change the file name in the chunk below if this is the case).
 
 In the next chunk, we will read in the orthology file that was just downloaded.
 
@@ -213,43 +219,23 @@ We are going to manipulate some of the column names to make things easier when c
 ```{r}
 mouse <- mouse %>%
   set_names(names(.) %>%
-    gsub("_gene$", "", .)) # Removing some extra wording in some of the column names
+    # Removing extra word in some of the column names
+    gsub("_gene$", "", .))
 ```
 
 ## Import and set up data
 
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
-This chunk of code will read the both TSV files and add them as data frames to your environment.
+This chunk of code will read the data TSV file and add it as an object to your environment.
 
 ```{r}
-# Read in metadata TSV file
-metadata <- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your metadata file
-  "metadata_SRP070849.tsv" # Replace with the name of your metadata file
-))
-
 # Read in data TSV file
-df <- readr::read_tsv(file.path(
+mouse_genes <- readr::read_tsv(file.path(
   data_dir, # Replace with path to your data file
   "SRP070849.tsv" # Replace with the name of your data file
 )) %>%
-  # Tuck away the gene ID column as rownames
-  tibble::column_to_rownames("Gene")
-```
-
-Let's ensure that the metadata and data are in the same sample order. 
-
-```{r}
-# Make the data in the order of the metadata
-df <- df %>%
-  dplyr::select(metadata$refinebio_accession_code)
-
-# Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)
-
-# Bring back the "Gene" column in preparation for mapping
-df <- df %>%
-  tibble::rownames_to_column("Gene")
+  # We only want the gene IDs so let's pull the `Gene` column
+  dplyr::pull("Gene")
 ```
 
 ## Mapping mouse Ensembl gene IDs to human Ensembl gene IDs
@@ -257,8 +243,8 @@ df <- df %>%
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
 ```{r}
-# Let's take a look at the first 6 items in the `Gene` column of `df`
-head(df$Gene)
+# Let's take a look at the first 6 items of `mouse_genes`
+head(mouse_genes)
 ```
 
 Ensembl gene identifiers have different species-specific prefixes. 
@@ -275,7 +261,7 @@ human_mouse_key <- mouse %>%
   # We'll want to subset mouse to only the columns we're interested in
   dplyr::select(mouse_ensembl, human_ensembl, support)
 
-# Since we ignored the additional columns in `mouse`, let's check to see if we 
+# Since we ignored the additional columns in `mouse`, let's check to see if we
 # have any duplicates in our `human_mouse_key`
 any(duplicated(human_mouse_key))
 ```
@@ -285,19 +271,18 @@ We don't want to handle duplicate data, so let's remove those duplicates before 
 
 ```{r}
 human_mouse_key <- human_mouse_key %>%
-  # We need to use the `distinct()` function to remove duplicates resulted from 
+  # We need to use the `distinct()` function to remove duplicates resulted from
   # ignoring the additional columns in the `mouse` object
   dplyr::distinct()
 ```
 
-Now let's join the mapped data from `human_mouse_key` with the expression data in `df`.
+Now let's join the mapped data from `human_mouse_key` with the gene data in `mouse_genes`.
 
 ```{r}
-human_mouse_mapped_df <- df %>%
-  dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl")) %>%
-  # Sort so that the columns with the mouse Ensembl IDs, human Ensembl IDs and 
-  # support databases are first
-  dplyr::select(Gene, human_ensembl, support, dplyr::everything())
+# First, we need to convert our vector of mouse genes into a data frame
+human_mouse_mapped_df <- data.frame("Gene" = mouse_genes) %>%
+  # Now we can join the mapped data
+  dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl"))
 ```
 
 Here's what the new data frame looks like:
@@ -309,27 +294,30 @@ head(human_mouse_mapped_df, n = 25)
 Let's get a summary of the Ensembl IDs returned in the `human_ensembl` column of our mapped data frame.
 
 ```{r}
-# We can use this `count()` function after `group_by()`to get a count of how many `mouse_ensembl` IDs there are per `human_ensembl` IDs
+# We can use this `count()` function after `group_by()`to get a count of how many
+# `mouse_ensembl` IDs there are per `human_ensembl` IDs
 human_mouse_mapped_df %>%
   dplyr::group_by(human_ensembl) %>%
   dplyr::count() %>%
-  # Sort by highest `n` which would be the human Ensembl ID with the most mapped mouse Ensembl IDs
+  # Sort by highest `n` which would be the human Ensembl ID with the most mapped
+  # mouse Ensembl IDs
   dplyr::arrange(desc(n))
 ```
 
 Looks like we have mapped IDs!
+
 Now, let's get an idea of how many mouse Ensembl IDs we have that were not mapped to human Ensembl IDs.
 
 ```{r}
 sum(is.na(human_mouse_mapped_df$human_ensembl))
 ```
 
-We have 18,801 NAs, which means we have 18,801 mouse Ensembl IDs that were not mapped to human Ensembl IDs.
+We have 18,801 NAs, which means we have 18,801 mouse Ensembl IDs out of the 64,816 in `human_mouse_mapped_df`, that were not mapped to human Ensembl IDs.
 This is okay because we do not expect everything to map across species.
 
 ## Take a look at some multi-mappings
 
-If a mouse Ensembl gene ID maps to multiple human Ensembl IDs, the gene expression values get duplicated.
+If a mouse Ensembl gene ID maps to multiple human Ensembl IDs, the associated values will get duplicated.
 Let's look at the `ENSMUSG00000000290` example below.
 
 ```{r}
@@ -337,7 +325,7 @@ human_mouse_mapped_df %>%
   dplyr::filter(Gene == "ENSMUSG00000000290")
 ```
 
-Remember that our original data is associated to mouse Ensembl IDs, so when a human Ensembl ID maps to multiple mouse Ensembl IDs, the data will not get duplicated, but you will have multiple rows associated with that human Ensembl ID.
+On the other hand, if you were to look at the original data associated to the mouse Ensembl IDs, when a human Ensembl ID maps to multiple mouse Ensembl IDs, the values will not get duplicated, but you will have multiple rows associated with that human Ensembl ID.
 Let's look at the `ENSG00000001617` example below.
 
 ```{r}
@@ -347,19 +335,18 @@ human_mouse_mapped_df %>%
 
 ## Collapse mouse genes mapping to multiple human genes
 
-Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the gene expression values get duplicated.
-We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate expression values in our data frame.
+Remember that if a mouse Ensembl gene ID maps to multiple human symbols, the values get duplicated.
+We can collapse the multi-mapped values into a list for each Ensembl ID as to not have duplicate values in our data frame.
 
 In the next chunk, we show how we can collapse all the human Ensembl IDs into one column where we store them all for each unique mouse Ensembl ID.
 
 ```{r}
 collapsed_human_ensembl_df <- human_mouse_mapped_df %>%
-  # Group by Ensembl IDs
+  # Group by zebrafish Ensembl IDs
   dplyr::group_by(Gene) %>%
-  # Collapse the mapped values in `human_mouse_mapped_df` into one column named `all_human_ensembls`
-  dplyr::summarize(all_human_ensembls = paste(human_ensembl, collapse = ";")) %>%
-  # Now we need get the gene expression data back
-  dplyr::left_join(df, by = "Gene")
+  # Collapse the mapped values in `human_mouse_mapped_df` into one column named
+  # `all_human_ensembls` -- note that we will lose the `support` column in this summarizing step
+  dplyr::summarize(all_human_ensembls = paste(human_ensembl, collapse = ";"))
 
 head(collapsed_human_ensembl_df)
 ```
@@ -381,9 +368,13 @@ readr::write_tsv(
 
 ## Collapse human genes mapping to multiple mouse genes
 
-Since multiple mouse Ensembl gene IDs map to the same human symbol, we can also collapse all Ensembl IDs that each unique human Ensembl ID mapped to.
+Since multiple mouse Ensembl gene IDs map to the same human Ensembl gene ID, we may want to identify which one of these mappings represents the "true" ortholog, i.e. which mouse gene is most similar to the human gene we are interested in.
+*This is not at all straightforward!* (see, for just one example, https://doi.org/10.1093/bioinformatics/btaa468)
+Gene duplications along the mouse lineage may result in complicated relationships among genes, especially with regard to divisions of function.
 
-A known issue in ortholog mapping is how to handle this data because combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
+Simply combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
+One thing we might do to make the problem somewhat simpler is to reduce the number of multi-mapped genes by requiring a certain level of support for each mapping from across the various databases included in `HCOP`.
+This will not fully solve the problem (and may not even be desirable in some cases), but we present it here as an example of an approach one might take.
 
 Therefore, we will use the `support` column to decide which mappings to retain.
 Let's take a look at `support`.
@@ -396,21 +387,52 @@ Looks like we have a variety of databases for multiple mappings, but we do have 
 As we noted earlier, an orthology prediction where more than one of the databases concur would be considered reliable.
 Therefore, where we have multi-mapped mouse Ensembl gene IDs, we will take the mappings with more than one database to support the assertion.
 
+Before we do, let's take a look how many multi-mapped genes there are in the data frame.
+
+```{r}
+human_mouse_mapped_df %>%
+  # Group by human Ensembl IDs
+  dplyr::group_by(human_ensembl) %>%
+  # Count the number of rows in the data frame for each Ensembl ID
+  dplyr::count() %>%
+  # Filter out the symbols without multimapped genes
+  dplyr::filter(n > 1)
+```
+
+Looks like we have 6,608 human gene Ensembl IDs with multiple mappings.
+
+Now let's filter out the less reliable mappings.
+
 ```{r}
 filtered_mouse_ensembl_df <- human_mouse_mapped_df %>%
   # Count the number of databases in the support column for each prediction
   dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>%
   # Group by human Ensembl IDs
   dplyr::group_by(human_ensembl) %>%
-  # Now filter for the rows with more than one database in support for each human Ensembl ID
+  # Now filter for the rows with more than one database in support for each
+  # human Ensembl ID
   dplyr::filter(n_databases > 1)
 
 head(filtered_mouse_ensembl_df)
 ```
 
+Let's count how many multi-mapped genes we have now.
+
+```{r}
+filtered_mouse_ensembl_df %>%
+  # Group by human Ensembl IDs
+  dplyr::group_by(human_ensembl) %>%
+  # Count the number of rows in the data frame for each Ensembl ID
+  dplyr::count() %>%
+  # Filter out the symbols without multimapped genes
+  dplyr::filter(n > 1)
+```
+Now we only have 2,532 multi-mapped genes, compared to the 6,608 that we began with.
+Although we haven't filtered down to zero multi-mapped genes, we have hopefully removed some of the less _reliable_ mappings.
+
 ### Write results to file
 
-Now let's write our `filtered_mouse_ensembl_df` object, with the _reliable_ zebrafish Ensembl IDs for each unique human gene symbol, to file.
+Now let's write our `filtered_mouse_ensembl_df` object, with the _reliable_ mouse Ensembl IDs for each unique human gene Ensembl ID, to file.
 
 
 ```{r}
@@ -438,4 +460,7 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
+```
+
+# References
