@@ -118,19 +118,32 @@ Your example analysis folder should now look something like this (except with re
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
-Run this chunk to double check that your files are in the right place. 
+
+First we will declare our file paths to our data and metadata files, which should be in our data directory.
+This is handy to do because if we want to [switch the dataset](#using-a-different-refinebio-dataset-with-this-analysis) we are using for this analysis, we will only have to change the file path here to get started. 
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE13490")
+data_dir <- file.path("data", "GSE13490") # Replace with accession number which will be the name of the folder the files will be in
 
-# Check if the gene expression matrix file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "GSE13490.tsv"))
+# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
+data_file <- file.path(data_dir, "GSE13490.tsv") # Replace with file path to your dataset
 
-# Check if the metadata file is in the data directory stored as `data_dir`
-file.exists(file.path(data_dir, "metadata_GSE13490.tsv"))
+# Declare the file path to the metadata file using the data directory saved as `data_dir`
+metadata_file <- file.path(data_dir, "metadata_GSE13490.tsv") # Replace with file path to your metadata
 ```
 
+Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
+
+```{r}
+# Check if the gene expression matrix file is at the file path stored in `data_file`
+file.exists(data_file)
+
+# Check if the metadata file is at the file path stored in `metadata_file`
+file.exists(metadata_file)
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
@@ -188,18 +201,14 @@ library(magrittr)
 Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. 
 This chunk of code will read the both TSV files and add them as data frames to your environment.
 
+We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
+
 ```{r}
 # Read in metadata TSV file
-metadata <- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your metadata file
-  "metadata_GSE13490.tsv" # Replace with the name of your metadata file
-))
+metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(file.path(
-  data_dir, # Replace with path to your data file
-  "GSE13490.tsv" # Replace with the name of your data file
-)) %>%
+df <- readr::read_tsv(data_file) %>%
   # Tuck away the Gene ID column as rownames
   tibble::column_to_rownames("Gene")
 ```
