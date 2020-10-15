@@ -354,4 +354,3 @@ sessioninfo::session_info()
 ```
 
 # References
-
