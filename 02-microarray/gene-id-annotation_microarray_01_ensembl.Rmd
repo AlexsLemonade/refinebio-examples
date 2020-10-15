@@ -352,3 +352,6 @@ This helps make your code more reproducible by recording what versions of softwa
 # Print session info
 sessioninfo::session_info()
 ```
+
+# References
+
