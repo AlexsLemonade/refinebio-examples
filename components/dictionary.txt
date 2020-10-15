@@ -21,6 +21,7 @@ cheatsheets
 ChIP
 Cmd
 ColorBrewer
+Compara
 ComplexHeatmap
 CREB
 Crouser
@@ -37,6 +38,7 @@ DGE
 directionality
 DocToc
 dorsoventral
+duplications
 ECM
 edgeR
 edgeR's
@@ -51,6 +53,7 @@ functionalize
 FPKM
 GEne
 GeneChips
+Genenames
 generalizable
 ggplot
 GitHub
