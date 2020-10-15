@@ -190,7 +190,7 @@ To download a file, click the file name.
 For this notebook, you will want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
 If you are using a different dataset, you can replace `mouse` in `human_mouse_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/3d4e8a9be91eee5e95a5875d5e897e9ed4cfeac4/template/screenshots/download-hgnc-mouse-file.png width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/3d4e8a9be91eee5e95a5875d5e897e9ed4cfeac4/template/screenshots/download-hgnc-mouse-file.png" width=400>
 
 Next, move the `human_mouse_hcop_fifteen_column.txt.gz` file into your `data/` folder.
 
@@ -369,7 +369,7 @@ readr::write_tsv(
 ## Collapse human genes mapping to multiple mouse genes
 
 Since multiple mouse Ensembl gene IDs map to the same human Ensembl gene ID, we may want to identify which one of these mappings represents the "true" ortholog, i.e. which mouse gene is most similar to the human gene we are interested in.
-*This is not at all straightforward!* (see, for just one example, https://doi.org/10.1093/bioinformatics/btaa468)
+*This is not at all straightforward!* (see, for just one example, https://doi.org/10.1093/bioinformatics/btaa468) [@Stamboulian2020].
 Gene duplications along the mouse lineage may result in complicated relationships among genes, especially with regard to divisions of function.
 
 Simply combining values across mouse transcripts using an average may result in the loss of a lot of data and will likely not be representative of the mouse biology.
