@@ -190,7 +190,7 @@ To download a file, click the file name.
 For this notebook, you will want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
 If you are using a different dataset, you can replace `mouse` in `human_mouse_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
 
-<img src=../template/screenshots/download-hgnc-mouse-file.png width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/3d4e8a9be91eee5e95a5875d5e897e9ed4cfeac4/template/screenshots/download-hgnc-mouse-file.png width=400>
 
 Next, move the `human_mouse_hcop_fifteen_column.txt.gz` file into your `data/` folder.
 
@@ -342,7 +342,7 @@ In the next chunk, we show how we can collapse all the human Ensembl IDs into on
 
 ```{r}
 collapsed_human_ensembl_df <- human_mouse_mapped_df %>%
-  # Group by zebrafish Ensembl IDs
+  # Group by mouse Ensembl IDs
   dplyr::group_by(Gene) %>%
   # Collapse the mapped values in `human_mouse_mapped_df` into one column named
   # `all_human_ensembls` -- note that we will lose the `support` column in this summarizing step
@@ -427,13 +427,13 @@ filtered_mouse_ensembl_df %>%
   # Filter out the symbols without multimapped genes
   dplyr::filter(n > 1)
 ```
+
 Now we only have 2,532 multi-mapped genes, compared to the 6,608 that we began with.
 Although we haven't filtered down to zero multi-mapped genes, we have hopefully removed some of the less _reliable_ mappings.
 
 ### Write results to file
 
 Now let's write our `filtered_mouse_ensembl_df` object, with the _reliable_ mouse Ensembl IDs for each unique human gene Ensembl ID, to file.
-
 
 ```{r}
 readr::write_tsv(
