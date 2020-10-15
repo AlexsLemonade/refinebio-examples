@@ -159,22 +159,20 @@ library(magrittr)
 ## Import data from HGNC
 
 The HUGO Gene Nomenclature Committee (HGNC) assigns a unique and ideally meaningful name and symbol to every human gene.
-The [HGNC database](https://www.genenames.org/) currently contains over 39000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
+The [HGNC database](https://www.genenames.org/) currently contains over 39,000 public records containing approved human gene nomenclature and associated gene information [@Gray2015].
 
-The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes from a variety of sources, including Ensembl Compara, HGNC, and NCBI Gene Orthology.
-Thus allowing users to obtain and compare orthology data [@Wright2005].
+The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes from a variety of sources, including Ensembl Compara, HGNC, and NCBI Gene Orthology [@Wright2005].
 In general, an orthology prediction where most of the databases concur would be considered the reliable, and we will use this to prioritize mapping in cases where there is more than one possible ortholog for a gene.
 HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including zebrafish, which we will use in this notebook [@hcop-help].
 
-First, we need to download the file from the FTP server holding the HGNC data.
+First, we need to download the file from the server holding the HGNC data.
 Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
 
 This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
 Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
 
 *Note:* If you are using Safari (or the above FTP server link does not open in a web browser), you may need to go to the [link for the HCOP search tool](https://www.genenames.org/tools/hcop/) and scroll down to "Bulk Downloads" to choose a file to download.
-Here, you can find the same files you would find at the FTP server linked above.
-
+Here, you can find the same files you would find at the server linked above.
 
 To download a file, click the file name.
 For this notebook, you will want to download the file named `human_zebrafish_hcop_fifteen_column.txt.gz`.
@@ -186,12 +184,17 @@ Next, move the `human_zebrafish_hcop_fifteen_column.txt.gz` file into your `data
 
 *Note:* If you are using Safari, this file will automatically be decompressed, so the name of the file would instead be `human_zebrafish_hcop_fifteen_column.txt` (don't forget to change the file name in the chunk below if this is the case).
 
-In the next chunk, we will read in the orthology file that was just downloaded.
+Now let's double check that the file is in the right place.
 
 ```{r}
 # Define the file path to organism orthology file downloaded from the HGNC database
 zebrafish_hgnc_file <- file.path("data", "human_zebrafish_hcop_fifteen_column.txt.gz")
+
+# Check if the organism orthology file file is in the `data` directory
+file.exists(zebrafish_hgnc_file)
 ```
+
+In the next chunk, we will read in the orthology file that was just downloaded.
 
 ```{r}
 # Read in the data from HGNC
@@ -203,6 +206,7 @@ Let's take a look at what `zebrafish` looks like.
 ```{r}
 zebrafish
 ```
+
 We are going to manipulate some of the column names to make things easier when calling them downstream.
 
 ```{r}
@@ -358,7 +362,7 @@ readr::write_tsv(
 ## Collapse human genes mapping to multiple zebrafish genes
 
 Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we may want to identify which one of these mappings represents the "true" ortholog, i.e. which zebrafish gene is most similar to the human gene we are interested in.
-*This is not at all straightforward!* (see, for just one example, https://doi.org/10.1093/bioinformatics/btaa468) [@Stamboulian2020].
+*This is not at all straightforward!* (see [this paper](https://doi.org/10.1093/bioinformatics/btaa468) for just one example) [@Stamboulian2020].
 Gene duplications along the zebrafish lineage may result in complicated relationships among genes, especially with regard to divisions of function.
 
 Simply combining values across zebrafish transcripts using an average may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
