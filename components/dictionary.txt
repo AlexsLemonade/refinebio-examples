@@ -8,8 +8,11 @@ Azacytidine
 arounds
 Baumer
 Benjamini
+BeadArray
 bioconductor
 bioinformatics
+Brainarray
+Brainarray’s
 Brems
 CCDL
 CCDL's
@@ -49,6 +52,7 @@ FACS
 frac
 functionalize
 FPKM
+GeneChips
 generalizable
 ggplot
 GitHub
@@ -73,6 +77,7 @@ KEGG
 limma
 logFC
 medulloblastoma
+microarray’s
 molecularly
 musculus
 MSigDB

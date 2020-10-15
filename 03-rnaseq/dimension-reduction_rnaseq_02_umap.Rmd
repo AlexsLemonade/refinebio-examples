@@ -124,7 +124,7 @@ Your new analysis folder should contain:
 
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/e140face75daa6d2c34e30a4755c362e6039a677/template/screenshots/analysis-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis.
 Run this chunk to double check that your files are in the right place.
