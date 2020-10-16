@@ -118,6 +118,7 @@ Your example analysis folder should now look something like this (except with re
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+These chunks will declare your file paths and double check that your files are in the right place.
 
 First we will declare our file paths to our data and metadata files, which should be in our data directory.
 This is handy to do because if we want to [switch the dataset](#using-a-different-refinebio-dataset-with-this-analysis) we are using for this analysis, we will only have to change the file path here to get started. 
