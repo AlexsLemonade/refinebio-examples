@@ -22,6 +22,7 @@ ChIP
 clusterProfiler
 Cmd
 ColorBrewer
+Compara
 ComplexHeatmap
 CREB
 Crouser
@@ -39,6 +40,7 @@ directionality
 displaystyle
 DocToc
 dorsoventral
+duplications
 ECM
 edgeR
 edgeR's
@@ -53,6 +55,7 @@ frac
 functionalize
 FPKM
 GeneChips
+Genenames
 generalizable
 ggplot
 GitHub
