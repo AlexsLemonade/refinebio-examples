@@ -238,7 +238,7 @@ We stored our file path for the dataset in an object named `data_file` in [this 
 
 ```{r}
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+zebrafish_genes <- readr::read_tsv(data_file) %>%
   # We only want the gene IDs so let's pull the `Gene` column
   dplyr::pull("Gene")
 ```
