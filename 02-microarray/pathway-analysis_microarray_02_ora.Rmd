@@ -11,10 +11,10 @@ output:
 
 # Purpose of this analysis
 
-This example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or less genes with gene sets/pathways than we would expect at random.
-This pathway analysis method does not require any particular sample size, since the only input is gene sets [@Yaari2013].
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes.
 
-This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes. 
+This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.
+This pathway analysis method does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -70,11 +70,11 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 In this example, we are using differential expression results table we obtained from an [example analysis of zebrafish samples overexpressing human CREB experiment](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes, and adjusted p-values (FDR in this case).
 
-We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression example analysis](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html).
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression analysis example](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html).
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpressing zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Tregnago2016].
+For this example analysis, we will use this [CREB overexpression zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Tregnago2016].
 @Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
 
 ## Check out our file structure!
@@ -106,9 +106,9 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene datasets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
 
-We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to do some gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an upset plot [@Carlson2019-zebrafish; @Ahlmann-Eltze2020].
+We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019-zebrafish; @Ahlmann-Eltze2020].
 
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
@@ -154,7 +154,7 @@ library(magrittr)
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
-We can identify upregulated genes by filtering these results and use this list as input to ORA.
+We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`. 
@@ -192,7 +192,7 @@ msigdbr_species()
 The data we're interested in here comes from zebrafish samples, so we can obtain just the gene sets relevant to _D. rerio_ with the `species` argument to `msigdbr()`.
 
 ```{r}
-hs_msigdb_df <- msigdbr(species = "Danio rerio")
+dr_msigdb_df <- msigdbr(species = "Danio rerio")
 ```
 
 MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005].
@@ -213,7 +213,7 @@ Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](h
 First, let's take a look at what information is included in this data frame. 
 
 ```{r}
-head(hs_msigdb_df)
+head(dr_msigdb_df)
 ```
 
 We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways. 
@@ -221,7 +221,7 @@ We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step 
 ```{r}
 # Filter the zebrafish data frame to the KEGG pathways that are included in the
 # curated gene sets
-hs_kegg_df <- hs_msigdb_df %>%
+dr_kegg_df <- dr_msigdb_df %>%
   dplyr::filter(
     gs_cat == "C2", # This is to filter only to the C2 curated gene sets
     gs_subcat == "CP:KEGG" # This is because we only want KEGG pathways
@@ -324,7 +324,7 @@ Over-representation testing using `clusterProfiler` is based on a hypergeometric
 
 \(p = 1 - \displaystyle\sum_{i = 0}^{k-1}\frac{ {M \choose i}{ {N-M} \choose {n-i} } } { {N \choose n} }\)
 
-Where `N` is the number of genes in the background distribution, `M` is the number of genes in a pathway, `n` is the number of genes we are interested in (our marker genes), and `k` is the number of genes that overlap between the pathway and our marker genes.
+Where `N` is the number of genes in the background distribution, `M` is the number of genes in a pathway, `n` is the number of genes we are interested in (our differentially expressed genes), and `k` is the number of genes that overlap between the pathway and our genes of interest.
 
 So, we will need to provide to `clusterProfiler` two genes lists: 
 
@@ -334,18 +334,18 @@ So, we will need to provide to `clusterProfiler` two genes lists:
 ## Determine our genes of interest list
 
 We will use our differential expression results to get a genes of interest list. 
-Let's use our adjusted p values as a cutoff 
+Let's use our adjusted p values as a cutoff. 
 
 ```{r}
 # Select genes that are below a cutoff
 genes_of_interest <- dge_annot_df %>%
-  # Here we want the top 100 fold changes for this group
-  dplyr::filter(adj.P.Val < 0.05) %>%
+  # Here we want the top differentially expressed genes and we will use downregulated genes
+  dplyr::filter(adj.P.Val < 0.05, logFC < -1) %>%
   # We are extracting the gene symbols as a vector
   dplyr::pull(gene_symbol)
 ```
 
-There are a lot of ways we could make a genes of interest list, and this using a p-value cutoff is just one way you can do this; you could also pick a "top 100" or really use whatever you are basing your "interest" on. 
+There are a lot of ways we could make a genes of interest list, and using a p-value cutoff for differential expression analysis is just one way you can do this.
 
 ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach's weaknesses -- to get to a gene list we've removed all other context.
 
@@ -383,7 +383,7 @@ kegg_ora_results <- enricher(
   # The pathway information should be a data frame with a term name or
   # identifier and the gene identifiers
   TERM2GENE = dplyr::select(
-    hs_kegg_df,
+    dr_kegg_df,
     gs_name,
     gene_symbol
   )
@@ -409,7 +409,7 @@ kegg_result_df %>%
   dplyr::filter(p.adjust < 0.1)
 ```
 
-Looks like there are KEGG sets returned as significant at FDR of `0.1`. 
+Looks like there is one KEGG sets returned as significant at FDR of `0.1`. 
 
 ## Visualizing results
 
