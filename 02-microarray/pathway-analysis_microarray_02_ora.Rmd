@@ -409,7 +409,7 @@ kegg_result_df %>%
   dplyr::filter(p.adjust < 0.1)
 ```
 
-Looks like there is one KEGG sets returned as significant at FDR of `0.1`. 
+Looks like there are four KEGG sets returned as significant at FDR of `0.1`. 
 
 ## Visualizing results
 
@@ -441,7 +441,7 @@ We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/
 enrichplot::upsetplot(kegg_ora_results)
 ```
 
-See that `KEGG_SMALL_CELL_LUNG_CANCER` and `KEGG_APOPTOSIS` have genes in common. 
+See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common. 
 Gene sets or pathways aren't independent!
 
 Let's also save this to a PNG. 
