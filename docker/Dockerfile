@@ -52,11 +52,14 @@ RUN R -e "BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
+      'clusterProfiler', \
       'ComplexHeatmap', \
       'DESeq2', \
       'EnhancedVolcano', \
+      'ggupset', \
       'limma', \
       'marray', \
+      'msigdbr', \
       'org.Mm.eg.db', \
       'org.Dr.eg.db'), \
      update = FALSE)"

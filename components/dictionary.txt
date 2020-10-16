@@ -19,6 +19,7 @@ CCDL's
 cheatsheet
 cheatsheets
 ChIP
+clusterProfiler
 Cmd
 ColorBrewer
 Compara
@@ -36,6 +37,7 @@ DESeqDataset
 devtools
 DGE
 directionality
+displaystyle
 DocToc
 dorsoventral
 duplications
@@ -49,9 +51,9 @@ ENSG
 Entrez
 et
 FACS
+frac
 functionalize
 FPKM
-GEne
 GeneChips
 Genenames
 generalizable
@@ -109,7 +111,6 @@ ribosomes
 RMA
 RPKMs
 RStudio
-SeT
 ssGSEA
 StatQuest
 SuperSeries
@@ -129,9 +130,8 @@ UMAP
 UMAP's
 unmapped
 upregulated
+UpSet
 vivo
-WebGestalt
-WebGestaltR
 WNT
 Yaari
 zebrafish
