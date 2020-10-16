@@ -19,8 +19,10 @@ CCDL's
 cheatsheet
 cheatsheets
 ChIP
+clusterProfiler
 Cmd
 ColorBrewer
+Compara
 ComplexHeatmap
 CREB
 Crouser
@@ -35,8 +37,10 @@ DESeqDataset
 devtools
 DGE
 directionality
+displaystyle
 DocToc
 dorsoventral
+duplications
 ECM
 edgeR
 edgeR's
@@ -47,10 +51,11 @@ ENSG
 Entrez
 et
 FACS
+frac
 functionalize
 FPKM
-GEne
 GeneChips
+Genenames
 generalizable
 ggplot
 GitHub
@@ -106,7 +111,6 @@ ribosomes
 RMA
 RPKMs
 RStudio
-SeT
 ssGSEA
 StatQuest
 SuperSeries
@@ -126,9 +130,8 @@ UMAP
 UMAP's
 unmapped
 upregulated
+UpSet
 vivo
-WebGestalt
-WebGestaltR
 WNT
 Yaari
 zebrafish

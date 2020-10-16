@@ -1,0 +1,272 @@
+---
+title: "KEGG pathways: mapping to mouse orthologs with `hcop`"
+output:
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: J. Taroni for ALSF CCDL
+date: 2019
+---
+
+## Background
+
+In this module, we use QuSAGE ([](https://doi.org/10.1093/nar/gkt660))
+for pathway analysis (implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html)).
+
+`qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
+
+[MSigDB](http://software.broadinstitute.org/gsea/msigdb) offers gene sets in this format.
+[Curated gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2)
+such as [KEGG](https://www.genome.jp/kegg/) are a good starting point for any pathway analysis.
+
+However, MSigDB only distributes human pathways.
+If we want to use KEGG Pathways with another species without going through
+[KEGG Orthology](https://www.genome.jp/kegg/ko.html), we need to map to
+orthologs ourselves.
+
+We'll use the [`hcop` package](https://github.com/stephenturner/hcop) to do
+this.
+If you're looking for a little bit more background information (like if you
+run into trouble installing `hcop`), check out the notebook in our
+[`ortholog-mapping`](https://github.com/AlexsLemonade/refinebio-examples/tree/master/ortholog-mapping) module.
+
+## Setup
+
+Package installation
+
+```{r}
+# need read.gmt functionality from qusage
+if (!("qusage" %in% installed.packages())) {
+  BiocManager::install("qusage", update = FALSE)
+}
+
+# we need devtools in order to install the hcop package we will use to
+# do the ortholog mapping
+if (!("devtools" %in% installed.packages())) {
+  install.packages("devtools")
+}
+
+# this installs a specific version of hcop
+# we pass the commit hash to the ref argument
+devtools::install_github("stephenturner/hcop",
+  ref = "0985fddc91a6ef2308f4800958dfd11c25fe6a98"
+)
+```
+
+```{r}
+`%>%` <- dplyr::`%>%`
+```
+
+```{r}
+library(hcop)
+```
+
+## KEGG human pathways
+
+We need to download the the MSigDB v6.2 KEGG gene sets that use Entrez gene IDs
+and place them at the following path if we have not done so already:
+
+```
+gene-sets/c2.cp.kegg.v6.2.entrez.gmt
+```
+
+```{r}
+# the kegg gmt file should be located in the spot we mention above
+kegg_file <- file.path("gene-sets", "c2.cp.kegg.v6.2.entrez.gmt")
+# since we do not track this file in our repository, let's check to make sure
+# it exists where we expect it and download it if we don't find it
+if (!file.exists(kegg_file)) {
+  message(paste(
+    "KEGG GMT file is not found at", kegg_file,
+    ", downloading now..."
+  ))
+  # need gene-sets directory
+  if (!dir.exists("gene-sets")) {
+    dir.create("gene-sets")
+  }
+  download.file("https://data.broadinstitute.org/gsea-msigdb/msigdb/release/6.2/c2.cp.kegg.v6.2.entrez.gmt",
+    destfile = kegg_file
+  )
+}
+```
+
+Read in the pathway file
+
+```{r}
+kegg_human_list <- qusage::read.gmt(kegg_file)
+```
+
+## Conversion from human Entrez ID to mouse symbol
+
+### Human to mouse mapping with `hcop`
+
+`hcop` is designed to work well with `dplyr`, so we'll get all the possible
+human Entrez IDs into a `data.frame`.
+
+```{r}
+entrez_in_pathways_df <- data.frame(
+  human_entrez = as.integer(unique(unlist(kegg_human_list)))
+)
+```
+
+Join to mouse orthologs by the human Entrez IDs.
+
+```{r}
+# Join to mouse orthologs
+mouse_ortholog_df <- entrez_in_pathways_df %>%
+  dplyr::inner_join(mouse, by = "human_entrez")
+```
+
+### 1:many mapping
+
+For 1:many mappings, we'll pick the one with the most support.
+Here, we'll only consider the _number_ of sources without any regard for _what_
+those resources are.
+Essentially, we weigh all sources equally though they likely have more or less
+permissive criteria.
+
+```{r}
+# add a column that counts resources
+mouse_ortholog_df <- mouse_ortholog_df %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(
+    num_resources_support =
+      length(stringr::str_split(support,
+        pattern = ",",
+        simplify = TRUE
+      ))
+  )
+```
+
+To demonstrate how this works, we'll pick a gene that had 1:many mappings
+and follow it along.
+
+```{r}
+mouse_ortholog_df %>%
+  dplyr::filter(human_entrez == 5631) %>%
+  dplyr::select(
+    human_entrez, mouse_entrez, human_symbol, mouse_symbol,
+    num_resources_support
+  )
+```
+
+We can see that the human gene _PRPS1_/`5631` maps to 4 mouse genes, one of
+which has 10 resources supporting that mapping.
+
+```{r}
+# for each unique human entrez id, pick the mapping with the highest number of
+# resources supporting it
+most_support_df <- mouse_ortholog_df %>%
+  dplyr::group_by(human_entrez) %>%
+  dplyr::top_n(1, num_resources_support)
+```
+
+What happened to `5631`?
+
+```{r}
+most_support_df %>%
+  dplyr::filter(human_entrez == 5631) %>%
+  dplyr::select(
+    human_entrez, mouse_entrez, human_symbol, mouse_symbol,
+    num_resources_support
+  )
+```
+
+We successfully selected the mapping with the highest number of resources
+supporting it.
+
+### Conversion of KEGG pathways
+
+For each KEGG pathway we have (currently populated with human Entrez IDs),
+we need a new gene set that is comprised of mouse gene symbols.
+
+```{r}
+kegg_mouse_list <-
+  lapply(
+    kegg_human_list,
+    function(pathway) {
+      dplyr::filter(most_support_df, human_entrez %in% pathway) %>%
+        dplyr::pull(mouse_symbol)
+    }
+  )
+```
+
+Do the results this seem reasonable?
+Let's pick the polymerase pathway, where our success should be pretty obvious
+from the mouse gene symbols.
+
+```{r}
+kegg_mouse_list[[grep(
+  "POLYMERASE", # Replace with a word (case sensitive) or phrase that would filter in your desired pathway(s)
+  names(kegg_mouse_list)
+)]]
+```
+
+### Write mouse pathway list in `GMT` format
+
+We need to write this new mouse pathway list to file in [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), as this will facilitate use with downstream pathway analysis.
+
+Briefly, the GMT format has one pathway per line and it follows this pattern:
+
+```
+<PATHWAY_NAME>\t<PATHWAY_DESCRIPTION>\t<gene_1_in_pathway>...<gene_n_in_pathway>
+```
+
+We've lost the description information because it's removed by
+`qusage::read.gmt`.
+The description in `r kegg_file` follows this pattern:
+
+```
+http://www.broadinstitute.org/gsea/msigdb/cards/<PATHWAY_NAME>
+```
+
+We can pretty easily stick this back in when we write to file with `write()`.
+
+```{r}
+# filename we're going to write to
+mouse_file <- file.path(
+  "gene-sets", # Replace with path to desired output directory
+  "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt" # Replace with name for output file
+)
+
+# if you run this again after making changes above, you'd just end up appending
+# this to the end of your old file, so we should take steps to get rid of
+# the existing file
+if (file.exists(mouse_file)) {
+  message(paste("Removing old", mouse_file))
+  file.remove(mouse_file)
+}
+
+# for each pathway, write it to line following GMT format
+for (pathway_iter in seq_along(kegg_mouse_list)) {
+  # extract the current pathway name
+  pathway_name <- names(kegg_mouse_list)[pathway_iter]
+  text_to_write <-
+    paste(
+      # the name of the pathway
+      pathway_name,
+      # the description -- this is stripped out by qusage::read.gmt
+      paste0(
+        "http://www.broadinstitute.org/gsea/msigdb/cards/",
+        pathway_name
+      ),
+      # the gene symbols
+      paste(kegg_mouse_list[[pathway_iter]], collapse = "\t"),
+      sep = "\t"
+    )
+  write(text_to_write, mouse_file, append = TRUE)
+}
+```
+
+We can double check how this went by reading it back in with `qusage::read.gmt`.
+
+```{r}
+mouse_read_list <- qusage::read.gmt(mouse_file)
+all.equal(mouse_read_list, kegg_mouse_list)
+```
+
+## Session Info
+
+```{r}
+sessioninfo::session_info()
+```
