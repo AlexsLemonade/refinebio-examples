@@ -120,7 +120,7 @@ In order for our example here to run without a hitch, we need these files to be 
 These chunks will declare your file paths and double check that your files are in the right place.
 
 First we will declare our file paths to our data and metadata files, which should be in our data directory.
-This is handy to do because if we want to [switch the dataset](#using-a-different-refinebio-dataset-with-this-analysis) we are using for this analysis, we will only have to change the file path here to get started. 
+This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started. 
 
 ```{r}
 # Define the file path to the data directory
