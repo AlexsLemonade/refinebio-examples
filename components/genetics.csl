@@ -151,7 +151,7 @@
           </group>
         </else>
       </choose>
-      <text macro="access" prefix=". "/>
+      <text variable="url" display="block" prefix=" url: "/>
     </layout>
   </bibliography>
 </style>
