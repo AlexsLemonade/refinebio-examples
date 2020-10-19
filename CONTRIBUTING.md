@@ -239,15 +239,15 @@ You may/will still need to do some manual edits to maintain consistency with the
 - All sources need to have URLs.
 - Where applicable, sources should have doi's.
 - `{}` are preferred to `" "`.
-- All lower case tags are preferred to upper case (eg. `title` NOT `Title`).
-- Spaces before and after `=` are preferred.
+- To preserve capitalization, use an extra `{}` around what should be capitalized.
 
 **How to add sources by type**  
 
 - _R packages_: Use this kind of command in the console: `toBibtex(citation("tidyverse"))`.
 Copy and paste the output to the `references.bib` file.
 
-- _Articles_: For PubMed articles, you can use [this website to find the article](https://www.bioinformatics.org/texmed/). Select the correct article that pops up and click `Export`. Then copy and paste the reference to the `references.bib` file.
+- _Articles_: For articles, you can use [this website to get a BibTex](https://www.doi2bib.org/ ).
+Then copy and paste the reference to the `references.bib` file.
 
 - _Websites_: Websites can be added using this template:
 ```
