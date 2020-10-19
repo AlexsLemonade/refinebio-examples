@@ -240,6 +240,7 @@ You may still need to do some manual edits to maintain consistency with the curr
 - Where applicable, sources should have doi's.
 - `{}` are preferred to `" "`
 - All lower case tags are preferred to upper case (eg. `title` NOT `Title`)
+- Spaces before and after `=` are preferred.
 
 **How to add sources by type**  
 
