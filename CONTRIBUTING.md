@@ -289,7 +289,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
-All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers. 
+All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
 
 ### How to re-render the notebooks locally
 
@@ -332,7 +332,7 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
-Default is the `references.bib` script at the top of the repository.  
+Default is the `references.bib` in the `components` folder.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
 ### Add new analyses to the Snakefile
