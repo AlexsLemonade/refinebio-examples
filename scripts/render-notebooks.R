@@ -113,7 +113,7 @@ rmarkdown::render(tmp_file,
     toc = TRUE, toc_depth = 2,
     toc_float = TRUE, number_sections = TRUE,
     df_print = "paged",
-    css = file.path("..", "components", "styles.css")
+    css = normalizePath(file.path("components", "styles.css"))
   ),
   # Save to original html output file name
   output_file = output_file

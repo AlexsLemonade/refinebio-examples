@@ -35,16 +35,17 @@ a {
 }
 .navbar-default {
   font-size: 1rem;
-  background-color: #002F6C !important;
+  background-color: #386db0 !important;
   color: #FDFDFD;
 }
 .navbar-brand, nav a {
-  color: #FDFDFD !important;
+  color: #000000 !important;
 }
 ul.dropdown-menu {
-  background-color: #002F6C !important;
-  color: #FDFDFD;
+  background-color: #FDFDFD !important;
+  color: #000000 !important;
 }
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
   background-color: #386db0 !important;
+  color: #000000 !important;
 }
