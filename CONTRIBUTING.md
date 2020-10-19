@@ -231,6 +231,18 @@ From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/
 You can obtain formatted `LaTeX` reference entry following the instructions below and copying and pasting the whole thing in `reference.bib`.
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
 
+These automatic reference renders don't maintain consistent syntax (though they usually will still work).
+You may need to do some manual edits to maintain consistency with the current sources.
+
+**Adding sources rules:**  
+
+- All sources need to have URLs.
+- Where applicable, sources should have doi's.
+- `{}` are preferred to `" "`
+- All lower case tags are preferred to upper case (eg. `title` NOT `Title`)
+
+**How to add sources by type**  
+
 - _R packages_: Use this kind of command in the console: `toBibtex(citation("tidyverse"))`.
 Copy and paste the output to the `references.bib` file.
 
@@ -239,9 +251,9 @@ Copy and paste the output to the `references.bib` file.
 - _Websites_: Websites can be added using this template:
 ```
 @online{website,
-    author = "First Last",
-    title = "Title",
-    url  = "http://www.someurl.html",
+    author = {First Last},
+    title = {Title},
+    url  = {http://www.someurl.html},
 }
 ```
 
@@ -289,7 +301,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
-All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers. 
+All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
 
 ### How to re-render the notebooks locally
 
