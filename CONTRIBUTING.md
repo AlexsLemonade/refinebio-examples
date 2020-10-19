@@ -231,8 +231,8 @@ From the RMarkdown Cookbook [bibliographies chapter](https://bookdown.org/yihui/
 You can obtain formatted `LaTeX` reference entry following the instructions below and copying and pasting the whole thing in `reference.bib`.
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
 
-These automatic reference renders don't maintain consistent syntax (though they usually will still work).
-You may need to do some manual edits to maintain consistency with the current sources.
+Automatic reference renders (like those recommended below) don't maintain consistent syntax (though they usually will still work).
+You may still need to do some manual edits to maintain consistency with the current sources.
 
 **Adding sources rules:**  
 
