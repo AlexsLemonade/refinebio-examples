@@ -232,14 +232,14 @@ You can obtain formatted `LaTeX` reference entry following the instructions belo
 The references in `reference.bib` should be kept in alphabetical order (this will reduce the chances of adding duplicates).
 
 Automatic reference renders (like those recommended below) don't maintain consistent syntax (though they usually will still work).
-You may still need to do some manual edits to maintain consistency with the current sources.
+You may/will still need to do some manual edits to maintain consistency with the current `references.bib`-listed sources.
 
 **Adding sources rules:**  
 
 - All sources need to have URLs.
 - Where applicable, sources should have doi's.
-- `{}` are preferred to `" "`
-- All lower case tags are preferred to upper case (eg. `title` NOT `Title`)
+- `{}` are preferred to `" "`.
+- All lower case tags are preferred to upper case (eg. `title` NOT `Title`).
 - Spaces before and after `=` are preferred.
 
 **How to add sources by type**  
