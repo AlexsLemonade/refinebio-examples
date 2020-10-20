@@ -45,11 +45,25 @@ option_list <- list(
     opt_str = c("-s", "--style"), action = "store_true",
     default = FALSE,
     help = "Style input file before processing"
+  ),
+  make_option(
+    opt_str = c("--google_analytics"),
+    type = "character",
+    default = NULL,
+    help = "File name of a file that contains the Google Analytics code to be added to the top of each html file. Will be normalized with normalizePath().",
+    metavar = "character"
   )
 )
 
 # Parse options
 opt <- parse_args(OptionParser(option_list = option_list))
+
+opt$rmd <- "01-getting-started/getting-started.Rmd"
+opt$bib_file <- "references.bib"
+opt$cite_style <- "components/genetics.csl"
+opt$html <- "01-getting-started/getting-started.html"
+opt$style <- TRUE
+opt$google_analytics <- "components/google-analytics.txt"
 
 # Get working directory
 base_dir <- getwd()
@@ -118,6 +132,22 @@ rmarkdown::render(tmp_file,
   # Save to original html output file name
   output_file = output_file
 )
+
+# If specified, read in and add on Google Analytics bits
+if (!is.null(opt$google_analytics)) {
+
+  # Read in the Google Analytics bits
+  google_analytics <- readr::read_lines(normalizePath(opt$google_analytics))
+
+  # Read in the output html
+  html_lines <- readr::read_lines(output_file)
+
+  # Bind google analytics to original html
+  html_lines <- c(google_analytics, html_lines)
+
+  # Write html with Google Analytics to file
+  readr::write_lines(new_lines, output_file)
+}
 
 # Remove the temporary header change .Rmd tmp file
 file.remove(tmp_file)

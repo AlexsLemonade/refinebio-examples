@@ -31,3 +31,4 @@ rule render_citations:
         " --cite_style components/genetics.csl"
         " --html {output}"
         " --style"
+        " --google_analytics components/google-analytics.txt"
