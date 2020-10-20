@@ -14,7 +14,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     zlib1g \
     libbz2-dev \
     liblzma-dev \
-    libreadline-dev
+    libreadline-dev \
+    libglpk40
 
 # libmagick++-dev is needed for coloblindr to install
 RUN apt-get -y --no-install-recommends install \
