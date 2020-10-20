@@ -284,7 +284,7 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using GitHub actions upon opening a PR for master or prior to merging to master.
+Spell checks are run automatically using GitHub actions upon opening a PR for `master` or `staging`.
 GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
@@ -304,7 +304,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
-All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
+All `.html` files will be re-rendered upon merging to `master` or `staging`, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
 
 ### How to re-render the notebooks locally
 
@@ -328,6 +328,29 @@ If you already have the `refinebio-examples` docker image:
 ```
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
+
+### Pull Requests
+
+After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch (the default branch for this repository).
+The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
+
+Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a `staging` -> `master` pull request.
+These types of PRs should only involve well-polished and ready for the public material.
+
+In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
+These PRs should only be fairly small PRs and not anything that would require intense review.
+This more for situations where "this is broken and here's a fix".
+
+In summary, the three types of pull requests in this repo:  
+
+- `some-branch` -> `staging` -> NOT published to user-facing content.
+This will be how most material is prepared so we can be more incremental with our changes and ultimately make sure only the very polished material is made user-facing.
+
+- `staging` -> `master` -> published to user-facing.
+This is for when the updates from the previous kinds of PRs are "ready for prime time".
+
+- Hotfix PR: `some-branch` -> `master` -> published to user-facing
+For "this-is-broken" type changes that should be hastened to the user-facing content.
 
 ### Automatic rendering using GitHub actions
 
@@ -380,7 +403,7 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
 ## Pull request status checks
 
-To require that branches are up-to-date with `master` before merging, we need to require that a status check passes before merging to `master`.
+To require that branches are up-to-date with `master` or `staging` before merging, we need to require that a status check passes before merging to `master` or `staging`.
 Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
 The status check used is a GitHub Action that test builds the docker image.
 Most of the time, this should pull cached docker layers, so this will complete in a matter of minutes.
