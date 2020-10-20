@@ -241,7 +241,7 @@ You may/will still need to do some manual edits to maintain consistency with the
 - `{}` are preferred to `" "`.
 - To preserve capitalization, use an extra `{}` around words that require special capitalization (genes, software packages, etc).
 - All journal names should be given in full, not abbreviated
-- Author names with abbreviations should include a period after the abbreviation. i.e. Harry S. Truman not Harry S Truman and Truman, H. S. not Truman, HS.
+- Author names with abbreviations should include a period after the abbreviation. i.e. `Harry S. Truman` not `Harry S Truman` and `Truman, H. S.` not `Truman, HS`.
 
 **How to add sources by type**  
 
