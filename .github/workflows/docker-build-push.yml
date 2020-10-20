@@ -68,7 +68,7 @@ jobs:
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
-      
+
       - name: Render all pages to html
         run: |
           docker run \
@@ -76,11 +76,18 @@ jobs:
           ccdl/refinebio-examples \
           snakemake --cores 2 --forceall
 
-      - name: Commit changed html
+      # If we are on the staging branch, do not publish to github pages
+      - name: Commit changed html back to staging branch
+        if: github.ref == 'refs/heads/staging'
         run: |
           git add -A
-          git commit -m 'Render html' || echo "No changes to commit"
+          git commit -m 'Render html, do not publish' || echo "No changes to commit"
+          git push origin staging || echo "No changes to push"
+
+      # If we are on the master branch, publish to github pages!
+      - name: Commit changed html to public facing gh-pages
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git add -A
+          git commit -m 'Render html and publish' || echo "No changes to commit"
           git push origin gh-pages || echo "No changes to push"
-
-
-
