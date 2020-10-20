@@ -240,18 +240,20 @@ You may/will still need to do some manual edits to maintain consistency with the
 - Where applicable, sources should have doi's.
 - `{}` are preferred to `" "`.
 - To preserve capitalization, use an extra `{}` around what should be capitalized.
+- All journal names should be given in full, not abbreviated
+- Author names with abbreviations should include a period after the abbreviation. i.e. Harry S. Truman not Harry S Truman and Truman, H. S. not Truman, HS.
 
 **How to add sources by type**  
 
 - _R packages_: Use this kind of command in the console: `toBibtex(citation("tidyverse"))`.
 Copy and paste the output to the `references.bib` file.
 
-- _Articles_: For articles, you can use [this website to get a BibTex](https://www.doi2bib.org/ ).
+- _Articles_: For articles (or any item with a DOI), you can use [doi2bib.org](https://www.doi2bib.org/) to get a BibTex-formatted reference.
 Then copy and paste the reference to the `references.bib` file.
 
 - _Websites_: Websites can be added using this template:
 ```
-@online{website,
+@website{citekey,
     author = {First Last},
     title = {Title},
     url  = {http://www.someurl.html},
@@ -267,7 +269,7 @@ Whenever possible, tags for all types of references should follow this format: `
 For example the tidyverse citation starts like this:
 
 ```
-@Article{Wickham2019,
+@article{Wickham2019,
 ```
 
 This allows you to reference it by `@Wickham2019` as [mentioned in the section above](#citing-sources-in-text)
@@ -276,7 +278,7 @@ If there is no author name or no year associated with the reference, then turn t
 
 For example:
 ```
-@Website{pca-visually-explained,
+@website{pca-visually-explained,
 ```
 Had no year associated with it, so it has keywords for its tag `pca-visually-explained`.
 
