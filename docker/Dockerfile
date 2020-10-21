@@ -49,7 +49,7 @@ RUN Rscript -e  "install.packages( \
 
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
-RUN R -e "BiocManager::install( \
+RUN R -e "options(warn = 2); BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
