@@ -58,14 +58,14 @@ jobs:
           tags: ccdl/refinebio-examples:latest
       # for staging, we just want to build, but not push
       - name: Build and Load Docker image
-        if: github.ref == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/jashapiro/dont-push-staging-docker'
         uses: docker/build-push-action@v2
         with:
           push: false
           load: true
           context: docker
           file: docker/Dockerfile
-          tags: ccdl/refinebio-examples:latest
+          tags: ccdl/refinebio-examples:staging
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
