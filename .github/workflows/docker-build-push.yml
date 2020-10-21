@@ -5,8 +5,6 @@ name: Build, Render, and Push
 on:
   push:
     branches: [ staging, master ]
-  pull_request:
-    branches: [ staging, master ]
 
 jobs:
   # This workflow contains a single job called "build-all"
