@@ -26,11 +26,11 @@ jobs:
 
       - name: Checkout pages branch and sync with changes
         run: |
-          echo ${GITHUB_REF#refs/*/}
-          if [${GITHUB_REF#refs/*/} == 'refs/heads/master']
+          echo $GITHUB_REF
+          if [ $GITHUB_REF == 'refs/heads/master' ]
           then
             pages_branch="gh-pages"
-          elif [${GITHUB_REF#refs/*/} == 'refs/heads/staging']
+          elif [ $GITHUB_REF == 'refs/heads/staging' ]
           then
             pages_branch="gh-pages-stages"
           fi
@@ -89,7 +89,7 @@ jobs:
 
       # If we are on the staging branch, do not publish to github pages
       - name: Commit changed html back to non-public pages
-        if: ${GITHUB_REF#refs/*/} == 'refs/heads/staging'
+        if: github.ref == 'refs/heads/staging'
         run: |
           git add -A
           git commit -m 'Render html, do not publish' || echo "No changes to commit"
@@ -97,7 +97,7 @@ jobs:
 
       # If we are on the master branch, publish to github pages!
       - name: Commit changed html to public pages
-        if: ${GITHUB_REF#refs/*/} == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master'
         run: |
           git add -A
           git commit -m 'Render html and publish' || echo "No changes to commit"
