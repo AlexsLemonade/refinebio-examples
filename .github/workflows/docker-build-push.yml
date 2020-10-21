@@ -46,19 +46,8 @@ jobs:
       # set up Docker build
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
-      # Build docker image and push if this is master
-      - name: Build and Push Docker image
-        if: github.ref == 'refs/heads/master'
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: docker
-          file: docker/Dockerfile
-          tags: ccdl/refinebio-examples:latest
-      # for staging, we just want to build, but not push
+      # Build the Docker image
       - name: Build and Load Docker image
-        if: github.ref == 'refs/heads/jashapiro/dont-push-staging-docker'
         uses: docker/build-push-action@v2
         with:
           push: false
@@ -66,10 +55,14 @@ jobs:
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
+      # push the Docker image if this is master
+      - name: Push Docker image
+        if: github.ref == 'refs/heads/master'
+        run: docker push ccdl/refinebio-examples:latest
+      
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
-
       - name: Render all pages to html
         run: |
           docker run \
