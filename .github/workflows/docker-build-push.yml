@@ -30,6 +30,7 @@ jobs:
           then
             pages_branch="gh-pages"
           elif [github.ref == 'refs/heads/staging']
+          then
             pages_branch="gh-pages-stages"
           fi
           echo $pages_branch
