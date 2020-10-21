@@ -24,23 +24,15 @@ jobs:
           # use alexslemonade-docs-bot
           token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
 
-      - name: github.ref
-        run: echo $github.ref
-        
-      - name: If master branch, use public pages branch
-        if: github.ref == 'refs/heads/master'
-        env:
-          pages_branch: gh-pages
-        run: echo $pages_branch
-
-      - name: If staging branch, use non-public pages branch
-        if: github.ref == 'refs/heads/staging'
-        env:
-          pages_branch: gh-pages-stages
-        run: echo $pages_branch
-
       - name: Checkout pages branch and sync with changes
         run: |
+          if [github.ref == 'refs/heads/master']
+          then
+            pages_branch=gh-pages
+          elif [github.ref == 'refs/heads/staging']
+            pages_branch=gh-pages-stages
+          fi 
+          echo $pages_branch
           git config --local user.email "actions@github.com"
           git config --local user.name "Alex's Lemonade Docs Bot"
           git checkout $pages_branch
@@ -95,7 +87,7 @@ jobs:
           snakemake --cores 2 --forceall
 
       # If we are on the staging branch, do not publish to github pages
-      - name: Commit changed html back to staging branch
+      - name: Commit changed html back to non-public pages
         if: github.ref == 'refs/heads/staging'
         run: |
           git add -A
@@ -103,7 +95,7 @@ jobs:
           git push origin gh-pages-stages || echo "No changes to push"
 
       # If we are on the master branch, publish to github pages!
-      - name: Commit changed html to public facing gh-pages
+      - name: Commit changed html to public pages
         if: github.ref == 'refs/heads/master'
         run: |
           git add -A
