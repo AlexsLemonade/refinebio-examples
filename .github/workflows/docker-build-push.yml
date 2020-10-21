@@ -24,6 +24,9 @@ jobs:
           # use alexslemonade-docs-bot
           token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
 
+      - name: github.ref
+        run: echo $github.ref
+        
       - name: If master branch, use public pages branch
         if: github.ref == 'refs/heads/master'
         env:
