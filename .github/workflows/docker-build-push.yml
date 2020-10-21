@@ -26,14 +26,14 @@ jobs:
 
       - name: Checkout pages branch and sync with changes
         run: |
-          if [github.ref == 'refs/heads/master']
+          echo $github.ref
+          if [$github.ref == 'refs/heads/master']
           then
             pages_branch="gh-pages"
-          elif [github.ref == 'refs/heads/staging']
+          elif [$github.ref == 'refs/heads/staging']
           then
             pages_branch="gh-pages-stages"
           fi
-          echo $pages_branch
           git config --local user.email "actions@github.com"
           git config --local user.name "Alex's Lemonade Docs Bot"
           git checkout $pages_branch
