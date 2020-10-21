@@ -25,14 +25,12 @@ jobs:
           token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
 
       - name: Checkout pages branch and sync with changes
-        env:
-          merge_branch: github.ref
         run: |
-          echo $merge_branch
-          if [$merge_branch == 'refs/heads/master']
+          echo ${{ github.ref }}
+          if [${{ github.ref }} == 'refs/heads/master']
           then
             pages_branch="gh-pages"
-          elif [$merge_branch == 'refs/heads/staging']
+          elif [${{ github.ref }} == 'refs/heads/staging']
           then
             pages_branch="gh-pages-stages"
           fi
