@@ -65,7 +65,7 @@ jobs:
           load: true
           context: docker
           file: docker/Dockerfile
-          tags: ccdl/refinebio-examples:staging
+          tags: ccdl/refinebio-examples:latest
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
