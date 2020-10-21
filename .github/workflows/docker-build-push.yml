@@ -23,19 +23,16 @@ jobs:
           token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
 
       - name: If master branch, use public pages branch
-        uses: actions/checkout@v2
-        id: pages_branch
         if: github.ref == 'refs/heads/master'
         env:
-          branch: gh-pages
-        run: echo ${{ pages_branch.branch }}
+          pages_branch: gh-pages
+        run: echo ${{ pages_branch }}
 
       - name: If staging branch, use non-public pages branch
-        uses: actions/checkout@v2
-        id: pages_branch
         if: github.ref == 'refs/heads/staging'
         env:
-          branch: gh-pages-stages
+          pages_branch: gh-pages-stages
+        run: echo ${{ pages_branch }}
 
       - name: Checkout pages branch and sync with changes
         run: |
