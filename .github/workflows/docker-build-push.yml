@@ -54,13 +54,11 @@ jobs:
           load: true
           context: docker
           file: docker/Dockerfile
-          tags: |
-            ccdl/refinebio-examples:latest
-            ccdl/refinebio-examples:test
+          tags: ccdl/refinebio-examples:latest
       # push the Docker image if this is master
       - name: Push Docker image
-        if: github.ref == 'refs/heads/jashapiro/dont-push-staging-docker'
-        run: docker push ccdl/refinebio-examples:test
+        if: github.ref == 'refs/heads/master'
+        run: docker push ccdl/refinebio-examples:latest
       
       # download data
       - name: Download data
