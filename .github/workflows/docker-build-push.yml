@@ -4,7 +4,7 @@ name: Build, Render, and Push
 # events only for the master branch
 on:
   push:
-    branches: [ staging, master, cansavvy/gha-updates-pr-process ]
+    branches: [ staging, master ]
 
 jobs:
   # This workflow contains a single job called "build-all"
