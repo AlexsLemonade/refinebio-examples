@@ -120,8 +120,7 @@ rmarkdown::render(tmp_file,
     toc_float = TRUE, number_sections = TRUE,
     highlight = "haddock",
     df_print = "paged",
-    css = normalizePath(file.path("components", "styles.css"))
-    highlight = "haddock",
+    css = normalizePath(file.path("components", "styles.css")),
     includes = rmarkdown::includes(in_header = google_analytics_file)
   ),
   # Save to original html output file name
