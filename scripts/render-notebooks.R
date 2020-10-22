@@ -54,9 +54,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 # Get working directory
 base_dir <- getwd()
 
-# Normalize file path
-opt$bib_file <- normalizePath(opt$bib_file)
-
 # Check that the rmd file exists
 if (!file.exists(opt$rmd)) {
   stop("Rmd file specified with --rmd is not found.")
@@ -66,7 +63,7 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  header_line <- paste("bibliography:", opt$bib_file)
+  header_line <- paste("bibliography:", normalizePath(opt$bib_file))
 }
 # Check for a citation style
 if (!is.null(opt$cite_style)){
@@ -115,9 +112,8 @@ rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
     toc = TRUE, toc_depth = 2,
     toc_float = TRUE, number_sections = TRUE,
-    highlight = "haddock",
     df_print = "paged",
-    css = normalizePath(file.path("components", "styles.css"))
+    highlight = "haddock"
   ),
   # Save to original html output file name
   output_file = output_file
