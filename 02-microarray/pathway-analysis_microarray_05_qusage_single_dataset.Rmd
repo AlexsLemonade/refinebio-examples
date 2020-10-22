@@ -1,0 +1,481 @@
+---
+title: "Pathway analysis with QuSAGE: Single dataset"
+output:
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: J. Taroni for ALSF CCDL
+date: 2019
+---
+
+## Background
+
+In this module, we'll demonstrate how to perform pathway analysis using
+Quantitative Set Analysis of Gene Expression (QuSAGE)
+([](https://doi.org/10.1093/nar/gkt660)).
+QuSAGE, implemented in the [`qusage` bioconductor package](https://bioconductor.org/packages/release/bioc/html/qusage.html),
+has some nice features:
+
+* It takes into account inter-gene correlation (a source of type I error).
+* It returns more information than just a p-value.
+That's useful for analyses you might want to perform downstream.
+* Built-in visualization functionality.
+
+We recommend taking a look at the original publication (Yaari et al.) and
+the R package documentation to learn more.
+
+## Gene sets
+
+`qusage` allows you to read in gene sets that are in the [GMT format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29).
+[Curated gene sets from MSigDB](http://software.broadinstitute.org/gsea/msigdb/collections.jsp#C2)
+like [KEGG](https://www.genome.jp/kegg/) are popular for pathway analysis, but
+MSigDB only distributes human pathway data.
+Here, we'll work with a mouse dataset.
+
+In the [`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook in
+this module, we mapped human Entrez IDs to mouse symbols using the
+[`hcop` package](https://github.com/stephenturner/hcop).
+When there was a 1:many mapping between human Entrez IDs and mouse gene symbols,
+we selected the mouse gene symbol with the highest number of resources
+supporting the mapping.
+This decision might not be suitable for every experiment and may result in
+some loss of information.
+
+## Dataset
+
+We're using [`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction) in this notebook.
+This dataset assays the gene expression response to short-term calorie
+restriction in multiple tissues from multiple mouse strains.
+We'll test for pathways that change in response to short-term calorie
+restriction.
+
+## Set up
+
+Package installation and loading
+
+```{r}
+if (!("qusage" %in% installed.packages())) {
+  BiocManager::install("qusage", update = FALSE)
+}
+
+if (!("org.Mm.eg.db" %in% installed.packages())) {
+  BiocManager::install("org.Mm.eg.db", update = FALSE)
+}
+
+if (!("pheatmap" %in% installed.packages())) {
+  install.packages("pheatmap")
+}
+```
+
+```{r}
+`%>%` <- dplyr::`%>%`
+```
+
+```{r}
+library(qusage)
+library(org.Mm.eg.db)
+library(pheatmap)
+```
+
+Create directories to hold plots and results if they do not yet exist.
+
+```{r}
+# Define the file path to the plots directory
+plots_dir <- "plots" # Replace with path to desired output plots directory
+
+# Make a plots directory if it isn't created yet
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Replace with path to desired output results directory
+
+# Make a results directory if it isn't created yet
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
+# Define the file path to the data directory
+data_dir <- "data"
+```
+
+## Read in refine.bio data
+
+The gene expression matrix of the dataset we'll be working with is too large
+to be tracked with git without compression, so we need to unzip it if we have
+not already.
+
+Note that if your file is not zipped you can skip this chunk.
+
+```{r}
+# if the unzipped folder does not exist -- skip this if you do not have a zipped file
+if (!dir.exists(file.path(
+  data_dir,
+  "GSE75574" # Replace with the name of your file without the .zip extension
+))) {
+  compressed_file <- file.path(
+    data_dir,
+    "GSE75574.zip" # Replace with the name of your zipped file
+  )
+  unzip(compressed_file, exdir = data_dir)
+}
+```
+
+### Expression data
+
+```{r}
+expression_file <- file.path(
+  data_dir,
+  "GSE75574", # Replace with name of the folder in which your expression file is stored
+  "GSE75574.tsv" # Replace with name of your expression file
+)
+exprs_df <- readr::read_tsv(expression_file, progress = FALSE)
+# first column is currently named 'Gene' and contains Ensembl gene IDs
+colnames(exprs_df)[1] <- "ENSEMBL"
+```
+
+Because our gene sets use gene symbols and expression data from refine.bio uses
+Ensembl IDs, we need to do a conversion.
+We're using the default behavior for 1:many mappings here, where only the first
+one is selected
+([docs](https://www.rdocumentation.org/packages/AnnotationDbi/versions/1.30.1/topics/AnnotationDb-objects)).
+
+```{r}
+symbol_mappings <- mapIds(org.Mm.eg.db,
+  keys = exprs_df$ENSEMBL,
+  column = "SYMBOL", keytype = "ENSEMBL"
+)
+```
+
+```{r}
+head(symbol_mappings)
+```
+
+```{r}
+# mapIds returns this in the same order as the keys we passed it to, let's
+# demonstrate that
+all.equal(names(symbol_mappings), exprs_df$ENSEMBL)
+```
+
+We'll annotate these expression data with the gene symbols.
+
+```{r}
+symbol_exprs_df <- exprs_df %>%
+  # add a new column that contains the gene symbols
+  # this gets added as the last column
+  dplyr::mutate(SYMBOL = symbol_mappings) %>%
+  # drop the Ensembl gene IDs
+  dplyr::select(-ENSEMBL) %>%
+  # reorder such that the gene symbols are in the first column
+  dplyr::select(SYMBOL, dplyr::everything()) %>%
+  # drop any genes without a gene symbol
+  dplyr::filter(!is.na(SYMBOL))
+```
+
+How many gene symbols have duplicate values?
+
+```{r}
+sum(duplicated(symbol_exprs_df$SYMBOL))
+```
+
+Collapse to the mean value for that gene symbol.
+
+```{r}
+symbol_exprs_df <- symbol_exprs_df %>%
+  dplyr::group_by(SYMBOL) %>%
+  dplyr::summarise_all(mean)
+```
+
+Write to file.
+
+```{r}
+readr::write_tsv(symbol_exprs_df, file.path(
+  data_dir,
+  "GSE75574", # Replace with name of the folder in which you would like to store your output file
+  "GSE75574_symbols.tsv" # Replace with relevant output name
+))
+```
+
+### Metadata
+
+```{r}
+metadata_file <- file.path(
+  data_dir,
+  "GSE75574", # Replace with name of the folder in which your relevant metadata file is stored
+  "metadata_GSE75574.tsv" # Replace with name of relevant metadata file
+)
+metadata_df <- readr::read_tsv(metadata_file) %>%
+  # drop any metadata columns that are all NAs
+  dplyr::select(-which(apply(is.na(.), 2, all)))
+```
+
+Retain only the most pertinent columns.
+
+```{r}
+metadata_df <- metadata_df %>%
+  dplyr::select(
+    refinebio_accession_code, refinebio_title,
+    refinebio_specimen_part, refinebio_sex, strain
+  )
+```
+
+This particular accession ([`GSE75574`](https://www.refine.bio/experiments/GSE75574/gene-expression-in-mouse-tissues-in-response-to-short-term-calorie-restriction)) is a SuperSeries comprised of experiments
+in multiple tissues from multiple mouse strains.
+We'll use white adipose tissue for all strains in this example.
+
+```{r}
+metadata_df <- metadata_df %>%
+  dplyr::filter(refinebio_specimen_part == "white adipose")
+```
+
+The two groups we are interested in for comparison are calorie restricted vs.
+controls.
+This information is in the title.
+We can extract this and put it in its own column called `condition`.
+
+```{r}
+metadata_df <- metadata_df %>%
+  dplyr::mutate(condition = dplyr::case_when(
+    grepl("control", refinebio_title) ~ "control",
+    grepl("calorierestricted", refinebio_title) ~ "calorierestricted"
+  ))
+```
+
+## Pathway Analysis
+
+### Read in KEGG pathways
+
+First, we need the sets of genes that represent pathways.
+Again, these were prepared in the
+[`kegg_ortholog_mapping`](./kegg_ortholog_mapping.nb.html) notebook (see
+[Gene Sets](#gene-sets) above).
+
+```{r}
+kegg_file <- file.path(
+  "gene-sets",
+  "c2.cp.kegg.v6.2.entrez_mouse_symbol_hcop.gmt"
+)
+kegg_pathways <- read.gmt(kegg_file)
+```
+
+### Prep expression matrix
+
+```{r}
+exprs_mat <- symbol_exprs_df %>%
+  tibble::column_to_rownames("SYMBOL") %>%
+  # same order as the metdata
+  dplyr::select(metadata_df$refinebio_accession_code) %>%
+  # qusage takes a matrix
+  as.matrix()
+```
+
+We want to compare calorie restricted mice to controls.
+
+```{r}
+qusage_results <- qusage(
+  eset = exprs_mat,
+  labels = metadata_df$condition,
+  contrast = "calorierestricted-control",
+  geneSets = kegg_pathways
+)
+```
+
+Save the `QSArray` output.
+We can use this object for visualization or other downstream analyses.
+
+```{r}
+readr::write_rds(
+  qusage_results,
+  file.path(
+    results_dir,
+    "GSE75574_adipose_calorierest-ctrl_QSarray.RDS" # Replace with file name relevant to output results
+  )
+)
+```
+
+### Overall results
+
+We can get a look at the general trend of the results with the `plotCIs`
+function.
+This plots the means and 95% confidence intervals of each pathway we tested,
+sorted such that the gene sets with the highest mean will be on the left of the
+plot.
+These are gene sets that are elevated in calorie restricted mice.
+Error bars are colored by the directionality and corrected p-value (FDR by
+default).
+Unfortunately the p-value color scheme is red-green, which does not work well
+for people with green or red color-vision deficiency.
+
+```{r}
+plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
+```
+
+Save to plot.
+
+```{r}
+pdf(file.path(
+  plots_dir,
+  "GSE75574_adipose_calorierestricted-control_plotCIs.pdf"
+),
+width = 14, height = 8.5
+)
+plotCIs(qusage_results, cex.xaxis = 0.25, main = "Calorie Restricted - Control")
+dev.off()
+```
+
+We can also look at the log fold-change and FDR values for pathways with the
+`qsTable` function.
+By default, this function shows you the top 20 pathways sorted by FDR.
+We can change the `number` argument to `qsTable` to decrease or increase the
+number of pathways returned.
+We can use the `numPathways` function to get _all_ the pathways we tested.
+
+```{r}
+qsTable(qusage_results, number = numPathways(qusage_results))
+```
+
+Write to results.
+
+```{r}
+qsTable(qusage_results, number = numPathways(qusage_results)) %>%
+  readr::write_tsv(file.path(
+    results_dir,
+    "GSE75574_adipose_calorierestricted-control.tsv" # Replace with file name relevant to results output
+  ))
+```
+
+`qusage` has functionality that lets us dig into our results a bit more to
+get an idea of which genes are contributing to the differences between our two
+groups.
+
+### KEGG ECM Receptor Interaction
+
+The KEGG ECM Receptor Interaction pathway expression is reduced in response
+to calorie restriction.
+
+We can look at the distribution of genes in this pathway with the
+`plotGeneSetDistributions` function.
+We tell this function which pathway to plot with the `path.index` argument.
+
+```{r}
+grep(
+  "ECM_RECEPTOR", # Replace with an exact word or phrase that would filter in your desired pathway(s) as the `grep` function looks for all instances of the pattern given -- names of pathways can be seen using the `names(kegg_pathways)` function
+  names(kegg_pathways)
+)
+```
+
+```{r}
+plotGeneSetDistributions(qusage_results, path.index = 114)
+```
+
+_Most_ genes are around zero (no activity), but we see some genes with
+negative activity values.
+We can dig into the _what_ the genes are with the `plotCIsGenes` function.
+
+```{r}
+plotCIsGenes(qusage_results, path.index = 114)
+```
+
+Let's look at another example with the opposite directionality.
+
+### KEGG Steroid Biosynthesis
+
+The KEGG Steroid Biosynthesis pathway expression is increased in calorie
+restricted adipose tissue.
+
+```{r}
+plotGeneSetDistributions(qusage_results, path.index = 9)
+```
+
+This looks about half of the genes have positive activity values.
+
+```{r}
+plotCIsGenes(qusage_results, path.index = 9)
+```
+
+We can make a heatmap with only genes from this pathway.
+The heatmap will have similar information as `plotCIsGenes`, but we'll also
+get a sense of how samples relate to one another.
+
+#### Heatmap
+
+Subset the expression matrix to only genes in the KEGG Steroid Biosynthesis
+pathways.
+
+```{r}
+steroid_genes <- kegg_pathways$KEGG_STEROID_BIOSYNTHESIS
+# rows (genes) in the pathway
+steroid_mat <- exprs_mat[which(rownames(exprs_mat) %in% steroid_genes), ]
+```
+
+We'll use annotation bars for the columns (samples).
+
+```{r}
+# need a data.frame that contains the sample metadata that we're interested in
+annotation_col_df <- metadata_df %>%
+  dplyr::select(refinebio_accession_code, condition, strain) %>%
+  tibble::column_to_rownames("refinebio_accession_code")
+
+# colors to be used in the annotation bars -- we need to assign one for
+# each factor level in the two columns
+annot_colors <- list(
+  condition = c(
+    control = "#FFFFFF",
+    calorierestricted = "#CD2626"
+  ),
+  # palette from
+  # https://github.com/clauswilke/colorblindr/blob/1ac3d4d62dad047b68bb66c06cee927a4517d678/R/palettes.R#L7
+  strain = c(
+    `129S1/SvImJ` = "#E69F00",
+    `B6C3F1/J` = "#56B4E9",
+    `Balbc/J` = "#009E73",
+    `C3H/HeJ` = "#F0E442",
+    `C57BL6/J` = "#0072B2",
+    `CBA/J` = "#D55E00",
+    `DBA/2J` = "#CC79A7"
+  )
+)
+```
+
+Let's make the heatmap with annotation bars.
+
+```{r}
+hm_plot <- pheatmap::pheatmap(steroid_mat,
+  # using blue, white, red color scheme
+  color = colorRampPalette(c(
+    "#0000FF", "#FFFFFF",
+    "#FF0000"
+  ))(25),
+  clustering_distance_cols = "correlation",
+  clustering_distance_rows = "correlation",
+  clustering_method = "average",
+  # scale the expression values of genes for
+  # visualization
+  scale = "row",
+  fontsize_col = 2,
+  angle_col = "45",
+  annotation_col = annotation_col_df,
+  annotation_colors = annot_colors,
+  main = "KEGG Steroid Biosynthesis"
+)
+```
+
+Save the plot.
+
+```{r}
+pdf(file.path(
+  plots_dir,
+  "GSE75574_steroid_biosynthesis_heatmap.pdf" # Replace with relevant output plot name
+),
+width = 7, height = 5
+)
+print(hm_plot)
+dev.off()
+```
+
+## Session info
+
+```{r}
+sessioninfo::session_info()
+```

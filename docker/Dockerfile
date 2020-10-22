@@ -14,7 +14,8 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     zlib1g \
     libbz2-dev \
     liblzma-dev \
-    libreadline-dev
+    libreadline-dev \
+    libglpk40
 
 # libmagick++-dev is needed for coloblindr to install
 RUN apt-get -y --no-install-recommends install \
@@ -48,15 +49,18 @@ RUN Rscript -e  "install.packages( \
 
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
-RUN R -e "BiocManager::install( \
+RUN R -e "options(warn = 2); BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
+      'clusterProfiler', \
       'ComplexHeatmap', \
       'DESeq2', \
       'EnhancedVolcano', \
+      'ggupset', \
       'limma', \
       'marray', \
+      'msigdbr', \
       'org.Mm.eg.db', \
       'org.Dr.eg.db'), \
      update = FALSE)"
