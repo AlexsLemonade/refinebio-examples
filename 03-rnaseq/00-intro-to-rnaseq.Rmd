@@ -36,10 +36,11 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 
 RNA-sequencing measures gene expression by direct high-throughput sequencing methods after the RNA has been isolated from a sample. 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/rnaseq-overview.png" width=400>  
+<img src=../components/figures/rnaseq-overview.png width=400>  
 
-[@rnaseq-blog]
+[based on @rnaseq-blog]
 
+The diagram above provides a brief overview of the RNA-seq process, which includes extracting the total RNA from a tissue population, isolating the specific RNA species, converting the RNA to cDNA, and constructing a sequencing library to perform PCR amplification and sequencing.
 As with all experimental methods, RNA-seq has strengths and limitations that you should consider in regards to your scientific questions.
 
 ### RNA-seq data **strengths**  
