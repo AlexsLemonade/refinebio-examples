@@ -1,8 +1,6 @@
 ---
 name: Other issue
 about: Use this issue template to describe a current issue with an analysis or documentation (that is not a new example analysis)
-title: 'Other issue'
-labels: other issue
 assignees: ''
 
 ---
