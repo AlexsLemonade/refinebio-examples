@@ -7,9 +7,11 @@ assignees: ''
 
 ---
 
-### What are goals of this new example analysis?
+### What are the goals of this new example analysis?
 
 <!-- What should this new example show that's not currently shown in the existing samples -->
+<!-- What was the background and context that lead to this new example? -->
+<!-- Links to github comments or related issues are also helpful --> 
 
 ### What kind of dataset will this need?
 
