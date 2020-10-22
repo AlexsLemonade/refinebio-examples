@@ -347,7 +347,7 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
-Default is the `references.bib` script at the top of the repository.  
+Default is the `references.bib` in the `components` folder.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
 ### Add new analyses to the Snakefile
