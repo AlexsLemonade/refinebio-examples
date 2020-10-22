@@ -37,47 +37,38 @@ jobs:
           git checkout $pages_branch
           git merge -s recursive --strategy-option=theirs ${{ github.event.after }}
 
-      # Test if Dockerfile has changed
-      # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
-      - name: Check Dockerfile for changes
-        id: check_docker
-        env:
-          BEFORE: ${{ github.event.before }}
-        run: |
-          git diff-index --name-only $BEFORE > changes.txt
-          if grep "docker/Dockerfile" changes.txt ; then
-            echo "Dockerfile changed"
-            echo "::set-output name=changed::1"
-          else
-            echo "No change to Dockerfile"
-            echo "::set-output name=changed::0"
-          fi
-          rm changes.txt
-
       # Login to Dockerhub
       - name: Login to DockerHub
-        if: steps.check_docker.outputs.changed == 1
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_ID }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       # set up Docker build
       - name: Set up Docker Buildx
-        if: steps.check_docker.outputs.changed == 1
         uses: docker/setup-buildx-action@v1
-      # Build docker image (We are not using caching here to force a clean build)
-      - name: Build and Push Docker image
-        if: steps.check_docker.outputs.changed == 1
+      # Build the Docker image
+      - name: Build and Load Docker image
         uses: docker/build-push-action@v2
         with:
-          push: true
+          push: false
+          load: true
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
+      # push the Docker image if this is staging
+      - name: Push Docker image
+        if: github.ref == 'refs/heads/staging'
+        run: docker push ccdl/refinebio-examples:latest
+      # retag and push the Docker image if this is master
+      - name: Push release Docker image
+        if: github.ref == 'refs/heads/master'
+        run: | 
+          docker tag ccdl/refinebio-examples:latest ccdl/refinebio-examples:release
+          docker push ccdl/refinebio-examples:release
+      
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
-
       - name: Render all pages to html
         run: |
           docker run \
