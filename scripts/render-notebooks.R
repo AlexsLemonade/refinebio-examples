@@ -115,7 +115,6 @@ rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
     toc = TRUE, toc_depth = 2,
     toc_float = TRUE, number_sections = TRUE,
-    df_print = "paged",
     highlight = "haddock",
     df_print = "paged",
     css = normalizePath(file.path("components", "styles.css"))
