@@ -32,9 +32,9 @@ Microarrays measure gene expression using chips filled with oligonucleotide prob
 After hybridization, the microarrays are scanned, and the fluorescence intensity for each probe is measured.
 The fluorescence intensity indicates the number of labeled fragments bound and therefore the relative quantity of the transcript the probe is designed for. 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/46f3d93471088218eda3104aa7a62bd90f6dfa0c/components/figures/microarray-overview.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/46f3d93471088218eda3104aa7a62bd90f6dfa0c/components/figures/microarray-overview.png" width=600>
 
-[based on @microarray-video]
+[based on diagram from @microarray-video]
 
 There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays). 
 At this time, refine.bio only supports single-color arrays, so our examples and advice are generally from the perspective of using single-color array.
