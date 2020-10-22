@@ -2563,15 +2563,6 @@ window.onload = function() {
   ul.task-list{list-style: none;}
       </style>
 
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-      </style>
-
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -2620,7 +2611,7 @@ h6 {
 <style type="text/css">html,
 body {
 font-family: 'Lato', sans-serif;
-font-size: 14px;
+font-size: 16px;
 -webkit-font-smoothing: antialiased;
 line-height: 1.5;
 }
@@ -2652,20 +2643,36 @@ text-decoration: none;
 color: #386db0;
 line-height: 1;
 }
-.navbar-default {
-font-size: 1.625rem;
-background-color: #002F6C !important;
-color: #FDFDFD;
-}
-.navbar-brand, nav a {
+.navbar-default, .navbar-nav, .navbar-inverse{
+font-size: 1rem;
+max-width: 100%;
+background-color: #386db0 !important;
 color: #FDFDFD !important;
 }
+.navbar-nav>li>a {
+font-size: 1rem;
+background-color: #386db0 !important;
+color: #FDFDFD !important;
+}
+.navbar-default .navbar-brand{
+color: #FDFDFD; !important;
+float: left;
+max-width: 100%;
+display: block;
+overflow: visible;
+padding-bottom: 32px;
+}
 ul.dropdown-menu {
-background-color: #002F6C !important;
-color: #FDFDFD;
+background-color: #FDFDFD !important;
+color: #000000 !important;
+}
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:active {
+background-color: #386db0 !important;
+color: #FDFDFD !important;
 }
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
 background-color: #386db0 !important;
+color: #FDFDFD !important;
 }
 </style>
 
@@ -2934,15 +2941,20 @@ div.tocify {
 <!-- Navigation header for refine.bio example Rmarkdown notebooks -->
 <nav class="navbar navbar-default  navbar-fixed-top">
   <div class="container">
-    <div class="navbar-header">
+    <div class="navbar-inverse">
       <!-- NOTE: add "navbar-inverse" class for an alternate navbar background -->
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+  <!--    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">refine.bio examples</a>
-    </div>
+      </button> -->
+      <div class="logo">
+        <a class="navbar-brand" href="#">
+          <!-- <img src = "../components/refine-bio-ex-logo.svg" alt ="refine.bio examples"> -->
+          refine.bio examples
+        </a>
+      </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <!-- This outer list is the main navigation menu elements -->
       <ul class="nav navbar-nav">
@@ -2960,7 +2972,9 @@ div.tocify {
             <li><a href="../02-microarray/differential-expression_microarray_02_several-groups.html">Differential Expression - Several groups</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
+            <li><a href="../02-microarray/pathway-analysis_microarray_02_ora.html">Pathway Analysis - ORA</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
+            <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
 
           </ul>
         </li> <!--/microarray dropdown-->
@@ -2976,6 +2990,7 @@ div.tocify {
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
+            <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -2988,14 +3003,17 @@ div.tocify {
               <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
 
             </ul>
+
         </li><!--/advanced dropdown-->
+
       </ul>
 
-      <!-- Right side menubar -->
+      <!-- Right side menubar  -->
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give us feedback</a></li>
-        <li><a href="https://www.refine.bio">refine.bio</a></li>
+        <li><a href="https://www.refine.bio"> Back to refine.bio</a></li>
+        <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give Feedback</a></li>
       </ul>
+        </div>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </nav><!--/.navbar -->

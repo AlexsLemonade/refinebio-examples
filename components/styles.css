@@ -1,7 +1,7 @@
 html,
 body {
   font-family: 'Lato', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
 }
@@ -33,19 +33,37 @@ a {
   color: #386db0;
   line-height: 1;
 }
-.navbar-default {
+.navbar-default, .navbar-nav, .navbar-inverse{
+  font-size: 1rem;
+  max-width: 100%;
+  background-color: #386db0 !important;
+  color: #FDFDFD !important;
+}
+
+.navbar-nav>li>a {
   font-size: 1rem;
   background-color: #386db0 !important;
-  color: #FDFDFD;
+  color: #FDFDFD !important;
 }
-.navbar-brand, nav a {
-  color: #000000 !important;
+
+.navbar-default .navbar-brand{
+  color: #FDFDFD; !important;
+  float: left;
+  max-width: 100%;
+  display: block;
+  overflow: visible;
+  padding-bottom: 32px;
 }
+
 ul.dropdown-menu {
   background-color: #FDFDFD !important;
   color: #000000 !important;
 }
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:active {
+  background-color: #386db0 !important;
+  color: #FDFDFD !important;
+}
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
   background-color: #386db0 !important;
-  color: #000000 !important;
+  color: #FDFDFD !important;
 }
