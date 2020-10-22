@@ -32,7 +32,7 @@ Microarrays measure gene expression using chips filled with oligonucleotide prob
 After hybridization, the microarrays are scanned, and the fluorescence intensity for each probe is measured.
 The fluorescence intensity indicates the number of labeled fragments bound and therefore the relative quantity of the transcript the probe is designed for. 
 
-<img src=../components/figures/microarray-overview.png width=400>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/72ba39735440ea40051a3e753a71ae80f1094eac/components/figures/microarray-overview.png" width=400>
 
 [based on @microarray-video]
 
