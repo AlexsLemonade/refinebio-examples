@@ -357,19 +357,25 @@ These types of PRs should only involve well-polished and ready for the public ma
 
 **Scenario 1: All changes from staging should be made live**  
 
-If you are certain that all changes in `staging` should be carried over to `master`, first create a new branch from the most up-to-date `staging` branch.
-Now you can use the new branch to create the pull request to master as you would normally do.
-This allows you can resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+- Create a new branch from the most up-to-date `master` branch.
+- Checkout your newly created branch.
+- If you are certain that all changes in `staging` should be carried over to `master`, then you can do a `git merge staging` into your new branch.
+- Now you can use the new branch to create the pull request to master as you would normally do.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
 
 **Scenario 2: Only some changes from staging should be made live**  
 
-If only some changes in `staging` are ready to be public facing (and there isn't great timing for when the other changes will be ready), then you can use cherry picking to only bring over the changes ready to be live.
-This time, create a new branch from the most up-to-date `master` branch which you will use for merging.
-
-_How to cherry pick commits_
-Checkout your new branch.
-For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
+- Create a new branch from the most up-to-date `master` branch.
+- Checkout your newly created branch.
+- For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
+- Now you can use the new branch to create the pull request to `master` as you would normally do.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
 
 _Tips for getting commits ids_  
 GitKraken shows commits, but sometimes I find it hard to follow which commits belong to which branch.
