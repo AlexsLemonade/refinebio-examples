@@ -388,7 +388,11 @@ In (hopefully rare) scenarios where something that has already been published is
 These PRs should only be fairly small PRs and not anything that would require intense review.
 This more for situations where "this is broken and here's a fix".
 
-After the change has been sent to `master`, you should also make sure the change still ends up in `staging`.
+- Create a new branch from the most up-to-date `master` branch.
+- Checkout your newly created branch.
+- Make the hotfix change.
+- Create the pull request to `master` as you would normally do.
+- After your PR to `master` is approved, file a second PR from the same branch to `staging`.
 
 #### A summary of types of PRs.
 
