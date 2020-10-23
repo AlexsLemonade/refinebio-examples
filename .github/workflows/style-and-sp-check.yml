@@ -5,7 +5,7 @@ name: Style and spell check R markdowns
 # events but only for the master branch
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ staging, master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
