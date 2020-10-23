@@ -346,6 +346,10 @@ The `staging` branch does not feed into the published, user-facing material so y
 Use `squash and merge` for these merges.
 `squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
 
+Previews for `staging` branch should be review using html preview.
+Go here and navigate to the pertinent pages that you've changed.
+`http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
+
 #### Make it live: staged changes merged to master
 
 Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a merge to `master` pull request.
@@ -372,7 +376,7 @@ GitKraken shows commits, but sometimes I find it hard to follow which commits be
 If you checkout `staging` and use `git log` you can see all the most recent commits for the `staging` branch.
 If you want to save it to a file for easy browsing and copy/pasting you can use this command `git log --pretty=format:'%h was %an, %ar, message: %s' > git.log`
 
-#### Make it live, but quicker: direct merges to master, hotfixes
+#### Make it live, but quickly: direct merges to master, hotfixes
 
 In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
 These PRs should only be fairly small PRs and not anything that would require intense review.
