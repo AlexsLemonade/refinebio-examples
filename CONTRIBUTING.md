@@ -331,26 +331,66 @@ docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-exa
 
 ### Pull Requests
 
+There are two protected branches in this repo:
+
+`staging` - where changes are initially sent for testing and previewing.
+`master` - where changes that were tested are made user-facing.
+
+This two branch set up allows us to make incremental changes that we can test before directly making our changes "live".
+It also means that pull requests have some extra methodology.
+
+#### Add to the testing branch: merges to staging
+
 After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch (the default branch for this repository).
 The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
+Use `squash and merge` for these merges.
+`squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
 
-Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a `staging` -> `master` pull request.
+#### Make it live: staged changes merged to master
+
+Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a merge to `master` pull request.
 These types of PRs should only involve well-polished and ready for the public material.
+
+**Scenario 1: All changes from staging should be made live**  
+
+If you are certain that all changes in `staging` should be carried over to `master`, first create a new branch from the most up-to-date `staging` branch.
+Now you can use the new branch to create the pull request to master as you would normally do.
+This allows you can resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+
+**Scenario 2: Only some changes from staging should be made live**  
+
+If only some changes in `staging` are ready to be public facing (and there isn't great timing for when the other changes will be ready), then you can use cherry picking to only bring over the changes ready to be live.
+This time, create a new branch from the most up-to-date `master` branch which you will use for merging.
+
+_How to cherry pick commits_
+Checkout your new branch.
+For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
+Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
+
+_Tips for getting commits ids_  
+GitKraken shows commits, but sometimes I find it hard to follow which commits belong to which branch.
+If you checkout `staging` and use `git log` you can see all the most recent commits for the `staging` branch.
+If you want to save it to a file for easy browsing and copy/pasting you can use this command `git log --pretty=format:'%h was %an, %ar, message: %s' > git.log`
+
+#### Make it live, but quicker: direct merges to master, hotfixes
 
 In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
 These PRs should only be fairly small PRs and not anything that would require intense review.
 This more for situations where "this is broken and here's a fix".
 
-In summary, the three types of pull requests in this repo:  
+After the change has been sent to `master`, you should also make sure the change still ends up in `staging`.
+
+#### A summary of types of PRs.
 
 - `some-branch` -> `staging` -> NOT published to user-facing content.
 This will be how most material is prepared so we can be more incremental with our changes and ultimately make sure only the very polished material is made user-facing.
 
-- `staging` -> `master` -> published to user-facing.
+- Group of changes in `staging` -> `master` -> published to user-facing.
 This is for when the updates from the previous kinds of PRs are "ready for prime time".
 
 - Hotfix PR: `some-branch` -> `master` -> published to user-facing
 For "this-is-broken" type changes that should be hastened to the user-facing content.
+This may require a follow up merge to `staging`.
 
 ### Automatic rendering using GitHub actions
 
