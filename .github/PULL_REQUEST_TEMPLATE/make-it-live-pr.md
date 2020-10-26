@@ -1,3 +1,12 @@
+---
+name: Make it live PR
+about: Use this PR template for making changes from staging -> master
+title: 'Make it live'
+labels: make it live
+assignees: ''
+
+---
+
 ## Changes being made live:
 
 <!-- What overall changes are being included in this "make it live" PR? and are they all ready to be made live? -->

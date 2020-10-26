@@ -1,3 +1,12 @@
+---
+name: Hotfix PR
+about: Use this PR template for filing a a hotfix directly to master (and then also to staging)
+title: 'Hotfix'
+labels: hotfix
+assignees: ''
+
+---
+
 ## Hotfix Purpose:
 
 <!-- What is the urgent and straightforward problem that requirers hotfix. Why is a hotfix needed? -->
@@ -20,4 +29,4 @@
 
 <!-- Is there anything you are unsure about with this fix that you could use the reviewer's help checking/double-checking? -->
 
-<!-- Are there any outstanding things you think should be check up on? Should you file an additional issue? --> 
+<!-- Are there any outstanding things you think should be check up on? Should you file an additional issue? -->

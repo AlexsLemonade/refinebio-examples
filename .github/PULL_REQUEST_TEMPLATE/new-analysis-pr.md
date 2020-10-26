@@ -1,11 +1,23 @@
+---
+name: New analysis PR
+about: Use this PR template for filing a new analysis issue
+title: 'New Analysis'
+labels: new analysis
+assignees: ''
+
+---
+
 ## Purpose:
-What issue(s) does your PR address?
+
+<!-- What issue(s) does your PR address? -->
 
 ## Strategy
-What was your strategy for this new or edited analysis?
+
+<!-- What was your strategy for this new or edited analysis? -->
 
 ## Concerns/Questions for reviewers:
-What things should reviewers look out for?
+
+<!-- What things should reviewers look out for? -->
 
 ## Analysis Pull Request Check List (roughly in order):
 
