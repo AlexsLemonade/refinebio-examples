@@ -1,11 +1,14 @@
 ## Changes being made live:
+
 <!-- What overall changes are being included in this "make it live" PR? and are they all ready to be made live? -->
 
 ## List of commits/PR's included:
+
 <!-- List the staging commits/PR #'s are included PR? with a general summary of what each does -->
 
 ## Link to html preview
 
+For reviewing purposes, you can take a browse through htmlpreview: http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html
 
 ## Make it live checklist:
 
