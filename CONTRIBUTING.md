@@ -394,7 +394,7 @@ This more for situations where "this is broken and here's a fix".
 - Make the hotfix change.
 - Create the pull request to `master` as you would normally do.
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
-- File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number. 
+- File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number.
 
 #### A summary of types of PRs.
 
@@ -404,9 +404,9 @@ This will be how most material is prepared so we can be more incremental with ou
 - Group of changes in `staging` -> `master` -> published to user-facing.
 This is for when the updates from the previous kinds of PRs are "ready for prime time".
 
-- Hotfix PR: `some-branch` -> `master` -> published to user-facing
+- Hotfix PR: `hotfix` -> `master` -> published to user-facing.
 For "this-is-broken" type changes that should be hastened to the user-facing content.
-This may require a follow up merge to `staging`.
+This requires a follow up pull request and merge to `staging`.
 
 ### Automatic rendering using GitHub actions
 
