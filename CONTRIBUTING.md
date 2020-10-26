@@ -31,7 +31,7 @@
   - [Mechanics of the rendering](#mechanics-of-the-rendering)
   - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
-  - [Pull Requests](#pull-requests)
+- [Pull Requests](#pull-requests)
     - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
     - [Make it live: staged changes merged to master](#make-it-live-staged-changes-merged-to-master)
     - [Make it live, but quickly: direct merges to master, hotfixes](#make-it-live-but-quickly-direct-merges-to-master-hotfixes)
@@ -334,7 +334,7 @@ If you already have the `refinebio-examples` docker image:
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
 
-### Pull Requests
+## Pull Requests
 
 There are two protected branches in this repo:
 
