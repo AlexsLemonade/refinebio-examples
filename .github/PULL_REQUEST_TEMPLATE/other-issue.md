@@ -8,7 +8,7 @@ assignees: ''
 ### Purpose
 
 <!-- What was the background and context that lead to this problem? -->
-<!-- Links to github comments or related issues are also helpful -->
+<!-- Links to Github comments or related issues are also helpful -->
 
 ### Issue addressed
 
