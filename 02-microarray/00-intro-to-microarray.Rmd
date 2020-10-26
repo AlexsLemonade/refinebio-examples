@@ -32,12 +32,13 @@ Microarrays measure gene expression using chips filled with oligonucleotide prob
 After hybridization, the microarrays are scanned, and the fluorescence intensity for each probe is measured.
 The fluorescence intensity indicates the number of labeled fragments bound and therefore the relative quantity of the transcript the probe is designed for. 
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/13fd8c2d8469f2ac35e1608b4a952a5f5fe9698c/components/figures/microarray-overview.jpg" width=400>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/46f3d93471088218eda3104aa7a62bd90f6dfa0c/components/figures/microarray-overview.png" width=600>
 
-[@microarray-video]
+[based on diagram from @microarray-video]
 
 There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays). 
 At this time, refine.bio only supports single-color arrays, so our examples and advice are generally from the perspective of using single-color array.
+The diagram above shows an overview of the single-color array process which includes extracting the total RNA from a sample, labeling the RNA with fluorescent dye, hybridizing the labels, and scanning the fluorescent image to analyze the fluorescence intensity.
 
 The two most common microarray platforms on refine.bio are [Affymetrix GeneChips](https://www.thermofisher.com/us/en/home/life-science/microarray-analysis/transcriptome-profiling-microarrays.html) and [Illumina BeadArray](https://www.illumina.com/documents/products/datasheets/datasheet_gene_exp_analysis.pdf). 
 A longer list of specific arrays that are supported by refine.bio can be found [here](https://github.com/AlexsLemonade/refinebio/blob/dev/config/supported_microarray_platforms.csv). 
