@@ -284,7 +284,7 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using GitHub actions upon opening a PR for master or prior to merging to master.
+Spell checks are run automatically using GitHub actions upon opening a PR for `master` or `staging`.
 GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
@@ -304,7 +304,7 @@ The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html`
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
-All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
+All `.html` files will be re-rendered upon merging to `master` or `staging`, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
 
 ### How to re-render the notebooks locally
 
@@ -328,6 +328,85 @@ If you already have the `refinebio-examples` docker image:
 ```
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
+
+### Pull Requests
+
+There are two protected branches in this repo:
+
+`staging` - where changes are initially sent for testing and previewing.
+`master` - where changes that were tested are made user-facing.
+
+This two branch set up allows us to make incremental changes that we can test before directly making our changes "live".
+It also means that pull requests have some extra methodology.
+
+#### Add to the testing branch: merges to staging
+
+After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch (the default branch for this repository).
+The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
+Use `squash and merge` when merging these pull requests into `staging` after approval.
+`squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
+
+After merging a pull request into `staging`, check that all the changes are correct by reviewing the newly generated pages using html preview.
+Go here and navigate to the pertinent pages that you've changed.
+`http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
+You may also want to spot-check other pages to be sure that there have not been inadvertent or unexpected  changes introduced.
+
+#### Make it live: staged changes merged to master
+
+Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a merge to `master` pull request.
+These types of PRs should only involve well-polished and ready for the public material.
+
+**Scenario 1: All changes from staging should be made live**  
+
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
+- Checkout `make-it-live`, your newly created branch.
+- If you are certain that all changes in `staging` should be carried over to `master`, then you can do a `git merge staging` into your new branch.
+- Now you can use the new branch to create the pull request to master as you would normally do.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
+
+**Scenario 2: Only some changes from staging should be made live**  
+
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
+- Checkout `make-it-live`, your newly created branch.
+- For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
+Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
+- Now you can use the new branch to create the pull request to `master` as you would normally do.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
+
+_Tips for getting commits ids_  
+GitKraken shows commits, but sometimes I find it hard to follow which commits belong to which branch.
+If you checkout `staging` and use `git log` you can see all the most recent commits for the `staging` branch.
+If you want to save it to a file for easy browsing and copy/pasting you can use this command `git log --pretty=format:'%h was %an, %ar, message: %s' > git.log`
+
+#### Make it live, but quickly: direct merges to master, hotfixes
+
+In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
+These PRs should only be fairly small PRs and not anything that would require intense review.
+This more for situations where "this is broken and here's a fix".
+
+- Create a new branch from the most up-to-date `master` branch and call it `hotfix`.
+- Checkout `hotfix`, your newly created branch.
+- Make the hotfix change.
+- Create the pull request to `master` as you would normally do.
+- After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
+- File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number.
+
+#### A summary of types of PRs.
+
+- `some-branch` -> `staging` -> NOT published to user-facing content.
+This will be how most material is prepared so we can be more incremental with our changes and ultimately make sure only the very polished material is made user-facing.
+
+- Group of changes in `staging` -> `master` -> published to user-facing.
+This is for when the updates from the previous kinds of PRs are "ready for prime time".
+
+- Hotfix PR: `hotfix` -> `master` -> published to user-facing.
+For "this-is-broken" type changes that should be hastened to the user-facing content.
+This requires a follow up pull request and merge to `staging`.
 
 ### Automatic rendering using GitHub actions
 
@@ -380,7 +459,7 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
 ## Pull request status checks
 
-To require that branches are up-to-date with `master` before merging, we need to require that a status check passes before merging to `master`.
+To require that branches are up-to-date with `master` or `staging` before merging, we need to require that a status check passes before merging to `master` or `staging`.
 Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
 The status check used is a GitHub Action that test builds the docker image.
 Most of the time, this should pull cached docker layers, so this will complete in a matter of minutes.
