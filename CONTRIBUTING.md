@@ -343,12 +343,13 @@ It also means that pull requests have some extra methodology.
 
 After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch (the default branch for this repository).
 The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
-Use `squash and merge` for these merges.
+Use `squash and merge` when merging these pull requests into `staging` after approval.
 `squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
 
-Previews for `staging` branch should be review using html preview.
+After merging a pull request into `staging`, check that all the changes are correct by reviewing the newly generated pages using html preview.
 Go here and navigate to the pertinent pages that you've changed.
 `http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
+You may also want to spot-check other pages to be sure that there have not been inadvertent or unexpected  changes introduced.
 
 #### Make it live: staged changes merged to master
 
@@ -357,8 +358,8 @@ These types of PRs should only involve well-polished and ready for the public ma
 
 **Scenario 1: All changes from staging should be made live**  
 
-- Create a new branch from the most up-to-date `master` branch.
-- Checkout your newly created branch.
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
+- Checkout `make-it-live`, your newly created branch.
 - If you are certain that all changes in `staging` should be carried over to `master`, then you can do a `git merge staging` into your new branch.
 - Now you can use the new branch to create the pull request to master as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
@@ -368,8 +369,8 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 
 **Scenario 2: Only some changes from staging should be made live**  
 
-- Create a new branch from the most up-to-date `master` branch.
-- Checkout your newly created branch.
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
+- Checkout `make-it-live`, your newly created branch.
 - For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
 - Now you can use the new branch to create the pull request to `master` as you would normally do.
@@ -388,11 +389,12 @@ In (hopefully rare) scenarios where something that has already been published is
 These PRs should only be fairly small PRs and not anything that would require intense review.
 This more for situations where "this is broken and here's a fix".
 
-- Create a new branch from the most up-to-date `master` branch.
-- Checkout your newly created branch.
+- Create a new branch from the most up-to-date `master` branch and call it `hotfix`.
+- Checkout `hotfix`, your newly created branch.
 - Make the hotfix change.
 - Create the pull request to `master` as you would normally do.
-- After your PR to `master` is approved, file a second PR from the same branch to `staging`.
+- After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
+- File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number. 
 
 #### A summary of types of PRs.
 
