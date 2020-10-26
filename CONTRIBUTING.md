@@ -363,8 +363,8 @@ These types of PRs should only involve well-polished and ready for the public ma
 
 **Scenario 1: All changes from staging should be made live**  
 
-- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
-- Checkout `make-it-live`, your newly created branch.
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live-<mychanges>` where `mychanges` has a short tag relevant to the changes.
+- Checkout your newly created `make-it-live` branch.
 - If you are certain that all changes in `staging` should be carried over to `master`, then you can do a `git merge staging` into your new branch.
 - Now you can use the new branch to create the pull request to master as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
@@ -374,8 +374,8 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 
 **Scenario 2: Only some changes from staging should be made live**  
 
-- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
-- Checkout `make-it-live`, your newly created branch.
+- Create a new branch from the most up-to-date `master` branch, call it `make-it-live-<mychanges>` where `mychanges` has a short tag relevant to the changes.
+- Checkout your newly created `make-it-live` branch.
 - For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
 - Now you can use the new branch to create the pull request to `master` as you would normally do.
@@ -394,8 +394,8 @@ In (hopefully rare) scenarios where something that has already been published is
 These PRs should only be fairly small PRs and not anything that would require intense review.
 This more for situations where "this is broken and here's a fix".
 
-- Create a new branch from the most up-to-date `master` branch and call it `hotfix`.
-- Checkout `hotfix`, your newly created branch.
+- Create a new branch from the most up-to-date `master` branch and call it `hotfix-mybug`, where where `mybug` has a short tag relevant to the changes.
+- Checkout your newly created `hotfix` branch.
 - Make the hotfix change.
 - Create the pull request to `master` as you would normally do.
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
