@@ -31,6 +31,14 @@
   - [Mechanics of the rendering](#mechanics-of-the-rendering)
   - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
+  - [Pull Requests](#pull-requests)
+    - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
+    - [Make it live: staged changes merged to master](#make-it-live-staged-changes-merged-to-master)
+    - [Make it live, but quickly: direct merges to master, hotfixes](#make-it-live-but-quickly-direct-merges-to-master-hotfixes)
+    - [A summary of types of PRs.](#a-summary-of-types-of-prs)
+  - [Github actions summary](#github-actions-summary)
+    - [Spell check and style](#spell-check-and-style)
+    - [Docker image and rendering](#docker-image-and-rendering)
   - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
@@ -172,6 +180,9 @@ These analyses follow the [Google R Style Guide](https://google.github.io/styleg
 Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
 This will help fix some spacing and formatting issues automatically.
 
+Github actions will also automatically run styler and commit back to your branch any changes.
+See the [Github actions section](#github-actions-summary) for more info.
+
 #### Session Info
 
 `sessioninfo::session_info()` should always be printed out at the end.
@@ -284,7 +295,7 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using GitHub actions upon opening a PR for `master` or `staging`.
+Spell checks are [run automatically using GitHub actions]((#github-actions-summary) upon opening a PR for `master` or `staging`.
 GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
@@ -367,6 +378,8 @@ These types of PRs should only involve well-polished and ready for the public ma
 This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
 It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/all-changes-pr.png" width=600>
+
 **Scenario 2: Only some changes from staging should be made live**  
 
 - Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
@@ -377,6 +390,8 @@ Or in GitKraken, you can right click on the commit and choose `Cherry pick commi
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
 This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/some-changes-pr.png" width=600>
 
 _Tips for getting commits ids_  
 GitKraken shows commits, but sometimes I find it hard to follow which commits belong to which branch.
@@ -396,6 +411,8 @@ This more for situations where "this is broken and here's a fix".
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
 - File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number.
 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/hotfix-pr.png" width=600>
+
 #### A summary of types of PRs.
 
 - `some-branch` -> `staging` -> NOT published to user-facing content.
@@ -407,6 +424,26 @@ This is for when the updates from the previous kinds of PRs are "ready for prime
 - Hotfix PR: `hotfix` -> `master` -> published to user-facing.
 For "this-is-broken" type changes that should be hastened to the user-facing content.
 This requires a follow up pull request and merge to `staging`.
+
+### Github actions summary
+
+#### Spell check and style
+
+When pull requests are initiated, spell check and styler are run by Github actions.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/gha-spell-check.png" width=600>
+
+If the styling introduces changes to the files, these changes will be committed back to your branch.
+If spell check finds more than 2 errors, Github actions will fail.
+See the [spell check section](#spell-checking) for instructions on how to see your spelling errors and otherwise use spell check.
+
+#### Docker image and rendering
+
+After a pull request to `staging` or `master` branch is approved and a merge to one of these branches has been initiated, a sequence of Github actions makes sure that the rendered html files are pushed to the correct branch and that the updated docker image is pushed to Dockerhub.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/gha-docker.png" width=600>
+
+See the [Docker](#docker-for-refinebio-examples) and the next section about automatic rendering for more on how these steps are conducted.
 
 ### Automatic rendering using GitHub actions
 
