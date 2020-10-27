@@ -31,10 +31,10 @@
   - [Mechanics of the rendering](#mechanics-of-the-rendering)
   - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
-  - [Pull Requests](#pull-requests)
+- [Pull Requests](#pull-requests)
     - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
-    - [Make it live: staged changes merged to master](#make-it-live-staged-changes-merged-to-master)
-    - [Make it live, but quickly: direct merges to master, hotfixes](#make-it-live-but-quickly-direct-merges-to-master-hotfixes)
+    - [Publish: staged changes merged to master](#publish-staged-changes-merged-to-master)
+    - [Publish, but quickly: direct merges to master, hotfixes](#publish-but-quickly-direct-merges-to-master-hotfixes)
     - [A summary of types of PRs.](#a-summary-of-types-of-prs)
   - [Github actions summary](#github-actions-summary)
     - [Spell check and style](#spell-check-and-style)
@@ -340,14 +340,14 @@ If you already have the `refinebio-examples` docker image:
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
 
-### Pull Requests
+## Pull Requests
 
 There are two protected branches in this repo:
 
 `staging` - where changes are initially sent for testing and previewing.
 `master` - where changes that were tested are made user-facing.
 
-This two branch set up allows us to make incremental changes that we can test before directly making our changes "live".
+This two branch set up allows us to make incremental changes that we can test before publishing to our user-facing github pages.
 It also means that pull requests have some extra methodology.
 
 #### Add to the testing branch: merges to staging
@@ -362,16 +362,17 @@ Go here and navigate to the pertinent pages that you've changed.
 `http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
 You may also want to spot-check other pages to be sure that there have not been inadvertent or unexpected  changes introduced.
 
-#### Make it live: staged changes merged to master
+#### Publish: staged changes merged to master
 
-Once a set of changes that are merged to `staging` are ready to be published and made "live", you can file a merge to `master` pull request.
+Once a set of changes that are merged to `staging` are ready to be published, you can file a merge to `master` pull request.
+
 These types of PRs should only involve well-polished and ready for the public material.
 
-**Scenario 1: All changes from staging should be made live**  
+**Scenario 1: All changes from staging should be published**  
 
-- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
-- Checkout `make-it-live`, your newly created branch.
-- If you are certain that all changes in `staging` should be carried over to `master`, then you can do a `git merge staging` into your new branch.
+- Create a new branch from the most up-to-date `master` branch, call it `publish-mychanges` where `mychanges` is a short tag relevant to the changes.
+- Checkout your newly created `publish` branch.
+- If you are certain that all changes in `staging` should be carried over to `master` (aka published to Github pages), then you can do a `git merge staging` into your new branch.
 - Now you can use the new branch to create the pull request to master as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
@@ -380,11 +381,11 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/5b88a7a3aab29fe7ef5b47cb45b932252ec1b5a5/components/pr-diagrams/all-changes-pr.png" width=600>
 
-**Scenario 2: Only some changes from staging should be made live**  
+**Scenario 2: Only some changes from staging should be published**  
 
-- Create a new branch from the most up-to-date `master` branch, call it `make-it-live`.
-- Checkout `make-it-live`, your newly created branch.
-- For each commit that needs to be made live, add it to your new branch by using `git cherry-pick <commit_id>`.
+- Create a new branch from the most up-to-date `master` branch, call it `publish-mychanges` where `mychanges` is a short tag relevant to the changes.
+- Checkout your newly created `publish` branch.
+- For each commit that needs to be published, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
 - Now you can use the new branch to create the pull request to `master` as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
@@ -398,14 +399,14 @@ GitKraken shows commits, but sometimes I find it hard to follow which commits be
 If you checkout `staging` and use `git log` you can see all the most recent commits for the `staging` branch.
 If you want to save it to a file for easy browsing and copy/pasting you can use this command `git log --pretty=format:'%h was %an, %ar, message: %s' > git.log`
 
-#### Make it live, but quickly: direct merges to master, hotfixes
+#### Publish a change, but quickly: direct merges to master, hotfixes
 
 In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
 These PRs should only be fairly small PRs and not anything that would require intense review.
 This more for situations where "this is broken and here's a fix".
 
-- Create a new branch from the most up-to-date `master` branch and call it `hotfix`.
-- Checkout `hotfix`, your newly created branch.
+- Create a new branch from the most up-to-date `master` branch and call it `hotfix-mybug`, where where `mybug` is a short tag relevant to the changes.
+- Checkout your newly created `hotfix` branch.
 - Make the hotfix change.
 - Create the pull request to `master` as you would normally do.
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
