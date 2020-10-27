@@ -1,12 +1,11 @@
 
-
-### Click on a link to choose a PR template that should suite your needs:
-
-For publishing changes to Github pages:
-[Publishing PR](https://github.com/AlexsLemonade/refinebio-examples/compare/survey?expand=1&template=publish-pr.md).
+### Use a link to choose a PR template meant for the type of changes you are proposing:
 
 For any stage of a adding a new analysis example:
 [New analysis PR](https://github.com/AlexsLemonade/refinebio-examples/compare/survey?expand=1&template=new-analysis-pr.md).
+
+For publishing changes to Github pages:
+[Publishing PR](https://github.com/AlexsLemonade/refinebio-examples/compare/survey?expand=1&template=publish-pr.md).
 
 For either stage of a hotfix PR -- something that is straightforward and needs to be user-facing quickly:
 [Hotfix PR](https://github.com/AlexsLemonade/refinebio-examples/compare/survey?expand=1&template=hotfix-pr.md).
