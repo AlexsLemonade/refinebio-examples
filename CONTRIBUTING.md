@@ -376,7 +376,7 @@ These types of PRs should only involve well-polished and ready for the public ma
 - Now you can use the new branch to create the pull request to master as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/67969ada88ffaaff4d675feaee09d7ccecc37fc1/components/pr-diagrams/all-changes-pr.png" width=600>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/all-changes-pr.png" width=600>
 
 This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
 It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
@@ -390,7 +390,7 @@ Or in GitKraken, you can right click on the commit and choose `Cherry pick commi
 - Now you can use the new branch to [create the pull request where the `master` branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository) is the base branch.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/67969ada88ffaaff4d675feaee09d7ccecc37fc1/components/pr-diagrams/some-changes-pr.png" width=600>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/some-changes-pr.png" width=600>
 
 In this example above, the blue project is ready to bee published, but the red project is not.
 So in this scenario, we would cherry pick both commits from the blue project but ignore the one commit from the incomplete red project.
@@ -416,7 +416,7 @@ This more for situations where "this is broken and here's a fix".
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
 - File a second PR for `hotfix` but this time with [`staging` as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/67969ada88ffaaff4d675feaee09d7ccecc37fc1/components/pr-diagrams/hotfix-pr.png" width=600>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/hotfix-pr.png" width=600>
 
 #### A summary of types of PRs.
 
@@ -436,7 +436,7 @@ This requires a follow up pull request and merge to `staging`.
 
 When pull requests are initiated, spell check and styler are run by Github actions.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/67969ada88ffaaff4d675feaee09d7ccecc37fc1/components/pr-diagrams/gha-spell-check.png" width=600>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/gha-spell-check.png" width=600>
 
 If the styling introduces changes to the files, these changes will be committed back to your branch.
 However if there are no styling changes, no commit will be made.
@@ -448,7 +448,7 @@ See the [spell check section](#spell-checking) for instructions on how to see yo
 
 After a pull request to `staging` or `master` branch is approved and a merge to one of these branches has been initiated, a sequence of Github actions makes sure that the rendered html files are pushed to the correct branch and that the updated docker image is pushed to Dockerhub.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/67969ada88ffaaff4d675feaee09d7ccecc37fc1/components/pr-diagrams/gha-docker.png" width=600>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/gha-docker.png" width=600>
 
 See the [Docker](#docker-for-refinebio-examples) and the next section about automatic rendering for more on how these steps are conducted.
 
