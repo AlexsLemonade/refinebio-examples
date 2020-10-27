@@ -39,10 +39,10 @@
   - [Github actions](#github-actions)
     - [Automatic Spell checking and styling](#automatic-spell-checking-and-styling)
     - [Automatic Docker image and rendering](#automatic-docker-image-and-rendering)
-  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
-  - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
-  - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
-  - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
+    - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
+    - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+    - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
+    - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -456,20 +456,24 @@ After a pull request to `staging` or `master` branch is approved and a merge to 
 
 See the [Docker](#docker-for-refinebio-examples) and the next section about automatic rendering for more on how these steps are conducted.
 
-### Automatic rendering using GitHub actions
+#### Automatic rendering
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-All notebooks are automatically re-rendered by GitHub actions upon merges to master.
-The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
+All notebooks are automatically re-rendered by GitHub actions upon merges to `master` or `staging`.
+The newly rendered html files are all pushed to the `gh-pages` branch (if merging to `master`) and `gh-pages-stages` branch (if merging to `staging`).
+
+The `gh-pages` branch is where material is publshed to https://alexslemonade.github.io/refinebio-examples/.
+The `gh-pages-stages` staging branch can be viewed using html preview at `http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
 
 If this automatic rendering fails, you will see a failed check at at the bottom of your PR on GitHub (and probably an email).
 You can see the details of this error on  by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
 Click on `build` on the left bar and click on the step that has failed to see the error message.
 Hopefully the error message helps you track down the problem, but you can also contact this repo's maintainers for support.
 
-### About the render-notebooks.R script
+#### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+It also adds other components like CSS styling, a footer, and Google Analytics (these items are all hard-coded into the script).
 
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
@@ -477,7 +481,7 @@ The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rm
 Default is the `references.bib` in the `components` folder.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-### Add new analyses to the Snakefile
+#### Add new analyses to the Snakefile
 
 Any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
 Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
@@ -489,7 +493,7 @@ rule target:
 ```
 File paths should be relative to the `Snakefile`.
 
-### Add new analyses to the navbar
+#### Add new analyses to the navbar
 
 Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
