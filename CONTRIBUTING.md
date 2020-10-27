@@ -36,14 +36,13 @@
     - [Publish: staged changes merged to master](#publish-staged-changes-merged-to-master)
     - [Publish a change, but quickly: direct merges to master, hotfixes](#publish-a-change-but-quickly-direct-merges-to-master-hotfixes)
     - [A summary of types of PRs.](#a-summary-of-types-of-prs)
-  - [Github actions summary](#github-actions-summary)
-    - [Spell check and style](#spell-check-and-style)
-    - [Docker image and rendering](#docker-image-and-rendering)
+  - [Github actions](#github-actions)
+    - [Automatic Spell checking and styling](#automatic-spell-checking-and-styling)
+    - [Automatic Docker image and rendering](#automatic-docker-image-and-rendering)
   - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
   - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
-- [Pull request status checks](#pull-request-status-checks)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -430,14 +429,14 @@ This is for when the updates from the previous kinds of PRs are "ready for prime
 For "this-is-broken" type changes that should be hastened to the user-facing content.
 This requires a follow up pull request and merge to `staging`.
 
-### Github actions summary
+### Github actions
 
 This repository has a lot of little moving parts, so to help make sure changes are where they are supposed to be and that some items aren't missed, we use Github actions to automate things where we can.
 
 Github action workflows are initiated either when a pull request is started or when a merge to `master` or `staging` is initiated.
 The following sections explain more details about which Github actions happen when and what they do.
 
-#### Spell check and style
+#### Automatic Spell checking and styling
 
 When pull requests are initiated, spell check and styler are run by Github actions.
 
@@ -449,7 +448,7 @@ However if there are no styling changes, no commit will be made.
 If spell check finds more than 2 errors, Github actions will fail.
 See the [spell check section](#spell-checking) for instructions on how to see your spelling errors and otherwise use spell check.
 
-#### Docker image and rendering
+#### Automatic Docker image and rendering
 
 After a pull request to `staging` or `master` branch is approved and a merge to one of these branches has been initiated, a sequence of Github actions makes sure that the rendered html files are pushed to the correct branch and that the updated docker image is pushed to Dockerhub.
 
