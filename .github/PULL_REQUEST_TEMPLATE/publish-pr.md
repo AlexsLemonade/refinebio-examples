@@ -1,12 +1,3 @@
----
-name: Publish PR
-about: Use this PR template for moving changes from staging -> master
-title: 'Publish'
-labels: publish
-assignees: ''
-
----
-
 ## Changes Being Published
 
 <!-- What overall changes are being included in this "Publish" PR and are they all ready to be published? -->

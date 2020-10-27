@@ -1,12 +1,3 @@
----
-name: New analysis PR
-about: Use this PR template for filing a new analysis issue
-title: 'New Analysis'
-labels: new analysis
-assignees: ''
-
----
-
 ## Analysis Purpose
 
 <!-- What new analysis issue(s) does your PR address? -->
