@@ -39,10 +39,10 @@
   - [Github actions](#github-actions)
     - [Automatic Spell checking and styling](#automatic-spell-checking-and-styling)
     - [Automatic Docker image and rendering](#automatic-docker-image-and-rendering)
-    - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
-    - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
-    - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
-    - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
+    - [Automatic rendering](#automatic-rendering)
+  - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
+  - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
+  - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -310,7 +310,7 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 
 ### Mechanics of the rendering
 
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+The [`Snakefile`](#add-new-analyses-to-the-snakefile) calls the [`scripts/render-notebooks.R`](#about-the-render-notebooksr-script) which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
@@ -470,7 +470,7 @@ You can see the details of this error on  by going to `Actions` and clicking the
 Click on `build` on the left bar and click on the step that has failed to see the error message.
 Hopefully the error message helps you track down the problem, but you can also contact this repo's maintainers for support.
 
-#### About the render-notebooks.R script
+### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
 It also adds other components like CSS styling, a footer, and Google Analytics (these items are all hard-coded into the script).
@@ -481,7 +481,7 @@ It also adds other components like CSS styling, a footer, and Google Analytics (
 Default is the `references.bib` in the `components` folder.  
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
-#### Add new analyses to the Snakefile
+### Add new analyses to the Snakefile
 
 Any new `.Rmd` notebooks should have their `.html` equivalent added underneath the `target:input:` section of the `Snakefile`.
 Follow the formatting of the previous files and add a `comma` after like this example where `"a-directory/the-name-of-the-new-rmd.html"` is what we are adding.
@@ -493,7 +493,7 @@ rule target:
 ```
 File paths should be relative to the `Snakefile`.
 
-#### Add new analyses to the navbar
+### Add new analyses to the navbar
 
 Follow these steps to add the `.html` link to the navigation bar upon rendering.
 
