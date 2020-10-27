@@ -346,7 +346,7 @@ It also means that pull requests have some extra methodology.
 
 #### Add to the testing branch: merges to staging
 
-After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch (the default branch for this repository).
+After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch this is the default branch for this repository so you should not have to change anything.
 The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
 Use `squash and merge` when merging these pull requests into `staging` after approval.
 `squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
@@ -379,7 +379,7 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 - Checkout your newly created `publish` branch.
 - For each commit that needs to be published, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
-- Now you can use the new branch to create the pull request to `master` as you would normally do.
+- Now you can use the new branch to [create the pull request where the `master` branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository) is the base branch.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
 This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
@@ -398,9 +398,9 @@ This more for situations where "this is broken and here's a fix".
 - Create a new branch from the most up-to-date `master` branch and call it `hotfix-mybug`, where where `mybug` is a short tag relevant to the changes.
 - Checkout your newly created `hotfix` branch.
 - Make the hotfix change.
-- Create the pull request to `master` as you would normally do.
+- Create a [pull request with `master` branch as the base branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository).
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
-- File a second PR for `hotfix` -> `staging`, noting the `hotfix` -> `master` PR number.
+- File a second PR for `hotfix` but this time with [`staging` as the base branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository).
 
 #### A summary of types of PRs.
 
