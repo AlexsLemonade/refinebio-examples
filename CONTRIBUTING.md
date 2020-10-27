@@ -398,7 +398,7 @@ This more for situations where "this is broken and here's a fix".
 - Create a new branch from the most up-to-date `master` branch and call it `hotfix-mybug`, where where `mybug` is a short tag relevant to the changes.
 - Checkout your newly created `hotfix` branch.
 - Make the hotfix change.
-- Create a [pull request with `master` branch as the base branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository).
+- Create a [pull request with `master` branch as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
 - File a second PR for `hotfix` but this time with [`staging` as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
 
