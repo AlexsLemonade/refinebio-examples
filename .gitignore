@@ -21,3 +21,6 @@ _site
 
 # If spell check is run, we don't really have a need for tracking this
 spell_check_results.tsv
+
+# If git commit history is saved to file, ignore it
+git.log
