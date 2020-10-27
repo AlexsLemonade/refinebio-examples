@@ -392,7 +392,7 @@ Or in GitKraken, you can right click on the commit and choose `Cherry pick commi
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/05abe1baf3ddac4f27c479eb7ff2f1217ed46011/components/pr-diagrams/some-changes-pr.png" width=600>
 
-In this example above, the blue project is ready to bee published, but the red project is not.
+In this example above, the blue project is ready to be published, but the red project is not.
 So in this scenario, we would cherry pick both commits from the blue project but ignore the one commit from the incomplete red project.
 
 This allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
@@ -431,6 +431,11 @@ For "this-is-broken" type changes that should be hastened to the user-facing con
 This requires a follow up pull request and merge to `staging`.
 
 ### Github actions summary
+
+This repository has a lot of little moving parts, so to help make sure changes are where they are supposed to be and that some items aren't missed, we use Github actions to automate things where we can.
+
+Github action workflows are initiated either when a pull request is started or when a merge to `master` or `staging` is initiated.
+The following sections explain more details about which Github actions happen when and what they do.
 
 #### Spell check and style
 
@@ -500,11 +505,3 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
 7) Save the file!  
 8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
-
-## Pull request status checks
-
-To require that branches are up-to-date with `master` or `staging` before merging, we need to require that a status check passes before merging to `master` or `staging`.
-Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
-The status check used is a GitHub Action that test builds the docker image.
-Most of the time, this should pull cached docker layers, so this will complete in a matter of minutes.
-As a bonus, this process also checks that any changes to the Dockerfile result in a buildable image.
