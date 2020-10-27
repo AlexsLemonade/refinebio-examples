@@ -7,22 +7,26 @@ assignees: ''
 
 ---
 
-## Hotfix Purpose:
+## Hotfix Purpose
 
 <!-- What is the urgent and straightforward problem that requires hotfix; why is a hotfix needed? -->
 
-<!-- Is this the first PR, to `master`? Or the second PR, to `staging`?-->
+## Pull Request Stage
 
-<!-- If this is the second PR, to `staging`, put the link the master PR here so the reviewer can see that review -->
+<!-- Delete one of these to let the reviewer know what stage this analysis example is at -->
 
-## Explain the fix
+This is the **first PR**, to `master` -- it has not been reviewed at all.
 
- <!-- What have you done to test that your hotfix works and addresses the problem at hand? -->
+This is the **second PR**, to `staging` -- it was reviewed for the `master` branch on <!--PR Link--> and now should be reviewed mostly for correct merge conflict resolutions.
+
+## Explain the Fix
+
+<!-- What have you done to test that your hotfix works and addresses the problem at hand? -->
 
 <!-- Attach any relevant screenshots or html's that show the before and after -->
 
-## Comments/questions for the reviewer
+## Comments/Questions for the Reviewer
 
 <!-- Is there anything you are unsure about with this fix that you could use the reviewer's help double checking? -->
 
-<!-- Are there follow-up issues that should be filed? -- perhaps related issues but outside the scope of this PR -->
+<!-- Are there follow-up issues that should be filed? -- perhaps related issues but not meant to be addressed through hotfix -->

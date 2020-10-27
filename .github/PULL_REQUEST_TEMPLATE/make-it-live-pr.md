@@ -7,20 +7,22 @@ assignees: ''
 
 ---
 
-## Changes being made live:
+## Changes Being Made Live
 
 <!-- What overall changes are being included in this "make it live" PR and are they all ready to be made live? -->
 
-## List of commits/PR's included:
+## List of Commits/PR's Included
 
-<!-- List the staging commits/PR #'s are included PR? with a general and quick summary of what each does -->
+<!-- List the staging commits/PR #'s that are included PR? with a general and quick summary of what each does -->
 
-## Link to html preview
+- PR# Added such and such
+
+## Link to html Preview
 
 For reviewing purposes, you can take a browse through htmlpreview: http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html
 
-## Make it live checklist:
+## Make it Live Checklist:
 
-- [ ] Does everything look good using html preview; taking particularly close look at any new html files?
+- [ ] Does everything look good using html preview -- having taken a particularly close look at any new html files?
 
 - [ ] Have any new examples added to the [refinebio-examples feedback survey](https://app.hubspot.com/forms/5187852/a50f293c-1ef4-4ee1-b7ee-c563afe2ad5c/performance)? Ideally, don't click publish until this PR is merged (changes are autosaved).
