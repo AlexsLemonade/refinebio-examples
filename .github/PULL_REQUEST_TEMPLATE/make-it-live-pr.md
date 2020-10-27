@@ -9,11 +9,11 @@ assignees: ''
 
 ## Changes being made live:
 
-<!-- What overall changes are being included in this "make it live" PR? and are they all ready to be made live? -->
+<!-- What overall changes are being included in this "make it live" PR and are they all ready to be made live? -->
 
 ## List of commits/PR's included:
 
-<!-- List the staging commits/PR #'s are included PR? with a general summary of what each does -->
+<!-- List the staging commits/PR #'s are included PR? with a general and quick summary of what each does -->
 
 ## Link to html preview
 

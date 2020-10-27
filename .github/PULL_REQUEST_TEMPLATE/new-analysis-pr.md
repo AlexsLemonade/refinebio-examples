@@ -7,17 +7,33 @@ assignees: ''
 
 ---
 
-## Purpose:
+## Pull request stage
 
-<!-- What issue(s) does your PR address? -->
+<!-- Let the reviewer know what stage this analysis example is at -->
+
+This is a **Draft PR** - needs review of big concepts and outline
+
+This is a **Refined PR** - needs review of details and polishing
+
+<!-- In the case of the Refined PR, link the draft PR here -->
+
+## Purpose
+
+<!-- What new analysis issue(s) does your PR address? -->
 
 ## Strategy
 
 <!-- What was your strategy for this new or edited analysis? -->
 
+<!-- Is there anything you found out in implementation that required you to shift strategies from what was originally discussed? -->
+
 ## Concerns/Questions for reviewers:
 
-<!-- What things should reviewers look out for? -->
+<!-- Are there any items you would like the reviewer to take an extra close look? -->
+
+<!-- Any results that don't quite make sense? -->
+
+<!-- Anywhere that you are unsure about wording or how to guide the user? -->
 
 ## Analysis Pull Request Check List (roughly in order):
 
