@@ -34,7 +34,7 @@
 - [Pull Requests](#pull-requests)
     - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
     - [Publish: staged changes merged to master](#publish-staged-changes-merged-to-master)
-    - [Publish, but quickly: direct merges to master, hotfixes](#publish-but-quickly-direct-merges-to-master-hotfixes)
+    - [Publish a change, but quickly: direct merges to master, hotfixes](#publish-a-change-but-quickly-direct-merges-to-master-hotfixes)
     - [A summary of types of PRs.](#a-summary-of-types-of-prs)
   - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
