@@ -92,13 +92,27 @@ scripts/download-data.sh
 Here are the summarized steps for adding a new analysis.
 Click on the links to go to the detailed instructions for each step.
 
-- On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
-- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
-- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
-- Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
+In general, new analyses should be added to the `staging` branch in a series of at least two pull requests.
+
+### PR1: Big concepts discussed through a draft PR
+
+The first PR for a new analysis should be a **Draft** where you can ask for reviews on the big concepts and outline of the analysis.
+The analysis can be generally [set up from the analysis template](#setting-up-the-analysis-file) but at this point you do not need to worry about filling in all the blanks just that you represent the general workflow of the analysis.
+
+### PR2: Fine tune the analysis
+
+The second PR is where you can have the details of the analysis hammered out  which should include:
+
+- Adding [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
+- Adding a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
+- [Citing sources and add them to the reference.bib file](#citing-sources-in-text)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
 - In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
+
+### PR3: Publishing the analysis
+
+See [this section about Pull requests](#pull-requests) for more details on how this should be handled.
 
 ### Setting up a new analysis file
 
@@ -369,6 +383,7 @@ These types of PRs should only involve well-polished and ready for the public ma
 - If you are certain that all changes in `staging` should be carried over to `master` (aka published to Github pages), then you can do a `git merge staging` into your new branch.
 - Now you can use the new branch to create the pull request to master as you would normally do.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+- If these commits involve a new analysis example, make sure it is added to question 1 in the [refinebio-examples feedback survey on HubSpot](https://app.hubspot.com/forms/5187852/a50f293c-1ef4-4ee1-b7ee-c563afe2ad5c/performance).
 
 This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
 It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
@@ -381,6 +396,7 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
 - Now you can use the new branch to [create the pull request where the `master` branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository) is the base branch.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+- If these commits involve a new analysis example, make sure it is added to question 1 in the [refinebio-examples feedback survey on HubSpot](https://app.hubspot.com/forms/5187852/a50f293c-1ef4-4ee1-b7ee-c563afe2ad5c/performance).
 
 This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
 
