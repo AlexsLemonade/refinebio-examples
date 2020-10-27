@@ -13,7 +13,7 @@ assignees: ''
 
 ## Pull Request Stage
 
-<!-- Delete one of these to let the reviewer know what stage this analysis example is at -->
+<!-- Select one of these and delete the other to let the reviewer know what stage this analysis example is at -->
 
 This is the **first PR**, to `master` -- it has not been reviewed at all.
 
