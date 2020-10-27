@@ -379,7 +379,7 @@ It also provides us with a "snapshot" if merges are continuing to happen to `sta
 - Checkout your newly created `publish` branch.
 - For each commit that needs to be published, add it to your new branch by using `git cherry-pick <commit_id>`.
 Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
-- Now you can use the new branch to [create the pull request where the `master` branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository) is the base branch.
+- Now you can use the new branch to [create the pull request where the `master` branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository) is the base branch.
 - Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
 
 This strategy allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
@@ -400,7 +400,7 @@ This more for situations where "this is broken and here's a fix".
 - Make the hotfix change.
 - Create a [pull request with `master` branch as the base branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository).
 - After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
-- File a second PR for `hotfix` but this time with [`staging` as the base branch](https://help.github.jp/enterprise/2.11/user/articles/creating-a-pull-request/#changing-the-branch-range-and-destination-repository).
+- File a second PR for `hotfix` but this time with [`staging` as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
 
 #### A summary of types of PRs.
 
