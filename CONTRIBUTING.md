@@ -34,7 +34,7 @@
 - [Pull Requests](#pull-requests)
     - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
     - [Publish: staged changes merged to master](#publish-staged-changes-merged-to-master)
-    - [Publish, but quickly: direct merges to master, hotfixes](#publish-but-quickly-direct-merges-to-master-hotfixes)
+    - [Publish a change, but quickly: direct merges to master, hotfixes](#publish-a-change-but-quickly-direct-merges-to-master-hotfixes)
     - [A summary of types of PRs.](#a-summary-of-types-of-prs)
   - [Github actions summary](#github-actions-summary)
     - [Spell check and style](#spell-check-and-style)
