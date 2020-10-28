@@ -28,7 +28,7 @@ rule render_citations:
     shell:
         "Rscript scripts/render-notebooks.R"
         " --rmd {input.rmd}"
-        " --bib_file components/references.bib"
+        " --bib_file references.bib"
         " --cite_style components/genetics.csl"
         " --html {output}"
         " --style"
