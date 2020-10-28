@@ -1,7 +1,7 @@
 
 ### Use a link to choose a PR template meant for the type of changes you are proposing:
 
-For any stage of a adding a new analysis example:
+For any stage of adding a new analysis example:
 <a href="?expand=1&template=new-analysis-pr.md"> New analysis PR </a>
 
 For publishing changes to Github pages:
