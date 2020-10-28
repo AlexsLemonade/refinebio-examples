@@ -4,7 +4,7 @@ name: Build, Render, and Push
 # events only for the master branch
 on:
   push:
-    branches: [ staging, master ]
+    branches: [ master ]
 
 jobs:
   # This workflow contains a single job called "build-all"
@@ -21,54 +21,54 @@ jobs:
           fetch-depth: 0
           # use alexslemonade-docs-bot
           token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
-
       - name: Checkout pages branch and sync with changes
         run: |
-          echo $GITHUB_REF
-          if [ $GITHUB_REF == 'refs/heads/master' ]
-          then
-            pages_branch="gh-pages"
-          elif [ $GITHUB_REF == 'refs/heads/staging' ]
-          then
-            pages_branch="gh-pages-stages"
-          fi
           git config --local user.email "actions@github.com"
           git config --local user.name "Alex's Lemonade Docs Bot"
-          git checkout $pages_branch
+          git checkout gh-pages
           git merge -s recursive --strategy-option=theirs ${{ github.event.after }}
+
+      # Test if Dockerfile has changed
+      # sets steps.check_docker.outputs.changed to 1 if the Dockerfile has changed, 0 otherwise
+      - name: Check Dockerfile for changes
+        id: check_docker
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          git diff-index --name-only $BEFORE > changes.txt
+          if grep "docker/Dockerfile" changes.txt ; then
+            echo "Dockerfile changed"
+            echo "::set-output name=changed::1"
+          else
+            echo "No change to Dockerfile"
+            echo "::set-output name=changed::0"
+          fi
+          rm changes.txt
 
       # Login to Dockerhub
       - name: Login to DockerHub
+        if: steps.check_docker.outputs.changed == 1
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_ID }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       # set up Docker build
       - name: Set up Docker Buildx
+        if: steps.check_docker.outputs.changed == 1
         uses: docker/setup-buildx-action@v1
-      # Build the Docker image
-      - name: Build and Load Docker image
+      # Build docker image (We are not using caching here to force a clean build)
+      - name: Build and Push Docker image
+        if: steps.check_docker.outputs.changed == 1
         uses: docker/build-push-action@v2
         with:
-          push: false
-          load: true
+          push: true
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
-      # push the Docker image if this is staging
-      - name: Push Docker image
-        if: github.ref == 'refs/heads/staging'
-        run: docker push ccdl/refinebio-examples:latest
-      # retag and push the Docker image if this is master
-      - name: Push release Docker image
-        if: github.ref == 'refs/heads/master'
-        run: | 
-          docker tag ccdl/refinebio-examples:latest ccdl/refinebio-examples:release
-          docker push ccdl/refinebio-examples:release
-      
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
+      
       - name: Render all pages to html
         run: |
           docker run \
@@ -76,18 +76,11 @@ jobs:
           ccdl/refinebio-examples \
           snakemake --cores 2 --forceall
 
-      # If we are on the staging branch, do not publish to github pages
-      - name: Commit changed html back to non-public pages
-        if: github.ref == 'refs/heads/staging'
+      - name: Commit changed html
         run: |
           git add -A
-          git commit -m 'Render html, do not publish' || echo "No changes to commit"
-          git push origin gh-pages-stages || echo "No changes to push"
-
-      # If we are on the master branch, publish to github pages!
-      - name: Commit changed html to public pages
-        if: github.ref == 'refs/heads/master'
-        run: |
-          git add -A
-          git commit -m 'Render html and publish' || echo "No changes to commit"
+          git commit -m 'Render html' || echo "No changes to commit"
           git push origin gh-pages || echo "No changes to push"
+
+
+
