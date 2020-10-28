@@ -153,7 +153,7 @@ library(magrittr)
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
-We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
+We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`. 
@@ -187,7 +187,7 @@ Let's take a look at what organisms the package supports.
 ```{r}
 msigdbr_species()
 ```
-
+**DRAFT**
 MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005].
 
     H: hallmark gene sets
@@ -217,6 +217,8 @@ dr_hallmark_df <- msigdbr(
   category = "H"
 )
 ```
+
+If you want a less curated dataset, run the chunk above without specifying a `category` to the `msigdbr()` function.
 
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.
@@ -271,6 +273,7 @@ head(dge_df)
 
 ## Perform gene set enrichment analysis (GSEA)
 
+**DRAFT**
 Gene set enrichment testing using `clusterProfiler` is based on... [@clusterProfiler-book].
 
 ### Determine our preranked genes list
@@ -291,6 +294,7 @@ head(lfc_vector)
 
 ### Run GSEA using the `GSEA()` function
 
+**DRAFT**
 The enrichment score (ES) for a pathway, a pathway-level statistic, is calculated using our gene-level statistics.
 Genes are ranked from most highly positive to most highly negative and weighting them according to their gene-level statistic.
 A running score is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
@@ -298,6 +302,7 @@ The ES is the maximum deviation from zero.
 Significance is assessed by generating a null distribution by sampling random gene sets of the same size and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
 ([Subramanian, Tamayo *et al.* 2005](https://doi.org/10.1073/pnas.0506580102); [Korotkevich, Sukhov, and Sergushichev. 2019](https://doi.org/10.1101/060012)).
 
+**REVIEW**
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
 
 ```{r}
@@ -385,7 +390,6 @@ Let's look for the gene set with the highest negative NES.
 gsea_result_df %>%
   dplyr::arrange(NES)
 ```
-
 The gene set `HALLMARK_E2F_TARGETS` has a highly negative NES.
 
 ```{r}
@@ -419,6 +423,8 @@ readr::write_tsv(
 ```
 
 # Resources for further learning
+
+**DRAFT**
 
 - [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012].
 - [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
