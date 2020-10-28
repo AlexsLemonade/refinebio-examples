@@ -77,6 +77,7 @@ isoforms
 jitter
 JPEG
 KEGG
+Korotkevich
 limma
 logFC
 medulloblastoma
@@ -85,6 +86,7 @@ molecularly
 musculus
 MSigDB
 myeloid
+NES
 Northcott
 nb
 ortholog
@@ -113,6 +115,7 @@ RPKMs
 RStudio
 ssGSEA
 StatQuest
+Subramanian
 SuperSeries
 str
 subtype

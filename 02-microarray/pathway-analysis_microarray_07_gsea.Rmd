@@ -243,7 +243,7 @@ Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) 
 
 The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
 
-Let's create a column in the `dge_df` data frame that shows the mapped EntrezIDs along with the information for the respective Ensembl IDs.
+Let's create a column in the `dge_df` data frame that shows the mapped Entrez IDs along with the information for the respective Ensembl IDs.
 
 ```{r}
 # We would like a data frame we can join to the differential expression stats
@@ -276,9 +276,9 @@ head(dge_df)
 **DRAFT**
 Gene set enrichment testing using `clusterProfiler` is based on... [@clusterProfiler-book].
 
-### Determine our preranked genes list
+### Determine our pre-ranked genes list
 
-The `GSEA()` function takes a preranked (sorted) named vector of statistics, where the names in the vector are gene identifiers.
+The `GSEA()` function takes a pre-ranked (sorted) named vector of statistics, where the names in the vector are gene identifiers.
 This is step 1 -- gene-level statistics.
 
 ```{r}
@@ -300,7 +300,7 @@ Genes are ranked from most highly positive to most highly negative and weighting
 A running score is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 The ES is the maximum deviation from zero.
 Significance is assessed by generating a null distribution by sampling random gene sets of the same size and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
-([Subramanian, Tamayo *et al.* 2005](https://doi.org/10.1073/pnas.0506580102); [Korotkevich, Sukhov, and Sergushichev. 2019](https://doi.org/10.1101/060012)).
+([Subramanian 2005](https://doi.org/10.1073/pnas.0506580102); [Korotkevich 2019](https://doi.org/10.1101/060012)).
 
 **REVIEW**
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
