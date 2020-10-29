@@ -1,10 +1,3 @@
----
-name: Other issue
-about: Use this PR template to describe PR with an analysis or documentation (that is not a new example analysis)
-assignees: ''
-
----
-
 ### Purpose
 
 <!-- What was the background and context that lead to this problem? -->
