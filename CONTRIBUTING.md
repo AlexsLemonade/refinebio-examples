@@ -180,7 +180,7 @@ Snakemake will automatically runs the [r-lib/styler package](https://github.com/
 This will help fix some spacing and formatting issues automatically.
 
 Github actions will also automatically run styler and commit back to your branch any changes.
-See the [Github actions section](#github-actions-summary) for more info on how the automation steps for this works.
+See the [Github actions section](#github-actions) for more info on how the automation steps for this works.
 
 #### Session Info
 
@@ -294,7 +294,7 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are [run automatically using GitHub actions](#github-actions-summary) upon opening a PR for `master` or `staging`.
+Spell checks are [run automatically using GitHub actions](#github-actions) upon opening a PR for `master` or `staging`.
 GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
@@ -377,8 +377,10 @@ These types of PRs should only involve well-polished and ready for the public ma
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/all-changes-pr.png" width=600>
 
-This strategy allows you to resolve any merge conflicts in your new branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
-It also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
+In this example above, the blue project is ready to be published and there are no other incomplete projects that have been merged in, so all commits from `staging` are wanted to be brought over `master`.
+
+By checking out a separate `publish` branch, we can resolve any merge conflicts in this `publish` branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+This also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
 
 **Scenario 2: Only some changes from staging should be published**  
 
@@ -416,6 +418,10 @@ This more for situations where "this is broken and here's a fix".
 - File a second PR for `hotfix` but this time with [`staging` as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/hotfix-pr.png" width=600>
+
+In this scenario, we start by making a branch from `master` and make the hotfix change on this `hotfix` branch.
+Once the change is approved and merged, we start the second PR and merge in `staging` to our `hotfix` branch.
+This makes sure we don't accidentally undo any changes in `staging` that have not made it to `master` at this time. 
 
 #### A summary of types of PRs.
 
