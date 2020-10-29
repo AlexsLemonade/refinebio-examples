@@ -1,12 +1,3 @@
----
-name: Hotfix PR
-about: Use this PR template for filing a a hotfix directly to master (and then also to staging)
-title: 'Hotfix:'
-labels: hotfix
-assignees: ''
-
----
-
 ## Hotfix Purpose
 
 <!-- What is the urgent and straightforward problem that requires hotfix; why is a hotfix needed? -->
