@@ -420,8 +420,8 @@ This more for situations where "this is broken and here's a fix".
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/hotfix-pr.png" width=600>
 
 In this scenario, we start by making a branch from `master` and make the hotfix change on this `hotfix` branch.
-Once the change is approved and merged, we start the second PR and merge in `staging` to our `hotfix` branch.
-This makes sure we don't accidentally undo any changes in `staging` that have not made it to `master` at this time. 
+Once the change is approved and merged into `master` from the first PR, we start the second PR and merge in `staging` to our `hotfix` branch.
+This makes sure we don't accidentally undo any changes in `staging` that have not made it to `master` at this time.
 
 #### A summary of types of PRs.
 
