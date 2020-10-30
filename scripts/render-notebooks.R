@@ -118,17 +118,17 @@ footer_file <- normalizePath(file.path("components", "footer.html"))
 
 # Render the header added notebook
 rmarkdown::render(tmp_file,
-                  output_format = rmarkdown::html_document(
-                    toc = TRUE, toc_depth = 2,
-                    toc_float = TRUE, number_sections = TRUE,
-                    highlight = "haddock",
-                    df_print = "paged",
-                    css = normalizePath(file.path("components", "styles.css")),
-                    includes = rmarkdown::includes(in_header = google_analytics_file,
-                                                   after_body = footer_file)
-                  ),
-                  # Save to original html output file name
-                  output_file = output_file
+  output_format = rmarkdown::html_document(
+    toc = TRUE, toc_depth = 2,
+    toc_float = TRUE, number_sections = TRUE,
+    highlight = "haddock",
+    df_print = "paged",
+    css = normalizePath(file.path("components", "styles.css")),
+    includes = rmarkdown::includes(in_header = google_analytics_file,
+                                   after_body = footer_file)
+  ),
+  # Save to original html output file name
+  output_file = output_file
 )
 
 # Remove the temporary header change .Rmd tmp file
