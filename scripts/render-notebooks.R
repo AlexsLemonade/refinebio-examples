@@ -107,9 +107,6 @@ new_lines <- append(lines, header_line, header_range[1])
 # Write to an tmp file
 readr::write_lines(new_lines, tmp_file)
 
-# Declare path to google analytics bit
-google_analytics_file <- normalizePath(file.path("components", "google-analytics.html"))
-
 # Render the header added notebook
 rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
