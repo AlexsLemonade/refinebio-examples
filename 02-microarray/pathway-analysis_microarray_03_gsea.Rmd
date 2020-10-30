@@ -221,7 +221,7 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 
 We're going to convert our identifiers in `dge_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
-The annotation package `org.Dr.eg.db` contains information for different identifiers [@@Carlson2019-zebrafish].
+The annotation package `org.Dr.eg.db` contains information for different identifiers [@Carlson2019-zebrafish].
 `org.Dr.eg.db` is specific to _Danio rerio_ -- this is what the `Dr` in the package name is referencing.
 
 We can see what types of IDs are available to us in an annotation package with `keytypes()`.
@@ -237,53 +237,37 @@ Take a look at our other gene identifier conversion examples for examples with d
 
 The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
 
-Let's create a column in the `dge_df` data frame that shows the mapped Entrez IDs along with the information for the respective Ensembl IDs
+Let's create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.
 
 ```{r}
-# We would like a data frame we can join to the differential expression stats
-dge_df <- dge_df %>%
-  # Create a new column 'entrez_id' that contains the Entrez IDs returned by
-  # mapIds()
-  dplyr::mutate(entrez_id = mapIds(org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
+# First let's create a mapped data frame we can join to the differential expression stats
+dge_mapped_df <- data.frame(
+  "entrez_id" = mapIds(
+    org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
     keys = dge_df$Gene,
     column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
     keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "first" # Where there are multiple mappings, the first mapped value will be returned
-  )) %>%
+    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+  )
+) %>%
   # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop that
   # from the data frame
-  dplyr::filter(!is.na(entrez_id))
+  dplyr::filter(!is.na(entrez_id)) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
+  dplyr::inner_join(dge_df, by = c("Ensembl" = "Gene"))
 ```
 
-This message is letting us know that sometimes Ensembl gene identifiers will map to multiple Entrez IDs.
+This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
 In this case, it's also possible that a Entrez ID will map to multiple Ensembl IDs.
-
-Let's see a preview of the new `dge_df`. 
-
-```{r}
-head(dge_df)
-```
-
-Now let's look at how many duplicated Entrez IDs we have, if any.
-
-```{r}
-dge_df %>%
-  # Group by Entrez IDs
-  dplyr::group_by(entrez_id) %>%
-  # Count the number of rows in the data frame for each Entrez ID
-  dplyr::count() %>%
-  # Filter out the IDs with multiple mappings
-  dplyr::filter(n > 1)
-```
-
-It looks like we have two Entrez IDs that were mapped to multiple Ensembl IDs.
-For the purpose of performing GSEA later in this notebook, we will filter out the duplicated Entrez IDs.
+For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs.
 For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
+Let's see a preview of `dge_mapped_df`.
+
 ```{r}
-# Filter out rows that contain duplicated Entrez IDs
-dge_df <- dge_df %>%
-  dplyr::filter(!(duplicated(entrez_id)))
+head(dge_mapped_df)
 ```
 
 ## Perform gene set enrichment analysis (GSEA)

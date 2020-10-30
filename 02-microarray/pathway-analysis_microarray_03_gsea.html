@@ -3674,15 +3674,20 @@ div.tocify {
 <!-- Navigation header for refine.bio example Rmarkdown notebooks -->
 <nav class="navbar navbar-default  navbar-fixed-top">
   <div class="container">
-    <div class="navbar-header">
+    <div class="navbar-inverse">
       <!-- NOTE: add "navbar-inverse" class for an alternate navbar background -->
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">refine.bio examples</a>
-    </div>
+      </button> 
+      <div class="logo">
+        <a class="navbar-brand" href="#">
+          <!-- <img src = "../components/refine-bio-ex-logo.svg" alt ="refine.bio examples"> -->
+          refine.bio examples
+        </a>
+      </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <!-- This outer list is the main navigation menu elements -->
       <ul class="nav navbar-nav">
@@ -3732,14 +3737,17 @@ div.tocify {
               <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
 
             </ul>
+
         </li><!--/advanced dropdown-->
+
       </ul>
 
-      <!-- Right side menubar -->
+      <!-- Right side menubar  -->
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://github.com/AlexsLemonade/refinebio-examples">GitHub</a></li>
-        <li><a href="https://www.refine.bio">refine.bio</a></li>
+        <li><a href="https://www.refine.bio"> Back to refine.bio</a></li>
+        <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give Feedback</a></li>
       </ul>
+        </div>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </nav><!--/.navbar -->
@@ -3930,7 +3938,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -3979,7 +3987,7 @@ C7: immunologic signatures</code></pre>
 <div id="gene-identifier-conversion" class="section level2">
 <h2><span class="header-section-number">4.4</span> Gene identifier conversion</h2>
 <p>We’re going to convert our identifiers in <code>dge_df</code> to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!</p>
-<p>The annotation package <code>org.Dr.eg.db</code> contains information for different identifiers <span class="citation">(@ Carlson 2019)</span>. <code>org.Dr.eg.db</code> is specific to <em>Danio rerio</em> – this is what the <code>Dr</code> in the package name is referencing.</p>
+<p>The annotation package <code>org.Dr.eg.db</code> contains information for different identifiers <span class="citation">(Carlson 2019)</span>. <code>org.Dr.eg.db</code> is specific to <em>Danio rerio</em> – this is what the <code>Dr</code> in the package name is referencing.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">keytypes</span>(org.Dr.eg.db)</span></code></pre></div>
 <pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot;  &quot;ENSEMBLTRANS&quot;
@@ -3990,46 +3998,33 @@ C7: immunologic signatures</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to Entrez IDs (<code>ENTREZID</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to gene symbols (<code>SYMBOL</code>).</p>
 <p>Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
 <p>The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called <code>mapIds()</code>.</p>
-<p>Let’s create a column in the <code>dge_df</code> data frame that shows the mapped Entrez IDs along with the information for the respective Ensembl IDs</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># We would like a data frame we can join to the differential expression stats</span></span>
-<span id="cb39-2"><a href="#cb39-2"></a>dge_df &lt;-<span class="st"> </span>dge_df <span class="op">%&gt;%</span></span>
-<span id="cb39-3"><a href="#cb39-3"></a><span class="st">  </span><span class="co"># Create a new column &#39;entrez_id&#39; that contains the Entrez IDs returned by</span></span>
-<span id="cb39-4"><a href="#cb39-4"></a><span class="st">  </span><span class="co"># mapIds()</span></span>
-<span id="cb39-5"><a href="#cb39-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">entrez_id =</span> <span class="kw">mapIds</span>(org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb39-6"><a href="#cb39-6"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
-<span id="cb39-7"><a href="#cb39-7"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb39-8"><a href="#cb39-8"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb39-9"><a href="#cb39-9"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span> <span class="co"># Where there are multiple mappings, the first mapped value will be returned</span></span>
-<span id="cb39-10"><a href="#cb39-10"></a>  )) <span class="op">%&gt;%</span></span>
+<p>Let’s create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential expression stats</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a>dge_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb39-3"><a href="#cb39-3"></a>  <span class="st">&quot;entrez_id&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb39-4"><a href="#cb39-4"></a>    org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb39-5"><a href="#cb39-5"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
+<span id="cb39-6"><a href="#cb39-6"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb39-7"><a href="#cb39-7"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb39-8"><a href="#cb39-8"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span> <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
+<span id="cb39-9"><a href="#cb39-9"></a>  )</span>
+<span id="cb39-10"><a href="#cb39-10"></a>) <span class="op">%&gt;%</span></span>
 <span id="cb39-11"><a href="#cb39-11"></a><span class="st">  </span><span class="co"># If an Ensembl gene identifier doesn&#39;t map to a Entrez gene identifier, drop that</span></span>
 <span id="cb39-12"><a href="#cb39-12"></a><span class="st">  </span><span class="co"># from the data frame</span></span>
-<span id="cb39-13"><a href="#cb39-13"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(entrez_id))</span></code></pre></div>
+<span id="cb39-13"><a href="#cb39-13"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(entrez_id)) <span class="op">%&gt;%</span></span>
+<span id="cb39-14"><a href="#cb39-14"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
+<span id="cb39-15"><a href="#cb39-15"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb39-16"><a href="#cb39-16"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
+<span id="cb39-17"><a href="#cb39-17"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(dge_df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<p>This message is letting us know that sometimes Ensembl gene identifiers will map to multiple Entrez IDs. In this case, it’s also possible that a Entrez ID will map to multiple Ensembl IDs.</p>
-<p>Let’s see a preview of the new <code>dge_df</code>.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">head</span>(dge_df)</span></code></pre></div>
+<p>This <code>1:many mapping between keys and columns</code> message means that some Ensembl gene identifiers map to multiple Entrez IDs. In this case, it’s also possible that a Entrez ID will map to multiple Ensembl IDs. For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene ID conversion example</a>.</p>
+<p>Let’s see a preview of <code>dge_mapped_df</code>.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="kw">head</span>(dge_mapped_df)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Gene"],"name":[1],"type":["chr"],"align":["left"]},{"label":["logFC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AveExpr"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["P.Value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["adj.P.Val"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["B"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["entrez_id"],"name":[8],"type":["chr"],"align":["left"]}],"data":[{"1":"ENSDARG00000104315","2":"0.9797633","3":"0.5623370","4":"20.22172","5":"2.965470e-09","6":"2.735943e-05","7":"11.031530","8":"555053","_row":"ENSDARG00000104315"},{"1":"ENSDARG00000101341","2":"-0.6505860","3":"1.0051319","4":"-15.88369","5":"2.895358e-08","6":"1.335629e-04","7":"9.305940","8":"334310","_row":"ENSDARG00000101341"},{"1":"ENSDARG00000034503","2":"0.9219813","3":"0.6515454","4":"14.48634","5":"6.842701e-08","6":"1.875194e-04","7":"8.593576","8":"140633","_row":"ENSDARG00000034503"},{"1":"ENSDARG00000014945","2":"0.5699025","3":"0.7756560","4":"13.88657","5":"1.013543e-07","6":"1.875194e-04","7":"8.258341","8":"407728","_row":"ENSDARG00000014945"},{"1":"ENSDARG00000019113","2":"-0.6196192","3":"0.8643650","4":"-13.88257","5":"1.016255e-07","6":"1.875194e-04","7":"8.256041","8":"325366","_row":"ENSDARG00000019113"},{"1":"ENSDARG00000005799","2":"-0.9383565","3":"1.1067382","4":"-12.51418","5":"2.648122e-07","6":"3.651949e-04","7":"7.415053","8":"402894","_row":"ENSDARG00000005799"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["entrez_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["logFC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["AveExpr"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["P.Value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["adj.P.Val"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["B"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"ENSDARG00000104315","2":"555053","3":"0.9797633","4":"0.5623370","5":"20.22172","6":"2.965470e-09","7":"2.735943e-05","8":"11.031530","_rn_":"1"},{"1":"ENSDARG00000101341","2":"334310","3":"-0.6505860","4":"1.0051319","5":"-15.88369","6":"2.895358e-08","7":"1.335629e-04","8":"9.305940","_rn_":"2"},{"1":"ENSDARG00000034503","2":"140633","3":"0.9219813","4":"0.6515454","5":"14.48634","6":"6.842701e-08","7":"1.875194e-04","8":"8.593576","_rn_":"3"},{"1":"ENSDARG00000014945","2":"407728","3":"0.5699025","4":"0.7756560","5":"13.88657","6":"1.013543e-07","7":"1.875194e-04","8":"8.258341","_rn_":"4"},{"1":"ENSDARG00000019113","2":"325366","3":"-0.6196192","4":"0.8643650","5":"-13.88257","6":"1.016255e-07","7":"1.875194e-04","8":"8.256041","_rn_":"5"},{"1":"ENSDARG00000005799","2":"402894","3":"-0.9383565","4":"1.1067382","5":"-12.51418","6":"2.648122e-07","7":"3.651949e-04","8":"7.415053","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Now let’s look at how many duplicated Entrez IDs we have, if any.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>dge_df <span class="op">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="co"># Group by Entrez IDs</span></span>
-<span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(entrez_id) <span class="op">%&gt;%</span></span>
-<span id="cb42-4"><a href="#cb42-4"></a><span class="st">  </span><span class="co"># Count the number of rows in the data frame for each Entrez ID</span></span>
-<span id="cb42-5"><a href="#cb42-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>() <span class="op">%&gt;%</span></span>
-<span id="cb42-6"><a href="#cb42-6"></a><span class="st">  </span><span class="co"># Filter out the IDs with multiple mappings</span></span>
-<span id="cb42-7"><a href="#cb42-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</span></code></pre></div>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["entrez_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"336702","2":"2","_row":"ENSDARG00000037350"},{"1":"57924","2":"2","_row":"ENSDARG00000070867"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<p>It looks like we have two Entrez IDs that were mapped to multiple Ensembl IDs. For the purpose of performing GSEA later in this notebook, we will filter out the duplicated Entrez IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene ID conversion example</a>.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># Filter out rows that contain duplicated Entrez IDs</span></span>
-<span id="cb43-2"><a href="#cb43-2"></a>dge_df &lt;-<span class="st"> </span>dge_df <span class="op">%&gt;%</span></span>
-<span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span>(<span class="kw">duplicated</span>(entrez_id)))</span></code></pre></div>
 </div>
 <div id="perform-gene-set-enrichment-analysis-gsea" class="section level2">
 <h2><span class="header-section-number">4.5</span> Perform gene set enrichment analysis (GSEA)</h2>
@@ -4052,8 +4047,8 @@ C7: immunologic signatures</code></pre>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># Print session info</span></span>
-<span id="cb44-2"><a href="#cb44-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="co"># Print session info</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
