@@ -112,7 +112,7 @@ We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
   # Install this package if it isn't installed yet
-  BiocManager::install("clusterProfiler")
+  BiocManager::install("clusterProfiler", update = FALSE)
 }
 
 if (!("msigdbr" %in% installed.packages())) {

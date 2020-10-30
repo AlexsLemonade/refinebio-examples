@@ -3674,20 +3674,15 @@ div.tocify {
 <!-- Navigation header for refine.bio example Rmarkdown notebooks -->
 <nav class="navbar navbar-default  navbar-fixed-top">
   <div class="container">
-    <div class="navbar-inverse">
+    <div class="navbar-header">
       <!-- NOTE: add "navbar-inverse" class for an alternate navbar background -->
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button> 
-      <div class="logo">
-        <a class="navbar-brand" href="#">
-          <!-- <img src = "../components/refine-bio-ex-logo.svg" alt ="refine.bio examples"> -->
-          refine.bio examples
-        </a>
-      </div>
-
+      </button>
+      <a class="navbar-brand" href="#">refine.bio examples</a>
+    </div>
     <div id="navbar" class="navbar-collapse collapse">
       <!-- This outer list is the main navigation menu elements -->
       <ul class="nav navbar-nav">
@@ -3706,6 +3701,7 @@ div.tocify {
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../02-microarray/pathway-analysis_microarray_02_ora.html">Pathway Analysis - ORA</a></li>
+            <li><a href="../02-microarray/pathway-analysis_microarray_03_gsea.html">Pathway Analysis - GSEA</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
 
@@ -3736,17 +3732,14 @@ div.tocify {
               <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
 
             </ul>
-
         </li><!--/advanced dropdown-->
-
       </ul>
 
-      <!-- Right side menubar  -->
+      <!-- Right side menubar -->
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://www.refine.bio"> Back to refine.bio</a></li>
-        <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give Feedback</a></li>
+        <li><a href="https://github.com/AlexsLemonade/refinebio-examples">GitHub</a></li>
+        <li><a href="https://www.refine.bio">refine.bio</a></li>
       </ul>
-        </div>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </nav><!--/.navbar -->
@@ -3843,7 +3836,7 @@ div.tocify {
 <p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html"><code>org.Dr.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson 2019)</span>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;clusterProfiler&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;clusterProfiler&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;clusterProfiler&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb2-4"><a href="#cb2-4"></a>}</span>
 <span id="cb2-5"><a href="#cb2-5"></a></span>
 <span id="cb2-6"><a href="#cb2-6"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;msigdbr&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
@@ -3937,7 +3930,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4223,6 +4216,11 @@ C7: immunologic signatures</code></pre>
 </div>
 </div>
 
+<ul class="nav navbar-nav navbar-right">
+  <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give us feedback</a></li>
+  <li><a href="https://github.com/AlexsLemonade/refinebio-examples">GitHub</a></li>
+  <li><a href="https://www.refine.bio">refine.bio</a></li>
+</ul>
 
 
 </div>
