@@ -4032,8 +4032,9 @@ C7: immunologic signatures</code></pre>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>filtered_dge_mapped_df &lt;-<span class="st"> </span>dge_mapped_df <span class="op">%&gt;%</span></span>
 <span id="cb44-2"><a href="#cb44-2"></a><span class="st">  </span><span class="co"># Sort so that highest t-statistic values are at the top</span></span>
 <span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(dplyr<span class="op">::</span><span class="kw">desc</span>(t)) <span class="op">%&gt;%</span></span>
-<span id="cb44-4"><a href="#cb44-4"></a><span class="st">  </span><span class="co"># Filter out the duplicated rows</span></span>
-<span id="cb44-5"><a href="#cb44-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">duplicated</span>(entrez_id))</span></code></pre></div>
+<span id="cb44-4"><a href="#cb44-4"></a><span class="st">  </span><span class="co"># Filter out the duplicated rows -- this will keep the first row with the</span></span>
+<span id="cb44-5"><a href="#cb44-5"></a><span class="st">  </span><span class="co"># duplicated value thus keeping the row with the highest t-statistic value</span></span>
+<span id="cb44-6"><a href="#cb44-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">duplicated</span>(entrez_id))</span></code></pre></div>
 <p>Note however, that a caveat in using this approach is that the genes that have duplicate. identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.</p>
 </div>
 <div id="perform-gene-set-enrichment-analysis-gsea" class="section level2">
