@@ -67,7 +67,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 ## Obtain the gene set for this example
 
 In this example, we are using differential expression results table we obtained from an [example analysis of zebrafish samples overexpressing human CREB experiment](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
-The table contains Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).
+The table contains summary statistics including Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).
 
 We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression analysis example](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html).
 
@@ -146,7 +146,7 @@ library(magrittr)
 
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
-The table contains Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case).
+The table contains summary statistics including Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
@@ -277,6 +277,22 @@ any(duplicated(dge_mapped_df$entrez_id))
 ```
 
 Looks like we do have duplicated Entrez IDs.
+Let's find out which Entrez IDs have been duplicated.
+
+```{r}
+dge_mapped_df %>%
+  dplyr::filter(duplicated(entrez_id)) %>%
+  dplyr::pull(entrez_id)
+```
+
+Now let's take a look at the rows associated with one of the duplicated Entrez IDs.
+
+```{r}
+dge_mapped_df %>%
+  dplyr::filter(entrez_id == "336702")
+```
+We can see that the associated values vary for each row although the Entrez ID is the same.
+
 We do not want duplicated gene identifiers for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
 
 ```{r}
@@ -288,7 +304,15 @@ filtered_dge_mapped_df <- dge_mapped_df %>%
   dplyr::filter(!duplicated(entrez_id))
 ```
 
-Note however, that a caveat in using this approach is that the genes that have duplicate. identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
+Let's check to see that we removed the duplicate Entrez IDs and kept the row with the higher t-statistic value.
+
+```{r}
+filtered_dge_mapped_df %>%
+  dplyr::filter(entrez_id == "336702")
+```
+
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observation with the higher t-statistic value!
+Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
 
 ## Perform gene set enrichment analysis (GSEA)
 

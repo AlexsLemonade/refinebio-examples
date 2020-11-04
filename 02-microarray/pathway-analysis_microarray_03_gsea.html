@@ -3806,7 +3806,7 @@ div.tocify {
 </div>
 <div id="obtain-the-gene-set-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.3</span> Obtain the gene set for this example</h2>
-<p>In this example, we are using differential expression results table we obtained from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html">example analysis of zebrafish samples overexpressing human CREB experiment</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).</p>
+<p>In this example, we are using differential expression results table we obtained from an <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html">example analysis of zebrafish samples overexpressing human CREB experiment</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains summary statistics including Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).</p>
 <p>We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you’d like to follow the steps for obtaining this results file yourself, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html">that differential expression analysis example</a>.</p>
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
@@ -3928,7 +3928,7 @@ div.tocify {
 </div>
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import data</h2>
-<p>We will read in the differential expression results we will download from online. These results are from a zebrafish microarray experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html">differential expression analysis for two groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case). We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.</p>
+<p>We will read in the differential expression results we will download from online. These results are from a zebrafish microarray experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html">differential expression analysis for two groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains summary statistics including Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case). We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.</p>
 <p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results. First we will assign the URL to its own variable called, <code>dge_url</code>.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Define the url to your differential expression results file</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a>dge_url &lt;-<span class="st"> &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv&quot;</span></span></code></pre></div>
@@ -3938,7 +3938,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4028,14 +4028,36 @@ C7: immunologic signatures</code></pre>
 <p>Now let’s check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">any</span>(<span class="kw">duplicated</span>(dge_mapped_df<span class="op">$</span>entrez_id))</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<p>Looks like we do have duplicated Entrez IDs. We do not want duplicated gene identifiers for the GSEA steps later, so let’s keep the Entrez IDs associated with the higher t-statistic value.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>filtered_dge_mapped_df &lt;-<span class="st"> </span>dge_mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb44-2"><a href="#cb44-2"></a><span class="st">  </span><span class="co"># Sort so that highest t-statistic values are at the top</span></span>
-<span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(dplyr<span class="op">::</span><span class="kw">desc</span>(t)) <span class="op">%&gt;%</span></span>
-<span id="cb44-4"><a href="#cb44-4"></a><span class="st">  </span><span class="co"># Filter out the duplicated rows -- this will keep the first row with the</span></span>
-<span id="cb44-5"><a href="#cb44-5"></a><span class="st">  </span><span class="co"># duplicated value thus keeping the row with the highest t-statistic value</span></span>
-<span id="cb44-6"><a href="#cb44-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">duplicated</span>(entrez_id))</span></code></pre></div>
-<p>Note however, that a caveat in using this approach is that the genes that have duplicate. identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.</p>
+<p>Looks like we do have duplicated Entrez IDs. Let’s find out which Entrez IDs have been duplicated.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>dge_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">duplicated</span>(entrez_id)) <span class="op">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">pull</span>(entrez_id)</span></code></pre></div>
+<pre><code>## [1] &quot;336702&quot; &quot;57924&quot;</code></pre>
+<p>Now let’s take a look at the rows associated with one of the duplicated Entrez IDs.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dge_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(entrez_id <span class="op">==</span><span class="st"> &quot;336702&quot;</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["entrez_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["logFC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["AveExpr"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["P.Value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["adj.P.Val"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["B"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"ENSDARG00000037350","2":"336702","3":"0.3237585","4":"3.7354390","5":"5.722352","6":"0.0002158983","7":"0.006392137","8":"0.9015145"},{"1":"ENSDARG00000054799","2":"336702","3":"-0.2068359","4":"0.6793741","5":"-3.073719","6":"0.0121792174","7":"0.060770936","8":"-3.1940435"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>We can see that the associated values vary for each row although the Entrez ID is the same.</p>
+<p>We do not want duplicated gene identifiers for the GSEA steps later, so let’s keep the Entrez IDs associated with the higher t-statistic value.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>filtered_dge_mapped_df &lt;-<span class="st"> </span>dge_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a><span class="st">  </span><span class="co"># Sort so that highest t-statistic values are at the top</span></span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(dplyr<span class="op">::</span><span class="kw">desc</span>(t)) <span class="op">%&gt;%</span></span>
+<span id="cb47-4"><a href="#cb47-4"></a><span class="st">  </span><span class="co"># Filter out the duplicated rows -- this will keep the first row with the</span></span>
+<span id="cb47-5"><a href="#cb47-5"></a><span class="st">  </span><span class="co"># duplicated value thus keeping the row with the highest t-statistic value</span></span>
+<span id="cb47-6"><a href="#cb47-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">duplicated</span>(entrez_id))</span></code></pre></div>
+<p>Let’s check to see that we removed the duplicate Entrez IDs and kept the row with the higher t-statistic value.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>filtered_dge_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(entrez_id <span class="op">==</span><span class="st"> &quot;336702&quot;</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["entrez_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["logFC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["AveExpr"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["t"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["P.Value"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["adj.P.Val"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["B"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"ENSDARG00000037350","2":"336702","3":"0.3237585","4":"3.735439","5":"5.722352","6":"0.0002158983","7":"0.006392137","8":"0.9015145"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observation with the higher t-statistic value! Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.</p>
 </div>
 <div id="perform-gene-set-enrichment-analysis-gsea" class="section level2">
 <h2><span class="header-section-number">4.5</span> Perform gene set enrichment analysis (GSEA)</h2>
@@ -4058,8 +4080,8 @@ C7: immunologic signatures</code></pre>
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># Print session info</span></span>
-<span id="cb45-2"><a href="#cb45-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a><span class="co"># Print session info</span></span>
+<span id="cb49-2"><a href="#cb49-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
