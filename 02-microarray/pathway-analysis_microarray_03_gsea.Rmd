@@ -270,6 +270,25 @@ Let's see a preview of `dge_mapped_df`.
 head(dge_mapped_df)
 ```
 
+Now let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+
+```{r}
+any(duplicated(dge_mapped_df$entrez_id))
+```
+
+Looks like we do have duplicated Entrez IDs.
+We do not want duplicated gene identifiers for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
+
+```{r}
+filtered_dge_mapped_df <- dge_mapped_df %>%
+  # Sort so that highest t-statistic values are at the top
+  dplyr::arrange(dplyr::desc(t)) %>%
+  # Filter out the duplicated rows
+  dplyr::filter(!duplicated(entrez_id))
+```
+
+Note however, that a caveat in using this approach is that the genes that have duplicate. identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
+
 ## Perform gene set enrichment analysis (GSEA)
 
 _Addressed in upcoming PR_
