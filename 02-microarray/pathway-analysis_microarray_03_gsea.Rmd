@@ -212,7 +212,15 @@ dr_hallmark_df <- msigdbr(
 )
 ```
 
-If you want a less curated dataset, run the chunk above without specifying a `category` to the `msigdbr()` function.
+If you run the chunk above without specifying a `category` to the `msigdbr()` function, it will return all of the MSigDB gene sets for zebrafish.
+
+Let's preview what's in `dr_hallmark_df`.
+
+```{r}
+head(dr_hallmark_df)
+```
+
+Looks like we have a data frame of gene sets with associated gene symbols and Entrez IDs.
 
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
@@ -270,7 +278,8 @@ Let's see a preview of `dge_mapped_df`.
 head(dge_mapped_df)
 ```
 
-Now let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+We do not want duplicated gene identifiers for the GSEA steps later as the `GSEA()` function will throw a warning that having duplicate gene names may produce unexpected results.
+Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
 
 ```{r}
 any(duplicated(dge_mapped_df$entrez_id))
@@ -280,20 +289,24 @@ Looks like we do have duplicated Entrez IDs.
 Let's find out which Entrez IDs have been duplicated.
 
 ```{r}
-dge_mapped_df %>%
+dup_entrez_ids <- dge_mapped_df %>%
   dplyr::filter(duplicated(entrez_id)) %>%
   dplyr::pull(entrez_id)
+
+dup_entrez_ids
 ```
 
-Now let's take a look at the rows associated with one of the duplicated Entrez IDs.
+Now let's take a look at the rows associated with the duplicated Entrez IDs.
 
 ```{r}
 dge_mapped_df %>%
-  dplyr::filter(entrez_id == "336702")
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
-We can see that the associated values vary for each row although the Entrez ID is the same.
 
-We do not want duplicated gene identifiers for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
+We can see that the associated values vary for each row.
+
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
+Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
 
 ```{r}
 filtered_dge_mapped_df <- dge_mapped_df %>%
@@ -305,15 +318,14 @@ filtered_dge_mapped_df <- dge_mapped_df %>%
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-Let's check to see that we removed the duplicate Entrez IDs and kept the row with the higher t-statistic value.
+Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher t-statistic value.
 
 ```{r}
 filtered_dge_mapped_df %>%
-  dplyr::filter(entrez_id == "336702")
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observation with the higher t-statistic value!
-Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher t-statistic value!
 
 ## Perform gene set enrichment analysis (GSEA)
 
