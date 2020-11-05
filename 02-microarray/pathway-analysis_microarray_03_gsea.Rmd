@@ -306,7 +306,7 @@ dge_mapped_df %>%
 We can see that the associated values vary for each row.
 
 As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
-Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
+Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is due to the removal of the duplicate gene identifiers and their associated values.
 
 ```{r}
 filtered_dge_mapped_df <- dge_mapped_df %>%
