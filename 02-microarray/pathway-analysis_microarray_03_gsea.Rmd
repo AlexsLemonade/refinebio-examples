@@ -299,9 +299,10 @@ We do not want duplicated gene identifiers for the GSEA steps later, so let's ke
 filtered_dge_mapped_df <- dge_mapped_df %>%
   # Sort so that highest t-statistic values are at the top
   dplyr::arrange(dplyr::desc(t)) %>%
-  # Filter out the duplicated rows -- this will keep the first row with the
-  # duplicated value thus keeping the row with the highest t-statistic value
-  dplyr::filter(!duplicated(entrez_id))
+  # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
+  # the first row with the duplicated value thus keeping the row with the
+  # highest t-statistic value
+  dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
 Let's check to see that we removed the duplicate Entrez IDs and kept the row with the higher t-statistic value.
