@@ -289,6 +289,7 @@ Now let's take a look at the rows associated with one of the duplicated Entrez I
 dge_mapped_df %>%
   dplyr::filter(entrez_id == "336702")
 ```
+
 We can see that the associated values vary for each row although the Entrez ID is the same.
 
 We do not want duplicated gene identifiers for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
@@ -312,7 +313,9 @@ filtered_dge_mapped_df %>%
 
 Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observation with the higher t-statistic value!
 Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
- 
+
+**START REVIEW HERE**
+
 ## Perform gene set enrichment analysis (GSEA)
 
 The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout the pre-ranked gene list or primarily found at the top or bottom of the list.
