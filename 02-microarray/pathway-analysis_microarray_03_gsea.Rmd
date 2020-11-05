@@ -305,27 +305,27 @@ dge_mapped_df %>%
 
 We can see that the associated values vary for each row.
 
-As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher absolute value of the t-statistic.
 Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is due to the removal of the duplicate gene identifiers and their associated values.
 
 ```{r}
 filtered_dge_mapped_df <- dge_mapped_df %>%
-  # Sort so that highest t-statistic values are at the top
-  dplyr::arrange(dplyr::desc(t)) %>%
+  # Sort so that the highest absolute values of the t-statistic are at the top
+  dplyr::arrange(dplyr::desc(abs(t))) %>%
   # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
   # the first row with the duplicated value thus keeping the row with the
-  # highest t-statistic value
+  # highest absolute value of the t-statistic
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher t-statistic value.
+Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher absolute value of the t-statistic.
 
 ```{r}
 filtered_dge_mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher t-statistic value!
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the t-statistic!
 
 ## Perform gene set enrichment analysis (GSEA)
 
