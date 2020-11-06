@@ -3940,7 +3940,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4054,7 +4054,7 @@ C7: immunologic signatures</code></pre>
   </script>
 </div>
 <p>We can see that the associated values vary for each row.</p>
-<p>As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let’s keep the Entrez IDs associated with the higher absolute value of the t-statistic. Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is due to the removal of the duplicate gene identifiers and their associated values.</p>
+<p>As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let’s keep the Entrez IDs associated with the higher absolute value of the t-statistic. GSEA relies on genes’ rankings on the basis of this statistic. Retaining the instance of the Entrez ID with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, less likely to be towards the middle of the ranked gene list. We should keep this decision in mind when interpreting our results. For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value. We are removing values for two genes here, so it is unlikely to have a considerable impact on our results.</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>filtered_dge_mapped_df &lt;-<span class="st"> </span>dge_mapped_df <span class="op">%&gt;%</span></span>
 <span id="cb48-2"><a href="#cb48-2"></a><span class="st">  </span><span class="co"># Sort so that the highest absolute values of the t-statistic are at the top</span></span>
 <span id="cb48-3"><a href="#cb48-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(dplyr<span class="op">::</span><span class="kw">desc</span>(<span class="kw">abs</span>(t))) <span class="op">%&gt;%</span></span>
@@ -4105,7 +4105,7 @@ C7: immunologic signatures</code></pre>
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-11-05                  
+##  date     2020-11-06                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
