@@ -225,6 +225,8 @@ Looks like we have a data frame of gene sets with associated gene symbols and En
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
 
+We will also want to keep in mind that GSEA requires that genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic.
+
 ## Gene identifier conversion
 
 We're going to convert our identifiers in `dge_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
@@ -333,8 +335,8 @@ Looks like we were able to successfully get rid of the duplicate gene identifier
 
 ## Perform gene set enrichment analysis (GSEA)
 
-The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout the pre-ranked gene list or primarily found at the top or bottom of the list.
-Genes are ranked based on phenotype so we expect that sets related to a distinct phenotype will tend to show the latter distribution [@clusterProfiler-book].
+The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list.
+As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes, so we expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book; @Subramanian2005].
 
 ### Determine our pre-ranked genes list
 
@@ -358,10 +360,8 @@ head(t_vector)
 
 ### Run GSEA using the `GSEA()` function
 
-The enrichment score (ES) is a pathway-level statistic, calculated using our gene-level statistics.
 Genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic.
-The ES is the maximum deviation from zero.
-An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+The enrichment score (ES) is a pathway-level statistic, calculated using our gene-level statistics.
 Normalized enrichment scores (NES) are enrichment scores that are scaled to make gene sets that contain different number of genes comparable [@Subramanian2005; @Korotkevich2019].
 
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
@@ -431,7 +431,9 @@ highly_positive_nes_plot
 ```
 
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
-The red dashed line indicates the peak ES score (the score with the max deviation from 0).
+The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
+An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+In this case, the most highly positive enrichment scores are being displayed.
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
 
@@ -467,7 +469,9 @@ highly_negative_nes_plot
 ```
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
-Again, the red dashed line here indicates the peak ES score (the score with the max deviation from 0).
+Again, the red dashed line here indicates the peak ES score (the ES is the maximum deviation from zero).
+An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+In this case, the most highly negative enrichment scores are being displayed.
 
 Let's save this plot to PNG.
 
