@@ -412,9 +412,8 @@ Let's look for the gene set with the highest positive NES.
 
 ```{r}
 gsea_result_df %>%
-  # Combining the `dplyr::desc()` function with `dplyr::arrange()` sorts the
-  # values in descending order
-  dplyr::arrange(dplyr::desc(NES))
+  # Use `top_n()` to return the top n observation using `NES` as the ordering variable
+  dplyr::top_n(n = 1, wt = NES)
 ```
 
 The gene set `HALLMARK_TNFA_SIGNALING_VIA_NFKB` has the highest positive NES score.
@@ -451,11 +450,12 @@ Let's look for the gene set with the highest negative NES.
 
 ```{r}
 gsea_result_df %>%
-  # The `dplyr::arrange()` function sorts the values in ascending order
-  dplyr::arrange(NES)
+  # Use `top_n()` to return the top n observation using `NES` as the ordering
+  # variable -- note the use of `dplyr::desc()` to sort the values in descending order
+  dplyr::top_n(n = 1, wt = dplyr::desc(NES))
 ```
 
-The gene set `HALLMARK_E2F_TARGETS` has a highly negative NES.
+The gene set `HALLMARK_E2F_TARGETS` has the highest negative NES.
 
 ```{r}
 highly_negative_nes_plot <- enrichplot::gseaplot(
