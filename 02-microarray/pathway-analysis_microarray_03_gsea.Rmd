@@ -431,7 +431,7 @@ highly_positive_nes_plot
 
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
 The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
-An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 In this case, the most highly positive enrichment scores are being displayed.
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
@@ -470,7 +470,7 @@ highly_negative_nes_plot
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
 Again, the red dashed line here indicates the peak ES score (the ES is the maximum deviation from zero).
-An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 In this case, the most highly negative enrichment scores are being displayed.
 
 Let's save this plot to PNG.
