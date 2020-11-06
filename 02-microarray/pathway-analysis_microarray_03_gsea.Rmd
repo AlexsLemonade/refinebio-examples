@@ -1,0 +1,359 @@
+---
+title: "Gene set enrichment analysis - Microarray"
+author: "CCDL for ALSF"
+date: "October 2020"
+output:  
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes.
+
+This particular example analysis shows how you can use gene set enrichment analysis (GSEA) to detect situations where all genes in a predefined set change in a coordinated way, detecting even small statistical but coordinated changes between two biological states.
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_03_gsea.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the gene set for this example
+
+In this example, we are using differential expression results table we obtained from an [example analysis of zebrafish samples overexpressing human CREB experiment](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+The table contains summary statistics including Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).
+
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression analysis example](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_01_2-groups.html).
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [CREB overexpression zebrafish experiment](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process) [@Tregnago2016].
+@Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called `data` (currently empty) 
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+    
+Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Gene set enrichment analysis - Microarray
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform GSEA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Yu2012; @Igor2020; @Subramanian2005].
+
+We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to perform gene identifier conversion [@Carlson2019-zebrafish].
+
+```{r}
+if (!("clusterProfiler" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("clusterProfiler", update = FALSE)
+}
+
+if (!("msigdbr" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("msigdbr", update = FALSE)
+}
+
+if (!("org.Dr.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Dr.eg.db", update = FALSE)
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library(clusterProfiler)
+
+# Package that contains MSigDB gene sets in tidy format
+library(msigdbr)
+
+# Zebrafish annotation package we'll use for gene identifier conversion
+library(org.Dr.eg.db)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import data 
+
+We will read in the differential expression results we will download from online.
+These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
+The table contains summary statistics including Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case).
+We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
+
+Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
+First we will assign the URL to its own variable called, `dge_url`. 
+
+```{r}
+# Define the url to your differential expression results file
+dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv"
+```
+
+Read in the file that has differential expression results. 
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "GSE71270_limma_results.tsv")`.
+
+```{r}
+# Read in the contents of your differential expression results file
+# `dge_url` can be replaced with a file path to a TSV file with your
+# desired gene list results
+dge_df <- readr::read_tsv(dge_url)
+```
+
+`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
+Let's take a look at what these contrast results from the differential expression analysis look like. 
+
+```{r}
+dge_df
+```
+
+## Getting familiar with `clusterProfiler`'s options
+
+Let's take a look at what organisms the package supports.
+
+```{r}
+msigdbr_species()
+```
+
+MSigDB contains 8 different gene set collections [@Subramanian2005].
+
+    H: hallmark gene sets
+    C1: positional gene sets
+    C2: curated gene sets
+    C3: motif gene sets
+    C4: computational gene sets
+    C5: GO gene sets
+    C6: oncogenic signatures
+    C7: immunologic signatures
+
+MSigDB includes a collection called Hallmark gene sets.
+Here's an excerpt of the collection description [@Liberzon2015]:
+
+Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression.
+These gene sets were generated by a computational methodology based on identifying gene set overlaps and retaining genes that display coordinate expression.
+The hallmarks reduce noise and redundancy and provide a better delineated biological space for GSEA.
+We'll use the Hallmark collection for GSEA
+Notably, there are only 50 gene sets included in this collection.
+The fewer gene sets we test, the lower our multiple hypothesis testing burden.
+
+The data we're interested in here comes from zebrafish samples, so we can obtain just the gene sets relevant to _D. rerio_ by specifying `species = "Danio rerio"` and only the Hallmark gene sets by specifying `category = "H"` to the `msigdbr()` function.
+
+```{r}
+dr_hallmark_df <- msigdbr(
+  species = "Danio rerio", # Replace with species name relevant to your data
+  category = "H"
+)
+```
+
+If you run the chunk above without specifying a `category` to the `msigdbr()` function, it will return all of the MSigDB gene sets for zebrafish.
+
+Let's preview what's in `dr_hallmark_df`.
+
+```{r}
+head(dr_hallmark_df)
+```
+
+Looks like we have a data frame of gene sets with associated gene symbols and Entrez IDs.
+
+In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
+So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
+
+## Gene identifier conversion
+
+We're going to convert our identifiers in `dge_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+
+The annotation package `org.Dr.eg.db` contains information for different identifiers [@Carlson2019-zebrafish].
+`org.Dr.eg.db` is specific to _Danio rerio_ -- this is what the `Dr` in the package name is referencing.
+
+We can see what types of IDs are available to us in an annotation package with `keytypes()`.
+
+```{r}
+keytypes(org.Dr.eg.db)
+```
+
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`).
+
+Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
+
+Let's create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.
+
+```{r}
+# First let's create a mapped data frame we can join to the differential expression stats
+dge_mapped_df <- data.frame(
+  "entrez_id" = mapIds(
+    org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
+    keys = dge_df$Gene,
+    column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
+    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+  )
+) %>%
+  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop that
+  # from the data frame
+  dplyr::filter(!is.na(entrez_id)) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
+  dplyr::inner_join(dge_df, by = c("Ensembl" = "Gene"))
+```
+
+This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
+In this case, it's also possible that a Entrez ID will map to multiple Ensembl IDs.
+For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs.
+For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+
+Let's see a preview of `dge_mapped_df`.
+
+```{r}
+head(dge_mapped_df)
+```
+
+We do not want duplicated gene identifiers for the GSEA steps later as the `GSEA()` function will throw a warning that having duplicate gene names may produce unexpected results.
+Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+
+```{r}
+any(duplicated(dge_mapped_df$entrez_id))
+```
+
+Looks like we do have duplicated Entrez IDs.
+Let's find out which Entrez IDs have been duplicated.
+
+```{r}
+dup_entrez_ids <- dge_mapped_df %>%
+  dplyr::filter(duplicated(entrez_id)) %>%
+  dplyr::pull(entrez_id)
+
+dup_entrez_ids
+```
+
+Now let's take a look at the rows associated with the duplicated Entrez IDs.
+
+```{r}
+dge_mapped_df %>%
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
+```
+
+We can see that the associated values vary for each row.
+
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher absolute value of the t-statistic.
+GSEA relies on genes' rankings on the basis of this statistic.
+Retaining the instance of the Entrez ID with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, less likely to be towards the middle of the ranked gene list.
+We should keep this decision in mind when interpreting our results.
+For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value.
+We are removing values for two genes here, so it is unlikely to have a considerable impact on our results.
+
+```{r}
+filtered_dge_mapped_df <- dge_mapped_df %>%
+  # Sort so that the highest absolute values of the t-statistic are at the top
+  dplyr::arrange(dplyr::desc(abs(t))) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
+  # the first row with the duplicated value thus keeping the row with the
+  # highest absolute value of the t-statistic
+  dplyr::distinct(entrez_id, .keep_all = TRUE)
+```
+
+Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher absolute value of the t-statistic.
+
+```{r}
+filtered_dge_mapped_df %>%
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
+```
+
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the t-statistic!
+
+## Perform gene set enrichment analysis (GSEA)
+
+_Addressed in upcoming PR_
+
+## Visualizing results
+
+_Addressed in upcoming PR_
+
+# Resources for further learning
+
+- [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012]
+- [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
+- [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
+- See this [Broad Institute page](https://www.gsea-msigdb.org/gsea/index.jsp) for more on GSEA and MSigDB [@GSEA-broad-institute].
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessioninfo::session_info()
+```
+
+# References
