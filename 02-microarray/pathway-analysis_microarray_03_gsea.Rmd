@@ -226,6 +226,8 @@ In our differential expression results data frame, `dge_df` we have Ensembl gene
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
 
 We will also want to keep in mind that GSEA requires that genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic.
+GSEA also requires unique gene identifiers to produce the most accurate results.
+This means if any duplicate gene identifiers are found in our dataset, we will want to retain the instance with the higher absolute value as this will be the instance most likely to be ranked most highly negative or most highly positive.
 
 ## Gene identifier conversion
 
@@ -336,7 +338,7 @@ Looks like we were able to successfully get rid of the duplicate gene identifier
 ## Perform gene set enrichment analysis (GSEA)
 
 The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list.
-As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes, so we expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book; @Subramanian2005].
+As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes, so we expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book].
 
 ### Determine our pre-ranked genes list
 
