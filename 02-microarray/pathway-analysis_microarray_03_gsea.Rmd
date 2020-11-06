@@ -44,14 +44,18 @@ If you have trouble running this chunk, see our [introduction to using `.Rmd`s](
 if (!dir.exists("data")) {
   dir.create("data")
 }
+
 # Define the file path to the plots directory
 plots_dir <- "plots" # Can replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
+
 # Define the file path to the results directory
 results_dir <- "results" # Can replace with path to desired output results directory
+
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
@@ -80,7 +84,7 @@ Your new analysis folder should contain:
 - A folder called `data` (currently empty) 
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-
+    
 Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
@@ -110,10 +114,12 @@ if (!("clusterProfiler" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("clusterProfiler", update = FALSE)
 }
+
 if (!("msigdbr" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("msigdbr", update = FALSE)
 }
+
 if (!("org.Dr.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Dr.eg.db", update = FALSE)
@@ -125,10 +131,13 @@ Attach the packages we need for this analysis.
 ```{r}
 # Attach the library
 library(clusterProfiler)
+
 # Package that contains MSigDB gene sets in tidy format
 library(msigdbr)
+
 # Zebrafish annotation package we'll use for gene identifier conversion
 library(org.Dr.eg.db)
+
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```
@@ -215,7 +224,6 @@ Looks like we have a data frame of gene sets with associated gene symbols and En
 
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
-This conversation was marked as resolved by cbethell
 
 ## Gene identifier conversion
 
@@ -284,6 +292,7 @@ Let's find out which Entrez IDs have been duplicated.
 dup_entrez_ids <- dge_mapped_df %>%
   dplyr::filter(duplicated(entrez_id)) %>%
   dplyr::pull(entrez_id)
+
 dup_entrez_ids
 ```
 
@@ -321,8 +330,6 @@ filtered_dge_mapped_df %>%
 ```
 
 Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the t-statistic!
-
-**START REVIEW HERE**
 
 ## Perform gene set enrichment analysis (GSEA)
 

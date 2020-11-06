@@ -113,6 +113,7 @@ RPKMs
 RStudio
 ssGSEA
 StatQuest
+Subramanian
 SuperSeries
 str
 subtype
