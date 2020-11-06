@@ -3862,7 +3862,7 @@ div.tocify {
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Attach the library</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">library</span>(clusterProfiler)</span></code></pre></div>
 <pre><code>## </code></pre>
-<pre><code>## clusterProfiler v3.16.1  For help: https://guangchuangyu.github.io/software/clusterProfiler
+<pre><code>## clusterProfiler v3.18.0  For help: https://guangchuangyu.github.io/software/clusterProfiler
 ## 
 ## If you use clusterProfiler in published research, please cite:
 ## Guangchuang Yu, Li-Gen Wang, Yanyan Han, Qing-Yu He. clusterProfiler: an R package for comparing biological themes among gene clusters. OMICS: A Journal of Integrative Biology. 2012, 16(5):284-287.</code></pre>
@@ -3897,7 +3897,7 @@ div.tocify {
 ##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
 ##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
 ##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which, which.max, which.min</code></pre>
+##     union, unique, unsplit, which.max, which.min</code></pre>
 <pre><code>## Loading required package: Biobase</code></pre>
 <pre><code>## Welcome to Bioconductor
 ## 
@@ -3940,7 +3940,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4109,18 +4109,18 @@ C7: immunologic signatures</code></pre>
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
-##  AnnotationDbi   * 1.50.3   2020-07-25 [1] Bioconductor  
+##  AnnotationDbi   * 1.52.0   2020-10-27 [1] Bioconductor  
 ##  assertthat        0.2.1    2019-03-21 [1] RSPM (R 4.0.0)
 ##  backports         1.1.10   2020-09-15 [1] RSPM (R 4.0.2)
-##  Biobase         * 2.48.0   2020-04-27 [1] Bioconductor  
-##  BiocGenerics    * 0.34.0   2020-04-27 [1] Bioconductor  
+##  Biobase         * 2.50.0   2020-10-27 [1] Bioconductor  
+##  BiocGenerics    * 0.36.0   2020-10-27 [1] Bioconductor  
 ##  BiocManager       1.30.10  2019-11-16 [1] RSPM (R 4.0.0)
-##  BiocParallel      1.22.0   2020-04-27 [1] Bioconductor  
+##  BiocParallel      1.24.0   2020-10-27 [1] Bioconductor  
 ##  bit               4.0.4    2020-08-04 [1] RSPM (R 4.0.2)
 ##  bit64             4.0.5    2020-08-30 [1] RSPM (R 4.0.2)
 ##  blob              1.2.1    2020-01-20 [1] RSPM (R 4.0.0)
 ##  cli               2.1.0    2020-10-12 [1] RSPM (R 4.0.2)
-##  clusterProfiler * 3.16.1   2020-08-18 [1] Bioconductor  
+##  clusterProfiler * 3.18.0   2020-10-27 [1] Bioconductor  
 ##  colorspace        1.4-1    2019-03-18 [1] RSPM (R 4.0.0)
 ##  cowplot           1.1.0    2020-09-08 [1] RSPM (R 4.0.2)
 ##  crayon            1.3.4    2017-09-16 [1] RSPM (R 4.0.0)
@@ -4128,38 +4128,33 @@ C7: immunologic signatures</code></pre>
 ##  data.table        1.13.0   2020-07-24 [1] RSPM (R 4.0.2)
 ##  DBI               1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  digest            0.6.25   2020-02-23 [1] RSPM (R 4.0.0)
-##  DO.db             2.9      2020-10-27 [1] Bioconductor  
-##  DOSE              3.14.0   2020-04-27 [1] Bioconductor  
+##  DO.db             2.9      2020-11-06 [1] Bioconductor  
+##  DOSE              3.16.0   2020-10-27 [1] Bioconductor  
 ##  downloader        0.4      2015-07-09 [1] RSPM (R 4.0.0)
 ##  dplyr             1.0.2    2020-08-18 [1] RSPM (R 4.0.2)
 ##  ellipsis          0.3.1    2020-05-15 [1] RSPM (R 4.0.0)
-##  enrichplot        1.8.1    2020-04-29 [1] Bioconductor  
-##  europepmc         0.4      2020-05-31 [1] RSPM (R 4.0.0)
+##  enrichplot        1.10.0   2020-10-27 [1] Bioconductor  
 ##  evaluate          0.14     2019-05-28 [1] RSPM (R 4.0.0)
 ##  fansi             0.4.1    2020-01-08 [1] RSPM (R 4.0.0)
 ##  farver            2.0.3    2020-01-16 [1] RSPM (R 4.0.0)
 ##  fastmatch         1.1-0    2017-01-28 [1] RSPM (R 4.0.0)
-##  fgsea             1.14.0   2020-04-27 [1] Bioconductor  
+##  fgsea             1.16.0   2020-10-27 [1] Bioconductor  
 ##  generics          0.0.2    2018-11-29 [1] RSPM (R 4.0.0)
 ##  getopt            1.20.3   2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggforce           0.3.2    2020-06-23 [1] RSPM (R 4.0.2)
 ##  ggplot2           3.3.2    2020-06-19 [1] RSPM (R 4.0.1)
-##  ggplotify         0.0.5    2020-03-12 [1] RSPM (R 4.0.0)
 ##  ggraph            2.0.3    2020-05-20 [1] RSPM (R 4.0.2)
 ##  ggrepel           0.8.2    2020-03-08 [1] RSPM (R 4.0.2)
-##  ggridges          0.5.2    2020-01-12 [1] RSPM (R 4.0.0)
 ##  glue              1.4.2    2020-08-27 [1] RSPM (R 4.0.2)
-##  GO.db             3.11.4   2020-10-27 [1] Bioconductor  
-##  GOSemSim          2.14.2   2020-09-04 [1] Bioconductor  
+##  GO.db             3.12.1   2020-11-06 [1] Bioconductor  
+##  GOSemSim          2.16.1   2020-10-29 [1] Bioconductor  
 ##  graphlayouts      0.7.0    2020-04-25 [1] RSPM (R 4.0.2)
 ##  gridExtra         2.3      2017-09-09 [1] RSPM (R 4.0.0)
-##  gridGraphics      0.5-0    2020-02-25 [1] RSPM (R 4.0.0)
 ##  gtable            0.3.0    2019-03-25 [1] RSPM (R 4.0.0)
 ##  hms               0.5.3    2020-01-08 [1] RSPM (R 4.0.0)
 ##  htmltools         0.5.0    2020-06-16 [1] RSPM (R 4.0.1)
-##  httr              1.4.2    2020-07-20 [1] RSPM (R 4.0.2)
 ##  igraph            1.2.6    2020-10-06 [1] RSPM (R 4.0.2)
-##  IRanges         * 2.22.2   2020-05-21 [1] Bioconductor  
+##  IRanges         * 2.24.0   2020-10-27 [1] Bioconductor  
 ##  jsonlite          1.7.1    2020-09-07 [1] RSPM (R 4.0.2)
 ##  knitr             1.30     2020-09-22 [1] RSPM (R 4.0.2)
 ##  lattice           0.20-41  2020-04-02 [2] CRAN (R 4.0.2)
@@ -4171,16 +4166,14 @@ C7: immunologic signatures</code></pre>
 ##  msigdbr         * 7.2.1    2020-10-02 [1] RSPM (R 4.0.2)
 ##  munsell           0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  optparse        * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Dr.eg.db    * 3.11.4   2020-10-27 [1] Bioconductor  
+##  org.Dr.eg.db    * 3.12.0   2020-11-06 [1] Bioconductor  
 ##  pillar            1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig         2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  plyr              1.8.6    2020-03-03 [1] RSPM (R 4.0.2)
 ##  polyclip          1.10-0   2019-03-14 [1] RSPM (R 4.0.0)
-##  prettyunits       1.1.1    2020-01-24 [1] RSPM (R 4.0.0)
-##  progress          1.2.2    2019-05-16 [1] RSPM (R 4.0.0)
 ##  ps                1.4.0    2020-10-07 [1] RSPM (R 4.0.2)
 ##  purrr             0.3.4    2020-04-17 [1] RSPM (R 4.0.0)
-##  qvalue            2.20.0   2020-04-27 [1] Bioconductor  
+##  qvalue            2.22.0   2020-10-27 [1] Bioconductor  
 ##  R.cache           0.14.0   2019-12-06 [1] RSPM (R 4.0.0)
 ##  R.methodsS3       1.8.1    2020-08-26 [1] RSPM (R 4.0.2)
 ##  R.oo              1.24.0   2020-08-26 [1] RSPM (R 4.0.2)
@@ -4196,10 +4189,11 @@ C7: immunologic signatures</code></pre>
 ##  RSQLite           2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi        0.11     2020-02-07 [1] RSPM (R 4.0.0)
 ##  rvcheck           0.1.8    2020-03-01 [1] RSPM (R 4.0.0)
-##  S4Vectors       * 0.26.1   2020-05-16 [1] Bioconductor  
+##  S4Vectors       * 0.28.0   2020-10-27 [1] Bioconductor  
 ##  scales            1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  scatterpie        0.1.5    2020-09-09 [1] RSPM (R 4.0.2)
 ##  sessioninfo       1.1.1    2018-11-05 [1] RSPM (R 4.0.0)
+##  shadowtext        0.0.7    2019-11-06 [1] RSPM (R 4.0.0)
 ##  stringi           1.5.3    2020-09-09 [1] RSPM (R 4.0.2)
 ##  stringr           1.4.0    2019-02-10 [1] RSPM (R 4.0.0)
 ##  styler            1.3.2    2020-02-23 [1] RSPM (R 4.0.0)
@@ -4207,15 +4201,12 @@ C7: immunologic signatures</code></pre>
 ##  tidygraph         1.2.0    2020-05-12 [1] RSPM (R 4.0.2)
 ##  tidyr             1.1.2    2020-08-27 [1] RSPM (R 4.0.2)
 ##  tidyselect        1.1.0    2020-05-11 [1] RSPM (R 4.0.0)
-##  triebeard         0.3.0    2016-08-04 [1] RSPM (R 4.0.2)
 ##  tweenr            1.0.1    2018-12-14 [1] RSPM (R 4.0.2)
-##  urltools          1.7.3    2019-04-14 [1] RSPM (R 4.0.2)
 ##  vctrs             0.3.4    2020-08-29 [1] RSPM (R 4.0.2)
 ##  viridis           0.5.1    2018-03-29 [1] RSPM (R 4.0.0)
 ##  viridisLite       0.3.0    2018-02-01 [1] RSPM (R 4.0.0)
 ##  withr             2.3.0    2020-09-22 [1] RSPM (R 4.0.2)
 ##  xfun              0.18     2020-09-29 [1] RSPM (R 4.0.2)
-##  xml2              1.3.2    2020-04-23 [1] RSPM (R 4.0.0)
 ##  yaml              2.2.1    2020-02-01 [1] RSPM (R 4.0.0)
 ## 
 ## [1] /usr/local/lib/R/site-library
