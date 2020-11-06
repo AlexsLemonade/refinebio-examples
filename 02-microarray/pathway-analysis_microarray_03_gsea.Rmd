@@ -44,18 +44,14 @@ If you have trouble running this chunk, see our [introduction to using `.Rmd`s](
 if (!dir.exists("data")) {
   dir.create("data")
 }
-
 # Define the file path to the plots directory
 plots_dir <- "plots" # Can replace with path to desired output plots directory
-
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
-
 # Define the file path to the results directory
 results_dir <- "results" # Can replace with path to desired output results directory
-
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
@@ -84,7 +80,7 @@ Your new analysis folder should contain:
 - A folder called `data` (currently empty) 
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-    
+
 Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
@@ -114,12 +110,10 @@ if (!("clusterProfiler" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("clusterProfiler", update = FALSE)
 }
-
 if (!("msigdbr" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("msigdbr", update = FALSE)
 }
-
 if (!("org.Dr.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Dr.eg.db", update = FALSE)
@@ -131,29 +125,19 @@ Attach the packages we need for this analysis.
 ```{r}
 # Attach the library
 library(clusterProfiler)
-
 # Package that contains MSigDB gene sets in tidy format
 library(msigdbr)
-
 # Zebrafish annotation package we'll use for gene identifier conversion
 library(org.Dr.eg.db)
-
 # We will need this so we can use the pipe: %>%
 library(magrittr)
-```
-
-The GSEA algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.
-
-```{r}
-# Set the seed so our results are reproducible:
-set.seed(12345)
 ```
 
 ## Import data 
 
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
-The table contains summary statistics including Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).
+The table contains summary statistics including Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
@@ -219,10 +203,19 @@ dr_hallmark_df <- msigdbr(
 )
 ```
 
-If you want a less curated dataset, run the chunk above without specifying a `category` to the `msigdbr()` function.
+If you run the chunk above without specifying a `category` to the `msigdbr()` function, it will return all of the MSigDB gene sets for zebrafish.
+
+Let's preview what's in `dr_hallmark_df`.
+
+```{r}
+head(dr_hallmark_df)
+```
+
+Looks like we have a data frame of gene sets with associated gene symbols and Entrez IDs.
 
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
+This conversation was marked as resolved by cbethell
 
 ## Gene identifier conversion
 
@@ -259,8 +252,10 @@ dge_mapped_df <- data.frame(
 ) %>%
   # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop that
   # from the data frame
-  dplyr::filter(!is.na(entrez_id)) %>% # Make an `Ensembl` column to store the rownames
-  tibble::rownames_to_column("Ensembl") %>% # Now let's join the rest of the expression data
+  dplyr::filter(!is.na(entrez_id)) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
   dplyr::inner_join(dge_df, by = c("Ensembl" = "Gene"))
 ```
 
@@ -275,7 +270,8 @@ Let's see a preview of `dge_mapped_df`.
 head(dge_mapped_df)
 ```
 
-Now let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+We do not want duplicated gene identifiers for the GSEA steps later as the `GSEA()` function will throw a warning that having duplicate gene names may produce unexpected results.
+Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
 
 ```{r}
 any(duplicated(dge_mapped_df$entrez_id))
@@ -285,41 +281,46 @@ Looks like we do have duplicated Entrez IDs.
 Let's find out which Entrez IDs have been duplicated.
 
 ```{r}
-dge_mapped_df %>%
+dup_entrez_ids <- dge_mapped_df %>%
   dplyr::filter(duplicated(entrez_id)) %>%
   dplyr::pull(entrez_id)
+dup_entrez_ids
 ```
 
-Now let's take a look at the rows associated with one of the duplicated Entrez IDs.
+Now let's take a look at the rows associated with the duplicated Entrez IDs.
 
 ```{r}
 dge_mapped_df %>%
-  dplyr::filter(entrez_id == "336702")
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-We can see that the associated values vary for each row although the Entrez ID is the same.
+We can see that the associated values vary for each row.
 
-We do not want duplicated gene identifiers for the GSEA steps later, so let's keep the Entrez IDs associated with the higher t-statistic value.
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher absolute value of the t-statistic.
+GSEA relies on genes' rankings on the basis of this statistic.
+Retaining the instance of the Entrez ID with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, less likely to be towards the middle of the ranked gene list.
+We should keep this decision in mind when interpreting our results.
+For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value.
+We are removing values for two genes here, so it is unlikely to have a considerable impact on our results.
 
 ```{r}
 filtered_dge_mapped_df <- dge_mapped_df %>%
-  # Sort so that highest t-statistic values are at the top
-  dplyr::arrange(dplyr::desc(t)) %>%
+  # Sort so that the highest absolute values of the t-statistic are at the top
+  dplyr::arrange(dplyr::desc(abs(t))) %>%
   # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
   # the first row with the duplicated value thus keeping the row with the
-  # highest t-statistic value
+  # highest absolute value of the t-statistic
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-Let's check to see that we removed the duplicate Entrez IDs and kept the row with the higher t-statistic value.
+Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher absolute value of the t-statistic.
 
 ```{r}
 filtered_dge_mapped_df %>%
-  dplyr::filter(entrez_id == "336702")
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observation with the higher t-statistic value!
-Note however, that a caveat in using this approach is that the genes that have duplicate identifiers could be enriched in a particular pathway/gene set and we may get an overly optimistic view of how perturbed that pathway truly is.
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the t-statistic!
 
 **START REVIEW HERE**
 
@@ -330,15 +331,15 @@ Genes are ranked based on phenotype so we expect that sets related to a distinct
 
 ### Determine our pre-ranked genes list
 
-The `GSEA()` function takes a pre-ranked (sorted) named vector of statistics, where the names in the vector are gene identifiers.
-This is step 1 -- gene-level statistics.
+The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, where the names in the vector are gene identifiers.
+This is step 1 -- create a gene list with statistics that GSEA will rank by.
 
 ```{r}
 # Let's create a named vector ranked based on the t-statistic values -- we
-# already sorted in the t-stastic values in descending order in the previous
-# chunk so we won't need to do that here
+# need to sort the t-statistic values in descending order here
 t_vector <- filtered_dge_mapped_df$t
 names(t_vector) <- filtered_dge_mapped_df$entrez_id
+t_vector <- sort(t_vector, decreasing = TRUE)
 ```
 
 Let's preview our pre-ranked named vector.
@@ -350,11 +351,10 @@ head(t_vector)
 
 ### Run GSEA using the `GSEA()` function
 
-The enrichment score (ES) for a pathway, a pathway-level statistic, is calculated using our gene-level statistics.
+The enrichment score (ES) is a pathway-level statistic, calculated using our gene-level statistics.
 Genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic.
-A running score is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 The ES is the maximum deviation from zero.
-Significance is assessed by generating a null distribution by sampling random gene sets of the same size and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
+An ES is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 Normalized enrichment scores (NES) are enrichment scores that are scaled to make gene sets that contain different number of genes comparable [@Subramanian2005; @Korotkevich2019].
 
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
@@ -383,6 +383,7 @@ Let's take a look at the results.
 head(gsea_results@result)
 ```
 
+Significance is assessed by generating a null distribution by sampling random gene sets of the same size and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
 Looks like we have gene sets returned as significant at FDR of `0.05`.
 If we didn't have any, our visualizations below would show up blank as nothing would have met our `pvalueCutoff` above.
 
@@ -409,17 +410,21 @@ gsea_result_df %>%
   dplyr::arrange(dplyr::desc(NES))
 ```
 
-The gene set `HALLMARK_TNFA_SIGNALING_VIA_NFKB` has the highest NES score.
+The gene set `HALLMARK_TNFA_SIGNALING_VIA_NFKB` has the highest positive NES score.
 
 ```{r}
-enrichplot::gseaplot(gsea_results,
+highly_positive_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
   geneSetID = "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
   title = "HALLMARK_TNFA_SIGNALING_VIA_NFKB",
   color.line = "#0d76ff"
 )
+
+highly_positive_nes_plot
 ```
 
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
+The red dashed line indicates the peak ES score (the score with the max deviation from 0).
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
 
@@ -427,7 +432,7 @@ Let's save to PNG.
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_gsea_enrich_positive_plot.png"),
-  plot = ggplot2::last_plot()
+  plot = highly_positive_nes_plot
 )
 ```
 
@@ -444,20 +449,24 @@ gsea_result_df %>%
 The gene set `HALLMARK_E2F_TARGETS` has a highly negative NES.
 
 ```{r}
-enrichplot::gseaplot(gsea_results,
+highly_negative_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
   geneSetID = "HALLMARK_E2F_TARGETS",
   title = "HALLMARK_E2F_TARGETS",
   color.line = "#0d76ff"
 )
+
+highly_negative_nes_plot
 ```
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
+Again, the red dashed line here indicates the peak ES score (the score with the max deviation from 0).
 
 Let's save this plot to PNG.
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_gsea_enrich_negative_plot.png"),
-  plot = ggplot2::last_plot()
+  plot = highly_negative_nes_plot
 )
 ```
 
