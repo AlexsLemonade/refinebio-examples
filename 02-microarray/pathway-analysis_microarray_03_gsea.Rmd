@@ -146,7 +146,7 @@ library(magrittr)
 
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
-The table contains summary statistics including Ensembl gene IDs, t-statistic values for each group, and adjusted p-values (FDR in this case).
+The table contains summary statistics including Ensembl gene IDs, t-statistic values, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
@@ -225,10 +225,6 @@ Looks like we have a data frame of gene sets with associated gene symbols and En
 In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
 
-We will also want to keep in mind that GSEA requires that genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic.
-GSEA also requires unique gene identifiers to produce the most accurate results.
-This means if any duplicate gene identifiers are found in our dataset, we will want to retain the instance with the higher absolute value as this will be the instance most likely to be ranked most highly negative or most highly positive.
-
 ## Gene identifier conversion
 
 We're going to convert our identifiers in `dge_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
@@ -281,8 +277,11 @@ Let's see a preview of `dge_mapped_df`.
 ```{r}
 head(dge_mapped_df)
 ```
+We will want to keep in mind that GSEA requires that genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic.
+GSEA also requires unique gene identifiers to produce the most accurate results.
+This means if any duplicate gene identifiers are found in our dataset, we will want to retain the instance with the higher absolute value as this will be the instance most likely to be ranked most highly negative or most highly positive.
+Otherwise the enrichment score results may be skewed and the `GSEA()` function will throw a warning.
 
-We do not want duplicated gene identifiers for the GSEA steps later as the `GSEA()` function will throw a warning that having duplicate gene names may produce unexpected results.
 Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
 
 ```{r}
@@ -311,7 +310,7 @@ We can see that the associated values vary for each row.
 
 As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the Entrez IDs associated with the higher absolute value of the t-statistic.
 GSEA relies on genes' rankings on the basis of this statistic.
-Retaining the instance of the Entrez ID with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, less likely to be towards the middle of the ranked gene list.
+Retaining the instance of the Entrez ID with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, the values less likely to be towards the middle of the ranked gene list.
 We should keep this decision in mind when interpreting our results.
 For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value.
 We are removing values for two genes here, so it is unlikely to have a considerable impact on our results.
@@ -338,7 +337,8 @@ Looks like we were able to successfully get rid of the duplicate gene identifier
 ## Perform gene set enrichment analysis (GSEA)
 
 The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list.
-As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes, so we expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book].
+As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes.
+We therefore expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book].
 
 ### Determine our pre-ranked genes list
 
@@ -415,7 +415,7 @@ Let's look for the gene set with the highest positive NES.
 ```{r}
 gsea_result_df %>%
   # Use `top_n()` to return the top n observation using `NES` as the ordering variable
-  dplyr::top_n(n = 1, wt = NES)
+  dplyr::top_n(n = 3, wt = NES)
 ```
 
 The gene set `HALLMARK_TNFA_SIGNALING_VIA_NFKB` has the highest positive NES score.
@@ -434,7 +434,7 @@ highly_positive_nes_plot
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
 The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
 An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
-In this case, the most highly positive enrichment scores are being displayed.
+In this case, the most highly positive enrichment score's data are being displayed.
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
 
@@ -448,16 +448,17 @@ ggplot2::ggsave(file.path(plots_dir, "GSE71270_gsea_enrich_positive_plot.png"),
 
 ### Highly Negative NES
 
-Let's look for the gene set with the highest negative NES.
+Let's look for the gene set with the most negative NES.
 
 ```{r}
 gsea_result_df %>%
   # Use `top_n()` to return the top n observation using `NES` as the ordering
-  # variable -- note the use of `dplyr::desc()` to sort the values in descending order
-  dplyr::top_n(n = 1, wt = dplyr::desc(NES))
+  # variable -- note the use of `-n` to display the top n values when sorted
+  # in descending order
+  dplyr::top_n(n = -3, wt = NES)
 ```
 
-The gene set `HALLMARK_E2F_TARGETS` has the highest negative NES.
+The gene set `HALLMARK_E2F_TARGETS` has the most negative NES.
 
 ```{r}
 highly_negative_nes_plot <- enrichplot::gseaplot(
@@ -471,9 +472,9 @@ highly_negative_nes_plot
 ```
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
-Again, the red dashed line here indicates the peak ES score (the ES is the maximum deviation from zero).
+Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
 An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
-In this case, the most highly negative enrichment scores are being displayed.
+In this case, the most highly negative enrichment score's data are being displayed.
 
 Let's save this plot to PNG.
 
