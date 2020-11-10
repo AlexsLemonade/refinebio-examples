@@ -1,0 +1,365 @@
+---
+title: "Over-Representation Analysis - RNA-seq"
+author: "CCDL for ALSF"
+date: "October 2020"
+output:   
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+**DRAFT**
+
+# Purpose of this analysis
+
+This analysis 1) Normalizes and transforms data wth DESeq2.
+              2) Run WGCNA to identify coexpressed gene modules. 
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>  
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
+
+@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+
+## Place the dataset in your new `data/` folder
+
+refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `SRP078441` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called "data" which contains:
+  - The `SRP078441` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)
+- A folder for `results` (currently empty)
+
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+These chunks will declare your file paths and double check that your files are in the right place. 
+
+First we will declare our file paths to our data and metadata files, which should be in our data directory.
+This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started. 
+
+```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP078441") # Replace with accession number which will be the name of the folder the files will be in
+
+# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
+data_file <- file.path(data_dir, "SRP078441.tsv") # Replace with file path to your dataset
+
+# Declare the file path to the metadata file using the data directory saved as `data_dir`
+metadata_file <- file.path(data_dir, "metadata_SRP078441.tsv") # Replace with file path to your metadata
+```
+
+Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
+
+```{r}
+# Check if the gene expression matrix file is at the file path stored in `data_file`
+file.exists(data_file)
+
+# Check if the metadata file is at the file path stored in `metadata_file`
+file.exists(metadata_file)
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences.
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Over-Representation Analysis with `clusterProfiler` - RNA-seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
+
+We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019-human; @Ahlmann-Eltze2020].
+
+```{r}
+if (!("clusterProfiler" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("clusterProfiler", update = FALSE)
+}
+
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+
+# This is required to make one of the plots that clusterProfiler will make
+if (!("ggupset" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("ggupset", update = FALSE)
+}
+
+if (!("msigdbr" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("msigdbr", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+
+if (!("impute" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("impute")
+}
+
+if (!("WGCNA" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("WGCNA")
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library(clusterProfiler)
+
+# Attach the DESeq2 library
+library(DESeq2)
+
+# Package that contains MSigDB gene sets in tidy format
+library(msigdbr)
+
+# Homo sapiens annotation package we'll use for gene identifier conversion
+library(org.Hs.eg.db)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+
+# We'll need this for finding gene modules
+library(WGCNA)
+```
+
+## Import and set up data
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(metadata_file)
+
+# Read in data TSV file
+df <- readr::read_tsv(data_file) %>%
+  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  tibble::column_to_rownames("Gene")
+```
+
+Let's ensure that the metadata and data are in the same sample order.
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>% 
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+```
+
+### Prepare data for `DESeq2`
+
+We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+
+```{r}
+# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
+round_df <- df %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, round) 
+```
+
+## Create a DESeqDataset
+
+We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2). ) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
+In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
+
+```{r}
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(
+  countData = round_df, # This is the data frame with the counts values for all replicates in our dataset
+  colData = metadata, # This is the data frame with the annotation data for the replicates in the counts data frame
+  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+)
+```
+
+## Perform DESeq2 normalization and transformation
+
+We are going to use the `vst()` function from the `DESeq2` package to normalize and transform the data.
+For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
+
+```{r}
+# Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+dds_norm <- vst(dds)
+```
+
+## Identify a set of genes of interest
+
+Here we will use WGCNA to identify co-expressed gene modules. 
+We'll continue with the top gene module with ORA. 
+
+Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
+
+```{r}
+# First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
+normalized_counts <- assay(dds_norm) %>%
+  t() # We need to transpose this data in preparation for the `WGCNA::blockwiseModules()` function
+```
+
+Run WGCNA!
+
+```{r}
+net <- WGCNA::blockwiseModules(normalized_counts, 
+                               power = 6,
+                               TOMType = "unsigned", 
+                               minModuleSize = 30,
+                               reassignThreshold = 0, 
+                               mergeCutHeight = 0.25,
+                               numericLabels = TRUE, 
+                               pamRespectsDendro = FALSE,
+                               saveTOMs = TRUE,
+                               saveTOMFileBase = "SRP078441",
+                               verbose = 3)
+```
+
+Save the gene IDs for this module as a vector. 
+
+```{r}
+module_39_genes <- rownames(df)[which(net$colors == 39)]
+```
+
+## Write results to file
+
+```{r}
+readr::write_tsv(
+  kegg_result_df,
+  file.path(
+    results_dir,
+    "SRP078441_wgcna_results.tsv"
+  )
+)
+```
+
+# Resources for further learning
+
+- [WGCNA tutorial]()
+- [WGCNA paper]()
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessionInfo()
+```
+
+# References
