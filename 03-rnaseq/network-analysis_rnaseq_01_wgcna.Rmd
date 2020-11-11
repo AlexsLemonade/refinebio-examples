@@ -229,7 +229,7 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% 
+df <- df %>%
   dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
@@ -246,7 +246,7 @@ df <- df %>%
   # Bring out rownames and store as their own column
   tibble::rownames_to_column("Gene") %>%
   # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, round) 
+  dplyr::mutate_if(is.numeric, round)
 ```
 
 ## Create a DESeqDataset
@@ -312,34 +312,35 @@ By providing a soft-threshold power parameter, we can guide it on {{I still can'
 The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
 
 ```{r}
-sft <- pickSoftThreshold(normalized_counts, 
-                         dataIsExpr = TRUE, 
-                         corFnc = cor,
-                         networkType = "signed")
+sft <- pickSoftThreshold(normalized_counts,
+  dataIsExpr = TRUE,
+  corFnc = cor,
+  networkType = "signed"
+)
 ```
 
 This `sft` object has a lot of information, we will want to plot some of it to figure out what our `power` soft-threshold should be. 
 We have to first calculate the model fit, the R squared and make that a new variable. 
 
 ```{r}
-sft_df <- data.frame(sft$fitIndices) %>% 
-  dplyr::mutate(model_fit = -sign(slope)*SFT.R.sq) 
+sft_df <- data.frame(sft$fitIndices) %>%
+  dplyr::mutate(model_fit = -sign(slope) * SFT.R.sq)
 ```
 
 Now, let's plot the model fitting by the `power` soft threshold so we can decide on a soft-threshold for power. 
 
 ```{r}
-sft_df %>% 
-  ggplot2::ggplot() + 
+sft_df %>%
+  ggplot2::ggplot() +
   ggplot2::geom_label(ggplot2::aes(x = Power, y = model_fit), label = sft_df$Power) +
   # We will plot what WGCNA recommends as an R^2 cutoff
   ggplot2::geom_hline(yintercept = 0.80, col = "red") +
   # Just in case our values are low, we want to make sure we can still see the 0.80 level
   ggplot2::ylim(c(min(sft_df$model_fit), 1)) +
   # We can add more sensible labels for our axis
-  ggplot2::xlab("Soft Threshold (power)") + 
-  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") + 
-  ggplot2::ggtitle("Scale independence") + 
+  ggplot2::xlab("Soft Threshold (power)") +
+  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
+  ggplot2::ggtitle("Scale independence") +
   # This adds some nicer aesthetics to our plot
   ggplot2::theme_classic()
 ```
@@ -366,12 +367,12 @@ This will take some time to run.
 Note that for the `power` argument we are using `14` which we determined above. 
 
 ```{r}
-bwnet <- blockwiseModules(normalized_counts, 
-                          TOMType = "signed", # topological overlap matrix
-                          power = 14, # soft threshold for network construction
-                          randomSeed = 1234 # there's some randomness associated with this calculation 
-                                            # so we should set a seed
-                          )
+bwnet <- blockwiseModules(normalized_counts,
+  TOMType = "signed", # topological overlap matrix
+  power = 14, # soft threshold for network construction
+  randomSeed = 1234 # there's some randomness associated with this calculation
+  # so we should set a seed
+)
 ```
 
 There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page to see more.
@@ -409,7 +410,7 @@ head(gene_modules)
 We can turn this into a data frame for handy use. 
 
 ```{r}
-gene_modules_df <- data.frame(gene_modules) %>% 
+gene_modules_df <- data.frame(gene_modules) %>%
   tibble::rownames_to_column("Gene")
 ```
 
@@ -442,9 +443,10 @@ annotation_df <- metadata %>%
 Now we can create a heatmap. 
 
 ```{r}
-pheatmap::pheatmap(module_eigengenes, 
-                   show_rownames = FALSE,
-                   annotation_row = annotation_df)
+pheatmap::pheatmap(module_eigengenes,
+  show_rownames = FALSE,
+  annotation_row = annotation_df
+)
 ```
 
 ## Visualize how correlated these eigengenes are
@@ -454,17 +456,18 @@ correlate_eigegenes <- cor(bwnet$MEs)
 ```
 
 ```{r}
-pheatmap::pheatmap(correlate_eigegenes, 
-                   show_rownames = FALSE, 
-                   show_colnames = FALSE)
+pheatmap::pheatmap(correlate_eigegenes,
+  show_rownames = FALSE,
+  show_colnames = FALSE
+)
 ```
 
 ## Write results to file
 
 ```{r}
-readr::write_rds(bwnet, 
-                 file = file.path("results", "SRP133573_wgcna_results.RDS")
-                 )
+readr::write_rds(bwnet,
+  file = file.path("results", "SRP133573_wgcna_results.RDS")
+)
 ```
 
 # Resources for further learning
