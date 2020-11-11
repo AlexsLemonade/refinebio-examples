@@ -336,9 +336,8 @@ Looks like we were able to successfully get rid of the duplicate gene identifier
 
 ## Perform gene set enrichment analysis (GSEA)
 
-The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list.
-As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes.
-We therefore expect that sets will tend to be highly- or lowly-ranked or, put another way, found at the top or bottom of the pre-ranked gene list [@clusterProfiler-book].
+The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list meaning that they are highly- or lowly-ranked.
+As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes so we would expect the latter distribution. [@clusterProfiler-book].
 
 ### Determine our pre-ranked genes list
 
@@ -346,10 +345,11 @@ The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, 
 This is step 1 -- create a gene list with statistics that GSEA will rank by.
 
 ```{r}
-# Let's create a named vector ranked based on the t-statistic values -- we
-# need to sort the t-statistic values in descending order here
+# Let's create a named vector ranked based on the t-statistic values
 t_vector <- filtered_dge_mapped_df$t
 names(t_vector) <- filtered_dge_mapped_df$entrez_id
+
+# We need to sort the t-statistic values in descending order here
 t_vector <- sort(t_vector, decreasing = TRUE)
 ```
 
@@ -473,7 +473,7 @@ most_negative_nes_plot
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
 Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
-An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+Here the ES is calculated by starting with the most lowly ranked genes (according to the gene-level t-statistic values) and making the score more negative when a gene is in the pathway.
 In this case, the most negative enrichment score's data are being displayed.
 
 Let's save this plot to PNG.
