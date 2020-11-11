@@ -90,9 +90,6 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
-
-<!--BRIEFLY SUMMARIZE THIS DATASET-->
-
 The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
 Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 

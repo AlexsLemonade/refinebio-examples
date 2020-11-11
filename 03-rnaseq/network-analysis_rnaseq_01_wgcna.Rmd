@@ -13,8 +13,8 @@ output:
 
 # Purpose of this analysis
 
-This analysis 1) Normalizes and transforms data wth DESeq2.
-              2) Run WGCNA to identify coexpressed gene modules. 
+In this example, we use [weighted gene co-expression network analysis (WGCNA)]() to identify co-expressed gene modules. 
+WGCNA using a series of correlations to determine what genes are expressed together in your dataset.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -69,7 +69,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP133573/identification-of-transcription-factor-relationships-associated-with-androgen-deprivation-therapy-response-and-metastatic-progression-in-prostate-cancer).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -90,9 +90,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
-
-@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
+The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
+Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
 
 ## Place the dataset in your new `data/` folder
 
@@ -107,7 +107,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `SRP078441` folder into your newly created `data/` folder.
+Copy and paste the `SRP133573` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -115,7 +115,7 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `SRP078441` folder which contains:
+  - The `SRP133573` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)
@@ -133,13 +133,13 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "SRP078441") # Replace with accession number which will be the name of the folder the files will be in
+data_dir <- file.path("data", "SRP133573") # Replace with accession number which will be the name of the folder the files will be in
 
 # Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "SRP078441.tsv") # Replace with file path to your dataset
+data_file <- file.path(data_dir, "SRP133573.tsv") # Replace with file path to your dataset
 
 # Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_SRP078441.tsv") # Replace with file path to your metadata
+metadata_file <- file.path(data_dir, "metadata_SRP133573.tsv") # Replace with file path to your metadata
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
@@ -162,6 +162,8 @@ If you'd like to adapt an example analysis to use a different dataset from [refi
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.
 
+Keep in mind that WGCNA requires at least 15 samples to produce a meaningful result [according to its authors](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html). So you will need to make sure the dataset you switch this to is sufficiently large. 
+
 ***
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
@@ -172,35 +174,13 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
-
-We will also need the [`org.Dr.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019-human; @Ahlmann-Eltze2020].
+In this analysis, we will be using [`WGCNA`](https://cran.r-project.org/web/packages/WGCNA/index.html) package.
+WGCNA also requires a package called `impute` that is sometimes has trouble installing so we recommend installing that first. 
 
 ```{r}
-if (!("clusterProfiler" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("clusterProfiler", update = FALSE)
-}
-
 if (!("DESeq2" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("DESeq2", update = FALSE)
-}
-
-# This is required to make one of the plots that clusterProfiler will make
-if (!("ggupset" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("ggupset", update = FALSE)
-}
-
-if (!("msigdbr" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("msigdbr", update = FALSE)
-}
-
-if (!("org.Hs.eg.db" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("org.Hs.eg.db", update = FALSE)
 }
 
 if (!("impute" %in% installed.packages())) {
@@ -217,14 +197,8 @@ if (!("WGCNA" %in% installed.packages())) {
 Attach the packages we need for this analysis.
 
 ```{r}
-# Attach the library
-library(clusterProfiler)
-
 # Attach the DESeq2 library
 library(DESeq2)
-
-# Package that contains MSigDB gene sets in tidy format
-library(msigdbr)
 
 # Homo sapiens annotation package we'll use for gene identifier conversion
 library(org.Hs.eg.db)
@@ -270,7 +244,9 @@ We need to make sure all of the values in our data are converted to integers as 
 
 ```{r}
 # The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
-round_df <- df %>%
+df <- df %>%
+  # Bring out rownames and store as their own column
+  tibble::rownames_to_column("Gene") %>%
   # Mutate numeric variables to be integers
   dplyr::mutate_if(is.numeric, round) 
 ```
@@ -284,9 +260,10 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = round_df, # This is the data frame with the counts values for all replicates in our dataset
+  countData = df, # This is the data frame with the counts values for all replicates in our dataset
   colData = metadata, # This is the data frame with the annotation data for the replicates in the counts data frame
-  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  design = ~1, # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  tidy = TRUE
 )
 ```
 
@@ -300,7 +277,7 @@ For more information about these transformation methods, [see here](https://alex
 dds_norm <- vst(dds)
 ```
 
-## Identify a set of genes of interest
+## Format normalized data for WGCNA
 
 Here we will use WGCNA to identify co-expressed gene modules. 
 We'll continue with the top gene module with ORA. 
@@ -313,38 +290,90 @@ normalized_counts <- assay(dds_norm) %>%
   t() # We need to transpose this data in preparation for the `WGCNA::blockwiseModules()` function
 ```
 
-Run WGCNA!
+## Determine parameters for WGCNA
+
+WGCNA has to decide what genes are included in which 
+Soft thresholds are a way for us give a parameter too WGCNA without it being absolute. 
+
 
 ```{r}
-net <- WGCNA::blockwiseModules(normalized_counts, 
-                               power = 6,
-                               TOMType = "unsigned", 
-                               minModuleSize = 30,
-                               reassignThreshold = 0, 
-                               mergeCutHeight = 0.25,
-                               numericLabels = TRUE, 
-                               pamRespectsDendro = FALSE,
-                               saveTOMs = TRUE,
-                               saveTOMFileBase = "SRP078441",
-                               verbose = 3)
+sft <- pickSoftThreshold(normalized_counts, 
+                         dataIsExpr = TRUE, 
+                         corFnc = cor,
+                         corOptions = list(use = 'p'),
+                         networkType = "signed")
 ```
 
-Save the gene IDs for this module as a vector. 
+This `sft` object has a lot of information, we will want to plot some of it to
 
 ```{r}
-module_39_genes <- rownames(df)[which(net$colors == 39)]
+sft_df <- data.frame(sft$fitIndices) %>% 
+  dplyr::mutate(model_fit = -sign(slope)*SFT.R.sq) 
+
+head(sft_df)
+```
+
+```{r}
+sft_df %>% 
+  ggplot2::ggplot() + 
+  ggplot2::geom_label(ggplot2::aes(x = Power, y = model_fit), label = sft_df$Power) +
+  ggplot2::xlab("Soft Threshold (power)") + 
+  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") + 
+  ggplot2::ggtitle("Scale independence") + 
+  ggplot2::theme_classic()
+```
+
+12 is the peak, we can use that for our `power` parameter in WGCNA. 
+
+## Run WGCNA!
+
+We will use the `blockwiseModules()` function to build a gene coexpression network.
+The `block` part refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
+
+This will take some time to run. 
+
+```{r}
+bwnet <- blockwiseModules(normalized_counts, 
+                          TOMType = "signed", # topological overlap matrix
+                          power = 12, # soft threshold for network construction
+                          randomSeed = 1234)
+```
+
+There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page to see more.
+
+There are two main parameters in particular that we think you should be aware of:
+ 
+- `TOMtype` - what kind of topological overlap matrix (TOM) should be used to make gene modules.
+  - `"signed"` means that the TOM put positive or negative regulations clustered together -- this is what WGCNA's docs recommend for most situations. 
+  - `"unsigned"` means that when the matrix is being built you won't pay attention to directionality, and focus on strength of relationship.
+
+For more on signed and unsigned network constructions: see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/).
+
+- `power` - the "soft" threshold for determining gene module networks. 
+- Here we will set `power` to 12, based on the above graph. 
+
+
+This object has a lot of information. 
+We can pull out the parts we are most interested in using for plotting. 
+
+```{r}
+
+```
+
+## Visualize how related these eigengenes are
+
+```{r}
+correlate_eigegenes <- cor(bwnet$MEs)
+
+pheatmap::pheatmap(correlate_eigegenes)
 ```
 
 ## Write results to file
 
 ```{r}
-readr::write_tsv(
-  kegg_result_df,
-  file.path(
-    results_dir,
-    "SRP078441_wgcna_results.tsv"
-  )
-)
+readr::write_rds(bwnet, 
+                 file = file.path("results", "SRP133573_wgcna_results.RDS")
+                 )
 ```
 
 # Resources for further learning
