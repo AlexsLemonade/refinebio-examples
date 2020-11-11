@@ -267,8 +267,23 @@ dds <- DESeqDataSetFromMatrix(
 )
 ```
 
+## Define a minimum counts cutoff
+
+We want to filter out the genes that have not been expressed or that have low expression counts. 
+This is recommended by [WGCNA docs for RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).
+Removing low count genes can help improve your WGCNA results. 
+We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
+
+```{r}
+# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
+# only rows that have counts above the cutoff
+genes_to_keep <- rowSums(counts(dds)) >= 50
+dds <- dds[genes_to_keep, ]
+```
+
 ## Perform DESeq2 normalization and transformation
 
+We often suggest normalizing and transforming your data for various applications and in this instance WGCNA's authors [suggest using variance stablizing transformation before running WGCNA](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).  
 We are going to use the `vst()` function from the `DESeq2` package to normalize and transform the data.
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
@@ -292,80 +307,154 @@ normalized_counts <- assay(dds_norm) %>%
 
 ## Determine parameters for WGCNA
 
-WGCNA has to decide what genes are included in which 
-Soft thresholds are a way for us give a parameter too WGCNA without it being absolute. 
-
+WGCNA has to decide what genes are included in which modules, but it might encounter some genes that are close to call between modules. 
+By providing a soft-threshold power parameter, we can guide it on {{I still can't figure out what power actually represents here}}
+The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
 
 ```{r}
 sft <- pickSoftThreshold(normalized_counts, 
                          dataIsExpr = TRUE, 
                          corFnc = cor,
-                         corOptions = list(use = 'p'),
                          networkType = "signed")
 ```
 
-This `sft` object has a lot of information, we will want to plot some of it to
+This `sft` object has a lot of information, we will want to plot some of it to figure out what our `power` soft-threshold should be. 
+We have to first calculate the model fit, the R squared and make that a new variable. 
 
 ```{r}
 sft_df <- data.frame(sft$fitIndices) %>% 
   dplyr::mutate(model_fit = -sign(slope)*SFT.R.sq) 
-
-head(sft_df)
 ```
+
+Now, let's plot the model fitting by the `power` soft threshold so we can decide on a soft-threshold for power. 
 
 ```{r}
 sft_df %>% 
   ggplot2::ggplot() + 
   ggplot2::geom_label(ggplot2::aes(x = Power, y = model_fit), label = sft_df$Power) +
+  # We will plot what WGCNA recommends as an R^2 cutoff
+  ggplot2::geom_hline(yintercept = 0.80, col = "red") +
+  # Just in case our values are low, we want to make sure we can still see the 0.80 level
+  ggplot2::ylim(c(min(sft_df$model_fit), 1)) +
+  # We can add more sensible labels for our axis
   ggplot2::xlab("Soft Threshold (power)") + 
   ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") + 
   ggplot2::ggtitle("Scale independence") + 
+  # This adds some nicer aesthetics to our plot
   ggplot2::theme_classic()
 ```
 
-12 is the peak, we can use that for our `power` parameter in WGCNA. 
+Using this plot we can decide on a power parameter. 
+WGCNA's authors recommend using a `power` that has an signed R^2 above `0.80`, otherwise they warn your results may be too noisy to be meaningful. 
+
+If you have multiple power values with signed R^2 above `0.80`, then picking the one at an inflection point, in other words where the R^2 values seem to have reached their saturation [{{SOURCE}}](https://dibernardo.tigem.it/files/papers/2008/zhangbin-statappsgeneticsmolbio.pdf).
+You want to a `power` that gives you a big enough R^2 but is not excessively large.
+
+So using the plot above, going with a power soft-threshold of `14`!
+
+If you find you have all very low R^2 values this may be because there are too many genes with low values that are cluttering up the calculations. 
+You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
+
 
 ## Run WGCNA!
 
 We will use the `blockwiseModules()` function to build a gene coexpression network.
-The `block` part refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
+The `blockwise` part refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
 
 This will take some time to run. 
+
+Note that for the `power` argument we are using `14` which we determined above. 
 
 ```{r}
 bwnet <- blockwiseModules(normalized_counts, 
                           TOMType = "signed", # topological overlap matrix
-                          power = 12, # soft threshold for network construction
-                          randomSeed = 1234)
+                          power = 14, # soft threshold for network construction
+                          randomSeed = 1234 # there's some randomness associated with this calculation 
+                                            # so we should set a seed
+                          )
 ```
 
 There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page to see more.
 
-There are two main parameters in particular that we think you should be aware of:
- 
-- `TOMtype` - what kind of topological overlap matrix (TOM) should be used to make gene modules.
-  - `"signed"` means that the TOM put positive or negative regulations clustered together -- this is what WGCNA's docs recommend for most situations. 
-  - `"unsigned"` means that when the matrix is being built you won't pay attention to directionality, and focus on strength of relationship.
+The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) should be used to make gene modules.
+You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
+However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out.
 
-For more on signed and unsigned network constructions: see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/).
+## Explore our WGCNA results
 
-- `power` - the "soft" threshold for determining gene module networks. 
-- Here we will set `power` to 12, based on the above graph. 
+This object, `bwnet` has a lot of information. 
+We can pull out the parts we are most interested in and may want to use use for plotting. 
 
-
-This object has a lot of information. 
-We can pull out the parts we are most interested in using for plotting. 
+In `bwnet` we have a data frame of eigengene module data for each sample in the `MEs` slot. 
+These represent the collapsed and combined expression of the genes a part of each module. 
 
 ```{r}
+module_eigengenes <- bwnet$MEs
 
+# Print out a preview
+head(module_eigengenes)
+```
+If you want to know which of your genes make up which modules, you can look at the `$colors` slot. 
+This is a named list which associates the genes with the module they are a part of. 
+
+```{r}
+gene_modules <- bwnet$colors
+
+# Print out a preview
+head(gene_modules)
 ```
 
-## Visualize how related these eigengenes are
+We can turn this into a data frame for handy use. 
+
+```{r}
+gene_modules_df <- data.frame(gene_modules) %>% 
+  tibble::rownames_to_column("Gene")
+```
+
+Now we can print out how many genes there are per module. 
+
+```{r}
+gene_modules_df %>% dplyr::count(gene_modules)
+```
+
+Note that the color assignments don't have any particular biological meaning and just function as labels. 
+
+## Take a look at eigengenes with your metadata
+
+We can also see if our eigengenes relate to our metadata labels. 
+
+First we would have to make an annotation data frame that we can give to heatmap.
+
+```{r}
+# Let's prepare the annotation data.frame for taking a look at our eigengenes
+annotation_df <- metadata %>%
+  # We want to select the variables that we want for annotating the technical replicates heatmap
+  dplyr::select(
+    refinebio_accession_code,
+    refinebio_treatment
+  ) %>%
+  # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our `DESeaDataSet` object
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+Now we can create a heatmap. 
+
+```{r}
+pheatmap::pheatmap(module_eigengenes, 
+                   show_rownames = FALSE,
+                   annotation_row = annotation_df)
+```
+
+## Visualize how correlated these eigengenes are
 
 ```{r}
 correlate_eigegenes <- cor(bwnet$MEs)
+```
 
-pheatmap::pheatmap(correlate_eigegenes)
+```{r}
+pheatmap::pheatmap(correlate_eigegenes, 
+                   show_rownames = FALSE, 
+                   show_colnames = FALSE)
 ```
 
 ## Write results to file
@@ -378,8 +467,9 @@ readr::write_rds(bwnet,
 
 # Resources for further learning
 
-- [WGCNA tutorial]()
-- [WGCNA paper]()
+- [WGCNA FAQ page](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html)
+- [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/)
+- [WGCNA paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-559)
 
 # Session info
 
