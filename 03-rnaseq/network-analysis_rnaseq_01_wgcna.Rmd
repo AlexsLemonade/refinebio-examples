@@ -9,8 +9,6 @@ output:
     number_sections: true
 ---
 
-**DRAFT**
-
 # Purpose of this analysis
 
 In this example, we use [weighted gene co-expression network analysis (WGCNA)]() to identify co-expressed gene modules. 
@@ -292,6 +290,8 @@ For more information about these transformation methods, [see here](https://alex
 dds_norm <- vst(dds)
 ```
 
+**REVIEW**
+
 ## Format normalized data for WGCNA
 
 Here we will use WGCNA to identify co-expressed gene modules. 
@@ -379,6 +379,8 @@ There are a lot of other settings you can tweak -- look at `?blockwiseModules` h
 The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) should be used to make gene modules.
 You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
 However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out.
+
+**DRAFT**
 
 ## Explore our WGCNA results
 
