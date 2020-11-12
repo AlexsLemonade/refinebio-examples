@@ -63,6 +63,8 @@ glioma
 GC
 GSE
 GSEA
+GSVA
+Hänzelmann
 HCOP
 hexamer
 HGNC
@@ -79,6 +81,7 @@ JPEG
 KEGG
 limma
 logFC
+Malhotra
 medulloblastoma
 microarray’s
 molecularly

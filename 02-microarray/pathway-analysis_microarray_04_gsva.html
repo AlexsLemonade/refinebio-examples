@@ -3708,6 +3708,7 @@ div.tocify {
             <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../02-microarray/pathway-analysis_microarray_02_ora.html">Pathway Analysis - ORA</a></li>
+            <li><a href="../02-microarray/pathway-analysis_microarray_03_gsea.html">Pathway Analysis - GSEA</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
 
@@ -3768,10 +3769,10 @@ div.tocify {
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
 <p><strong>DRAFT</strong></p>
-<p>In this example we will cover a method called Gene Set Variation Analysis (GSVA) (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann, Castelo, and Guinney. 2013</a>) that allows us to calculate gene set or pathway scores on a per-sample basis.</p>
+<p>In this example we will cover a method called Gene Set Variation Analysis (GSVA) (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann2013</a>) that allows us to calculate gene set or pathway scores on a per-sample basis.</p>
 <p>We like this quote from the GSVA paper (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann, Castelo, and Guinney. 2013</a>) to set the stage:</p>
-<p>While [gene set enrichment] methods are generally regarded as end points of a bioinformatic analysis, GSVA constitutes a starting point to build pathway-centric models of biology. Rather than contextualizing some results you <em>already have</em> from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment. Note that these scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and reran GSVA, you would expect the scores to change.</p>
-<p>GSVA assesses the relative enrichment of gene sets across samples using a non-parametric approach. Conceptually, GSVA transforms a p-gene by n-sample gene expression matrix into a g-geneset by n-sample pathway enrichment matrix. This facilitates many forms of statistical analysis in the ‘space’ of pathways rather than genes, providing a higher level of interpretability. (<a href="https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd" class="uri">https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd</a>)</p>
+<p>While [gene set enrichment] methods are generally regarded as end points of a bioinformatics analysis, GSVA constitutes a starting point to build pathway-centric models of biology. Rather than contextualizing some results you <em>already have</em> from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment. Note that these scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and reran GSVA, you would expect the scores to change.</p>
+<p>GSVA assesses the relative enrichment of gene sets across samples using a non-parametric approach. Conceptually, GSVA transforms a p-gene by n-sample gene expression matrix into a g-gene set by n-sample pathway enrichment matrix. (<a href="https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd" class="uri">https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd</a>)</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -4250,7 +4251,7 @@ div.tocify {
 <div id="gsva---microarray" class="section level2">
 <h2><span class="header-section-number">4.3</span> GSVA - Microarray</h2>
 <p><strong>DRAFT</strong></p>
-<p>You may notice that GSVA has some commonalities with GSEA. Rather than ranking genes based on some statistic <em>we</em> selected ahead of time, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution. This is a way of asking if a gene <em>i</em> is highly or lowly expressed in a sample <em>j</em> in the context of this experiment and ranking accordingly (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann, Castelo, and Guinney. 2013</a>). The pathway-level score calculated is a way of asking how genes <em>within</em> a gene set vary as compared to genes that are <em>outside</em> of that gene set (<a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Malhotra. 2018</a>). (This is sometimes called a competitive test in gene set enrichment literature.) The intuition here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (overexpressed or underexpressed relative to the overall population) (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann, Castelo, and Guinney. 2013</a>).</p>
+<p>You may notice that GSVA has some commonalities with GSEA. Rather than ranking genes based on some statistic <em>we</em> selected ahead of time, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution. This is a way of asking if a gene <em>i</em> is highly or lowly expressed in a sample <em>j</em> in the context of this experiment and ranking accordingly (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann2013</a>). The pathway-level score calculated is a way of asking how genes <em>within</em> a gene set vary as compared to genes that are <em>outside</em> of that gene set (<a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Malhotra. 2018</a>). (This is sometimes called a competitive test in gene set enrichment literature.) The intuition here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) (<a href="https://doi.org/10.1186/1471-2105-14-7">Hänzelmann2013</a>).</p>
 <p>The output is a gene set by sample matrix of GSVA scores.</p>
 <div id="perform-gsva" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Perform GSVA</h3>
@@ -4720,6 +4721,11 @@ div.tocify {
 </div>
 </div>
 
+<ul class="nav navbar-nav navbar-right">
+  <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give us feedback</a></li>
+  <li><a href="https://github.com/AlexsLemonade/refinebio-examples">GitHub</a></li>
+  <li><a href="https://www.refine.bio">refine.bio</a></li>
+</ul>
 
 
 </div>
