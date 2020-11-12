@@ -190,6 +190,11 @@ if (!("WGCNA" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   install.packages("WGCNA")
 }
+
+if (!("ggforce" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("ggforce")
+}
 ```
 
 Attach the packages we need for this analysis.
@@ -305,7 +310,7 @@ normalized_counts <- assay(dds_norm) %>%
 ## Determine parameters for WGCNA
 
 WGCNA has to decide what genes are included in which modules, but it might encounter some genes that are close to call between modules. 
-By providing a soft-threshold power parameter, we can guide it on {{I still can't figure out what power actually represents here}}
+By providing a soft-threshold power parameter, we can guide it on to what exponent it should compare R values for deciding between modules for a gene. 
 The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
 
 ```{r}
@@ -443,7 +448,7 @@ stats_df <- limma::topTable(fit, number = nrow(module_eigengenes_t)) %>%
 Let's arrange the results by the smallest adjusted p values. 
 
 ```{r}
-stats_df %>% 
+stats_df %>%
   dplyr::arrange(adj.P.Val)
 ```
 
@@ -452,14 +457,21 @@ Now we can do some investigation into this module.
 
 ## Let's make plot of module 52?
 
-Let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
+As a sanity check, let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
 
 ```{r}
-labeled_eigengenes_df %>% 
-  ggplot2::ggplot(ggplot2::aes(x = refinebio_treatment, 
-                               y = ME52, 
-                               color = refinebio_treatment)) + 
-  ggforce::geom_sina() + 
+module_eigengenes %>%
+  tibble::rownames_to_column("accession_code") %>%
+  dplyr::inner_join(metadata %>%
+    dplyr::select(refinebio_accession_code, refinebio_treatment),
+  by = c("accession_code" = "refinebio_accession_code")
+  ) %>%
+  ggplot2::ggplot(ggplot2::aes(
+    x = refinebio_treatment,
+    y = ME52,
+    color = refinebio_treatment
+  )) +
+  ggforce::geom_sina() +
   ggplot2::theme_classic()
 ```
 
@@ -472,7 +484,7 @@ This is a named list which associates the genes with the module they are a part 
 We can turn this into a data frame for handy use. 
 
 ```{r}
-gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>% 
+gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>%
   # Let's add the `ME` part so its more clear what these numbers are and it matches elsewhere
   dplyr::mutate(module = paste0("ME", module))
 ```
@@ -480,15 +492,16 @@ gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module"
 Now we can find what genes are a part of module 52.
 
 ```{r}
-module_52_genes <- gene_modules_df %>% 
+module_52_genes <- gene_modules_df %>%
   dplyr::filter(module == "ME52")
 ```
 
 Let's save this gene to module key to a TSV file for future use. 
 
 ```{r}
-readr::write_tsv(gene_modules_df, 
-                 file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv"))
+readr::write_tsv(gene_modules_df,
+  file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv")
+)
 ```
 
 # Resources for further learning
