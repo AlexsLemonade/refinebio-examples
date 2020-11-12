@@ -457,8 +457,7 @@ gsva_results <- gsva(matrix,
   max.sz = 50,
   # Compute Gaussian-distributed scores
   mx.diff = TRUE,
-  # Use 4 cores
-  parallel.sz = 1L,
+  # Print out information about each calculation step
   verbose = TRUE
 )
 ```
@@ -466,6 +465,7 @@ gsva_results <- gsva(matrix,
 **DRAFT**
 
 Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we had log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
+See `?gsva` for more options.
 
 ```{r}
 # Let's explore what the output of gsva() looks like

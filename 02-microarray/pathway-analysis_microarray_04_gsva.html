@@ -4266,10 +4266,9 @@ div.tocify {
 <span id="cb52-9"><a href="#cb52-9"></a>  <span class="dt">max.sz =</span> <span class="dv">50</span>,</span>
 <span id="cb52-10"><a href="#cb52-10"></a>  <span class="co"># Compute Gaussian-distributed scores</span></span>
 <span id="cb52-11"><a href="#cb52-11"></a>  <span class="dt">mx.diff =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb52-12"><a href="#cb52-12"></a>  <span class="co"># Use 4 cores</span></span>
-<span id="cb52-13"><a href="#cb52-13"></a>  <span class="dt">parallel.sz =</span> 1L,</span>
-<span id="cb52-14"><a href="#cb52-14"></a>  <span class="dt">verbose =</span> <span class="ot">TRUE</span></span>
-<span id="cb52-15"><a href="#cb52-15"></a>)</span></code></pre></div>
+<span id="cb52-12"><a href="#cb52-12"></a>  <span class="co"># Print out information about each calculation step</span></span>
+<span id="cb52-13"><a href="#cb52-13"></a>  <span class="dt">verbose =</span> <span class="ot">TRUE</span></span>
+<span id="cb52-14"><a href="#cb52-14"></a>)</span></code></pre></div>
 <pre><code>## Estimating GSVA scores for 7 gene sets.
 ## Estimating ECDFs with Gaussian kernels
 ## 
@@ -4290,7 +4289,7 @@ div.tocify {
   |                                                                            
   |======================================================================| 100%</code></pre>
 <p><strong>DRAFT</strong></p>
-<p>Note that the <code>gsva()</code> function documentation says we can use <code>kcdf = &quot;Gaussian&quot;</code> if we had log-CPMs, log-RPKMs or log-TPMs, but we would use <code>kcdf = &quot;Poisson&quot;</code> on integer counts.</p>
+<p>Note that the <code>gsva()</code> function documentation says we can use <code>kcdf = &quot;Gaussian&quot;</code> if we had log-CPMs, log-RPKMs or log-TPMs, but we would use <code>kcdf = &quot;Poisson&quot;</code> on integer counts. See <code>?gsva</code> for more options.</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a><span class="co"># Let&#39;s explore what the output of gsva() looks like</span></span>
 <span id="cb54-2"><a href="#cb54-2"></a><span class="kw">head</span>(gsva_results)</span></code></pre></div>
 <pre><code>##                                            GSM918590   GSM918634   GSM918581
