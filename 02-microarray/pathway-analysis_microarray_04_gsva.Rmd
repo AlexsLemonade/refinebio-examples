@@ -17,7 +17,7 @@ This example is one of pathway analysis module set, we recommend looking at the 
 
 In this example we will cover a method called Gene Set Variation Analysis (GSVA) ([Hänzelmann2013](https://doi.org/10.1186/1471-2105-14-7)) that allows us to calculate gene set or pathway scores on a per-sample basis.
 
-We like this quote from the GSVA paper ([Hänzelmann, Castelo, and Guinney. 2013](https://doi.org/10.1186/1471-2105-14-7)) to set the stage:
+We like this quote from the GSVA paper ([Hänzelmann2013](https://doi.org/10.1186/1471-2105-14-7)) to set the stage:
 
 While [gene set enrichment] methods are generally regarded as end points of a bioinformatics analysis, GSVA constitutes a starting point to build pathway-centric models of biology.
 Rather than contextualizing some results you _already have_ from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment.
