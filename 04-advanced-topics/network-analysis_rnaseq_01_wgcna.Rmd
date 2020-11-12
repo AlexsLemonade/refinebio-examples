@@ -12,7 +12,7 @@ output:
 # Purpose of this analysis
 
 In this example, we use [weighted gene co-expression network analysis (WGCNA)]() to identify co-expressed gene modules. 
-WGCNA using a series of correlations to determine what genes are expressed together in your dataset.
+WGCNA using a series of correlations to determine what genes are expressed together in your data set.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -290,12 +290,9 @@ For more information about these transformation methods, [see here](https://alex
 dds_norm <- vst(dds)
 ```
 
-**REVIEW**
-
 ## Format normalized data for WGCNA
 
 Here we will use WGCNA to identify co-expressed gene modules. 
-We'll continue with the top gene module with ORA. 
 
 Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
 
@@ -351,11 +348,10 @@ WGCNA's authors recommend using a `power` that has an signed R^2 above `0.80`, o
 If you have multiple power values with signed R^2 above `0.80`, then picking the one at an inflection point, in other words where the R^2 values seem to have reached their saturation [{{SOURCE}}](https://dibernardo.tigem.it/files/papers/2008/zhangbin-statappsgeneticsmolbio.pdf).
 You want to a `power` that gives you a big enough R^2 but is not excessively large.
 
-So using the plot above, going with a power soft-threshold of `14`!
+So using the plot above, going with a power soft-threshold of `16`!
 
 If you find you have all very low R^2 values this may be because there are too many genes with low values that are cluttering up the calculations. 
 You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
-
 
 ## Run WGCNA!
 
@@ -364,13 +360,14 @@ The `blockwise` part refers to that these calculations will be done on chunks of
 
 This will take some time to run. 
 
-Note that for the `power` argument we are using `14` which we determined above. 
+Note that for the `power` argument we are using `16` which we determined above. 
 
 ```{r}
 bwnet <- blockwiseModules(normalized_counts,
   TOMType = "signed", # topological overlap matrix
-  power = 14, # soft threshold for network construction
-  randomSeed = 1234 # there's some randomness associated with this calculation
+  power = 16, # soft threshold for network construction
+  numericLabels = TRUE, # Let's use numbers instead of colors for module labels
+  randomSeed = 1234, # there's some randomness associated with this calculation
   # so we should set a seed
 )
 ```
@@ -381,7 +378,13 @@ The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) s
 You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
 However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out.
 
-**DRAFT**
+## Write main WGCNA results object to file
+
+```{r}
+readr::write_rds(bwnet,
+  file = file.path("results", "SRP133573_wgcna_results.RDS")
+)
+```
 
 ## Explore our WGCNA results
 
@@ -397,77 +400,127 @@ module_eigengenes <- bwnet$MEs
 # Print out a preview
 head(module_eigengenes)
 ```
-If you want to know which of your genes make up which modules, you can look at the `$colors` slot. 
-This is a named list which associates the genes with the module they are a part of. 
 
-```{r}
-gene_modules <- bwnet$colors
-
-# Print out a preview
-head(gene_modules)
-```
-
-We can turn this into a data frame for handy use. 
-
-```{r}
-gene_modules_df <- data.frame(gene_modules) %>%
-  tibble::rownames_to_column("Gene")
-```
-
-Now we can print out how many genes there are per module. 
-
-```{r}
-gene_modules_df %>% dplyr::count(gene_modules)
-```
-
-Note that the color assignments don't have any particular biological meaning and just function as labels. 
-
-## Take a look at eigengenes with your metadata
+## Which modules have biggest differences across treatment groups
 
 We can also see if our eigengenes relate to our metadata labels. 
-
 First we would have to make an annotation data frame that we can give to heatmap.
 
 ```{r}
 # Let's prepare the annotation data.frame for taking a look at our eigengenes
-annotation_df <- metadata %>%
-  # We want to select the variables that we want for annotating the technical replicates heatmap
-  dplyr::select(
-    refinebio_accession_code,
-    refinebio_treatment
-  ) %>%
-  # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our `DESeaDataSet` object
-  tibble::column_to_rownames("refinebio_accession_code")
+labeled_eigengenes_df <- module_eigengenes %>% 
+  tibble::rownames_to_column("sample") %>%
+  dplyr::inner_join(metadata %>% 
+                      dplyr::select(refinebio_accession_code, refinebio_treatment), 
+                                        by = c("sample" = "refinebio_accession_code"))
 ```
 
-Now we can create a heatmap. 
+Set up a custom function for running ANOVA and extracting summary stats. 
 
 ```{r}
-pheatmap::pheatmap(module_eigengenes,
-  show_rownames = FALSE,
-  annotation_row = annotation_df
-)
+run_lineaar_model <- function(anova_df = labeled_eigengenes_df, 
+                      eigengene_col = "ME52", 
+                      group_variable_col = "refinebio_treatment") {
+  # Given a data frame with the variables you want to teest
+  #
+  # Args:
+  #   anova_df: a data fram that contains the variables you want to use ANOVA to test
+  #   eigengene_col: a string that is the column name for the eigengene you want to test
+  #   group_variable_col: a string that is the column name for the grouping variable you would like   #                       to look for differences across
+  #
+  # Returns:
+  # The summary statistics from running ANOVA
+
+  # Set up a formula using the eigengene column name and grouping variable name
+  aov_formula <- formula(paste(eigengene_col, "~", group_variable_col))
+  
+  # Run ANOVA based on that formula
+  aov_results <- lmFit(aov_formula, data = anova_df)
+
+  # Extract the summary stats 
+  summary_stats <- data.frame(summary(aov_results)$coefficients) %>% 
+    tibble::rownames_to_column("group") %>%
+    dplyr::filter(variable != )
+    
+    # Make a new column that has the eigengene module name
+    dplyr::mutate(module = eigengene_col)
+  
+  # Return the summary stats
+  return(summary_stats)
+}
 ```
 
-## Visualize how correlated these eigengenes are
+Obtain a vector of the module names we can supply to the `run_anova()` function in the next step. 
 
 ```{r}
-correlate_eigegenes <- cor(bwnet$MEs)
+# We need the module column names but not the other column names
+module_names <- grep("ME", colnames(labeled_eigengenes_df), value = TRUE)
 ```
 
+Run ANOVA on each eigengene module and bind results together. 
+
 ```{r}
-pheatmap::pheatmap(correlate_eigegenes,
-  show_rownames = FALSE,
-  show_colnames = FALSE
-)
+# Run ANOVA on each module
+aov_results_df <- purrr::map(module_names, 
+                             ~ run_anova(anova_df = labeled_eigengenes_df, 
+                                         eigengene_col = .x, 
+                                         group_variable_col = "refinebio_treatment")) %>%
+  # Bind all the modules results into one data frame
+  dplyr::bind_rows() %>% 
+  # The p value column has an annoying name, let's change it, let's also reearrange so module name comes first
+  dplyr::select(module, dplyr::everything(), p_val = Pr..F.) %>% 
+  # Make a new column of adjusted p values based on multiple testing corrections
+  dplyr::mutate(p_adjust = p.adjust(p_val, method = "hochberg"))
 ```
 
-## Write results to file
+Let's arrange the results by the smallest adjusted p values. 
 
 ```{r}
-readr::write_rds(bwnet,
-  file = file.path("results", "SRP133573_wgcna_results.RDS")
-)
+aov_results_df %>% 
+  dplyr::arrange(p_adjust)
+```
+
+Module 52 seems to be the most differentially expressed across `refinebio_treatment` groups. 
+Now we can do some investigation into this module. 
+
+## Let's make plot of module 52?
+
+Let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
+
+```{r}
+labeled_eigengenes_df %>% 
+  ggplot2::ggplot(ggplot2::aes(x = refinebio_treatment, 
+                               y = ME52, 
+                               color = refinebio_treatment)) + 
+  ggforce::geom_sina() + 
+  ggplot2::theme_classic()
+```
+
+This makes sense!
+
+## What genes are a part of module 52?
+
+If you want to know which of your genes make up a modules, you can look at the `$colors` slot. 
+This is a named list which associates the genes with the module they are a part of. 
+We can turn this into a data frame for handy use. 
+
+```{r}
+gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>% 
+  # Let's add the `ME` part so its more clear what these numbers are and it matches elsewhere
+  dplyr::mutate(module = paste0("ME", module))
+```
+
+Now we can find what genes are a part of module 52.
+
+```{r}
+module_52_genes <- gene_modules_df %>% 
+  dplyr::filter(module == "ME52")
+```
+
+Let's save this gene to module key to a TSV file for future use. 
+
+```{r}
+readr::write_tsv(gene_modules_df, file = file.path(results, "SRP133573_wgcna_gene_to_module.tsv"))
 ```
 
 # Resources for further learning
