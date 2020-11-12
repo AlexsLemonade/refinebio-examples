@@ -9,6 +9,7 @@ rule target:
         "02-microarray/dimension-reduction_microarray_02_umap.html",
         "02-microarray/gene-id-annotation_microarray_01_ensembl.html",
         "02-microarray/pathway-analysis_microarray_02_ora.html",
+        "02-microarray/pathway-analysis_microarray_03_gsea.html",
         "02-microarray/pathway-analysis_microarray_04_gsva.html",
         "02-microarray/ortholog-mapping_microarray_01_ensembl.html",
         "03-rnaseq/00-intro-to-rnaseq.html",
