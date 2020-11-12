@@ -4016,9 +4016,10 @@ div.tocify {
 <p>The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame that we used with <code>clusterProfiler</code> (although it does accept other formats).</p>
 <p>We’re going to take this opportunity to introduce a different format that gene sets are often distributed in called <a href="https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29">GMT (Gene Matrix Transposed)</a>.</p>
 <p>We’re going to read in the Hallmark collection file directly from <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">MSigDB</a>, rather than using <code>msigdbr</code> like we did in earlier notebooks.</p>
+<p>Note that when reading in the Hallmark collection file in this manner, the data is only compatible with <em>Homo sapiens</em> datasets.</p>
 <p><strong>REVIEW</strong></p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="co"># R can often read in data from a URL</span></span>
-<span id="cb35-2"><a href="#cb35-2"></a>hallmarks_url &lt;-<span class="st"> &quot;https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.1/h.all.v7.1.entrez.gmt&quot;</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a>hallmarks_url &lt;-<span class="st"> &quot;https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt&quot;</span></span>
 <span id="cb35-3"><a href="#cb35-3"></a></span>
 <span id="cb35-4"><a href="#cb35-4"></a><span class="co"># QuSAGE is another pathway analysis method, the `qusage` package has a function</span></span>
 <span id="cb35-5"><a href="#cb35-5"></a><span class="co"># for reading GMT files and turning them into a list</span></span>
@@ -4138,7 +4139,7 @@ div.tocify {
 <div id="gene-identifier-conversion" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Gene identifier conversion</h3>
 <p>We’re going to convert our identifiers in <code>dge_df</code> to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!</p>
-<p>The annotation package <code>org.Hs.eg.db</code> contains information for different identifiers <span class="citation">(Carlson 2020)</span>. <code>org.Dr.eg.db</code> is specific to <em>Homo sapiens</em> – this is what the <code>Hs</code> in the package name is referencing.</p>
+<p>The annotation package <code>org.Hs.eg.db</code> contains information for different identifiers <span class="citation">(Carlson 2020)</span>. <code>org.Hs.eg.db</code> is specific to <em>Homo sapiens</em> – this is what the <code>Hs</code> in the package name is referencing.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="kw">keytypes</span>(org.Hs.eg.db)</span></code></pre></div>
 <pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot;  &quot;ENSEMBLTRANS&quot;
