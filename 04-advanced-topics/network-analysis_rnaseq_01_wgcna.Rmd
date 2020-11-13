@@ -1,5 +1,5 @@
 ---
-title: "Over-Representation Analysis - RNA-seq"
+title: "WGCNA - RNA-seq"
 author: "CCDL for ALSF"
 date: "October 2020"
 output:   
@@ -8,6 +8,8 @@ output:
     toc_float: true
     number_sections: true
 ---
+
+**Draft**
 
 # Purpose of this analysis
 
@@ -166,7 +168,7 @@ Keep in mind that WGCNA requires at least 15 samples to produce a meaningful res
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-# Over-Representation Analysis with `clusterProfiler` - RNA-seq
+# Identifying co-expression gene modules with WGCNA - RNA-seq
 
 ## Install libraries
 
@@ -309,6 +311,8 @@ normalized_counts <- assay(dds_norm) %>%
 
 ## Determine parameters for WGCNA
 
+**Draft**
+
 WGCNA has to decide what genes are included in which modules, but it might encounter some genes that are close to call between modules. 
 By providing a soft-threshold power parameter, we can guide it on to what exponent it should compare R values for deciding between modules for a gene. 
 The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
@@ -358,17 +362,40 @@ So using the plot above, going with a power soft-threshold of `16`!
 If you find you have all very low R^2 values this may be because there are too many genes with low values that are cluttering up the calculations. 
 You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
 
+```{r}
+sft_df %>%
+  ggplot2::ggplot() +
+  ggplot2::geom_label(ggplot2::aes(x = Power, y = max.k.), label = sft_df$Power) +
+  # We can add more sensible labels for our axis
+  ggplot2::xlab("Soft Threshold (power)") +
+  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
+  ggplot2::ggtitle("Scale independence") +
+  # This adds some nicer aesthetics to our plot
+  ggplot2::theme_classic()
+```
+
 ## Run WGCNA!
 
+**Review**
+
 We will use the `blockwiseModules()` function to build a gene coexpression network.
-The `blockwise` part refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
-
-This will take some time to run. 
-
 Note that for the `power` argument we are using `16` which we determined above. 
+
+This next step take some time to run.
+The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
+
+Here we are using the default `maxBlockSize`, 5000 but, you may want to adjust the `maxBlockSize` argument depending on your computer's memory.
+The authors of WGCNA recommend running [the largest block your computer can handle](https://peterlangfelder.com/2018/11/25/blockwise-network-analysis-of-large-data/) and provide some approximations as to GB of memory of a laptop and what `maxBlockSize` it should be able to handle. 
+
+> • If the reader has access to a large workstation with more than 4 GB of memory, the parameter maxBlockSize
+can be increased. A 16GB workstation should handle up to 20000 probes; a 32GB workstation should handle
+perhaps 30000. A 4GB standard desktop or a laptop may handle up to 8000-10000 probes, depending on
+operating system and other running programs.
+
 
 ```{r}
 bwnet <- blockwiseModules(normalized_counts,
+  maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in.
   TOMType = "signed", # topological overlap matrix
   power = 16, # soft threshold for network construction
   numericLabels = TRUE, # Let's use numbers instead of colors for module labels
@@ -503,6 +530,8 @@ readr::write_tsv(gene_modules_df,
   file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv")
 )
 ```
+
+**Draft**
 
 # Resources for further learning
 
