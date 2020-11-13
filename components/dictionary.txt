@@ -16,6 +16,7 @@ Brainarray’s
 Brems
 CCDL
 CCDL's
+cDNA
 cheatsheet
 cheatsheets
 ChIP
@@ -44,6 +45,7 @@ duplications
 ECM
 edgeR
 edgeR's
+eigengene
 e.g.
 ENSDARG
 Ensembl
@@ -79,6 +81,7 @@ JPEG
 KEGG
 limma
 logFC
+maxBlockSize
 medulloblastoma
 microarray’s
 molecularly
@@ -133,6 +136,7 @@ unmapped
 upregulated
 UpSet
 vivo
+WGCNA
 WNT
 Yaari
 zebrafish

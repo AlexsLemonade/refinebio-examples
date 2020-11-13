@@ -288,7 +288,7 @@ dds <- dds[genes_to_keep, ]
 
 ## Perform DESeq2 normalization and transformation
 
-We often suggest normalizing and transforming your data for various applications and in this instance WGCNA's authors [suggest using variance stablizing transformation before running WGCNA](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).  
+We often suggest normalizing and transforming your data for various applications and in this instance WGCNA's authors [suggest using variance stabilizing transformation before running WGCNA](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).  
 We are going to use the `vst()` function from the `DESeq2` package to normalize and transform the data.
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
@@ -378,8 +378,8 @@ sft_df %>%
 
 **Review**
 
-We will use the `blockwiseModules()` function to build a gene coexpression network.
-Note that for the `power` argument we are using `16` which we determined above. 
+We will use the `blockwiseModules()` function to find gene co-expression modules.
+We will use `16` for the `power` argument like we determined above. 
 
 This next step take some time to run.
 The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
