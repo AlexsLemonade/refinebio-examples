@@ -13,7 +13,9 @@ output:
 
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes.
 
-This particular example analysis shows how you can use gene set enrichment analysis (GSEA) to detect situations where all genes in a predefined set change in a coordinated way, detecting even small statistical but coordinated changes between two biological states.
+This particular example analysis shows how you can use gene set enrichment analysis (GSEA) to detect situations where all genes in a predefined gene set change in a coordinated way, detecting even small statistical but coordinated changes between two biological states.
+Genes are ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic, for each gene set.
+Normalized enrichment scores (NES) are enrichment scores that are scaled to account for gene sets of different sizes [@Subramanian2005; @Korotkevich2019].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -336,8 +338,8 @@ Looks like we were able to successfully get rid of the duplicate gene identifier
 
 ## Perform gene set enrichment analysis (GSEA)
 
-The goal of GSEA is to determine whether the members of a set of genes are randomly distributed throughout a pre-ranked gene list or primarily found at the top or bottom of the list meaning that they are highly- or lowly-ranked.
-As mentioned earlier, hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression of genes so we would expect the latter distribution. [@clusterProfiler-book].
+The goal of GSEA is to detect situations where all genes in a gene set change in a coordinated way, detecting even small statistical but coordinated changes.
+This is done by ranking genes within a gene set from most highly positive to most highly negative, weighting them according to their gene-level statistic, to calculate the enrichment score (ES), which is a pathway-level statistic [@clusterProfiler-book].
 
 ### Determine our pre-ranked genes list
 
@@ -362,9 +364,8 @@ head(t_vector)
 
 ### Run GSEA using the `GSEA()` function
 
-Genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic.
-The enrichment score (ES) is a pathway-level statistic, calculated using our gene-level statistics.
-Normalized enrichment scores (NES) are enrichment scores that are scaled to make gene sets that contain different number of genes comparable [@Subramanian2005; @Korotkevich2019].
+Genes were ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, in the previous section.
+In this section, we will implement GSEA to calculate the enrichment score (ES) for each gene set using our pre-ranked gene list.
 
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
 
@@ -392,7 +393,8 @@ Let's take a look at the results.
 head(gsea_results@result)
 ```
 
-Significance is assessed by generating a null distribution by sampling random gene sets of the same size and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
+Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES.
+The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
 Looks like we have gene sets returned as significant at FDR of `0.05`.
 If we didn't have any, our visualizations below would show up blank as nothing would have met our `pvalueCutoff` above.
 
