@@ -15,6 +15,7 @@ This example is one of pathway analysis module set, we recommend looking at the 
 
 This particular example analysis shows how you can use gene set enrichment analysis (GSEA) to detect situations where all genes in a predefined gene set change in a coordinated way, detecting even small statistical but coordinated changes between two biological states.
 Genes are ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic, for each gene set.
+More specifically, an ES is calculated by starting with the most highly ranked genes (based on the gene-level statistic selected for ranking) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 Normalized enrichment scores (NES) are enrichment scores that are scaled to account for gene sets of different sizes [@Subramanian2005; @Korotkevich2019].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
@@ -344,7 +345,9 @@ This is done by ranking genes within a gene set from most highly positive to mos
 ### Determine our pre-ranked genes list
 
 The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, where the names in the vector are gene identifiers.
-This is step 1 -- create a gene list with statistics that GSEA will rank by.
+We will therefore need to create a gene list with statistics that GSEA will rank by.
+
+In the next chunk, we will create a named vector ranked based on the gene-level t-statistic values.
 
 ```{r}
 # Let's create a named vector ranked based on the t-statistic values
@@ -435,7 +438,7 @@ most_positive_nes_plot
 
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
 The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
-An ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+As mentioned earlier, an ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 In this case, the most highly positive enrichment score's data are being displayed.
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
@@ -475,7 +478,8 @@ most_negative_nes_plot
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
 Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
-Here the ES is calculated by starting with the most lowly ranked genes (according to the gene-level t-statistic values) and making the score more negative when a gene is in the pathway.
+As we know, the ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+A negative enrichment score will be returned when not many of the genes are found at the top of the list, as this would mean decreasing the score a great deal thus producing a negative value.
 In this case, the most negative enrichment score's data are being displayed.
 
 Let's save this plot to PNG.
