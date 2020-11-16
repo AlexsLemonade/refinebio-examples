@@ -11,53 +11,34 @@ output:
 
 # Purpose of this analysis
 
-This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table beloow](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes.
 
 This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.
 This pathway analysis method does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
-### What is pathway analysis?
-
-We refer to any technique that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment as pathway analysis.
-In the context of refine.bio, we use these techniques to analyze and interpret genome-wide gene expression experiments.
-The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
-In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
-
-We highly recommend taking a look at Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges from @Khatri for a more comprehensive overview and reading the primary publications and documentation of the methods and sources we will introduce below.
-
-### How to choose a pathway analysis?
-
-This table summarizes the pathway analyses examples in this module.
-
-|Analysis|What is required for input|What output looks like |✅ Pros|⚠️ Cons|
-|--------|--------------------------|-----------------------|-------|------|
-|[**ORA (Over-representation Analysis)**](link)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|<ul><li>Simple</li><li>Computationally inexpensive to compute p-values</li>|<ul><li>Requires arbitrary thresholds and ignores any statistics associated with a gene</li><li>Assumes independence of genes and pathways</li>|
-|[**GSEA (Gene Set Enrichment Analysis)**](link)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|<ul><li>Includes all genes (no arbitrary threshold!)</li><li>Attempts to measure coordination of genes</li>|<ul><li>Permutations can be expensive</li><li>Does not account for pathway overlap</li><li>Two-group comparisons not always appropriate/feasible</li>|
-|[**GSVA (Gene Set Variation Analysis)**](link)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis| <ul><li>Does not require two groups to compare upfront</li><li>Normally distributed scores</li> |<ul><li>Scores are not a good fit for gene sets that contain genes that go up AND down</li><li>Method doesn’t assign statistical significance itself</li><li>Recommended sample size n > 10</li>|
-
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd).
 
-Clicking this link will most likely send this to your downloads folder on your computer.
+Clicking this link will most likely send this to your downloads folder on your computer. 
 Move this `.Rmd` file to where you would like this example and its files to be stored.
 
 You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
 
-## Set up your analysis folders
+## Set up your analysis folders 
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you.
-Run this next chunk to set up your folders!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
 
-If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations.
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
 
 ```{r}
 # Create the data folder if it doesn't exist
@@ -98,22 +79,22 @@ For this example analysis, we will use this [CREB overexpression zebrafish exper
 
 ## Check out our file structure!
 
-Your new analysis folder should contain:
+Your new analysis folder should contain: 
 
 - The example analysis `.Rmd` you downloaded  
-- A folder called `data` (currently empty)
+- A folder called `data` (currently empty) 
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-
+    
 Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
 
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
 ***
 
@@ -168,7 +149,7 @@ library(org.Dr.eg.db)
 library(magrittr)
 ```
 
-## Import data
+## Import data 
 
 We will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
@@ -176,14 +157,14 @@ The table contains Ensembl gene IDs, log fold-changes for each group, and adjust
 We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
-First we will assign the URL to its own variable called, `dge_url`.
+First we will assign the URL to its own variable called, `dge_url`. 
 
 ```{r}
 # Define the url to your differential expression results file
 dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv"
 ```
 
-Read in the file that has differential expression results.
+Read in the file that has differential expression results. 
 Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "GSE71270_limma_results.tsv")`.
 
 ```{r}
@@ -193,8 +174,8 @@ Here we are using the URL we set up above, but this can be a local file path ins
 dge_df <- readr::read_tsv(dge_url)
 ```
 
-`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
-Let's take a look at what these contrast results from the differential expression analysis look like.
+`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
+Let's take a look at what these contrast results from the differential expression analysis look like. 
 
 ```{r}
 dge_df
@@ -227,15 +208,15 @@ MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/g
 
 In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005].
 
-Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000].
+Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000]. 
 
-First, let's take a look at what information is included in this data frame.
+First, let's take a look at what information is included in this data frame. 
 
 ```{r}
 head(dr_msigdb_df)
 ```
 
-We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways.
+We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways. 
 
 ```{r}
 # Filter the zebrafish data frame to the KEGG pathways that are included in the
@@ -253,7 +234,7 @@ The `clusterProfiler()` function we will use requires a data frame with two colu
 
 Our data frame with KEGG terms contains Entrez IDs and gene symbols.
 
-In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers.
+In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
 So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.
 
 ## Gene identifier conversion
@@ -310,13 +291,13 @@ gene_key_df <- data.frame(
   dplyr::filter(!is.na(gene_symbol))
 ```
 
-Let's see a preview of `gene_key_df`.
+Let's see a preview of `gene_key_df`. 
 
 ```{r}
 head(gene_key_df)
 ```
 
-Now we are ready to add the `gene_key_df` to our data frame with the differential expression stats, `dge_df`.
+Now we are ready to add the `gene_key_df` to our data frame with the differential expression stats, `dge_df`. 
 Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `dge_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
 
 ```{r}
@@ -330,7 +311,7 @@ dge_annot_df <- gene_key_df %>%
   )
 ```
 
-Let's take a look at what this data frame looks like.
+Let's take a look at what this data frame looks like. 
 
 ```{r}
 # Print out a preview
@@ -345,15 +326,15 @@ Over-representation testing using `clusterProfiler` is based on a hypergeometric
 
 Where `N` is the number of genes in the background distribution, `M` is the number of genes in a pathway, `n` is the number of genes we are interested in (our differentially expressed genes), and `k` is the number of genes that overlap between the pathway and our genes of interest.
 
-So, we will need to provide to `clusterProfiler` two genes lists:
+So, we will need to provide to `clusterProfiler` two genes lists: 
 
-1) Our genes of interest (`n`)
-2) What genes were in our total background set (`N`). (All genes that originally had an opportunity to be measured).
+1) Our genes of interest (`n`) 
+2) What genes were in our total background set (`N`). (All genes that originally had an opportunity to be measured). 
 
 ## Determine our genes of interest list
 
-We will use our differential expression results to get a genes of interest list.
-Let's use our adjusted p values as a cutoff.
+We will use our differential expression results to get a genes of interest list. 
+Let's use our adjusted p values as a cutoff. 
 
 ```{r}
 # Select genes that are below a cutoff
@@ -368,7 +349,7 @@ There are a lot of ways we could make a genes of interest list, and using a p-va
 
 ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach's weaknesses -- to get to a gene list we've removed all other context.
 
-Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list.
+Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list. 
 
 ```{r}
 # Reduce to only unique gene symbols
@@ -380,7 +361,7 @@ head(genes_of_interest)
 
 ## Determine our background set gene list
 
-Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set.
+Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set. 
 In other words, if we are unable to detect a gene, it should not be in our background set.
 
 We can obtain our detected genes list from our data frame, `dge_annot_df` (which we haven't done filtering on).
@@ -411,8 +392,8 @@ kegg_ora_results <- enricher(
 
 *Note: using `enrichKEGG()` is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you'd like!*
 
-What is returned by `enricher()`?
-You can run `View(kegg_ora_results)` or click on the object in your Environment panel.
+What is returned by `enricher()`? 
+You can run `View(kegg_ora_results)` or click on the object in your Environment panel. 
 
 The information we're most likely interested in is in the `results` slot.
 Let's convert this into a data frame that we can write to file.
@@ -421,19 +402,19 @@ Let's convert this into a data frame that we can write to file.
 kegg_result_df <- data.frame(kegg_ora_results@result)
 ```
 
-Let's print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of `0.1` FDR?
+Let's print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of `0.1` FDR? 
 
 ```{r}
 kegg_result_df %>%
   dplyr::filter(p.adjust < 0.1)
 ```
 
-Looks like there are four KEGG sets returned as significant at FDR of `0.1`.
+Looks like there are four KEGG sets returned as significant at FDR of `0.1`. 
 
 ## Visualizing results
 
 We can use a dot plot to visualize our significant enrichment results.
-The `enrichplot::dotplot()` function will only plot gene sets that are significant according to the multiple testing corrected p values (in the `p.adjust` column) and the `pvalueCutoff` you provided in the [`enricher()` step](#run-ora-using-the-enricher-function).
+The `enrichplot::dotplot()` function will only plot gene sets that are significant according to the multiple testing corrected p values (in the `p.adjust` column) and the `pvalueCutoff` you provided in the [`enricher()` step](#run-ora-using-the-enricher-function). 
 
 ```{r}
 enrich_plot <- enrichplot::dotplot(kegg_ora_results)
@@ -446,7 +427,7 @@ Use `?enrichplot::dotplot` to see the help page for more about how to use this f
 
 This plot is arguably more useful when we have a large number of significant pathways.
 
-Let's save it to a PNG.
+Let's save it to a PNG. 
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_enrich_plot.png"),
@@ -460,10 +441,10 @@ We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/
 enrichplot::upsetplot(kegg_ora_results)
 ```
 
-See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common.
+See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common. 
 Gene sets or pathways aren't independent!
 
-Let's also save this to a PNG.
+Let's also save this to a PNG. 
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_upset_plot.png"),
@@ -491,8 +472,8 @@ readr::write_tsv(
 
 # Session info
 
-At the end of every analysis, before saving your notebook, we recommend printing out your session info.
-This helps make your code more reproducible by recording what versions of software and packages you used to run this.
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
 
 ```{r}
 # Print session info
