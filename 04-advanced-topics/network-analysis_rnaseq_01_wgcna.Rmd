@@ -196,7 +196,7 @@ See our Getting Started page with [instructions for package installation](https:
 We will be using `DESeq2` to normalize and transform our RNA-seq data before running WGCNA, so we will need to install that [@Love2014].
 
 Of course, we will need the `WGCNA` package [@Langfelder2008].
-But `WGCNA` also requires a package called `impute` that is sometimes has trouble installing so we recommend installing that first. 
+But WGCNA also requires a package called `impute` that is sometimes has trouble installing so we recommend installing that first. 
 
 Lastly, we will be creating a `sina` plot which we will need a `ggplot2` companion package for, called `ggforce`. 
 
@@ -315,121 +315,6 @@ For more information about these transformation methods, [see here](https://alex
 ```{r}
 # Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
 dds_norm <- vst(dds)
-```
-
-## Format normalized data for WGCNA
-
-Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
-
-```{r}
-# First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
-normalized_counts <- assay(dds_norm) %>%
-  t() # We need to transpose this data in preparation for the `WGCNA::blockwiseModules()` function
-```
-
-## Determine parameters for WGCNA
-
-WGCNA has to decide what genes are included in which modules, but it might encounter some genes that are close to call between modules. 
-By providing a soft-threshold power parameter, we can guide it on to what exponent it should compare R values for deciding between modules for a gene. 
-The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
-
-```{r}
-sft <- pickSoftThreshold(normalized_counts,
-  dataIsExpr = TRUE,
-  corFnc = cor,
-  networkType = "signed"
-)
-```
-
-This `sft` object has a lot of information, we will want to plot some of it to figure out what our `power` soft-threshold should be. 
-We have to first calculate the model fit, the R squared and make that a new variable. 
-
-```{r}
-sft_df <- data.frame(sft$fitIndices) %>%
-  dplyr::mutate(model_fit = -sign(slope) * SFT.R.sq)
-```
-
-Now, let's plot the model fitting by the `power` soft threshold so we can decide on a soft-threshold for power. 
-
-```{r}
-sft_df %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_label(ggplot2::aes(x = Power, y = model_fit), label = sft_df$Power) +
-  # We will plot what WGCNA recommends as an R^2 cutoff
-  ggplot2::geom_hline(yintercept = 0.80, col = "red") +
-  # Just in case our values are low, we want to make sure we can still see the 0.80 level
-  ggplot2::ylim(c(min(sft_df$model_fit), 1)) +
-  # We can add more sensible labels for our axis
-  ggplot2::xlab("Soft Threshold (power)") +
-  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
-  ggplot2::ggtitle("Scale independence") +
-  # This adds some nicer aesthetics to our plot
-  ggplot2::theme_classic()
-```
-
-Using this plot we can decide on a power parameter. 
-WGCNA's authors recommend using a `power` that has an signed R^2 above `0.80`, otherwise they warn your results may be too noisy to be meaningful. 
-
-If you have multiple power values with signed R^2 above `0.80`, then picking the one at an inflection point, in other words where the R^2 values seem to have reached their saturation [@Zhang2005].
-You want to a `power` that gives you a big enough R^2 but is not excessively large.
-
-So using the plot above, going with a power soft-threshold of `16`!
-
-If you find you have all very low R^2 values this may be because there are too many genes with low values that are cluttering up the calculations. 
-You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
-
-```{r}
-sft_df %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_label(ggplot2::aes(x = Power, y = max.k.), label = sft_df$Power) +
-  # We can add more sensible labels for our axis
-  ggplot2::xlab("Soft Threshold (power)") +
-  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
-  ggplot2::ggtitle("Scale independence") +
-  # This adds some nicer aesthetics to our plot
-  ggplot2::theme_classic()
-```
-
-## Run WGCNA!
-
-We will use the `blockwiseModules()` function to find gene co-expression modules.
-We will use `16` for the `power` argument like we determined above. 
-
-This next step take some time to run.
-The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
-
-Here we are using the default `maxBlockSize`, 5000 but, you may want to adjust the `maxBlockSize` argument depending on your computer's memory.
-The authors of WGCNA recommend running [the largest block your computer can handle](https://peterlangfelder.com/2018/11/25/blockwise-network-analysis-of-large-data/) and provide some approximations as to GB of memory of a laptop and what `maxBlockSize` it should be able to handle. 
-
-> • If the reader has access to a large workstation with more than 4 GB of memory, the parameter maxBlockSize
-can be increased. A 16GB workstation should handle up to 20000 probes; a 32GB workstation should handle
-perhaps 30000. A 4GB standard desktop or a laptop may handle up to 8000-10000 probes, depending on
-operating system and other running programs.
-
-
-```{r}
-bwnet <- blockwiseModules(normalized_counts,
-  maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in.
-  TOMType = "signed", # topological overlap matrix
-  power = 16, # soft threshold for network construction
-  numericLabels = TRUE, # Let's use numbers instead of colors for module labels
-  randomSeed = 1234, # there's some randomness associated with this calculation
-  # so we should set a seed
-)
-```
-
-There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page to see more.
-
-The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) should be used to make gene modules.
-You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
-However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out.
-
-## Write main WGCNA results object to file
-
-```{r}
-readr::write_rds(bwnet,
-  file = file.path("results", "SRP133573_wgcna_results.RDS")
-)
 ```
 
 _Next sections addressed in upcoming PR_
