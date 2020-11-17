@@ -21,21 +21,21 @@ This pathway analysis method does not require any particular sample size, since 
 ### What is pathway analysis?
 
 We refer to any technique that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment as pathway analysis.
-In the context of refine.bio, we use these techniques to analyze and interpret genome-wide gene expression experiments.
+In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
 The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
 In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
 
-We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview and reading the primary publications and documentation of the methods and sources we will introduce below.
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
 
 ### How to choose a pathway analysis?
 
 This table summarizes the pathway analyses examples in this module.
 
-|Analysis|What is required for input|What output looks like |✅ Pros|⚠️ Cons|
-|--------|--------------------------|-----------------------|-------|------|
-|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|<ul><li>Simple</li><li>Computationally inexpensive to compute p-values</li>|<ul><li>Requires arbitrary thresholds and ignores any statistics associated with a gene</li><li>Assumes independence of genes and pathways</li>|
-|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|<ul><li>Includes all genes (no arbitrary threshold!)</li><li>Attempts to measure coordination of genes</li>|<ul><li>Permutations can be expensive</li><li>Does not account for pathway overlap</li><li>Two-group comparisons not always appropriate/feasible</li>|
-|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis| <ul><li>Does not require two groups to compare upfront</li><li>Normally distributed scores</li> |<ul><li>Scores are not a good fit for gene sets that contain genes that go up AND down</li><li>Method doesn’t assign statistical significance itself</li><li>Recommended sample size n > 10</li>|
+|Analysis|What is required for input|What output looks like |✅ Pros| ⚠️ Cons|
+|--------|--------------------------|-----------------------|-------|-------|
+|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|- Simple<br><br> - Inexpensive computationally to calculate p-values| - Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways|
+|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes|- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible|
+|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis|- Does not require two groups to compare upfront<br><br> - Normally distributed scores|- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n > 10|
 
 # How to run this example
 
