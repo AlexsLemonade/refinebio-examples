@@ -45,6 +45,7 @@ duplications
 ECM
 edgeR
 edgeR's
+eigengene
 e.g.
 ENSDARG
 Ensembl
@@ -80,13 +81,13 @@ JPEG
 KEGG
 limma
 logFC
+maxBlockSize
 medulloblastoma
 microarray’s
 molecularly
 musculus
 MSigDB
 myeloid
-NES
 Northcott
 nb
 ortholog
@@ -94,8 +95,6 @@ orthologs
 orthology
 overexpressing
 overexpression
-permutated
-permutating
 pheatmap
 PLOS
 PLX
@@ -137,6 +136,7 @@ unmapped
 upregulated
 UpSet
 vivo
+WGCNA
 WNT
 Yaari
 zebrafish
