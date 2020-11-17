@@ -13,9 +13,9 @@ output:
 
 In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
 WGCNA uses a series of correlations to determine what genes are expressed together in your data set. 
-This is a more intuitive approach to gene network analysis which is pretty widely used for microarray (as well as RNA-seq). 
+This is a fairly intuitive approach to gene network analysis which is pretty widely used for microarray (as well as RNA-seq). 
 
-As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) but are the collapsed information for a group of co-expressed genes). 
+As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) but are the collapsed information for a group of co-expressed genes) [@KhanAcademy; @Langfelder2007]. 
 This eigengene x sample data can, in many instances, used as you would the original gene expression values. 
 In this example, we use eigengene x sample data to identify differentially expressed modules between our treatment and control group
 
@@ -180,7 +180,7 @@ While you can adjust some parameters to make this more doable on a laptop, it ma
 WGCNA can be used with both RNA-seq and microarray datasets so long as they are well normalized and filtered. 
 In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data]((https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
 
-If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expressiion filter](#define-a-minimum-counts-cutoff) as we do in this example. 
+If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
 If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
 
 ***
