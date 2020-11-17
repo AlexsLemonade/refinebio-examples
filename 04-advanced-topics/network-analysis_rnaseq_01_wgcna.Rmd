@@ -9,8 +9,6 @@ output:
     number_sections: true
 ---
 
-**Draft**
-
 # Purpose of this analysis
 
 In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
