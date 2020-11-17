@@ -88,13 +88,16 @@ molecularly
 musculus
 MSigDB
 myeloid
-Northcott
 nb
+NES
+Northcott
 ortholog
 orthologs
 orthology
 overexpressing
 overexpression
+permutated
+permutating
 pheatmap
 PLOS
 PLX
@@ -137,6 +140,7 @@ upregulated
 UpSet
 vivo
 WGCNA
+WGCNA's
 WNT
 Yaari
 zebrafish
