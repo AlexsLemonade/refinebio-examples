@@ -15,7 +15,7 @@ In this example, we use weighted gene co-expression network analysis (WGCNA) to 
 WGCNA uses a series of correlations to determine what genes are expressed together in your data set. 
 This is a fairly intuitive approach to gene network analysis which is pretty widely used for microarray (as well as RNA-seq). 
 
-As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) that contain the collapsed information for a group of co-expressed genes) [@KhanAcademy; @Langfelder2007]. 
+As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes contain the summarized variance for a group of co-expressed genes) [@Alter2000; @Langfelder2007]. 
 This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
 In this example, we use eigengene x sample data to identify differentially expressed modules between our treatment and control group
 
