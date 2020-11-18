@@ -1,7 +1,7 @@
 ---
 title: "WGCNA - RNA-seq"
 author: "CCDL for ALSF"
-date: "October 2020"
+date: "November 2020"
 output:   
   html_notebook:
     toc: true
@@ -15,8 +15,8 @@ In this example, we use weighted gene co-expression network analysis (WGCNA) to 
 WGCNA uses a series of correlations to determine what genes are expressed together in your data set. 
 This is a fairly intuitive approach to gene network analysis which is pretty widely used for microarray (as well as RNA-seq). 
 
-As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) but are the collapsed information for a group of co-expressed genes) [@KhanAcademy; @Langfelder2007]. 
-This eigengene x sample data can, in many instances, used as you would the original gene expression values. 
+As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) that contain the collapsed information for a group of co-expressed genes) [@KhanAcademy; @Langfelder2007]. 
+This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
 In this example, we use eigengene x sample data to identify differentially expressed modules between our treatment and control group
 
 This method does require some computing power, but can still be run locally (on your own computer) for most refine.bio datasets.
@@ -172,13 +172,13 @@ From here you can customize this analysis example to fit your own scientific que
 
 Keep in mind when using a different refine.bio dataset with this example, that WGCNA requires at least 15 samples to produce a meaningful result [according to its authors](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html). 
 So you will need to make sure the dataset you use is sufficiently large. 
-However, note that very large datasets will be difficult to run locally (on a personal laptop).
+However, note that very large datasets will be difficult to run locally (on a personal laptop) due to the required computing power.
 While you can adjust some parameters to make this more doable on a laptop, it may decrease the reliability of your result if taken to an extreme (more on this parameter, called `maxBlockSize`, in the [`Run WGCNA!` section](#run-wgcna)).
 
 ### Microarray vs RNA-seq 
 
 WGCNA can be used with both RNA-seq and microarray datasets so long as they are well normalized and filtered. 
-In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data]((https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
+In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
 
 If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
 If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
@@ -196,7 +196,7 @@ See our Getting Started page with [instructions for package installation](https:
 We will be using `DESeq2` to normalize and transform our RNA-seq data before running WGCNA, so we will need to install that [@Love2014].
 
 Of course, we will need the `WGCNA` package [@Langfelder2008].
-But WGCNA also requires a package called `impute` that is sometimes has trouble installing so we recommend installing that first. 
+But `WGCNA` also requires a package called `impute` that it sometimes has trouble installing so we recommend installing that first [@Hastie2020]. 
 
 Lastly, we will be creating a `sina` plot which we will need a `ggplot2` companion package for, called `ggforce`. 
 
@@ -279,15 +279,15 @@ df <- df %>%
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
-We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2). ) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
 In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
   countData = df, # This is the data frame with the counts values for all replicates in our dataset
-  colData = metadata, # This is the data frame with the annotation data for the replicates in the counts data frame
-  design = ~1, # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  colData = metadata, # This is the data frame with the annotation for our samples
+  design = ~1, # Here we are not specifying a model
   tidy = TRUE
 )
 ```
@@ -297,7 +297,7 @@ dds <- DESeqDataSetFromMatrix(
 We want to filter out the genes that have not been expressed or that have low expression counts. 
 This is recommended by [WGCNA docs for RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).
 Removing low count genes can help improve your WGCNA results. 
-We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
+We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
 
 ```{r}
 # Define a minimum counts cutoff and filter `DESeqDataSet` object to include
@@ -313,7 +313,8 @@ We are going to use the `vst()` function from the `DESeq2` package to normalize 
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
 ```{r}
-# Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+# Normalize and transform the data in the `DESeqDataSet` object using the `vst()`
+# function from the `DESEq2` R package
 dds_norm <- vst(dds)
 ```
 
