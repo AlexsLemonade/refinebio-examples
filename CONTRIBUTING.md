@@ -94,31 +94,33 @@ scripts/download-data.sh
 ## Adding a new analysis
 
 Our PR process for adding a new analysis involves two stages which are 2-3 (or more) PRs.
-This splitting up an analysis into multiple PRs helps the review process more manageable as well as making sure big picture outlines and conceptual decisions are made first before review moves on to details and further polishing.
-Note that these following steps all describe PRs to `staging` branch (see more [about the branch set up](#pull-requests)).
+This splitting up an analysis into multiple PRs helps make the review process more manageable.
+This process ensures that discussions around the big picture: conceptual decisions, what steps are included, which packages are used, are generally concluded before review moves on to the details and further polishing.
+Note that all the following steps describe PRs to `staging` branch only (see more [about the branch set up](#pull-requests)).
 
 ### Draft PR: Big picture reviews  
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
-- Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% wordsmithed, but the general steps should be reflected).
-- Try to highlight things that encapsulate main concepts, ready for review using a `**Review**` tag.
-Or use a `**Draft**` tag to indicate it hasn't really been worked on much yet.
+- Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% word-smithed, but the general steps/outline should be reflected).
+- Try to highlight things that encapsulate main concepts, ready for review using a `**REVIEW**` tag.
+Or use a `**DRAFT**` tag to indicate it hasn't really been worked on much yet.
 - After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process.
 - Keep the original draft PR open for easy reference.
 
 ### Refined PRs: Detailed reviews  
 
 - Break up the steps of the analysis into the manageable review chunks on their own branches for detailed review (you may want to discuss what ths chunks should be on the Draft PR).
-- Make sure each steps explanations are fully realized for this PR.
+- Delete any `**REVIEW/DRAFT**` tags leftover from the draft PR.
+- Make sure each steps' explanations are fully realized for these PRs.
 - Ensure that the notebook adheres to [the guidelines](#guidelines-for-analysis-notebooks).
+- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
+- If the file has been [added to snakemake](#add-new-analyses-to-the-snakefile), in the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally) to make sure it runs.
 
 These steps should be done in the first refined PR, but don't need to be done again:
 - Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
-- [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally) to make sure it runs.
 
 ### Setting up a new analysis file
 
