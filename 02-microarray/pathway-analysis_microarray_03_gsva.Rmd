@@ -168,7 +168,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/packages/release/bioc/html/GSVA.html) package to perform GSVA, the [`qusage`](https://www.bioconductor.org/packages/release/bioc/html/qusage.html) package to read in the GMT file containing the gene set data, and the [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html) package to create a heatmap for visualization of the GSVA scores [@Hanzelmann2013; @Meng2019; @Slowikowski2017].
+In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/packages/release/bioc/html/GSVA.html) package to perform GSVA and the [`qusage`](https://www.bioconductor.org/packages/release/bioc/html/qusage.html) package to read in the GMT file containing the gene set data [@Hanzelmann2013; @Meng2019].
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
@@ -187,11 +187,6 @@ if (!("org.Hs.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Hs.eg.db", update = FALSE)
 }
-
-if (!("pheatmap" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  install.packages("pheatmap", update = FALSE)
-}
 ```
 
 Attach the packages we need for this analysis.
@@ -205,9 +200,6 @@ library(GSVA)
 
 # Human annotation package we'll use for gene identifier conversion
 library(org.Hs.eg.db)
-
-# Attach the `pheatmap` library
-library(pheatmap)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)

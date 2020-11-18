@@ -3713,6 +3713,7 @@ div.tocify {
             <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../02-microarray/pathway-analysis_microarray_01_ora.html">Pathway Analysis - ORA</a></li>
             <li><a href="../02-microarray/pathway-analysis_microarray_02_gsea.html">Pathway Analysis - GSEA</a></li>
+            <li><a href="../02-microarray/pathway-analysis_microarray_03_gsva.html">Pathway Analysis - GSVA</a></li>
             <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
 
@@ -3885,7 +3886,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the <a href="https://www.bioconductor.org/packages/release/bioc/html/GSVA.html"><code>GSVA</code></a> package to perform GSVA, the <a href="https://www.bioconductor.org/packages/release/bioc/html/qusage.html"><code>qusage</code></a> package to read in the GMT file containing the gene set data, and the <a href="https://cran.r-project.org/web/packages/pheatmap/index.html"><code>pheatmap</code></a> package to create a heatmap for visualization of the GSVA scores <span class="citation">(Hänzelmann <em>et al.</em> 2013a; Slowikowski 2017; Meng <em>et al.</em> 2019)</span>.</p>
+<p>In this analysis, we will be using the <a href="https://www.bioconductor.org/packages/release/bioc/html/GSVA.html"><code>GSVA</code></a> package to perform GSVA and the <a href="https://www.bioconductor.org/packages/release/bioc/html/qusage.html"><code>qusage</code></a> package to read in the GMT file containing the gene set data <span class="citation">(Hänzelmann <em>et al.</em> 2013a; Meng <em>et al.</em> 2019)</span>.</p>
 <p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html"><code>org.Hs.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson 2020)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;GSVA&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
@@ -3900,12 +3901,7 @@ div.tocify {
 <span id="cb7-11"><a href="#cb7-11"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-12"><a href="#cb7-12"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
 <span id="cb7-13"><a href="#cb7-13"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb7-14"><a href="#cb7-14"></a>}</span>
-<span id="cb7-15"><a href="#cb7-15"></a></span>
-<span id="cb7-16"><a href="#cb7-16"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;pheatmap&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
-<span id="cb7-17"><a href="#cb7-17"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a>  <span class="kw">install.packages</span>(<span class="st">&quot;pheatmap&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb7-19"><a href="#cb7-19"></a>}</span></code></pre></div>
+<span id="cb7-14"><a href="#cb7-14"></a>}</span></code></pre></div>
 <p>Attach the packages we need for this analysis.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Attach the `qusage` library</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a><span class="kw">library</span>(qusage)</span></code></pre></div>
@@ -3954,11 +3950,8 @@ div.tocify {
 ## 
 ##     expand.grid</code></pre>
 <pre><code>## </code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Attach the `pheatmap` library</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">library</span>(pheatmap)</span>
-<span id="cb27-3"><a href="#cb27-3"></a></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
-<span id="cb27-5"><a href="#cb27-5"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
 </div>
 <div id="import-and-set-up-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import and set up data</h2>
@@ -4284,7 +4277,6 @@ div.tocify {
 ##  blob                   1.2.1    2020-01-20 [1] RSPM (R 4.0.0)
 ##  cli                    2.1.0    2020-10-12 [1] RSPM (R 4.0.2)
 ##  coda                   0.19-4   2020-09-30 [1] RSPM (R 4.0.2)
-##  colorspace             1.4-1    2019-03-18 [1] RSPM (R 4.0.0)
 ##  crayon                 1.3.4    2017-09-16 [1] RSPM (R 4.0.0)
 ##  DBI                    1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  DelayedArray           0.16.0   2020-10-27 [1] Bioconductor  
@@ -4305,7 +4297,6 @@ div.tocify {
 ##  graph                  1.68.0   2020-10-27 [1] Bioconductor  
 ##  GSEABase               1.52.0   2020-10-27 [1] Bioconductor  
 ##  GSVA                 * 1.38.0   2020-10-27 [1] Bioconductor  
-##  gtable                 0.3.0    2019-03-25 [1] RSPM (R 4.0.0)
 ##  hms                    0.5.3    2020-01-08 [1] RSPM (R 4.0.0)
 ##  htmltools              0.5.0    2020-06-16 [1] RSPM (R 4.0.1)
 ##  httr                   1.4.2    2020-07-20 [1] RSPM (R 4.0.2)
@@ -4320,12 +4311,10 @@ div.tocify {
 ##  MatrixGenerics         1.2.0    2020-10-27 [1] Bioconductor  
 ##  matrixStats            0.57.0   2020-09-25 [1] RSPM (R 4.0.2)
 ##  memoise                1.1.0    2017-04-21 [1] RSPM (R 4.0.0)
-##  munsell                0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  mvtnorm                1.1-1    2020-06-09 [1] RSPM (R 4.0.0)
 ##  nlme                   3.1-148  2020-05-24 [2] CRAN (R 4.0.2)
 ##  optparse             * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
 ##  org.Hs.eg.db         * 3.12.0   2020-11-18 [1] Bioconductor  
-##  pheatmap             * 1.0.12   2019-01-04 [1] RSPM (R 4.0.0)
 ##  pillar                 1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig              2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  ps                     1.4.0    2020-10-07 [1] RSPM (R 4.0.2)
@@ -4336,7 +4325,6 @@ div.tocify {
 ##  R.oo                   1.24.0   2020-08-26 [1] RSPM (R 4.0.2)
 ##  R.utils                2.10.1   2020-08-26 [1] RSPM (R 4.0.2)
 ##  R6                     2.4.1    2019-11-12 [1] RSPM (R 4.0.0)
-##  RColorBrewer           1.1-2    2014-12-07 [1] RSPM (R 4.0.0)
 ##  Rcpp                   1.0.5    2020-07-06 [1] RSPM (R 4.0.2)
 ##  RCurl                  1.98-1.2 2020-04-18 [1] RSPM (R 4.0.0)
 ##  readr                  1.4.0    2020-10-05 [1] RSPM (R 4.0.2)
@@ -4346,7 +4334,6 @@ div.tocify {
 ##  RSQLite                2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi             0.11     2020-02-07 [1] RSPM (R 4.0.0)
 ##  S4Vectors            * 0.28.0   2020-10-27 [1] Bioconductor  
-##  scales                 1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  sessioninfo            1.1.1    2018-11-05 [1] RSPM (R 4.0.0)
 ##  stringi                1.5.3    2020-09-09 [1] RSPM (R 4.0.2)
 ##  stringr                1.4.0    2019-02-10 [1] RSPM (R 4.0.0)
@@ -4386,9 +4373,6 @@ div.tocify {
 </div>
 <div id="ref-Meng2019">
 <p>Meng H., G. Yaari, C. R. Bolen, S. Avey, and S. H. Kleinstein, 2019 Gene set meta-analysis with quantitative set analysis for gene expression (qusage). PLoS Computat Biol. 15: e1006899. <a href="https://doi.org/10.1371/journal.pcbi.1006899">https://doi.org/10.1371/journal.pcbi.1006899</a></p>
-</div>
-<div id="ref-Slowikowski2017">
-<p>Slowikowski K., 2017 Make heatmaps in R with pheatmap. <a href="https://slowkow.com/notes/pheatmap-tutorial/">https://slowkow.com/notes/pheatmap-tutorial/</a></p>
 </div>
 </div>
 </div>
