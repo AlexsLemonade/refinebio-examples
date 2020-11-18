@@ -48,7 +48,7 @@ RUN Rscript -e  "install.packages( \
       'styler'))"
 
 # Install bioconductor packages
-# org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
+# org.Mm.eg.db, org.Dr.eg.db and org.Hs.eg.db are required for gene mapping
 RUN R -e "options(warn = 2); BiocManager::install( \
     c('affy', \
       'apeglm', \
@@ -58,11 +58,14 @@ RUN R -e "options(warn = 2); BiocManager::install( \
       'DESeq2', \
       'EnhancedVolcano', \
       'ggupset', \
+      'GSVA', \
       'limma', \
       'marray', \
       'msigdbr', \
       'org.Mm.eg.db', \
-      'org.Dr.eg.db'), \
+      'org.Dr.eg.db', \
+      'org.Hs.eg.db', \
+      'qusage'), \
      update = FALSE)"
 
 # Installs packages needed for plottings
