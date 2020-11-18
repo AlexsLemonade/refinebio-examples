@@ -9,8 +9,8 @@
   - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
 - [Adding a new analysis](#adding-a-new-analysis)
-  - [Draft PR: Big picture reviews**](#draft-pr-big-picture-reviews)
-  - [Refined PRs: Detailed reviews**](#refined-prs-detailed-reviews)
+  - [Draft PR: Big picture reviews](#draft-pr-big-picture-reviews)
+  - [Refined PRs: Detailed reviews](#refined-prs-detailed-reviews)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
     - [How to use the template.Rmd](#how-to-use-the-templatermd)
     - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
@@ -97,7 +97,7 @@ Our PR process for adding a new analysis involves two stages which are 2-3 (or m
 This splitting up an analysis into multiple PRs helps the review process more manageable as well as making sure big picture outlines and conceptual decisions are made first before review moves on to details and further polishing.
 Note that these following steps all describe PRs to `staging` branch (see more [about the branch set up](#pull-requests)).
 
-### Draft PR: Big picture reviews**  
+### Draft PR: Big picture reviews  
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
 - Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% wordsmithed, but the general steps should be reflected).
@@ -106,7 +106,7 @@ Or use a `**Draft**` tag to indicate it hasn't really been worked on much yet.
 - After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process.
 - Keep the original draft PR open for easy reference.
 
-### Refined PRs: Detailed reviews**  
+### Refined PRs: Detailed reviews  
 
 - Break up the steps of the analysis into the manageable review chunks on their own branches for detailed review (you may want to discuss what ths chunks should be on the Draft PR).
 - Make sure each steps explanations are fully realized for this PR.
