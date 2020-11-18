@@ -392,24 +392,24 @@ sft_df %>%
 
 ## Run WGCNA!
 
-We will use the `blockwiseModules()` function to find gene co-expression modules.
-We will use `16` for the `power` argument like we determined above. 
+We will use the `blockwiseModules()` function to find gene co-expression modules in WGCNA, using `16` for the `power` argument like we determined above. 
 
-This next step take some time to run.
-The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with computing resources.
+This next step takes some time to run.
+The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with conserving computing resources.
 
 Here we are using the default `maxBlockSize`, 5000 but, you may want to adjust the `maxBlockSize` argument depending on your computer's memory.
-The authors of WGCNA recommend running [the largest block your computer can handle](https://peterlangfelder.com/2018/11/25/blockwise-network-analysis-of-large-data/) and provide some approximations as to GB of memory of a laptop and what `maxBlockSize` it should be able to handle. 
+The authors of WGCNA recommend running [the largest block your computer can handle](https://peterlangfelder.com/2018/11/25/blockwise-network-analysis-of-large-data/) and they provide some approximations as to GB of memory of a laptop and what `maxBlockSize` it should be able to handle:
 
 > • If the reader has access to a large workstation with more than 4 GB of memory, the parameter maxBlockSize
 can be increased. A 16GB workstation should handle up to 20000 probes; a 32GB workstation should handle
 perhaps 30000. A 4GB standard desktop or a laptop may handle up to 8000-10000 probes, depending on
 operating system and other running programs.
 
+[@Langfelder2016]
 
 ```{r}
 bwnet <- blockwiseModules(normalized_counts,
-  maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in.
+  maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in
   TOMType = "signed", # topological overlap matrix
   power = 16, # soft threshold for network construction
   numericLabels = TRUE, # Let's use numbers instead of colors for module labels
@@ -418,13 +418,15 @@ bwnet <- blockwiseModules(normalized_counts,
 )
 ```
 
-There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page to see more.
-
 The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) should be used to make gene modules.
 You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
-However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out.
+However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out [@Langfelder2018].
+
+There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page as well as the [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2016].
 
 ## Write main WGCNA results object to file
+
+We will save our whole results object to an RDS file in case we want to return to our original WGCNA results.
 
 ```{r}
 readr::write_rds(bwnet,
