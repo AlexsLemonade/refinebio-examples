@@ -354,48 +354,51 @@ See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb
 We are removing values for three gene identifiers here, so it is unlikely to have a considerable impact on our results.
 
 ```{r}
-# First let's create a column with the maximum expression value for each row --
-# we will want to look at the numeric expression values only so here we use
-# negative indexing to account for the two gene identifier columns from the
-# previous mapping step that we do not want included in finding the maximum
-# expression value
-mapped_df$max_val <- apply(mapped_df[, -c(1:2)], 1, max)
-
-# Let's look at the rows associated with the duplicated Entrez IDs now that we
-# have a maximum expression value
-mapped_df %>%
+max_dup_df <- mapped_df %>%
+  # Filter to include only the rows associated with the duplicate gene identifiers
   dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
-  dplyr::select(Ensembl, entrez_id, max_val, dplyr::everything())
+  # Group by Entrez IDs
+  dplyr::group_by(entrez_id) %>%
+  # Get the maximum expression value using all values associated with the grouping variable
+  dplyr::summarize_all(max)
+
+max_dup_df
 ```
-Now we can filter out the duplicate gene identifiers using the maximum expression value.
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the maximum expression value!
+
+Now let's combine the rest of the mapped data!
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
-  # Sort so that the highest expression values are at the top
-  dplyr::arrange(dplyr::desc(max_val)) %>%
-  # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
-  # the first row with the duplicated value thus keeping the row with the
-  # maximum expression value
-  dplyr::distinct(entrez_id, .keep_all = TRUE)
+  dplyr::filter(
+    # First let's get the data associated with the gene identifiers that aren't duplicated
+    !entrez_id %in% dup_entrez_ids |
+      # Now let's get the data associated with the duplicated gene identifiers that we
+      # collapsed in `max_dup_df`
+      entrez_id %in% max_dup_df$entrez_id &
+        Ensembl %in% max_dup_df$Ensembl
+  )
 ```
 
-Let's check to see that we removed the duplicate Entrez IDs and kept the rows with the higher `max_val`.
+Let's check to see that we removed the duplicate Entrez IDs from the rest of the mapped data.
 
 ```{r}
 filtered_mapped_df %>%
-  dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
-  dplyr::select(Ensembl, entrez_id, max_val, dplyr::everything())
+  # Let's sort by the Entrez IDs we know were duplicated
+  dplyr::arrange(dplyr::desc(entrez_id %in% dup_entrez_ids)) %>%
+  # Now lt's display the first six observations of our new object
+  head()
 ```
 
-Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher maximum expression value!
+Great, looks like we were able to successfully get rid of the duplicate gene identifiers while joining the rest of the mapped data!
 
 As mentioned earlier, we need a matrix for GSVA.
 Let's now convert our data frame into a matrix and prepare our object for GSVA.
 
 ```{r}
 filtered_mapped_matrix <- filtered_mapped_df %>%
-  # First let's remove the columns we no longer need
-  dplyr::select(-c("Ensembl", "max_val")) %>%
+  # First let's remove the column we no longer need
+  dplyr::select(-c("Ensembl")) %>%
   # Now we need to store our gene identifiers as rownames
   tibble::column_to_rownames("entrez_id") %>%
   # Now we can convert our object into a matrix
