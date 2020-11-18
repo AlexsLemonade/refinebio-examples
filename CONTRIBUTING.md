@@ -89,18 +89,34 @@ For development purposes, you can download all the datasets for the example note
 scripts/download-data.sh
 ```
 
-## Add a new analysis
+## Adding a new analysis
 
-Here are the summarized steps for adding a new analysis.
-Click on the links to go to the detailed instructions for each step.
+Our PR process for adding a new analysis involves two stages which are 2-3 (or more) PRs.
+This splitting up an analysis into multiple PRs helps the review process more manageable as well as making sure big picture outlines and conceptual decisions are made first before review moves on to details and further polishing.
+Note that these following steps all describe PRs to `staging` branch (see more [about the branch set up](#pull-requests)).
+
+### Draft PR: Big picture reviews**  
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
+- Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% wordsmithed, but the general steps should be reflected).
+- Try to highlight things that encapsulate main concepts, ready for review using a `**Review**` tag.
+Or use a `**Draft**` tag to indicate it hasn't really been worked on much yet.
+- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process.
+- Keep the original draft PR open for easy reference.
+
+### Refined PRs: Detailed reviews**  
+
+- Break up the steps of the analysis into the manageable review chunks on their own branches for detailed review (you may want to discuss what ths chunks should be on the Draft PR).
+- Make sure each steps explanations are fully realized for this PR.
+- Ensure that the notebook adheres to [the guidelines](#guidelines-for-analysis-notebooks).
+
+These steps should be done in the first refined PR, but don't need to be done again:
 - Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
 - [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
+- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally) to make sure it runs.
 
 ### Setting up a new analysis file
 
