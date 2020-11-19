@@ -533,8 +533,8 @@ gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module"
 Now we can find what genes are a part of module 52 and 6and make it into a vector. 
 
 ```{r}
-module_52_6_genes <- gene_modules_df %>%
-  dplyr::filter(module == "ME52" | module == "ME6")
+module_52_genes <- gene_modules_df %>%
+  dplyr::filter(module == "ME52")
 ```
 
 Let's save this gene to module key to a TSV file for future use. 
@@ -552,38 +552,51 @@ We will make a multi-panel plot that summarizes our differentially expressed mod
 ```{r}
 col_annot_df <- metadata %>% 
   dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
-  dplyr::mutate(module_52_eigengene = module_eigengenes$ME52, 
-                module_6_eigengene = module_eigengenes$ME6) %>% 
+  dplyr::mutate(module_52_eigengene = module_eigengenes$ME52) %>% 
   tibble::column_to_rownames("refinebio_accession_code") %>% 
   dplyr::arrange(refinebio_treatment)
 
-row_annot_df <- module_52_6_genes %>% 
+row_annot_df <- module_52_genes %>% 
   tibble::column_to_rownames("gene") %>% 
   dplyr::arrange(module)
 ```
 
-
 ```{r}
-mod52_6_df <- df %>% 
+mod52_df <- df %>% 
   tibble::rownames_to_column("Gene") %>%
   dplyr::filter(Gene %in% module_52_6_genes$gene) %>% 
   tibble::column_to_rownames("Gene") %>% 
-  dplyr::select(rownames(col_annot_df))
+  dplyr::select(rownames(col_annot_df)) 
 
-mod52_6_df <- mod52_6_df[rownames(row_annot_df), ]  
+mod52_df <- mod52_6_df[rownames(row_annot_df), ]  
+
+mod52_mat <- as.matrix(mod52_df) 
+
+mod52_mat_scaled <- t(apply(mod52_mat, 1, scale))
 ```
 
-
 ```{r}
-heatmap <- pheatmap::pheatmap(as.matrix(mod52_6_df), 
-                              annotation_col = col_annot_df,
-                              annotation_row = row_annot_df,
-                              scale = "row", 
-                              show_colnames = FALSE, 
-                              show_rownames = FALSE,
-                              cluster_rows = FALSE, 
-                              cluster_cols = FALSE,
-                              fontsize_row = 7)
+color_func <- circlize::colorRamp2(c(-1, 0, 1), 
+                                   c("#ef8a62", "#f7f7f7", "#67a9cf"))
+
+ # Create the Heatmap annotation object
+  col_annot <- ComplexHeatmap::HeatmapAnnotation(
+    df = data.frame(col_annot_df %>% dplyr::select(refinebio_treatment)),
+    module_52 = ComplexHeatmap::anno_barplot(col_annot_df$module_52_eigengene), 
+    col = list("post-adt" = "#f1a340", "pre-adt" = "#998ec3")
+  )
+
+  # Plot on a heatmap
+  heatmap <- ComplexHeatmap::Heatmap(mod52_mat_scaled,
+    col = color_func,
+    cluster_columns = FALSE,
+    cluster_rows = FALSE,
+    bottom_annotation = col_annot,
+    show_row_names = FALSE, 
+    show_column_names = FALSE
+  )
+  
+heatmap
 ```
 
 ```{r}
