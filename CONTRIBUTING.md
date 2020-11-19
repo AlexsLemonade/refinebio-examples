@@ -102,14 +102,13 @@ Note that all the following steps describe PRs to `staging` branch only (see mor
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
 - Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% word-smithed, but the general steps/outline should be reflected).
-- Try to highlight things that encapsulate main concepts, ready for review using a `**REVIEW**` tag.
-Or use a `**DRAFT**` tag to indicate it hasn't really been worked on much yet.
-- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process.
+- Try to highlight things that encapsulate main concepts as ready for review using a `**REVIEW**` tag and/or use a `**DRAFT**` tag to indicate a section that hasn't really been worked on much yet.
+- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process in subsequent refined PRs.
 - Keep the original draft PR open for easy reference.
 
 ### Refined PRs: Detailed reviews  
 
-- Break up the steps of the analysis into the manageable review chunks on their own branches for detailed review (you may want to discuss what ths chunks should be on the Draft PR).
+Break up the steps of the analysis into manageable review chunks on their own branches for detailed review (you may want to discuss what the chunks should be on the Draft PR).
 - Delete any `**REVIEW/DRAFT**` tags leftover from the draft PR.
 - Make sure each steps' explanations are fully realized for these PRs.
 - Ensure that the notebook adheres to [the guidelines](#guidelines-for-analysis-notebooks).
