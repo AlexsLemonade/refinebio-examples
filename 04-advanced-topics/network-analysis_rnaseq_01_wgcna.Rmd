@@ -530,12 +530,11 @@ gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module"
   dplyr::mutate(module = paste0("ME", module))
 ```
 
-Now we can find what genes are a part of module 52 and make it into a vector. 
+Now we can find what genes are a part of module 52 and 6and make it into a vector. 
 
 ```{r}
-module_52_genes <- gene_modules_df %>%
-  dplyr::filter(module == "ME52") %>% 
-  dplyr::pull(gene)
+module_52_6_genes <- gene_modules_df %>%
+  dplyr::filter(module == "ME52" | module == "ME6")
 ```
 
 Let's save this gene to module key to a TSV file for future use. 
@@ -551,51 +550,44 @@ readr::write_tsv(gene_modules_df,
 We will make a multi-panel plot that summarizes our differentially expressed module.
 
 ```{r}
-mod52_df <- df %>% 
-  tibble::rownames_to_column("Gene") %>%
-  dplyr::filter(Gene %in% module_52_genes) %>% 
-  tibble::column_to_rownames("Gene")
-
-annot_df <- metadata %>% 
+col_annot_df <- metadata %>% 
   dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
-  dplyr::mutate(module_52_eigengene = module_eigengenes$ME52) %>% 
-  tibble::column_to_rownames("refinebio_accession_code")
+  dplyr::mutate(module_52_eigengene = module_eigengenes$ME52, 
+                module_6_eigengene = module_eigengenes$ME6) %>% 
+  tibble::column_to_rownames("refinebio_accession_code") %>% 
+  dplyr::arrange(refinebio_treatment)
+
+row_annot_df <- module_52_6_genes %>% 
+  tibble::column_to_rownames("gene") %>% 
+  dplyr::arrange(module)
 ```
 
 
 ```{r}
-heatmap <- pheatmap::pheatmap(as.matrix(mod52_df), 
-                              annotation_col = annot_df, 
+mod52_6_df <- df %>% 
+  tibble::rownames_to_column("Gene") %>%
+  dplyr::filter(Gene %in% module_52_6_genes$gene) %>% 
+  tibble::column_to_rownames("Gene") %>% 
+  dplyr::select(rownames(col_annot_df))
+
+mod52_6_df <- mod52_6_df[rownames(row_annot_df), ]  
+```
+
+
+```{r}
+heatmap <- pheatmap::pheatmap(as.matrix(mod52_6_df), 
+                              annotation_col = col_annot_df,
+                              annotation_row = row_annot_df,
                               scale = "row", 
-                              cluster_rows = FALSE, 
                               show_colnames = FALSE, 
+                              show_rownames = FALSE,
+                              cluster_rows = FALSE, 
+                              cluster_cols = FALSE,
                               fontsize_row = 7)
 ```
 
-
 ```{r}
-sample_order <- heatmap$tree_col$labels
-
-barplot <- ggplot(annot_df[sample_order, ], aes(x = rownames(annot_df), 
-                                y = module_52_eigengene, 
-                                fill = refinebio_treatment)) + 
-  geom_bar(position = "dodge", stat = "identity") +
-  theme_classic() +
-  theme(axis.text.x = element_blank(), 
-        legend.position = "none") + 
-  ggplot2::scale_fill_manual(values = c("#00BFC4", "#F8766D")) +
-  xlab("refinebio_accession_code")
-
-barplot
-```
-
-
-```{r}
-multi_panel_plot <- gridExtra::grid.arrange(grobs = list(heatmap[[4]], barplot), ncol = 1, nrow = 2)
-```
-
-```{r}
-ggsave(plot = multi_panel_plot, file = file.path("results", "SRP133573_module_52_eigengene_heatmap.png"))
+ggsave(plot = heatmap, file = file.path("results", "SRP133573_module_52_and_6_eigengene_heatmap.png"))
 ```
 
 # Resources for further learning
