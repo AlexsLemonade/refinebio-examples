@@ -234,7 +234,7 @@ library(magrittr)
 # We'll need this for finding gene modules
 library(WGCNA)
 
-# We will make some ggplot2 plots 
+# We will make some ggplot2 plots
 library(ggplot2)
 ```
 
