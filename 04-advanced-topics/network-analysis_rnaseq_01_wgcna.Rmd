@@ -432,7 +432,118 @@ readr::write_rds(bwnet,
 )
 ```
 
-_Next sections addressed in upcoming PR_
+## Explore our WGCNA results
+
+This object, `bwnet` has a lot of information. 
+We can pull out the parts we are most interested in and may want to use use for plotting. 
+
+In `bwnet` we have a data frame of eigengene module data for each sample in the `MEs` slot. 
+These represent the collapsed and combined expression of the genes a part of each module. 
+
+```{r}
+module_eigengenes <- bwnet$MEs
+
+# Print out a preview
+head(module_eigengenes)
+```
+
+## Which modules have biggest differences across treatment groups?
+
+We can also see if our eigengenes relate to our metadata labels. 
+First we double check that our samples are still in order.
+
+```{r}
+all.equal(metadata$refinebio_accession_code, rownames(module_eigengenes))
+```
+
+```{r}
+# Create the design matrix from the refinebio_treatment variable
+des_mat <- model.matrix(~ metadata$refinebio_treatment)
+```
+
+Limma wants our tests to be per row, so we need to transpose so the eigengenes are rows
+
+```{r}
+# Transpose so the eigengenes are rows and samples are columns
+module_eigengenes_t <- t(module_eigengenes)
+```
+
+Run linear model on each module.
+
+```{r}
+# Apply linear model to data
+fit <- limma::lmFit(module_eigengenes_t, design = des_mat)
+
+# Apply empirical Bayes to smooth standard errors
+fit <- limma::eBayes(fit)
+```
+
+Apply multiple testing correction and obtain stats in a data frame. 
+
+```{r}
+# Apply multiple testing correction and obtain stats
+stats_df <- limma::topTable(fit, number = nrow(module_eigengenes_t)) %>%
+  tibble::rownames_to_column("module")
+```
+
+Let's arrange the results by the smallest adjusted p values. 
+
+```{r}
+stats_df %>%
+  dplyr::arrange(adj.P.Val)
+```
+
+Module 52 seems to be the most differentially expressed across `refinebio_treatment` groups. 
+Now we can do some investigation into this module. 
+
+## Let's make plot of module 52?
+
+As a sanity check, let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
+
+```{r}
+module_eigengenes %>%
+  tibble::rownames_to_column("accession_code") %>%
+  dplyr::inner_join(metadata %>%
+    dplyr::select(refinebio_accession_code, refinebio_treatment),
+  by = c("accession_code" = "refinebio_accession_code")
+  ) %>%
+  ggplot2::ggplot(ggplot2::aes(
+    x = refinebio_treatment,
+    y = ME52,
+    color = refinebio_treatment
+  )) +
+  ggforce::geom_sina() +
+  ggplot2::theme_classic()
+```
+
+This makes sense!
+
+## What genes are a part of module 52?
+
+If you want to know which of your genes make up a modules, you can look at the `$colors` slot. 
+This is a named list which associates the genes with the module they are a part of. 
+We can turn this into a data frame for handy use. 
+
+```{r}
+gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>%
+  # Let's add the `ME` part so its more clear what these numbers are and it matches elsewhere
+  dplyr::mutate(module = paste0("ME", module))
+```
+
+Now we can find what genes are a part of module 52.
+
+```{r}
+module_52_genes <- gene_modules_df %>%
+  dplyr::filter(module == "ME52")
+```
+
+Let's save this gene to module key to a TSV file for future use. 
+
+```{r}
+readr::write_tsv(gene_modules_df,
+  file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv")
+)
+```
 
 # Resources for further learning
 
