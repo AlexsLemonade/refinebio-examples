@@ -12,10 +12,10 @@ output:
 # Purpose of this analysis
 
 In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
-WGCNA uses a series of correlations to determine what genes are expressed together in your data set. 
-This is a fairly intuitive approach to gene network analysis which is pretty widely used for microarray (as well as RNA-seq). 
+WGCNA uses a series of correlations to identify sets of genes that are expressed together in your data set. 
+This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & RNAseq data. 
 
-As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where eigengenes are [eigenvalues](https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors) that contain the collapsed information for a group of co-expressed genes) [@KhanAcademy; @Langfelder2007]. 
+As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where the values for each eigengene represent the summarized expression for a group of co-expressed genes) [@Langfelder2007]. 
 This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
 In this example, we use eigengene x sample data to identify differentially expressed modules between our treatment and control group
 
@@ -181,7 +181,7 @@ WGCNA can be used with both RNA-seq and microarray datasets so long as they are 
 In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
 
 If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
-If you have troubles finding a `power` parameter that yields a sufficient $R^2$ even after applying a stringent cutoff, you may want to look into using a different dataset. 
+If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
 
 ***
 
@@ -234,7 +234,7 @@ library(magrittr)
 # We'll need this for finding gene modules
 library(WGCNA)
 
-# We will make some ggplot2 plots
+# We'll be making some plots
 library(ggplot2)
 ```
 
@@ -268,15 +268,22 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 ### Prepare data for `DESeq2`
 
-We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+There are two things we neeed to do to prep our expression data for DESeq2. 
+
+First, we need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+
+Then, we need to filter out the genes that have not been expressed or that have low expression counts. 
+This is recommended by [WGCNA docs for RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).
+Removing low count genes can also help improve your WGCNA results. 
+We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
 
 ```{r}
-# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
-df <- df %>%
-  # Bring out rownames and store as their own column
-  tibble::rownames_to_column("Gene") %>%
-  # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, round)
+# The next DESeq2 functions need the values to be converted to integers
+df <- round(df) %>%
+  # The next steps require a data frame and round() returns a matrix
+  as.data.frame() %>%
+  # Only keep rows that have total counts above the cutoff
+  dplyr::filter(rowSums(.) >= 50)
 ```
 
 ## Create a DESeqDataset
@@ -288,25 +295,10 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df, # This is the data frame with the counts values for all replicates in our dataset
-  colData = metadata, # This is the data frame with the annotation for our samples
-  design = ~1, # Here we are not specifying a model
-  tidy = TRUE
+  countData = df, # Our prepped data frame with counts
+  colData = metadata, # Data frame with annotation for our samples
+  design = ~1 # Here we are not specifying a model
 )
-```
-
-## Define a minimum counts cutoff
-
-We want to filter out the genes that have not been expressed or that have low expression counts. 
-This is recommended by [WGCNA docs for RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).
-Removing low count genes can help improve your WGCNA results. 
-We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
-
-```{r}
-# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
-# only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds)) >= 50
-dds <- dds[genes_to_keep, ]
 ```
 
 ## Perform DESeq2 normalization and transformation
@@ -326,9 +318,9 @@ dds_norm <- vst(dds)
 Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
 
 ```{r}
-# First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
+# Retrieve the normalized data from the `DESeqDataSet`
 normalized_counts <- assay(dds_norm) %>%
-  t() # We need to transpose this data in preparation for the `WGCNA::blockwiseModules()` function
+  t() # Transpose this data
 ```
 
 ## Determine parameters for WGCNA
