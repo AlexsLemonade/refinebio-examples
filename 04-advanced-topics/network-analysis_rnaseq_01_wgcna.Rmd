@@ -318,9 +318,9 @@ dds_norm <- vst(dds)
 Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
 
 ```{r}
-# First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
+# Retrieve the normalized data from the `DESeqDataSet`
 normalized_counts <- assay(dds_norm) %>%
-  t() # We need to transpose this data in preparation for the `WGCNA::blockwiseModules()` function
+  t() # Transpose this data
 ```
 
 _Next sections addressed in upcoming PR_
