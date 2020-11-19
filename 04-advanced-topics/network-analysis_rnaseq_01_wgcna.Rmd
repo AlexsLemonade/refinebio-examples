@@ -181,7 +181,7 @@ WGCNA can be used with both RNA-seq and microarray datasets so long as they are 
 In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
 
 If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
-If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
+If you have troubles finding a `power` parameter that yields a sufficient $R^2$ even after applying a stringent cutoff, you may want to look into using a different dataset. 
 
 ***
 
@@ -233,6 +233,9 @@ library(magrittr)
 
 # We'll need this for finding gene modules
 library(WGCNA)
+
+# We will make some ggplot2 plots 
+library(ggplot2)
 ```
 
 ## Import and set up data
@@ -330,9 +333,9 @@ normalized_counts <- assay(dds_norm) %>%
 
 ## Determine parameters for WGCNA
 
-WGCNA has to decide what genes are included in which modules, but it might encounter some genes that are close to call between modules. 
-By providing a soft-threshold power parameter, we can guide it on to what exponent it should compare R values for deciding between modules for a gene. 
-The "soft" part of a soft threshold just means that this will not be an absolute cutoff and WGCNA will use this parameter with some flexibility. 
+To identify which genes are in the same modules, WGCNA first creates a weighted network to define which genes are near each other. 
+The measure of "adjacency" it uses is based on the correlation matrix, but requires the definition of a threshold value, which in turn depends on a "power" parameter that defines the exponent used when transforming the correlation values. 
+The choice of power parameter will affect the number of modules identified, and the WGCNA modules provides the  `pickSoftThreshold()` function to help identify good choices for this parameter. 
 
 ```{r}
 sft <- pickSoftThreshold(normalized_counts,
@@ -343,7 +346,7 @@ sft <- pickSoftThreshold(normalized_counts,
 ```
 
 This `sft` object has a lot of information, we will want to plot some of it to figure out what our `power` soft-threshold should be. 
-We have to first calculate the model fit, the R squared and make that a new variable. 
+We have to first calculate a measure of the model fit, the signed $R^2$, and make that a new variable. 
 
 ```{r}
 sft_df <- data.frame(sft$fitIndices) %>%
@@ -353,42 +356,44 @@ sft_df <- data.frame(sft$fitIndices) %>%
 Now, let's plot the model fitting by the `power` soft threshold so we can decide on a soft-threshold for power. 
 
 ```{r}
-sft_df %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_label(ggplot2::aes(x = Power, y = model_fit), label = sft_df$Power) +
+ggplot(sft_df, aes(x = Power, y = model_fit, label = Power)) +
+  # Plot the points
+  geom_point() +
+  # We'll put the Power labels slightly above the data points
+  geom_label(nudge_y = 0.1) +
   # We will plot what WGCNA recommends as an R^2 cutoff
-  ggplot2::geom_hline(yintercept = 0.80, col = "red") +
+  geom_hline(yintercept = 0.80, col = "red") +
   # Just in case our values are low, we want to make sure we can still see the 0.80 level
-  ggplot2::ylim(c(min(sft_df$model_fit), 1)) +
+  ylim(c(min(sft_df$model_fit), 1)) +
   # We can add more sensible labels for our axis
-  ggplot2::xlab("Soft Threshold (power)") +
-  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
-  ggplot2::ggtitle("Scale independence") +
+  xlab("Soft Threshold (power)") +
+  ylab("Scale Free Topology Model Fit, signed R^2") +
+  ggtitle("Scale independence") +
   # This adds some nicer aesthetics to our plot
-  ggplot2::theme_classic()
+  theme_classic()
 ```
 
 Using this plot we can decide on a power parameter. 
-WGCNA's authors recommend using a `power` that has an signed R^2 above `0.80`, otherwise they warn your results may be too noisy to be meaningful. 
+WGCNA's authors recommend using a `power` that has an signed $R^2$ above `0.80`, otherwise they warn your results may be too noisy to be meaningful. 
 
-If you have multiple power values with signed R^2 above `0.80`, then picking the one at an inflection point, in other words where the R^2 values seem to have reached their saturation [@Zhang2005].
-You want to a `power` that gives you a big enough R^2 but is not excessively large.
+If you have multiple power values with signed $R^2$ above `0.80`, then picking the one at an inflection point, in other words where the $R^2$ values seem to have reached their saturation [@Zhang2005].
+You want to a `power` that gives you a big enough $R^2$ but is not excessively large.
 
 So using the plot above, going with a power soft-threshold of `16`!
 
-If you find you have all very low R^2 values this may be because there are too many genes with low values that are cluttering up the calculations. 
+If you find you have all very low $R^2$ values this may be because there are too many genes with low values that are cluttering up the calculations. 
 You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
 
 ```{r}
 sft_df %>%
-  ggplot2::ggplot() +
-  ggplot2::geom_label(ggplot2::aes(x = Power, y = max.k.), label = sft_df$Power) +
+  ggplot() +
+  geom_label(aes(x = Power, y = max.k.), label = sft_df$Power) +
   # We can add more sensible labels for our axis
-  ggplot2::xlab("Soft Threshold (power)") +
-  ggplot2::ylab("Scale Free Topology Model Fit, signed R^2") +
-  ggplot2::ggtitle("Scale independence") +
+  xlab("Soft Threshold (power)") +
+  ylab("Scale Free Topology Model Fit, signed R^2") +
+  ggtitle("Scale independence") +
   # This adds some nicer aesthetics to our plot
-  ggplot2::theme_classic()
+  theme_classic()
 ```
 
 ## Run WGCNA!
