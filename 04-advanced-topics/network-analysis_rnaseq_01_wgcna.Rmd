@@ -280,7 +280,7 @@ df <- round(df) %>%
   # The next steps require a data frame and round() spits back a matrix
   as.data.frame() %>%
   # Only keep rows that have total counts above the cutoff
-  dplyr::filter(apply(., 1, sum) >= 50) %>%
+  dplyr::filter(rowSums(.) >= 50) %>%
   # Bring out rownames and store as their own column
   tibble::rownames_to_column("Gene")
 ```
