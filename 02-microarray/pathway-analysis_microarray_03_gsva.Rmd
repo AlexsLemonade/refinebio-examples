@@ -361,14 +361,14 @@ Now, let's implement our choose the max value method for all samples and Entrez 
 ```{r}
 max_dup_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
-  dplyr::select(-"Ensembl") %>% 
+  dplyr::select(-"Ensembl") %>%
   # Filter to include only the rows associated with the duplicate Entrez gene identifiers
   dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
   # Group by Entrez IDs
   dplyr::group_by(entrez_id) %>%
   # Get the maximum expression value using all values associated with each duplicate
   # Entrez ID for each column or sample in this case
-  dplyr::summarize_all(max) 
+  dplyr::summarize_all(max)
 
 max_dup_df
 ```
