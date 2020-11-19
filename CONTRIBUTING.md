@@ -103,7 +103,7 @@ Note that all the following steps describe PRs to `staging` branch only (see mor
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
 - Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% word-smithed, but the general steps/outline should be reflected).
 - Try to highlight things that encapsulate main concepts as ready for review using a `**REVIEW**` tag and/or use a `**DRAFT**` tag to indicate a section that hasn't really been worked on much yet.
-- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process in subsequent refined PRs.
+- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process before you split off new branches to file your refined PRs.
 - Keep the original draft PR open for easy reference.
 
 ### Refined PRs: Detailed reviews  
