@@ -16,6 +16,7 @@ Brainarray’s
 Brems
 CCDL
 CCDL's
+cDNA
 cheatsheet
 cheatsheets
 ChIP
@@ -85,6 +86,7 @@ molecularly
 musculus
 MSigDB
 myeloid
+NES
 Northcott
 nb
 ortholog
@@ -92,6 +94,8 @@ orthologs
 orthology
 overexpressing
 overexpression
+permutated
+permutating
 pheatmap
 PLOS
 PLX
@@ -113,6 +117,7 @@ RPKMs
 RStudio
 ssGSEA
 StatQuest
+Subramanian
 SuperSeries
 str
 subtype
