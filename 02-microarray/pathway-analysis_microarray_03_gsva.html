@@ -3954,7 +3954,7 @@ div.tocify {
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb28-2"><a href="#cb28-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_character(),
 ##   refinebio_age = col_double(),
@@ -3980,7 +3980,7 @@ div.tocify {
 <span id="cb30-3"><a href="#cb30-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID  column as row names</span></span>
 <span id="cb30-4"><a href="#cb30-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4228,7 +4228,7 @@ div.tocify {
 <span id="cb51-2"><a href="#cb51-2"></a>  filtered_mapped_matrix,</span>
 <span id="cb51-3"><a href="#cb51-3"></a>  hallmarks_list,</span>
 <span id="cb51-4"><a href="#cb51-4"></a>  <span class="dt">method =</span> <span class="st">&quot;gsva&quot;</span>,</span>
-<span id="cb51-5"><a href="#cb51-5"></a>  <span class="co"># Appropriate for our transformed data on log2-like scale</span></span>
+<span id="cb51-5"><a href="#cb51-5"></a>  <span class="co"># Appropriate for our log2-transformed microarray data</span></span>
 <span id="cb51-6"><a href="#cb51-6"></a>  <span class="dt">kcdf =</span> <span class="st">&quot;Gaussian&quot;</span>,</span>
 <span id="cb51-7"><a href="#cb51-7"></a>  <span class="co"># Minimum gene set size</span></span>
 <span id="cb51-8"><a href="#cb51-8"></a>  <span class="dt">min.sz =</span> <span class="dv">15</span>,</span>

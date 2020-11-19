@@ -400,7 +400,7 @@ gsva_results <- gsva(
   filtered_mapped_matrix,
   hallmarks_list,
   method = "gsva",
-  # Appropriate for our transformed data on log2-like scale
+  # Appropriate for our log2-transformed microarray data
   kcdf = "Gaussian",
   # Minimum gene set size
   min.sz = 15,
