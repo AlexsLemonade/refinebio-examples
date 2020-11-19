@@ -357,6 +357,38 @@ Also keep in mind that these values are ultimately representing probe identifier
 
 There are two gene identifiers here for which we need to select the maximum expression values per sample across the duplicate Entrez gene identifier instances, so it is unlikely to have a considerable impact on our results.
 
+Let's try the selection the maximum expression values method for one of the samples.
+First, let's isolate a single sample along with the duplicate gene identifiers.
+
+```{r}
+single_sample_max_dup_df <- mapped_df %>%
+  # Select the column with the Entrez gene identifiers along with one of the
+  # samples/columns -- we are going to select the third column here since we
+  # know the first two columns contain gene identifiers
+  dplyr::select(entrez_id, 3) %>%
+  # Filter to include only the rows associated with the duplicate Entrez gene identifiers
+  dplyr::filter(entrez_id %in% dup_entrez_ids)
+
+single_sample_max_dup_df
+```
+
+We've isolated one of the samples and its expression values for each of the instances of a duplicate Entrez gene identifier.
+Now let's use the `summarize_all()` function to get the maximum expression value for each unique Entrez gene identifier.
+
+```{r}
+single_sample_max_dup_df <- single_sample_max_dup_df %>%
+  # First, we need to group by Entrez IDs
+  dplyr::group_by(entrez_id) %>%
+  # Get the maximum expression value using all values associated with each
+  # Entrez ID
+  dplyr::summarize_all(max)
+
+single_sample_max_dup_df
+```
+Great, looks like we were able to obtain the single sample's maximum expression values for each Entrez gene identifier!
+
+Let's apply this method to all of the samples.
+
 ```{r}
 max_dup_df <- mapped_df %>%
   # Filter to include only the rows associated with the duplicate Entrez gene identifiers
@@ -369,6 +401,7 @@ max_dup_df <- mapped_df %>%
 
 max_dup_df
 ```
+
 Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers by keeping the maximum expression value per sample associated with each of the duplicate gene identifiers!
 
 Now let's combine the rest of the mapped data!
@@ -386,8 +419,13 @@ filtered_mapped_df <- mapped_df %>%
 Let's preview `filtered_mapped_df` to check that we combined the data associated with the duplicate Entrez IDs in `max_dup_df` with the rest of the mapped data.
 
 ```{r}
+# Filter our object display the observations associated with the Entrez IDs in `dup_entrez_ids`
 filtered_mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
+
+# Preview the first six observations of `filtered_mapped_df` to ensure that we combined the rest
+# of the mapped data associated with the Entrez gene identifiers that were not duplicated
+head(filtered_mapped_df)
 ```
 
 Great, looks like we were able to successfully handle the duplicate Entrez IDs by keeping the maximum expression value per sample, and combine this data with the rest of the mapped data!
