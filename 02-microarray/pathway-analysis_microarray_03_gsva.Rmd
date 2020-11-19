@@ -338,98 +338,56 @@ dup_entrez_ids <- mapped_df %>%
 dup_entrez_ids
 ```
 
-Now let's take a look at the rows associated with the duplicated Entrez IDs.
+#### Handling duplicate gene identifiers
+
+As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
+GSVA is executed on a per sample basis so let's keep the maximum expression value per sample associated with the duplicate Entrez gene identifiers.
+In other words, we will keep only the maximum expression value found across the duplicate Entrez gene identifier instances for each sample or column in this case.
+
+Let's take a look at the rows associated with the duplicated Entrez IDs and see how this will play out. 
 
 ```{r}
 mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-We can see that the associated values vary for each row.
+As an example using the strategy we described, for `GSM187153`'s data in the first column, `-0.007355525` is larger than `-0.136553967` so moving forward, Entrez gene `6013` will have ``-0.007355525` value and the `-0.136553967` would be dropped from the dataset. 
 
-As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
-GSVA is executed on a per sample basis so let's keep the maximum expression value per sample associated with the duplicate Entrez gene identifiers.
-In other words, we will keep only the maximum expression value found across the duplicate Entrez gene identifier instances for each sample or column in this case.
-Note that using the maximum expression value to handle the duplicate Entrez gene identifiers means preferentially choosing values of a higher rank for use in the downstream GSVA steps.
-However, this is just one of the expression values that can be used to handle duplicate gene identifiers.
+However, this is just one method of handling duplicate gene identifiers.
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
-Also keep in mind that these values are ultimately representing probe identifiers for our microarray dataset, as opposed to transcript reads usually associated with RNA-seq data.
 
-There are two gene identifiers here for which we need to select the maximum expression values per sample across the duplicate Entrez gene identifier instances, so it is unlikely to have a considerable impact on our results.
-
-Let's try the selection the maximum expression values method for one of the samples.
-First, let's isolate a single sample along with the duplicate gene identifiers.
-
-```{r}
-single_sample_max_dup_df <- mapped_df %>%
-  # Select the column with the Entrez gene identifiers along with one of the
-  # samples/columns -- we are going to select the third column here since we
-  # know the first two columns contain gene identifiers
-  dplyr::select(entrez_id, 3) %>%
-  # Filter to include only the rows associated with the duplicate Entrez gene identifiers
-  dplyr::filter(entrez_id %in% dup_entrez_ids)
-
-single_sample_max_dup_df
-```
-
-We've isolated one of the samples and its expression values for each of the instances of a duplicate Entrez gene identifier.
-Now let's use the `summarize_all()` function to get the maximum expression value for each unique Entrez gene identifier.
-
-```{r}
-single_sample_max_dup_df <- single_sample_max_dup_df %>%
-  # First, we need to group by Entrez IDs
-  dplyr::group_by(entrez_id) %>%
-  # Get the maximum expression value using all values associated with each
-  # Entrez ID
-  dplyr::summarize_all(max)
-
-single_sample_max_dup_df
-```
-Great, looks like we were able to obtain the single sample's maximum expression values for each Entrez gene identifier!
-
-Let's apply this method to all of the samples.
+Now, let's implement our choose the max value method for all samples and Entrez IDs using tidyverse functions. 
 
 ```{r}
 max_dup_df <- mapped_df %>%
+  # We won't be using Ensembl IDs moving forward, so we will drop this column
+  dplyr::select(-"Ensembl") %>% 
   # Filter to include only the rows associated with the duplicate Entrez gene identifiers
   dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
   # Group by Entrez IDs
   dplyr::group_by(entrez_id) %>%
   # Get the maximum expression value using all values associated with each duplicate
   # Entrez ID for each column or sample in this case
-  dplyr::summarize_all(max)
+  dplyr::summarize_all(max) 
 
 max_dup_df
 ```
+We can see `GSM187153` now has the `-0.007355525` value for Entrez ID `6013` like expected. 
 
-Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers by keeping the maximum expression value per sample associated with each of the duplicate gene identifiers!
+Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers!
 
-Now let's combine the rest of the mapped data!
+Now let's combine our de-duplicated data with the rest of the mapped data!
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
+  # We won't be using Ensembl IDs moving forward, so we will drop this column
+  dplyr::select(-"Ensembl") %>%
   # First let's get the data associated with the Entrez gene identifiers that aren't duplicated
   dplyr::filter(!entrez_id %in% dup_entrez_ids) %>%
   # Now let's bind the rows of the maximum expression data we stored in `max_dup_df`
-  dplyr::bind_rows(max_dup_df) %>%
-  # Now let's remove the column we no longer need
-  dplyr::select(-"Ensembl")
+  dplyr::bind_rows(max_dup_df)
 ```
-
-Let's preview `filtered_mapped_df` to check that we combined the data associated with the duplicate Entrez IDs in `max_dup_df` with the rest of the mapped data.
-
-```{r}
-# Filter our object display the observations associated with the Entrez IDs in `dup_entrez_ids`
-filtered_mapped_df %>%
-  dplyr::filter(entrez_id %in% dup_entrez_ids)
-
-# Preview the first six observations of `filtered_mapped_df` to ensure that we combined the rest
-# of the mapped data associated with the Entrez gene identifiers that were not duplicated
-head(filtered_mapped_df)
-```
-
-Great, looks like we were able to successfully handle the duplicate Entrez IDs by keeping the maximum expression value per sample, and combine this data with the rest of the mapped data!
-
+ 
 As mentioned earlier, we need a matrix for GSVA.
 Let's now convert our data frame into a matrix and prepare our object for GSVA.
 
