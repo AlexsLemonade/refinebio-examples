@@ -655,19 +655,29 @@ mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
 mod_52_heatmap
 ```
 
-We can save this plot by usiing `ggsave()`. 
+We can save this plot to PDF.
 
 ```{r}
-ggsave(plot = mod_52_heatmap, file = file.path("results", "SRP133573_module_52_heatmap.png"))
+pdf(file.path("results", "SRP133573_module_52_heatmap.pdf"))
+mod_52_heatmap
+dev.off()
 ```
 
-Let's try out the custom heatmap function with module 52 (our most differentially expressed module).
+For comparison, let's try out the custom heatmap function with a different, not differentially expressed module. 
 
 ```{r}
-mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
+mod_20_heatmap <- make_module_heatmap(module_name = "ME20")
 
 # Print out the plot
-mod_52_heatmap
+mod_20_heatmap
+```
+
+Save this plot also.
+
+```{r}
+pdf(file.path("results", "SRP133573_module_20_heatmap.pdf"))
+mod_20_heatmap
+dev.off()
 ```
 
 # Resources for further learning
