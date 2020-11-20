@@ -198,7 +198,7 @@ We will be using `DESeq2` to normalize and transform our RNA-seq data before run
 Of course, we will need the `WGCNA` package [@Langfelder2008].
 But `WGCNA` also requires a package called `impute` that it sometimes has trouble installing so we recommend installing that first [@Hastie2020]. 
 
-Lastly, we will be creating a `sina` plot which we will need a `ggplot2` companion package for, called `ggforce`. 
+For plotting purposes will be creating a `sina` plot and heatmaps which we will need a `ggplot2` companion package for, called `ggforce` as well as the `ComplexHeatmap` package [@Gu2020].  
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -219,6 +219,11 @@ if (!("WGCNA" %in% installed.packages())) {
 if (!("ggforce" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   install.packages("ggforce")
+}
+
+if (!("ComplexHeatmap" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("ComplexHeatmap")
 }
 ```
 
@@ -496,7 +501,7 @@ stats_df %>%
 Module 52 seems to be the most differentially expressed across `refinebio_treatment` groups. 
 Now we can do some investigation into this module. 
 
-## Let's make plot of module 52?
+## Let's make plot of module 52
 
 As a sanity check, let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
 
@@ -548,6 +553,7 @@ readr::write_tsv(gene_module_key,
 ## Make a custom heatmap function
 
 We will make a heatmap that summarizes our differentially expressed module.
+Because we will make a couple of these, it makes sense to make a custom function for making this heatmap. 
 
 ```{r}
 make_module_heatmap <- function(module_name = "ME52",
@@ -691,6 +697,7 @@ dev.off()
 - [WGCNA FAQ page](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html) [@Langfelder2016].
 - [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2016].
 - [WGCNA paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-559) [@Langfelder2008].
+- [ComplexHeatmap's tutorial guide](https://jokergoo.github.io/ComplexHeatmap-reference/book/) for more info on how to tweak the heatmaps [@Gu2020].
 
 # Session info
 
