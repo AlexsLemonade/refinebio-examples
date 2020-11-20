@@ -16,10 +16,9 @@ This example is one of pathway analysis module set, we recommend looking at the 
 In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis.
 Gene set variation analysis (GSVA) constitutes a starting point to build pathway-centric models of biology.
 Rather than contextualizing some results you have received from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment.
-This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and reran GSVA, you would expect the scores to change [@Hanzelmann2013].
+This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change [@Hanzelmann2013].
 
-GSVA determines the relative enrichment of gene sets across samples using
-a non-parametric approach.
+GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach.
 GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
@@ -309,7 +308,7 @@ mapped_df <- data.frame(
 
 This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
 In this case, it's also possible that a Entrez ID will map to multiple Ensembl IDs.
-For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs.
+For the purpose of performing GSVA later in this notebook, we keep only the first mapped IDs.
 For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
 
 Let's see a preview of `mapped_df`.
@@ -351,7 +350,7 @@ mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-As an example using the strategy we described, for `GSM187153`'s data in the first column, `-0.007355525` is larger than `-0.136553967` so moving forward, Entrez gene `6013` will have ``-0.007355525` value and the `-0.136553967` would be dropped from the dataset. 
+As an example using the strategy we described, for `GSM187153`'s data in the first column, `-0.007355525` is larger than `-0.136553967` so moving forward, Entrez gene `6013` will have `-0.007355525` value and the `-0.136553967` would be dropped from the dataset. 
 
 However, this is just one method of handling duplicate gene identifiers.
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
