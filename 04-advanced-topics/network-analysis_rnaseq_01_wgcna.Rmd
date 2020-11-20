@@ -525,82 +525,149 @@ This is a named list which associates the genes with the module they are a part 
 We can turn this into a data frame for handy use. 
 
 ```{r}
-gene_modules_df <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>%
+gene_module_key <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>%
   # Let's add the `ME` part so its more clear what these numbers are and it matches elsewhere
   dplyr::mutate(module = paste0("ME", module))
 ```
 
-Now we can find what genes are a part of module 52 and 6and make it into a vector. 
+Now we can find what genes are a part of module 52. 
 
 ```{r}
-module_52_genes <- gene_modules_df %>%
+gene_module_key %>%
   dplyr::filter(module == "ME52")
 ```
 
 Let's save this gene to module key to a TSV file for future use. 
 
 ```{r}
-readr::write_tsv(gene_modules_df,
+readr::write_tsv(gene_module_key,
   file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv")
 )
 ```
 
-## Make a summary plot 
+## Make a custom heatmap function
 
-We will make a multi-panel plot that summarizes our differentially expressed module.
-
-```{r}
-col_annot_df <- metadata %>% 
-  dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
-  dplyr::mutate(module_52_eigengene = module_eigengenes$ME52) %>% 
-  tibble::column_to_rownames("refinebio_accession_code") %>% 
-  dplyr::arrange(refinebio_treatment)
-
-row_annot_df <- module_52_genes %>% 
-  tibble::column_to_rownames("gene") %>% 
-  dplyr::arrange(module)
-```
+We will make a heatmap that summarizes our differentially expressed module.
 
 ```{r}
-mod52_df <- df %>% 
-  tibble::rownames_to_column("Gene") %>%
-  dplyr::filter(Gene %in% module_52_6_genes$gene) %>% 
-  tibble::column_to_rownames("Gene") %>% 
-  dplyr::select(rownames(col_annot_df)) 
-
-mod52_df <- mod52_6_df[rownames(row_annot_df), ]  
-
-mod52_mat <- as.matrix(mod52_df) 
-
-mod52_mat_scaled <- t(apply(mod52_mat, 1, scale))
-```
-
-```{r}
-color_func <- circlize::colorRamp2(c(-1, 0, 1), 
-                                   c("#ef8a62", "#f7f7f7", "#67a9cf"))
-
- # Create the Heatmap annotation object
+make_module_heatmap <- function(module_name = "ME52", 
+                                expression_mat = normalized_counts,
+                                metadata_df = metadata,
+                                gene_module_key_df = gene_module_key,
+                                module_eigengenes_df = module_eigengenes,
+                                standardize_genes = TRUE
+                                ) {
+  # Create a summary heatmap of a given module. 
+  #
+  # Args:
+  # module_name: a character indicating what module should be plotted, e.g. "ME52"
+  # expression_mat: The gene
+  # metadata_df: a data frame with refinebio_accession_code and refinebio_treatment
+  #              as columns
+  # gene_module_key: a data.frame indicating what genes are a part of what modules
+  # module_eigengenes: a sample x eigengene data.frame with samples as rownames
+  #
+  # Returns:
+  # A module's genes in heatmap with the module's eigengenes in a barplot
+  
+  # Set up column annotation from metadata
+  col_annot_df <- metadata_df %>% 
+    # Only select the treatment and sample ID columns
+    dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
+    # Add on the eigengene expression as its own column
+    dplyr::mutate(
+      module_eigengene = module_eigengenes_df %>% 
+        dplyr::pull(module_name)
+      ) %>%
+    # Store sample 
+    tibble::column_to_rownames("refinebio_accession_code") %>% 
+    # Arrange by treatment
+    dplyr::arrange(refinebio_treatment)
+  
+  # Create the ComplexHeatmap column annotation object
   col_annot <- ComplexHeatmap::HeatmapAnnotation(
-    df = data.frame(col_annot_df %>% dplyr::select(refinebio_treatment)),
-    module_52 = ComplexHeatmap::anno_barplot(col_annot_df$module_52_eigengene), 
-    col = list("post-adt" = "#f1a340", "pre-adt" = "#998ec3")
+    # Supply treatment labels
+    refinebio_treatment = col_annot_df$refinebio_treatment,
+    # Add annotation barplot
+    module_eigengene = ComplexHeatmap::anno_barplot(col_annot_df$module_eigengene), 
+    # Pick colors for each experimental group in refinebio_treatment
+    col = list(refinebio_treatment = c("post-adt" = "#f1a340", "pre-adt" = "#998ec3"))
   )
+  
+  # Get a vector of the Ensembl gene ides that correspond to this module
+  module_genes <- gene_module_key_df %>%
+    dplyr::filter(module == module_name) %>% 
+    dplyr::pull(gene)
+ 
+  # Set up the gene expression data frame
+  mod_mat <- expression_mat %>% 
+    t() %>% 
+    as.data.frame() %>% 
+    # Only keep genes from this module
+    dplyr::filter(rownames(.) %in% module_genes) %>% 
+    # Order the samples to match col_annot_df
+    dplyr::select(rownames(col_annot_df)) %>% 
+    # Data needs to be a matrix
+    as.matrix() 
+
+  if (standardize_genes) {
+    # Genes are on very different scales; we will standardize them
+    mod_mat <- t(apply(mod_mat, 1, scale))
+
+    # Create a color function based on standardized scale
+    color_func <- circlize::colorRamp2(c(-1, 0, 1), 
+                                     c("#ef8a62", "#f7f7f7", "#67a9cf"))
+  } else {
+    # Create a color function based on standardized scale
+    color_func <- circlize::colorRamp2(c(quantile(mod_mat, 0.05), 
+                                       median(mod_mat), 
+                                       quantile(mod_mat, 0.95)), 
+                                      c("#ef8a62", "#f7f7f7", "#67a9cf"))
+  }
 
   # Plot on a heatmap
-  heatmap <- ComplexHeatmap::Heatmap(mod52_mat_scaled,
+  heatmap <- ComplexHeatmap::Heatmap(mod_mat,
+    # Supply color function
     col = color_func,
+    # Supply column annotation
+    bottom_annotation = col_annot,
+    # We don't want to cluster genes or samplese
     cluster_columns = FALSE,
     cluster_rows = FALSE,
-    bottom_annotation = col_annot,
+    # We don't need to show sample or gene labels
     show_row_names = FALSE, 
     show_column_names = FALSE
   )
   
-heatmap
+  # Return heatmap
+  return(heatmap)
+}
 ```
 
+## Make a module heatmap
+
+Let's try out the custom heatmap function with module 52 (our most differentially expressed module).
+
 ```{r}
-ggsave(plot = heatmap, file = file.path("results", "SRP133573_module_52_and_6_eigengene_heatmap.png"))
+mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
+
+# Print out the plot
+mod_52_heatmap
+```
+
+We can save this plot by usiing `ggsave()`. 
+
+```{r}
+ggsave(plot = mod_52_heatmap, file = file.path("results", "SRP133573_module_52_heatmap.png"))
+```
+
+Let's try out the custom heatmap function with module 52 (our most differentially expressed module).
+
+```{r}
+mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
+
+# Print out the plot
+mod_52_heatmap
 ```
 
 # Resources for further learning
