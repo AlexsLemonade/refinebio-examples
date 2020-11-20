@@ -51,14 +51,18 @@ If you have trouble running this chunk, see our [introduction to using `.Rmd`s](
 if (!dir.exists("data")) {
   dir.create("data")
 }
+
 # Define the file path to the plots directory
 plots_dir <- "plots" # Can replace with path to desired output plots directory
+
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
+
 # Define the file path to the results directory
 results_dir <- "results" # Can replace with path to desired output results directory
+
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
@@ -130,8 +134,10 @@ This is handy to do because if we want to switch the dataset (see next section f
 ```{r}
 # Define the file path to the data directory
 data_dir <- file.path("data", "GSE7696") # Replace with accession number which will be the name of the folder the files will be in
+
 # Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
 data_file <- file.path(data_dir, "GSE7696.tsv") # Replace with file path to your dataset
+
 # Declare the file path to the metadata file using the data directory saved as `data_dir`
 metadata_file <- file.path(data_dir, "metadata_GSE7696.tsv") # Replace with file path to your metadata
 ```
@@ -141,6 +147,7 @@ Now that our file paths are declared, we can use the `file.exists()` function to
 ```{r}
 # Check if the gene expression matrix file is at the file path stored in `data_file`
 file.exists(data_file)
+
 # Check if the metadata file is at the file path stored in `metadata_file`
 file.exists(metadata_file)
 ```
@@ -174,10 +181,12 @@ if (!("GSVA" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("GSVA", update = FALSE)
 }
+
 if (!("qusage" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("qusage", update = FALSE)
 }
+
 if (!("org.Hs.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Hs.eg.db", update = FALSE)
@@ -189,10 +198,13 @@ Attach the packages we need for this analysis.
 ```{r}
 # Attach the `qusage` library
 library(qusage)
+
 # Attach the `GSVA` library
 library(GSVA)
+
 # Human annotation package we'll use for gene identifier conversion
 library(org.Hs.eg.db)
+
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```
@@ -207,6 +219,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 ```{r}
 # Read in metadata TSV file
 metadata <- readr::read_tsv(metadata_file)
+
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
   # Tuck away the gene ID  column as row names
@@ -219,8 +232,10 @@ Let's ensure that the metadata and data are in the same sample order.
 # Make the data in the order of the metadata
 df <- df %>%
   dplyr::select(metadata$geo_accession)
+
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
+
 # Bring back the "Gene" column in preparation for mapping
 df <- df %>%
   tibble::rownames_to_column("Gene")
@@ -237,6 +252,7 @@ Note that when reading in the Hallmark collection file in this manner, the data 
 ```{r}
 # R can often read in data from a URL
 hallmarks_url <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt"
+
 # QuSAGE is another pathway analysis method, the `qusage` package has a function
 # for reading GMT files and turning them into a list
 hallmarks_list <- qusage::read.gmt(hallmarks_url)
@@ -322,6 +338,7 @@ Let's find out which Entrez IDs have been duplicated.
 dup_entrez_ids <- mapped_df %>%
   dplyr::filter(duplicated(entrez_id)) %>%
   dplyr::pull(entrez_id)
+
 dup_entrez_ids
 ```
 
@@ -354,6 +371,7 @@ max_dup_df <- mapped_df %>%
   # Get the maximum expression value using all values associated with each duplicate
   # Entrez ID for each column or sample in this case
   dplyr::summarize_all(max)
+
 max_dup_df
 ```
 
@@ -424,41 +442,15 @@ See `?gsva` for more options.
 head(gsva_results)
 ```
 
-## Visualizing Results
+### Find the pathway with the most significant differences across treatment groups
 
-### Violin plot
-
-The goal of the study associated with our dataset is to identify the molecular profiles associated with resistance in patients treated with concomitant chemoradiotherapy with the alkylating agent temozolomide (distinguished by the `tmz/radiotherapy` value in the `refinebio_treatment` column) [@Murat2008].
-Let's make a violin plot to look at the differences between the disease status and treatment groups (found in the `refinebio_disease` and `refinebio_treatment` columns, respectively), using our GSVA scores.
-
-First we need to get this data in an appropriate format for `ggplot2`.
+First, let's prepare the metadata.
 
 ```{r}
-# The results are a matrix
-annotated_results_df <- gsva_results %>%
-  data.frame() %>%
-  # Gene set names are row names
-  tibble::rownames_to_column("gene_set") %>%
-  # Get into long format using the `tidyr::pivot_longer()` function
-  tidyr::pivot_longer(
-    cols = -gene_set,
-    names_to = "sample",
-    values_to = "gsva_score"
-  ) %>%
-  dplyr::arrange(dplyr::desc(gsva_score)) %>%
-  # Join the column with the group labels that we would like to plot and compare --
-  # Select the variables relevant to your data
-  dplyr::left_join(dplyr::select(
-    metadata,
-    refinebio_accession_code,
-    refinebio_disease,
-    refinebio_treatment
-  ),
-  by = c("sample" = "refinebio_accession_code")
-  ) %>%
-  # Now we need to create a column variable to combine and store the information
-  # we need from `refinebio_disease` and `refinebio_treatment` -- first we need
-  # to replace the NAs in the treatment column with "none"
+# We need to create a column variable to combine and store the information
+# we need from `refinebio_disease` and `refinebio_treatment` -- first we need
+# to replace the NAs in the treatment column with "none"
+metadata <- metadata %>%
   dplyr::mutate(
     refinebio_treatment = dplyr::case_when(
       refinebio_treatment == "na" ~ "none",
@@ -468,11 +460,87 @@ annotated_results_df <- gsva_results %>%
   )
 ```
 
+Now let's double check that our samples are still in order.
+
+```{r}
+all.equal(metadata$refinebio_accession_code, colnames(gsva_results))
+```
+
+Now let's prepare the design matrix.
+
+```{r}
+# Create the design matrix from the `disease_status_treatmen` variable
+des_mat <- model.matrix(~ metadata$disease_status_treatment)
+```
+
+Run the linear model on each pathway (each row of `gsva_results`).
+
+```{r}
+# Apply linear model to data
+fit <- limma::lmFit(gsva_results, design = des_mat)
+
+# Apply empirical Bayes to smooth standard errors
+fit <- limma::eBayes(fit)
+```
+
+Apply multiple testing correction and obtain a data frame containing the stats. 
+
+```{r}
+# Apply multiple testing correction and obtain stats
+gsva_stats_df <- limma::topTable(fit, number = nrow(gsva_results)) %>%
+  tibble::rownames_to_column("gene set")
+```
+
+Now let's arrange the `gsva_stats_df` by the smallest adjusted p values. 
+
+```{r}
+gsva_stats_df %>%
+  dplyr::arrange(adj.P.Val)
+```
+
+`HALLMARK_DNA_REPAIR` appears to be the pathway that contains the most significant distribution of scores across `disease_status_treatment` groups. 
+
+## Visualizing Results
+
+### Violin plot
+
+The goal of the study associated with our dataset is to identify the molecular profiles associated with resistance in patients treated with concomitant chemoradiotherapy with the alkylating agent temozolomide (distinguished by the `tmz/radiotherapy` value in the `refinebio_treatment` column) [@Murat2008].
+Let's make a violin plot to look at the differences between the disease status and treatment groups using our GSVA scores.
+
+First we need to get this data in an appropriate format for `ggplot2`.
+
+```{r}
+annotated_results_df <- gsva_results %>%
+  # The results are a matrix
+  data.frame() %>%
+  # Gene set names are row names
+  tibble::rownames_to_column("gene_set") %>%
+  # Get into long format using the `tidyr::pivot_longer()` function
+  tidyr::pivot_longer(
+    cols = -gene_set,
+    names_to = "sample",
+    values_to = "gsva_score"
+  ) %>%
+  # dplyr::arrange(dplyr::desc(gsva_score)) %>%
+  # Join the column with the group labels that we would like to plot and compare --
+  # Select the variables relevant to your data
+  dplyr::left_join(dplyr::select(
+    metadata,
+    refinebio_accession_code,
+    disease_status_treatment
+  ),
+  by = c("sample" = "refinebio_accession_code")
+  )
+```
+
 Now let's make a violin plot so we can look at the differences between the `disease_status_treatment` groups using our GSVA scores.
 
 ```{r}
 # Violin plot comparing GSVA scores of the `disease_status_treatment` groups in our dataset
 violin_plot <- annotated_results_df %>%
+  # Filter for the scores associated with the most signficant pathway found in
+  # the previous step -- HALLMARK_DNA_REPAIR
+  dplyr::filter(gene_set == "HALLMARK_DNA_REPAIR") %>%
   ggplot2::ggplot(ggplot2::aes(
     x = disease_status_treatment, # Replace with a variable relevant to your data
     y = gsva_score
