@@ -47,6 +47,7 @@ duplications
 ECM
 edgeR
 edgeR's
+eigengene
 e.g.
 ENSDARG
 Ensembl
@@ -84,15 +85,16 @@ JPEG
 KEGG
 limma
 logFC
+maxBlockSize
 medulloblastoma
 microarray’s
 molecularly
 musculus
 MSigDB
 myeloid
+nb
 NES
 Northcott
-nb
 ortholog
 orthologs
 orthology
@@ -141,6 +143,8 @@ unmapped
 upregulated
 UpSet
 vivo
+WGCNA
+WGCNA's
 WNT
 Yaari
 zebrafish
