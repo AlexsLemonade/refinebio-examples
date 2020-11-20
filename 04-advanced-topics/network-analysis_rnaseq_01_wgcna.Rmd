@@ -298,8 +298,7 @@ sample_tree <- hclust(dist(t(df)), method = "average")
 Let's plot this for a visual and plot a potential height cutoff -- this number will be pretty dataset specific, so you may need to play around with this number. 
 
 ```{r}
-plot(sample_tree, main = "Sample clustering to detect outliers", cex = .2);
-
+plot(sample_tree, main = "Sample clustering to detect outliers", cex = .2)
 # Plot a height cutoff for outliers ()
 abline(h = 1500000, col = "red")
 ```
@@ -321,10 +320,10 @@ outliers <- colnames(df)[clust == 0]
 Filter out the outliers from both `df` and `metadata`. 
 
 ```{r}
-df <- df %>% 
+df <- df %>%
   dplyr::select(!outliers)
 
-metadata <- metadata %>% 
+metadata <- metadata %>%
   dplyr::filter(!(refinebio_accession_code %in% outliers))
 ```
 
