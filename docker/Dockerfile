@@ -35,6 +35,9 @@ RUN pip3 install \
 #### R packages
 ###############
 
+# We need to install impute so WGCNA will install in the next step
+RUN R -e "options(warn = 2); BiocManager::install('impute', update = FALSE)"
+
 # Commonly used R packages
 RUN Rscript -e  "install.packages( \
     c('cluster', \
@@ -45,7 +48,8 @@ RUN Rscript -e  "install.packages( \
       'rprojroot', \
       'viridis', \
       'spelling', \
-      'styler'))"
+      'styler', \
+      'WGCNA'))"
 
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
