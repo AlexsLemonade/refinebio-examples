@@ -3771,16 +3771,66 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>This example is one of pathway analysis module set, we recommend looking at the <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html">pathway analysis introduction</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
+<p>This example is one of pathway analysis module set, we recommend looking at the <a href="#how-to-choose-a-pathway-analysis">pathway analysis table below</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
 <p>This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random. This pathway analysis method does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
+<div id="what-is-pathway-analysis" class="section level3">
+<h3><span class="header-section-number">1.0.1</span> What is pathway analysis?</h3>
+<p>We refer to any technique that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment as pathway analysis. In the context of <a href="https://www.refine.bio/">refine.bio</a>, we use these techniques to analyze and interpret genome-wide gene expression experiments. The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest. In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.</p>
+<p>We highly recommend taking a look at <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375">Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges</a> from <span class="citation">Khatri <em>et al.</em> (2012)</span> for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the <a href="#resources-for-further-learning"><code>Resources for further learning</code> section</a>.</p>
+</div>
+<div id="how-to-choose-a-pathway-analysis" class="section level3">
+<h3><span class="header-section-number">1.0.2</span> How to choose a pathway analysis?</h3>
+<p>This table summarizes the pathway analyses examples in this module.</p>
+<table>
+<colgroup>
+<col width="11%"></col>
+<col width="36%"></col>
+<col width="32%"></col>
+<col width="9%"></col>
+<col width="9%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Analysis</th>
+<th>What is required for input</th>
+<th>What output looks like</th>
+<th>✅ Pros</th>
+<th>⚠️ Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.html"><strong>ORA (Over-representation Analysis)</strong></a></td>
+<td>A list of gene IDs (no stats needed)</td>
+<td>A per-pathway hypergeometric test result</td>
+<td>- Simple<br><br> - Inexpensive computationally to calculate p-values</td>
+<td>- Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways</td>
+</tr>
+<tr class="even">
+<td><a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html"><strong>GSEA (Gene Set Enrichment Analysis)</strong></a></td>
+<td>A list of genes IDs with gene-level summary statistics</td>
+<td>A per-pathway enrichment score</td>
+<td>- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes</td>
+<td>- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible</td>
+</tr>
+<tr class="odd">
+<td><a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_03_gsva.html"><strong>GSVA (Gene Set Variation Analysis)</strong></a></td>
+<td>A gene expression matrix (like what you get from refine.bio directly)</td>
+<td>Pathway-level scores on a per-sample basis</td>
+<td>- Does not require two groups to compare upfront<br><br> - Normally distributed scores</td>
+<td>- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n &gt; 10</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="how-to-run-this-example" class="section level1">
 <h1><span class="header-section-number">2</span> How to run this example</h1>
 <p>For general information about our tutorials and the basic software packages you will need, please see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
 <div id="obtain-the-.rmd-file" class="section level2">
 <h2><span class="header-section-number">2.1</span> Obtain the <code>.Rmd</code> file</h2>
-<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_ora_with_webgestaltr.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
+<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
 <p>Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
 <p>You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there. (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files.)</p>
 </div>
@@ -3950,7 +4000,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
