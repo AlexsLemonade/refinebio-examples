@@ -20,7 +20,7 @@ This pathway analysis method does not require any particular sample size, since 
 
 ### What is pathway analysis?
 
-We refer to any technique that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment as pathway analysis.
+Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment.
 In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
 The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
 In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
