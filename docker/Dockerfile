@@ -83,7 +83,7 @@ RUN Rscript -e  "install.packages( \
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
 
 # Install WGCNA
-RUN Rscript -e  "install.packages('WGCNA')"
+RUN Rscript -e  "options(warn = 2); install.packages('WGCNA')"
 
 # Install python libraries
 ##########################
