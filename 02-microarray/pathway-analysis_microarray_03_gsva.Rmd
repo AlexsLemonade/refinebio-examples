@@ -342,6 +342,7 @@ As an example using the strategy we described, for `GSM187153`'s data in the fir
 However, this is just one method of handling duplicate gene identifiers.
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
 Now, let's implement our choose the max value method for all samples and Entrez IDs using tidyverse functions. 
+
 ```{r}
 max_dup_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
@@ -395,6 +396,8 @@ The output is a gene set by sample matrix of GSVA scores.
 
 ### Perform GSVA
 
+Let's perform GSVA using the `gsva()` function.
+
 ```{r}
 gsva_results <- gsva(
   filtered_mapped_matrix,
@@ -425,7 +428,8 @@ head(gsva_results)
 
 ### Violin plot
 
-Now let's make a violin plot to look at the differences between the initial, recurrent, re-recurrent, and non-tumoral glioblastoma samples as noted in the `refinebio_disease` column, using our GSVA scores.
+The goal of the study associated with our dataset is to identify the molecular profiles associated with resistance in patients treated with concomitant chemoradiotherapy with the alkylating agent temozolomide (distinguished by the `tmz/radiotherapy` value in the `refinebio_treatment` column) [@Murat2008].
+Let's make a violin plot to look at the differences between the disease status and treatment groups (found in the `refinebio_disease` and `refinebio_treatment` columns, respectively), using our GSVA scores.
 
 First we need to get this data in an appropriate format for `ggplot2`.
 
@@ -447,19 +451,30 @@ annotated_results_df <- gsva_results %>%
   dplyr::left_join(dplyr::select(
     metadata,
     refinebio_accession_code,
-    refinebio_disease
+    refinebio_disease,
+    refinebio_treatment
   ),
   by = c("sample" = "refinebio_accession_code")
+  ) %>%
+  # Now we need to create a column variable to combine and store the information
+  # we need from `refinebio_disease` and `refinebio_treatment` -- first we need
+  # to replace the NAs in the treatment column with "none"
+  dplyr::mutate(
+    refinebio_treatment = dplyr::case_when(
+      refinebio_treatment == "na" ~ "none",
+      TRUE ~ refinebio_treatment
+    ),
+    disease_status_treatment = paste0(refinebio_disease, "-", refinebio_treatment)
   )
 ```
 
-Now let's make a violin plot so we can look at the differences between the `refinebio_disease` groups in our dataset using our GSVA scores.
+Now let's make a violin plot so we can look at the differences between the `disease_status_treatment` groups using our GSVA scores.
 
 ```{r}
-# Violin plot comparing GSVA scores of the `refinebio_disease` groups in our dataset
+# Violin plot comparing GSVA scores of the `disease_status_treatment` groups in our dataset
 violin_plot <- annotated_results_df %>%
   ggplot2::ggplot(ggplot2::aes(
-    x = refinebio_disease, # Replace with a variable relevant to your data
+    x = disease_status_treatment, # Replace with a variable relevant to your data
     y = gsva_score
   )) +
   # Make a violin plot that's a pretty blue!
@@ -473,20 +488,23 @@ violin_plot <- annotated_results_df %>%
     color = "#0066CC",
     shape = 18
   ) +
+  # Flip the axes
+  ggplot2::coord_flip() +
   # Add plot labels
   ggplot2::labs(
-    title = "GSVA Scores Across Glioblastoma Disease Groups",
-    x = "Glioblastoma disease group",
+    title = "GSVA Scores Across Glioblastoma Treatment Groups",
+    x = "Glioblastoma disease status and treatment group",
     y = "GSVA score"
   ) +
+  # Adjust the plot background for better visualization
   ggplot2::theme_bw()
 
 # Display plot
 violin_plot
 ```
 
-Now we can interpret our violin plot showing the distribution of GSVA scores across `refinebio_disease` groups.
-Looks like the `non-tumoral` samples are associated with the lowest GSVA scores, while the `recurrent gbm` and `gbm` samples are associated with some of the higher GSVA scores.
+Now we can interpret our violin plot showing the distribution of GSVA scores across `disease_status_treatment` groups.
+Looks like the `non-tumoral` samples which received no treatment are associated with the lowest GSVA scores, while the `recurrent gbm` and `gbm` samples which received the concomitant chemoradiotherapy (`tmz/radiotherapy`) treatment are associated with the higher GSVA scores.
 
 Let's save this plot to PNG.
 
@@ -519,7 +537,6 @@ gsva_results %>%
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
-
 ```{r}
 # Print session info
 sessioninfo::session_info()
