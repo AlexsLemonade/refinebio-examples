@@ -1,0 +1,441 @@
+---
+title: "WGCNA - RNA-seq"
+author: "CCDL for ALSF"
+date: "November 2020"
+output:   
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
+WGCNA uses a series of correlations to identify sets of genes that are expressed together in your data set. 
+This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & RNAseq data. 
+
+As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where the values for each eigengene represent the summarized expression for a group of co-expressed genes) [@Langfelder2007]. 
+This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
+In this example, we use eigengene x sample data to identify differentially expressed modules between our treatment and control group
+
+This method does require some computing power, but can still be run locally (on your own computer) for most refine.bio datasets.
+As with many clustering and network methods, there are some parameters that may need tweaking. 
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP133573/identification-of-transcription-factor-relationships-associated-with-androgen-deprivation-therapy-response-and-metastatic-progression-in-prostate-cancer).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>  
+
+We are going to use non-quantile normalized data for this analysis.
+To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
+Note that this option will only be available for RNA-seq datasets.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready. 
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
+The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
+Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
+
+## Place the dataset in your new `data/` folder
+
+refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+
+The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `SRP133573` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called "data" which contains:
+  - The `SRP133573` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)
+- A folder for `results` (currently empty)
+
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+These chunks will declare your file paths and double check that your files are in the right place. 
+
+First we will declare our file paths to our data and metadata files, which should be in our data directory.
+This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started. 
+
+```{r}
+# Define the file path to the data directory
+data_dir <- file.path("data", "SRP133573") # Replace with accession number which will be the name of the folder the files will be in
+
+# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
+data_file <- file.path(data_dir, "SRP133573.tsv") # Replace with file path to your dataset
+
+# Declare the file path to the metadata file using the data directory saved as `data_dir`
+metadata_file <- file.path(data_dir, "metadata_SRP133573.tsv") # Replace with file path to your metadata
+```
+
+Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
+
+```{r}
+# Check if the gene expression matrix file is at the file path stored in `data_file`
+file.exists(data_file)
+
+# Check if the metadata file is at the file path stored in `metadata_file`
+file.exists(metadata_file)
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences.
+
+### Sample size
+
+Keep in mind when using a different refine.bio dataset with this example, that WGCNA requires at least 15 samples to produce a meaningful result [according to its authors](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html). 
+So you will need to make sure the dataset you use is sufficiently large. 
+However, note that very large datasets will be difficult to run locally (on a personal laptop) due to the required computing power.
+While you can adjust some parameters to make this more doable on a laptop, it may decrease the reliability of your result if taken to an extreme (more on this parameter, called `maxBlockSize`, in the [`Run WGCNA!` section](#run-wgcna)).
+
+### Microarray vs RNA-seq 
+
+WGCNA can be used with both RNA-seq and microarray datasets so long as they are well normalized and filtered. 
+In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
+
+If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
+If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Identifying co-expression gene modules with WGCNA - RNA-seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+We will be using `DESeq2` to normalize and transform our RNA-seq data before running WGCNA, so we will need to install that [@Love2014].
+
+Of course, we will need the `WGCNA` package [@Langfelder2008].
+But `WGCNA` also requires a package called `impute` that it sometimes has trouble installing so we recommend installing that first [@Hastie2020]. 
+
+Lastly, we will be creating a `sina` plot which we will need a `ggplot2` companion package for, called `ggforce`. 
+
+```{r}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+
+if (!("impute" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("impute")
+}
+
+if (!("WGCNA" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("WGCNA")
+}
+
+if (!("ggforce" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("ggforce")
+}
+```
+
+Attach some of the packages we need for this analysis.
+
+```{r}
+# Attach the DESeq2 library
+library(DESeq2)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+
+# We'll need this for finding gene modules
+library(WGCNA)
+
+# We'll be making some plots
+library(ggplot2)
+```
+
+## Import and set up data
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(metadata_file)
+
+# Read in data TSV file
+df <- readr::read_tsv(data_file) %>%
+  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  tibble::column_to_rownames("Gene")
+```
+
+Let's ensure that the metadata and data are in the same sample order.
+
+```{r}
+# Make the data in the order of the metadata
+df <- df %>%
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(df), metadata$refinebio_accession_code)
+```
+
+### Prepare data for `DESeq2`
+
+There are two things we neeed to do to prep our expression data for DESeq2. 
+
+First, we need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+
+Then, we need to filter out the genes that have not been expressed or that have low expression counts. 
+This is recommended by [WGCNA docs for RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).
+Removing low count genes can also help improve your WGCNA results. 
+We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
+
+```{r}
+# The next DESeq2 functions need the values to be converted to integers
+df <- round(df) %>%
+  # The next steps require a data frame and round() returns a matrix
+  as.data.frame() %>%
+  # Only keep rows that have total counts above the cutoff
+  dplyr::filter(rowSums(.) >= 50)
+```
+
+## Create a DESeqDataset
+
+We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
+In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
+
+```{r}
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(
+  countData = df, # Our prepped data frame with counts
+  colData = metadata, # Data frame with annotation for our samples
+  design = ~1 # Here we are not specifying a model
+)
+```
+
+## Perform DESeq2 normalization and transformation
+
+We often suggest normalizing and transforming your data for various applications and in this instance WGCNA's authors [suggest using variance stabilizing transformation before running WGCNA](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.).  
+We are going to use the `vst()` function from the `DESeq2` package to normalize and transform the data.
+For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
+
+```{r}
+# Normalize and transform the data in the `DESeqDataSet` object using the `vst()`
+# function from the `DESEq2` R package
+dds_norm <- vst(dds)
+```
+
+## Format normalized data for WGCNA
+
+Extract the normalized counts to a matrix and transpose it so we can pass it to WGCNA. 
+
+```{r}
+# Retrieve the normalized data from the `DESeqDataSet`
+normalized_counts <- assay(dds_norm) %>%
+  t() # Transpose this data
+```
+
+## Determine parameters for WGCNA
+
+To identify which genes are in the same modules, WGCNA first creates a weighted network to define which genes are near each other. 
+The measure of "adjacency" it uses is based on the correlation matrix, but requires the definition of a threshold value, which in turn depends on a "power" parameter that defines the exponent used when transforming the correlation values. 
+The choice of power parameter will affect the number of modules identified, and the WGCNA modules provides the  `pickSoftThreshold()` function to help identify good choices for this parameter. 
+
+```{r}
+sft <- pickSoftThreshold(normalized_counts,
+  dataIsExpr = TRUE,
+  corFnc = cor,
+  networkType = "signed"
+)
+```
+
+This `sft` object has a lot of information, we will want to plot some of it to figure out what our `power` soft-threshold should be. 
+We have to first calculate a measure of the model fit, the signed $R^2$, and make that a new variable. 
+
+```{r}
+sft_df <- data.frame(sft$fitIndices) %>%
+  dplyr::mutate(model_fit = -sign(slope) * SFT.R.sq)
+```
+
+Now, let's plot the model fitting by the `power` soft threshold so we can decide on a soft-threshold for power. 
+
+```{r}
+ggplot(sft_df, aes(x = Power, y = model_fit, label = Power)) +
+  # Plot the points
+  geom_point() +
+  # We'll put the Power labels slightly above the data points
+  geom_text(nudge_y = 0.1) +
+  # We will plot what WGCNA recommends as an R^2 cutoff
+  geom_hline(yintercept = 0.80, col = "red") +
+  # Just in case our values are low, we want to make sure we can still see the 0.80 level
+  ylim(c(min(sft_df$model_fit), 1)) +
+  # We can add more sensible labels for our axis
+  xlab("Soft Threshold (power)") +
+  ylab("Scale Free Topology Model Fit, signed R^2") +
+  ggtitle("Scale independence") +
+  # This adds some nicer aesthetics to our plot
+  theme_classic()
+```
+
+Using this plot we can decide on a power parameter. 
+WGCNA's authors recommend using a `power` that has an signed $R^2$ above `0.80`, otherwise they warn your results may be too noisy to be meaningful. 
+
+If you have multiple power values with signed $R^2$ above `0.80`, then picking the one at an inflection point, in other words where the $R^2$ values seem to have reached their saturation [@Zhang2005].
+You want to a `power` that gives you a big enough $R^2$ but is not excessively large.
+
+So using the plot above, going with a power soft-threshold of `16`!
+
+If you find you have all very low $R^2$ values this may be because there are too many genes with low expression values that are cluttering up the calculations. 
+You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
+
+## Run WGCNA!
+
+We will use the `blockwiseModules()` function to find gene co-expression modules in WGCNA, using `16` for the `power` argument like we determined above. 
+
+This next step takes some time to run.
+The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with conserving computing resources.
+
+Here we are using the default `maxBlockSize`, 5000 but, you may want to adjust the `maxBlockSize` argument depending on your computer's memory.
+The authors of WGCNA recommend running [the largest block your computer can handle](https://peterlangfelder.com/2018/11/25/blockwise-network-analysis-of-large-data/) and they provide some approximations as to GB of memory of a laptop and what `maxBlockSize` it should be able to handle:
+
+> • If the reader has access to a large workstation with more than 4 GB of memory, the parameter maxBlockSize
+can be increased. A 16GB workstation should handle up to 20000 probes; a 32GB workstation should handle
+perhaps 30000. A 4GB standard desktop or a laptop may handle up to 8000-10000 probes, depending on
+operating system and other running programs.
+
+[@Langfelder2016]
+
+```{r}
+bwnet <- blockwiseModules(normalized_counts,
+  maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in
+  TOMType = "signed", # topological overlap matrix
+  power = 16, # soft threshold for network construction
+  numericLabels = TRUE, # Let's use numbers instead of colors for module labels
+  randomSeed = 1234, # there's some randomness associated with this calculation
+  # so we should set a seed
+)
+```
+
+The `TOMtype` argument specifies what kind of topological overlap matrix (TOM) should be used to make gene modules.
+You can safely assume for most situations a `signed` network represents what you want -- we want WGCNA to pay attention to directionality. 
+However if you suspect you may benefit from an `unsigned` network, where positive/negative is ignored see [this article](https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/) to help you figure that out [@Langfelder2018].
+
+There are a lot of other settings you can tweak -- look at `?blockwiseModules` help page as well as the [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2016].
+
+## Write main WGCNA results object to file
+
+We will save our whole results object to an RDS file in case we want to return to our original WGCNA results.
+
+```{r}
+readr::write_rds(bwnet,
+  file = file.path("results", "SRP133573_wgcna_results.RDS")
+)
+```
+
+_Next sections addressed in upcoming PR_
+
+# Resources for further learning
+
+- [WGCNA FAQ page](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html) [@Langfelder2016].
+- [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2016].
+- [WGCNA paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-559) [@Langfelder2008].
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessionInfo()
+```
+
+# References
