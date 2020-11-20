@@ -357,7 +357,7 @@ ggplot(sft_df, aes(x = Power, y = model_fit, label = Power)) +
   # Plot the points
   geom_point() +
   # We'll put the Power labels slightly above the data points
-  geom_label(nudge_y = 0.1) +
+  geom_text(nudge_y = 0.1) +
   # We will plot what WGCNA recommends as an R^2 cutoff
   geom_hline(yintercept = 0.80, col = "red") +
   # Just in case our values are low, we want to make sure we can still see the 0.80 level
@@ -378,20 +378,8 @@ You want to a `power` that gives you a big enough $R^2$ but is not excessively l
 
 So using the plot above, going with a power soft-threshold of `16`!
 
-If you find you have all very low $R^2$ values this may be because there are too many genes with low values that are cluttering up the calculations. 
+If you find you have all very low $R^2$ values this may be because there are too many genes with low expression values that are cluttering up the calculations. 
 You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
-
-```{r}
-sft_df %>%
-  ggplot() +
-  geom_label(aes(x = Power, y = max.k.), label = sft_df$Power) +
-  # We can add more sensible labels for our axis
-  xlab("Soft Threshold (power)") +
-  ylab("Scale Free Topology Model Fit, signed R^2") +
-  ggtitle("Scale independence") +
-  # This adds some nicer aesthetics to our plot
-  theme_classic()
-```
 
 ## Run WGCNA!
 
