@@ -35,9 +35,6 @@ RUN pip3 install \
 #### R packages
 ###############
 
-# We need to install impute so WGCNA will install in the next step
-RUN R -e "options(warn = 2); BiocManager::install('impute', update = FALSE)"
-
 # Commonly used R packages
 RUN Rscript -e  "install.packages( \
     c('cluster', \
@@ -48,12 +45,11 @@ RUN Rscript -e  "install.packages( \
       'rprojroot', \
       'viridis', \
       'spelling', \
-      'styler', \
-      'WGCNA'))"
+      'styler'))"
 
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
-RUN R -e "options(warn = 2); BiocManager::install( \
+RUN Rscript -e "options(warn = 2); BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
@@ -62,6 +58,7 @@ RUN R -e "options(warn = 2); BiocManager::install( \
       'DESeq2', \
       'EnhancedVolcano', \
       'ggupset', \
+      'impute', \
       'limma', \
       'marray', \
       'msigdbr', \
@@ -84,6 +81,9 @@ RUN Rscript -e  "install.packages( \
 # Install packages from github
 # Need this package to make plots colorblind friendly
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
+
+# Install WGCNA
+RUN Rscript -e  "install.packages('WGCNA')"
 
 # Install python libraries
 ##########################
