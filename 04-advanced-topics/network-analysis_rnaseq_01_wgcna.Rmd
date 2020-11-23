@@ -293,7 +293,7 @@ df <- round(df) %>%
 
 Another thing we need to do is make sure our main experimental group label is set up. 
 In this case `refinebio_treatment` has two groups: `pre-adt` and `post-adt`. 
-We need this to be a factor, but we also need `pre-adt` as the first level. 
+To keep these two treatments in logical (rather than alphabetical) order, we will convert this to a factor with `pre-adt` as the first level. 
 
 ```{r}
 metadata <- metadata %>%
@@ -597,10 +597,10 @@ make_module_heatmap <- function(module_name,
     dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
     # Add on the eigengene expression by joining with sample IDs
     dplyr::inner_join(module_eigengene, by = "refinebio_accession_code") %>%
-    # Store sample
-    tibble::column_to_rownames("refinebio_accession_code") %>%
     # Arrange by treatment
-    dplyr::arrange(refinebio_treatment)
+    dplyr::arrange(refinebio_treatment, refinebio_accession_code) %>%
+    # Store sample
+    tibble::column_to_rownames("refinebio_accession_code")
 
   # Create the ComplexHeatmap column annotation object
   col_annot <- ComplexHeatmap::HeatmapAnnotation(
@@ -612,7 +612,7 @@ make_module_heatmap <- function(module_name,
     col = list(refinebio_treatment = c("post-adt" = "#f1a340", "pre-adt" = "#998ec3"))
   )
 
-  # Get a vector of the Ensembl gene ides that correspond to this module
+  # Get a vector of the Ensembl gene IDs that correspond to this module
   module_genes <- gene_module_key_df %>%
     dplyr::filter(module == module_name) %>%
     dplyr::pull(gene)
@@ -628,6 +628,7 @@ make_module_heatmap <- function(module_name,
     # Data needs to be a matrix
     as.matrix()
 
+  # Normalize the gene expression values
   mod_mat <- mod_mat %>%
     # Scale can work on matrices, but it does it by column so we will need to
     # transpose first
@@ -671,6 +672,7 @@ mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
 # Print out the plot
 mod_52_heatmap
 ```
+
 From the barplot portion of our plot, we can see `post-adt` samples have higher values for this eigengene for module 52.
 In the heatmap portion, we can see how the individual genes that make up module 52 have more extreme values (very high or very low) in the `post-adt` samples. 
 
@@ -690,8 +692,10 @@ mod_10_heatmap <- make_module_heatmap(module_name = "ME10")
 # Print out the plot
 mod_10_heatmap
 ```
+
 In this non-significant module's heatmap, there's not a particularly strong pattern between pre and post ADT samples.
-In general expression is pretty low for all the genes that make up module 10 but there's a few samples and some genes that show higher expression. 
+In general the expression of genes in module 10 does not vary much between groups, staying near the overall mean. 
+There are a few samples and some genes that show higher expression, but it is not surprising this does not results in a significant overall difference between the groups.
 
 Save this plot also.
 
