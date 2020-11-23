@@ -17,6 +17,7 @@ Brems
 CCDL
 CCDL's
 cDNA
+centric
 cheatsheet
 cheatsheets
 ChIP
@@ -31,6 +32,7 @@ cytosolic
 Danio
 dataset
 dataset's
+de
 decitabine
 DESeq
 DESeq2
@@ -61,10 +63,12 @@ Genenames
 generalizable
 ggplot
 GitHub
+glioblastoma
 glioma
 GC
 GSE
 GSEA
+GSVA
 HCOP
 hexamer
 HGNC
