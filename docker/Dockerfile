@@ -63,7 +63,9 @@ RUN Rscript -e "options(warn = 2); BiocManager::install( \
       'marray', \
       'msigdbr', \
       'org.Mm.eg.db', \
-      'org.Dr.eg.db'), \
+      'org.Dr.eg.db', \
+      'org.Hs.eg.db', \
+      'qusage'), \
      update = FALSE)"
 
 # Installs packages needed for plottings
