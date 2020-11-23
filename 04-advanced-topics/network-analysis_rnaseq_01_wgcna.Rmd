@@ -286,47 +286,6 @@ df <- round(df) %>%
   dplyr::filter(rowSums(.) >= 50)
 ```
 
-### Remove outliers
-
-Outlier can affect WGCNA results. 
-One way we can try to identify outliers is using clustering and look for single or very few sample clusters.
-
-```{r}
-sample_tree <- hclust(dist(t(df)), method = "average")
-```
-
-Let's plot this for a visual and plot a potential height cutoff -- this number will be pretty dataset specific, so you may need to play around with this number. 
-
-```{r}
-plot(sample_tree, main = "Sample clustering to detect outliers", cex = .2)
-# Plot a height cutoff for outliers ()
-abline(h = 1500000, col = "red")
-```
-
-```{r}
-# Determine clusters under the line
-clust <- cutreeStatic(sample_tree, cutHeight = 1500000)
-
-# Print this out a table
-table(clust)
-```
-
-Cluster `0` contains our outliers in this instance (this may not always be the case).
-
-```{r}
-outliers <- colnames(df)[clust == 0]
-```
-
-Filter out the outliers from both `df` and `metadata`. 
-
-```{r}
-df <- df %>%
-  dplyr::select(!outliers)
-
-metadata <- metadata %>%
-  dplyr::filter(!(refinebio_accession_code %in% outliers))
-```
-
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
@@ -353,6 +312,9 @@ For more information about these transformation methods, [see here](https://alex
 # function from the `DESEq2` R package
 dds_norm <- vst(dds)
 ```
+
+At this point, if your data has any outliers, you should look into removing them as they can affect your WGCNA results. 
+WGCNA's tutorial has [an example of exploring your data for outliers you can reference](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/FemaleLiver-01-dataInput.pdf).
 
 ## Format normalized data for WGCNA
 
