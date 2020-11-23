@@ -568,7 +568,6 @@ Because we will make a couple of these, it makes sense to make a custom function
 
 ```{r}
 make_module_heatmap <- function(module_name,
-                                standardize_genes = TRUE,
                                 expression_mat = normalized_counts,
                                 metadata_df = metadata,
                                 gene_module_key_df = gene_module_key,
@@ -577,7 +576,6 @@ make_module_heatmap <- function(module_name,
   #
   # Args:
   # module_name: a character indicating what module should be plotted, e.g. "ME52"
-  # standardize_genes: logical TRUE/FALSE on whether genes should be scaled. Default is to scale.
   # expression_mat: The full gene expression matrix. Default is `normalized_counts`.
   # metadata_df: a data frame with refinebio_accession_code and refinebio_treatment
   #              as columns. Default is `metadata`.
@@ -630,32 +628,19 @@ make_module_heatmap <- function(module_name,
     # Data needs to be a matrix
     as.matrix()
 
-  if (standardize_genes) {
-    # Genes are on very different scales; we will normalize (Z score) them
-    mod_mat <- mod_mat %>%
-      # Scale can work on matrices, but it does it by column so we will need to
-      # transpose first
-      t() %>%
-      scale() %>%
-      # And now we need to transpose back
-      t()
+  mod_mat <- mod_mat %>%
+    # Scale can work on matrices, but it does it by column so we will need to
+    # transpose first
+    t() %>%
+    scale() %>%
+    # And now we need to transpose back
+    t()
 
-    # Create a color function based on standardized scale
-    color_func <- circlize::colorRamp2(
-      c(-2, 0, 2),
-      c("#67a9cf", "#f7f7f7", "#ef8a62")
-    )
-  } else {
-    # Create a color function based on observed scale
-    color_func <- circlize::colorRamp2(
-      c(
-        quantile(mod_mat, 0.025),
-        median(mod_mat),
-        quantile(mod_mat, 0.975)
-      ),
-      c("#67a9cf", "#f7f7f7", "#ef8a62")
-    )
-  }
+  # Create a color function based on standardized scale
+  color_func <- circlize::colorRamp2(
+    c(-2, 0, 2),
+    c("#67a9cf", "#f7f7f7", "#ef8a62")
+  )
 
   # Plot on a heatmap
   heatmap <- ComplexHeatmap::Heatmap(mod_mat,
