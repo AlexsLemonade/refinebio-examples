@@ -198,7 +198,7 @@ We will be using `DESeq2` to normalize and transform our RNA-seq data before run
 Of course, we will need the `WGCNA` package [@Langfelder2008].
 But `WGCNA` also requires a package called `impute` that it sometimes has trouble installing so we recommend installing that first [@Hastie2020]. 
 
-Lastly, we will be creating a `sina` plot which we will need a `ggplot2` companion package for, called `ggforce`. 
+For plotting purposes will be creating a `sina` plot and heatmaps which we will need a `ggplot2` companion package for, called `ggforce` as well as the `ComplexHeatmap` package [@Gu2020].  
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -219,6 +219,11 @@ if (!("WGCNA" %in% installed.packages())) {
 if (!("ggforce" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   install.packages("ggforce")
+}
+
+if (!("ComplexHeatmap" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("ComplexHeatmap")
 }
 ```
 
@@ -284,6 +289,23 @@ df <- round(df) %>%
   as.data.frame() %>%
   # Only keep rows that have total counts above the cutoff
   dplyr::filter(rowSums(.) >= 50)
+```
+
+Another thing we need to do is make sure our main experimental group label is set up. 
+In this case `refinebio_treatment` has two groups: `pre-adt` and `post-adt`. 
+To keep these two treatments in logical (rather than alphabetical) order, we will convert this to a factor with `pre-adt` as the first level. 
+
+```{r}
+metadata <- metadata %>%
+  dplyr::mutate(refinebio_treatment = factor(refinebio_treatment,
+    levels = c("pre-adt", "post-adt")
+  ))
+```
+
+Let's double check that our factor set up is right. 
+
+```{r}
+levels(metadata$refinebio_treatment)
 ```
 
 ## Create a DESeqDataset
@@ -420,13 +442,275 @@ readr::write_rds(bwnet,
 )
 ```
 
-_Next sections addressed in upcoming PR_
+## Explore our WGCNA results
+
+The `bwnet`  object has many parts, storing a lot of information. 
+We can pull out the parts we are most interested in and may want to use use for plotting. 
+
+In `bwnet` we have a data frame of eigengene module data for each sample in the `MEs` slot. 
+These represent the collapsed, combined, and normalized expression of the genes that make up each module. 
+
+```{r}
+module_eigengenes <- bwnet$MEs
+
+# Print out a preview
+head(module_eigengenes)
+```
+
+## Which modules have biggest differences across treatment groups?
+
+We can also see if our eigengenes relate to our metadata labels. 
+First we double check that our samples are still in order.
+
+```{r}
+all.equal(metadata$refinebio_accession_code, rownames(module_eigengenes))
+```
+
+```{r}
+# Create the design matrix from the refinebio_treatment variable
+des_mat <- model.matrix(~ metadata$refinebio_treatment)
+```
+
+Run linear model on each module.
+Limma wants our tests to be per row, so we also need to transpose so the eigengenes are rows
+
+```{r}
+# lmFit() needs a transposed version of the matrix
+fit <- limma::lmFit(t(module_eigengenes), design = des_mat)
+
+# Apply empirical Bayes to smooth standard errors
+fit <- limma::eBayes(fit)
+```
+
+Apply multiple testing correction and obtain stats in a data frame. 
+
+```{r}
+# Apply multiple testing correction and obtain stats
+stats_df <- limma::topTable(fit, number = ncol(module_eigengenes)) %>%
+  tibble::rownames_to_column("module")
+```
+
+Let's take a look at the results. 
+They are sorted with the most significant results at the top.
+
+```{r}
+head(stats_df)
+```
+
+Module 52 seems to be the most differentially expressed across `refinebio_treatment` groups. 
+Now we can do some investigation into this module. 
+
+## Let's make plot of module 52
+
+As a sanity check, let's use `ggplot` to see what module 52's eigengene looks like between treatment groups. 
+
+First we need to set up the module eigengene for this module with the sample metadata labels we need. 
+
+```{r}
+module_52_df <- module_eigengenes %>%
+  tibble::rownames_to_column("accession_code") %>%
+  # Here we are performing an inner join with a subset of metadata
+  dplyr::inner_join(metadata %>%
+    dplyr::select(refinebio_accession_code, refinebio_treatment),
+  by = c("accession_code" = "refinebio_accession_code")
+  )
+```
+
+Now we are ready for plotting. 
+
+```{r}
+ggplot(
+  module_52_df,
+  aes(
+    x = refinebio_treatment,
+    y = ME52,
+    color = refinebio_treatment
+  )
+) +
+  ggforce::geom_sina() +
+  theme_classic()
+```
+
+This makes sense! 
+Looks like module 52 has elevated expression post treatment.
+
+## What genes are a part of module 52?
+
+If you want to know which of your genes make up a modules, you can look at the `$colors` slot. 
+This is a named list which associates the genes with the module they are a part of. 
+We can turn this into a data frame for handy use. 
+
+```{r}
+gene_module_key <- tibble::enframe(bwnet$colors, name = "gene", value = "module") %>%
+  # Let's add the `ME` part so its more clear what these numbers are and it matches elsewhere
+  dplyr::mutate(module = paste0("ME", module))
+```
+
+Now we can find what genes are a part of module 52. 
+
+```{r}
+gene_module_key %>%
+  dplyr::filter(module == "ME52")
+```
+
+Let's save this gene to module key to a TSV file for future use. 
+
+```{r}
+readr::write_tsv(gene_module_key,
+  file = file.path("results", "SRP133573_wgcna_gene_to_module.tsv")
+)
+```
+
+## Make a custom heatmap function
+
+We will make a heatmap that summarizes our differentially expressed module.
+Because we will make a couple of these, it makes sense to make a custom function for making this heatmap. 
+
+```{r}
+make_module_heatmap <- function(module_name,
+                                expression_mat = normalized_counts,
+                                metadata_df = metadata,
+                                gene_module_key_df = gene_module_key,
+                                module_eigengenes_df = module_eigengenes) {
+  # Create a summary heatmap of a given module.
+  #
+  # Args:
+  # module_name: a character indicating what module should be plotted, e.g. "ME52"
+  # expression_mat: The full gene expression matrix. Default is `normalized_counts`.
+  # metadata_df: a data frame with refinebio_accession_code and refinebio_treatment
+  #              as columns. Default is `metadata`.
+  # gene_module_key: a data.frame indicating what genes are a part of what modules. Default is `gene_module_key`.
+  # module_eigengenes: a sample x eigengene data.frame with samples as rownames. Default is `module_eigengenes`.
+  #
+  # Returns:
+  # A heatmap of expression matrix for a module's genes, with a barplot of the
+  # eigengene expression for that module.
+
+  # Set up the module eigengene with its refinebio_accession_code
+  module_eigengene <- module_eigengenes_df %>%
+    dplyr::select(module_name) %>%
+    tibble::rownames_to_column("refinebio_accession_code")
+
+  # Set up column annotation from metadata
+  col_annot_df <- metadata_df %>%
+    # Only select the treatment and sample ID columns
+    dplyr::select(refinebio_accession_code, refinebio_treatment) %>%
+    # Add on the eigengene expression by joining with sample IDs
+    dplyr::inner_join(module_eigengene, by = "refinebio_accession_code") %>%
+    # Arrange by treatment
+    dplyr::arrange(refinebio_treatment, refinebio_accession_code) %>%
+    # Store sample
+    tibble::column_to_rownames("refinebio_accession_code")
+
+  # Create the ComplexHeatmap column annotation object
+  col_annot <- ComplexHeatmap::HeatmapAnnotation(
+    # Supply treatment labels
+    refinebio_treatment = col_annot_df$refinebio_treatment,
+    # Add annotation barplot
+    module_eigengene = ComplexHeatmap::anno_barplot(dplyr::select(col_annot_df, module_name)),
+    # Pick colors for each experimental group in refinebio_treatment
+    col = list(refinebio_treatment = c("post-adt" = "#f1a340", "pre-adt" = "#998ec3"))
+  )
+
+  # Get a vector of the Ensembl gene IDs that correspond to this module
+  module_genes <- gene_module_key_df %>%
+    dplyr::filter(module == module_name) %>%
+    dplyr::pull(gene)
+
+  # Set up the gene expression data frame
+  mod_mat <- expression_mat %>%
+    t() %>%
+    as.data.frame() %>%
+    # Only keep genes from this module
+    dplyr::filter(rownames(.) %in% module_genes) %>%
+    # Order the samples to match col_annot_df
+    dplyr::select(rownames(col_annot_df)) %>%
+    # Data needs to be a matrix
+    as.matrix()
+
+  # Normalize the gene expression values
+  mod_mat <- mod_mat %>%
+    # Scale can work on matrices, but it does it by column so we will need to
+    # transpose first
+    t() %>%
+    scale() %>%
+    # And now we need to transpose back
+    t()
+
+  # Create a color function based on standardized scale
+  color_func <- circlize::colorRamp2(
+    c(-2, 0, 2),
+    c("#67a9cf", "#f7f7f7", "#ef8a62")
+  )
+
+  # Plot on a heatmap
+  heatmap <- ComplexHeatmap::Heatmap(mod_mat,
+    name = module_name,
+    # Supply color function
+    col = color_func,
+    # Supply column annotation
+    bottom_annotation = col_annot,
+    # We don't want to cluster samples
+    cluster_columns = FALSE,
+    # We don't need to show sample or gene labels
+    show_row_names = FALSE,
+    show_column_names = FALSE
+  )
+
+  # Return heatmap
+  return(heatmap)
+}
+```
+
+## Make module heatmaps
+
+Let's try out the custom heatmap function with module 52 (our most differentially expressed module).
+
+```{r}
+mod_52_heatmap <- make_module_heatmap(module_name = "ME52")
+
+# Print out the plot
+mod_52_heatmap
+```
+
+From the barplot portion of our plot, we can see `post-adt` samples have higher values for this eigengene for module 52.
+In the heatmap portion, we can see how the individual genes that make up module 52 have more extreme values (very high or very low) in the `post-adt` samples. 
+
+We can save this plot to PDF.
+
+```{r}
+pdf(file.path("results", "SRP133573_module_52_heatmap.pdf"))
+mod_52_heatmap
+dev.off()
+```
+
+For comparison, let's try out the custom heatmap function with a different, _not_ differentially expressed module. 
+
+```{r}
+mod_10_heatmap <- make_module_heatmap(module_name = "ME10")
+
+# Print out the plot
+mod_10_heatmap
+```
+
+In this non-significant module's heatmap, there's not a particularly strong pattern between pre and post ADT samples.
+In general the expression of genes in module 10 does not vary much between groups, staying near the overall mean. 
+There are a few samples and some genes that show higher expression, but it is not surprising this does not results in a significant overall difference between the groups.
+
+Save this plot also.
+
+```{r}
+pdf(file.path("results", "SRP133573_module_10_heatmap.pdf"))
+mod_10_heatmap
+dev.off()
+```
 
 # Resources for further learning
 
 - [WGCNA FAQ page](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html) [@Langfelder2016].
 - [WGCNA tutorial](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2016].
 - [WGCNA paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-9-559) [@Langfelder2008].
+- [ComplexHeatmap's tutorial guide](https://jokergoo.github.io/ComplexHeatmap-reference/book/) for more info on how to tweak the heatmaps [@Gu2020].
 
 # Session info
 
