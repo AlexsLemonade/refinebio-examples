@@ -304,8 +304,8 @@ metadata <- metadata %>%
   dplyr::mutate(
     time_point = dplyr::case_when(
       # Create our new variable based on refinebio_title containing AV/CV
-      str_detect(refinebio_title, "_AV_") ~ "acute illness",
-      str_detect(refinebio_title, "_CV_") ~ "recovering"
+      stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
+      stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
     ),
     # It's easier for future items if this is already set up as a factor
     time_point = as.factor(time_point)
