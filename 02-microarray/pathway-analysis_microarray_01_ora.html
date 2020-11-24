@@ -3774,7 +3774,7 @@ div.tocify {
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example is one of pathway analysis module set, we recommend looking at the <a href="#how-to-choose-a-pathway-analysis">pathway analysis table below</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
 <p>This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.</p>
-<p>ORA is a broadly applicable technique that may be good in scenarios where the other pathway analyses methods don’t fit the dataset requirements or scientific questions you have. It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
+<p>ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don’t fit the requirements of other pathway analyses methods. It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 <div id="what-is-pathway-analysis" class="section level3">
 <h3><span class="header-section-number">1.0.1</span> What is pathway analysis?</h3>
@@ -3888,7 +3888,7 @@ div.tocify {
 </div>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
-<p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend replacing the <code>dge_url</code> with a different file that contains a gene list that you are interested in.</p>
+<p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend replacing the <code>dge_url</code> with a different file path to a gene list that you are interested in.</p>
 <p>If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html">GSEA</a> for your pathway analysis questions.</p>
 <p>As far as code, we still suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. But, from here you can customize this ORA example to fit your own scientific questions and preferences.</p>
 <hr />
@@ -4006,7 +4006,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),

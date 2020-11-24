@@ -15,7 +15,7 @@ This example is one of pathway analysis module set, we recommend looking at the 
 
 This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.
 
-ORA is a broadly applicable technique that may be good in scenarios where the other pathway analyses methods don't fit the dataset requirements or scientific questions you have. 
+ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don't fit the requirements of other pathway analyses methods.
 It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
@@ -113,7 +113,7 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 # Using a different refine.bio dataset with this analysis?
 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file that contains a gene list that you are interested in. 
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a gene list that you are interested in. 
 
 If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
 
