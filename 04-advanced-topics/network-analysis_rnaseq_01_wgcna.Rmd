@@ -335,8 +335,11 @@ For more information about these transformation methods, [see here](https://alex
 dds_norm <- vst(dds)
 ```
 
-At this point, if your data has any outliers, you should look into removing them as they can affect your WGCNA results. 
+At this point, if your data set has any outlier samples, you should look into removing them as they can affect your WGCNA results. 
+
 WGCNA's tutorial has [an example of exploring your data for outliers you can reference](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/FemaleLiver-01-dataInput.pdf).
+
+For this example data set, we will skip this step (there are no obvious outliers) and proceed.
 
 ## Format normalized data for WGCNA
 
