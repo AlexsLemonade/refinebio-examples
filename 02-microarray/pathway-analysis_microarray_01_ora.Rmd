@@ -18,6 +18,8 @@ This particular example analysis shows how you can use over-representation analy
 ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don't fit the requirements of other pathway analyses methods.
 It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
+If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
+
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 ### What is pathway analysis?
@@ -114,11 +116,12 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a gene list that you are interested in. 
+The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
 
 If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
 
-As far as code, we still suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-But, from here you can customize this ORA example to fit your own scientific questions and preferences.
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences.
 
 ***
 
@@ -177,12 +180,11 @@ library(magrittr)
 
 For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
 
-For this example, we will read in the differential expression results we will download from online.
+For this example, we will read in results from a differential expression analysis that we have already performed.
+Rather than reading from a local file, we will download the results table directly from a URL.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
-
-Generally, the dataset we are using here would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but here we are showing you how to use ORA since it can be useful in a number of other situations. 
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`.
@@ -358,6 +360,9 @@ We will need to provide to `clusterProfiler` two genes lists:
 
 We will use our differential expression results to get a genes of interest list.
 Let's use our adjusted p values as a cutoff.
+
+This step is highly variable depending on what your gene list is, what information it contains and what your goals are. 
+You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names. 
 
 ```{r}
 # Select genes that are below a cutoff
