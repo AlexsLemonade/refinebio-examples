@@ -111,7 +111,7 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 # Using a different refine.bio dataset with this analysis?
 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file that contains a gene list that you are interested in. 
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.
 
@@ -170,10 +170,15 @@ library(magrittr)
 
 ## Import data
 
-We will read in the differential expression results we will download from online.
+For ORA, we only need a list of gene IDs as our input. 
+There's a lot of different scenarios which you may end up with a gene list you want to know more about what biological pathways it coincides with. 
+
+For this example, we will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
+
+Generally, this dataset would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but...{IDK what to tell them here}
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`.
@@ -246,8 +251,6 @@ dr_kegg_df <- dr_msigdb_df %>%
     gs_subcat == "CP:KEGG" # This is because we only want KEGG pathways
   )
 ```
-
-Note: We could have specified that we wanted the KEGG gene sets using the `category` and `subcategory` arguments of `msigdbr()`, but we're going for general steps! -- use `?msigdbr` to see more information.
 
 The `clusterProfiler()` function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.
 
@@ -340,15 +343,12 @@ head(dge_annot_df)
 ## Over-representation Analysis (ORA)
 
 Over-representation testing using `clusterProfiler` is based on a hypergeometric test [@clusterProfiler-book].
+For more background on hypergeometric tests, this [handy tutorial](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html) explains more about how hypergeometric tests work [@Puthier2015]. 
 
-\(p = 1 - \displaystyle\sum_{i = 0}^{k-1}\frac{ {M \choose i}{ {N-M} \choose {n-i} } } { {N \choose n} }\)
+We will need to provide to `clusterProfiler` two genes lists:
 
-Where `N` is the number of genes in the background distribution, `M` is the number of genes in a pathway, `n` is the number of genes we are interested in (our differentially expressed genes), and `k` is the number of genes that overlap between the pathway and our genes of interest.
-
-So, we will need to provide to `clusterProfiler` two genes lists:
-
-1) Our genes of interest (`n`)
-2) What genes were in our total background set (`N`). (All genes that originally had an opportunity to be measured).
+1) Our genes of interest 
+2) What genes were in our total background set. (All genes that originally had an opportunity to be measured).
 
 ## Determine our genes of interest list
 
@@ -410,9 +410,6 @@ kegg_ora_results <- enricher(
 ```
 
 *Note: using `enrichKEGG()` is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you'd like!*
-
-What is returned by `enricher()`?
-You can run `View(kegg_ora_results)` or click on the object in your Environment panel.
 
 The information we're most likely interested in is in the `results` slot.
 Let's convert this into a data frame that we can write to file.
@@ -485,6 +482,8 @@ readr::write_tsv(
 
 # Resources for further learning
 
+- [Hypergeometric test exercises](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html)[@Puthier2015].
+- [clusterProfiler ORA tutorial](https://learn.gencore.bio.nyu.edu/rna-seq-analysis/over-representation-analysis/#:~:text=Over%2Drepresentation%20(or%20enrichment),a%20subset%20of%20your%20data.)
 - [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012].
 - [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
 - [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
