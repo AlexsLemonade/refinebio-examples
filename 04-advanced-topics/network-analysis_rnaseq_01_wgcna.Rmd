@@ -397,7 +397,7 @@ ggplot(sft_df, aes(x = Power, y = model_fit, label = Power)) +
   # We will plot what WGCNA recommends as an R^2 cutoff
   geom_hline(yintercept = 0.80, col = "red") +
   # Just in case our values are low, we want to make sure we can still see the 0.80 level
-  ylim(c(min(sft_df$model_fit), 1)) +
+  ylim(c(min(sft_df$model_fit), 1.05)) +
   # We can add more sensible labels for our axis
   xlab("Soft Threshold (power)") +
   ylab("Scale Free Topology Model Fit, signed R^2") +
@@ -412,14 +412,14 @@ WGCNA's authors recommend using a `power` that has an signed $R^2$ above `0.80`,
 If you have multiple power values with signed $R^2$ above `0.80`, then picking the one at an inflection point, in other words where the $R^2$ values seem to have reached their saturation [@Zhang2005].
 You want to a `power` that gives you a big enough $R^2$ but is not excessively large.
 
-So using the plot above, going with a power soft-threshold of `2`!
+So using the plot above, going with a power soft-threshold of `7`!
 
 If you find you have all very low $R^2$ values this may be because there are too many genes with low expression values that are cluttering up the calculations. 
 You can try returning to [gene filtering step](#define-a-minimum-counts-cutoff) and choosing a more stringent cutoff (you'll then need to re-run the transformation and subsequent steps to remake this plot to see if that helped). 
 
 ## Run WGCNA!
 
-We will use the `blockwiseModules()` function to find gene co-expression modules in WGCNA, using `2` for the `power` argument like we determined above. 
+We will use the `blockwiseModules()` function to find gene co-expression modules in WGCNA, using `7` for the `power` argument like we determined above. 
 
 This next step takes some time to run.
 The `blockwise` part of the `blockwiseModules()` function name refers to that these calculations will be done on chunks of your data at a time to help with conserving computing resources.
@@ -438,7 +438,7 @@ operating system and other running programs.
 bwnet <- blockwiseModules(normalized_counts,
   maxBlockSize = 5000, # What size chunks (how many genes) the calculations should be run in
   TOMType = "signed", # topological overlap matrix
-  power = 2, # soft threshold for network construction
+  power = 7, # soft threshold for network construction
   numericLabels = TRUE, # Let's use numbers instead of colors for module labels
   randomSeed = 1234, # there's some randomness associated with this calculation
   # so we should set a seed
@@ -546,7 +546,10 @@ ggplot(
     color = time_point
   )
 ) +
-  ggforce::geom_sina() +
+  ggforce::geom_sina(maxwidth = 0.3) +
+  # Putting on a boxplot, but making it see through and so we don't put outliers
+  # with boxplot
+  geom_boxplot(width = 0.2, alpha = 0, outlier.shape = NA) +
   theme_classic()
 ```
 
@@ -692,7 +695,7 @@ mod_18_heatmap <- make_module_heatmap(module_name = "ME18")
 mod_18_heatmap
 ```
 
-From the barplot portion of our plot, we can see `recovering` samples have higher values for this eigengene for module 18.
+From the barplot portion of our plot, we can see `acute illness` samples tend to have higher expression values for the module 18 eigengene.
 In the heatmap portion, we can see how the individual genes that make up module 18 are overall higher than in the `recovering` samples. 
 
 We can save this plot to PDF.
@@ -736,7 +739,7 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
 
 # References
