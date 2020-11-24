@@ -26,12 +26,12 @@ As with many clustering and network methods, there are some parameters that may 
 
 # How to run this example
 
-For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' pages](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html).
+For general information about our tutorials and the basic software packages required, please see our ['Getting Started' pages](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html).
 Below are some brief instructions about the files and directory structure this example expects.
 If you need more detailed instructions about how to obtain the data files from refine.bio, please consult one of the earlier examples, such as this one about [clustering and heatmaps](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/clustering_rnaseq_01_heatmap.html).
 
 
-## Obtain the `.Rmd` and data files
+## Directory structure and required files
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd) and moving the `.Rmd` file to your preferred analysis folder.
 
@@ -41,17 +41,18 @@ Follow the instructions, being sure to select "Skip quantile normalization for R
 
 Once you have downloaded and unzipped the refine.bio dataset, place the `SRP133573` folder in a `data` subdirectory of your analysis folder.
 
-You will also want to create `plots` and `results` folders, so your analysis directory will now contain:
+You will also want to create `plots` and `results` folders for future use. 
+At this point, your analysis directory should contain:
 
 - The example analysis `.Rmd`   
-- A folder called "data" which contains:
+- A folder called `data` which contains:
   - The `SRP133573` folder which contains:
     - The gene expression  
     - The metadata TSV  
-- A folder for `plots` (currently empty)
-- A folder for `results` (currently empty)
+- A `plots` folder (currently empty)
+- A `results` folder (currently empty)
 
-Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
+Your analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
@@ -61,18 +62,18 @@ We will define variables for the files and directories we are using in the chunk
 
 ```{r}
 # Define the file path to the accession data directory
-data_dir <- file.path("data", "SRP133573") 
+data_dir <- file.path("data", "SRP133573")
 
 # path to the refine.bio expression matrix
-data_file <- file.path(data_dir, "SRP133573.tsv") 
-# file path to the refine.bio metadata file 
+data_file <- file.path(data_dir, "SRP133573.tsv")
+# file path to the refine.bio metadata file
 metadata_file <- file.path(data_dir, "metadata_SRP133573.tsv")
 
 # Define the file path to the plots directory
 plots_dir <- "plots"
 
 # Define the file path to the results directory
-results_dir <- "results" 
+results_dir <- "results"
 ```
 
 It is always worth checking that the paths we defined above are correct and the files are where we expect!
@@ -92,12 +93,12 @@ From here you can customize this analysis example to fit your own scientific que
 
 ### Sample size
 
-Keep in mind when using a different refine.bio dataset with this example, that WGCNA requires at least 15 samples to produce a meaningful result [according to its authors](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html). 
+Keep in mind when using a different refine.bio dataset with this example that WGCNA requires at least 15 samples to produce a meaningful result [according to its authors](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html). 
 So you will need to make sure the dataset you use is sufficiently large. 
 However, note that very large datasets will be difficult to run locally (on a personal laptop) due to the required computing power.
 While you can adjust some parameters to make this more doable on a laptop, it may decrease the reliability of your result if taken to an extreme (more on this parameter, called `maxBlockSize`, in the [`Run WGCNA!` section](#run-wgcna)).
 
-### Microarray vs RNA-seq 
+### Microarray vs. RNA-seq 
 
 WGCNA can be used with both RNA-seq and microarray datasets so long as they are well normalized and filtered. 
 In this example we use RNA-seq and [normalize and transform the data with DESeq2's `vst()`](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which not only is a method and package we recommend in general, but is also the [authors' specific recommendations for using WGCNA with RNA-seq data](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/faq.html#:~:text=Can%20WGCNA%20be%20used%20to,Yes.&text=Whether%20one%20uses%20RPKM%2C%20FPKM,were%20processed%20the%20same%20way.). 
@@ -647,7 +648,7 @@ This helps make your code more reproducible by recording what versions of softwa
 
 ```{r}
 # Print session info
-sessionInfo()
+sessioninfo::session_info()
 ```
 
 # References
