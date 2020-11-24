@@ -13,7 +13,7 @@ output:
 
 In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
 WGCNA uses a series of correlations to identify sets of genes that are expressed together in your data set. 
-This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & RNAseq data. 
+This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & rna-seq data. 
 
 As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where the values for each eigengene represent the summarized expression for a group of co-expressed genes) [@Langfelder2007]. 
 This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
@@ -273,7 +273,7 @@ all.equal(colnames(df), metadata$refinebio_accession_code)
 
 ### Prepare data for `DESeq2`
 
-There are two things we neeed to do to prep our expression data for DESeq2. 
+There are two things we need to do to prep our expression data for DESeq2. 
 
 First, we need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
 
@@ -301,13 +301,15 @@ This new `time_point` variable will have two labels: `acute illness` and `recove
 
 ```{r}
 metadata <- metadata %>%
-  dplyr::mutate(time_point = dplyr::case_when(
-                # Create our new variable based on refinebio_title containing AV/CV
-                str_detect(refinebio_title, "_AV_") ~ "acute illness", 
-                str_detect(refinebio_title, "_CV_") ~ "recovering"
-                ), 
-                # It's easier for future items if this is already set up as a factor
-                time_point = as.factor(time_point))
+  dplyr::mutate(
+    time_point = dplyr::case_when(
+      # Create our new variable based on refinebio_title containing AV/CV
+      str_detect(refinebio_title, "_AV_") ~ "acute illness",
+      str_detect(refinebio_title, "_CV_") ~ "recovering"
+    ),
+    # It's easier for future items if this is already set up as a factor
+    time_point = as.factor(time_point)
+  )
 ```
 
 Let's double check that our factor set up is right. 
