@@ -97,7 +97,7 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
-The data that we downloaded from refine.bio for this analysis has 62  peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
+The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
 Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
 
 ## Place the dataset in your new `data/` folder
@@ -292,12 +292,12 @@ df <- round(df) %>%
 ```
 
 Another thing we need to do is set up our main experimental group variable. 
-Unfortunately the metadata for this dataset are not separated into separate, neat columns, but we can accomplish that ourselves. 
+Unfortunately the metadata for this dataset are not set up into separate, neat columns, but we can accomplish that ourselves. 
 
-For this study PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
+For this study, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
 
-For handier use of this information, wee can create a new variable that states this info more clearly. 
-We'll create a `time_point` has two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
+For handier use of this information, we can create a new variable, `time_point`, that states this info more clearly. 
+This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
 
 ```{r}
 metadata <- metadata %>%
@@ -311,10 +311,13 @@ metadata <- metadata %>%
 ```
 
 Let's double check that our factor set up is right. 
+We want `acute illness` to be the first level since it was the first time point collected. 
 
 ```{r}
 levels(metadata$time_point)
 ```
+
+Great! We're all set. 
 
 ## Create a DESeqDataset
 
@@ -481,7 +484,7 @@ all.equal(metadata$refinebio_accession_code, rownames(module_eigengenes))
 ```
 
 ```{r}
-# Create the design matrix from the time_point variable
+# Create the design matrix from the `time_point` variable
 des_mat <- model.matrix(~ metadata$time_point)
 ```
 
