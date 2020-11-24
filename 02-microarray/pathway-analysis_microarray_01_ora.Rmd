@@ -175,15 +175,14 @@ library(magrittr)
 
 ## Import data
 
-For ORA, we only need a list of gene IDs as our input. 
-There's a lot of different scenarios which you may end up with a gene list you want to know more about what biological pathways it coincides with. 
+For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
 
 For this example, we will read in the differential expression results we will download from online.
 These results are from a zebrafish microarray experiment we used for [differential expression analysis for two groups](https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html) using [`limma`](https://bioconductor.org/packages/release/bioc/html/limma.html) [@Ritchie2015].
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
 
-Generally, this dataset would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but here we are showing you how to use ORA since it can be useful in a number of other situations. 
+Generally, the dataset we are using here would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but here we are showing you how to use ORA since it can be useful in a number of other situations. 
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`.
