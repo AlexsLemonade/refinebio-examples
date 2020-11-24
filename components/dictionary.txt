@@ -26,6 +26,7 @@ Cmd
 ColorBrewer
 Compara
 ComplexHeatmap
+ComplexHeatmap's
 CREB
 Crouser
 cytosolic
@@ -122,6 +123,8 @@ RMA
 RPKMs
 RStudio
 ssGSEA
+SRA
+SRP
 StatQuest
 Subramanian
 SuperSeries
