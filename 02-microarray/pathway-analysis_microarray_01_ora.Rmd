@@ -14,7 +14,9 @@ output:
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
 
 This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.
-This pathway analysis method does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
+
+ORA is a broadly applicable technique that may be good in scenarios where the other pathway analyses methods don't fit the dataset requirements or scientific questions you have. 
+It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -112,8 +114,11 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file that contains a gene list that you are interested in. 
-We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences.
+
+If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
+
+As far as code, we still suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+But, from here you can customize this ORA example to fit your own scientific questions and preferences.
 
 ***
 
@@ -178,7 +183,7 @@ These results are from a zebrafish microarray experiment we used for [differenti
 The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case).
 We can identify differentially regulated genes by filtering these results and use this list as input to ORA.
 
-Generally, this dataset would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but...{IDK what to tell them here}
+Generally, this dataset would be a good candidate for [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) since it has gene-level rankings, but here we are showing you how to use ORA since it can be useful in a number of other situations. 
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
 First we will assign the URL to its own variable called, `dge_url`.
