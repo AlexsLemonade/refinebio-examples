@@ -516,17 +516,17 @@ They are sorted with the most significant results at the top.
 head(stats_df)
 ```
 
-Module 18 seems to be the most differentially expressed across `time_point` groups. 
+Module 19 seems to be the most differentially expressed across `time_point` groups. 
 Now we can do some investigation into this module. 
 
-## Let's make plot of module 18
+## Let's make plot of module 19
 
 As a sanity check, let's use `ggplot` to see what module 18's eigengene looks like between treatment groups. 
 
 First we need to set up the module eigengene for this module with the sample metadata labels we need. 
 
 ```{r}
-module_18_df <- module_eigengenes %>%
+module_19_df <- module_eigengenes %>%
   tibble::rownames_to_column("accession_code") %>%
   # Here we are performing an inner join with a subset of metadata
   dplyr::inner_join(metadata %>%
@@ -539,10 +539,10 @@ Now we are ready for plotting.
 
 ```{r}
 ggplot(
-  module_18_df,
+  module_19_df,
   aes(
     x = time_point,
-    y = ME18,
+    y = ME19,
     color = time_point
   )
 ) +
@@ -554,9 +554,9 @@ ggplot(
 ```
 
 This makes sense! 
-Looks like module 18 has elevated expression during the acute illness but not when recovering.
+Looks like module 19 has elevated expression during the acute illness but not when recovering.
 
-## What genes are a part of module 18?
+## What genes are a part of module 19?
 
 If you want to know which of your genes make up a modules, you can look at the `$colors` slot. 
 This is a named list which associates the genes with the module they are a part of. 
@@ -568,11 +568,11 @@ gene_module_key <- tibble::enframe(bwnet$colors, name = "gene", value = "module"
   dplyr::mutate(module = paste0("ME", module))
 ```
 
-Now we can find what genes are a part of module 18. 
+Now we can find what genes are a part of module 19. 
 
 ```{r}
 gene_module_key %>%
-  dplyr::filter(module == "ME18")
+  dplyr::filter(module == "ME19")
 ```
 
 Let's save this gene to module key to a TSV file for future use. 
@@ -597,7 +597,7 @@ make_module_heatmap <- function(module_name,
   # Create a summary heatmap of a given module.
   #
   # Args:
-  # module_name: a character indicating what module should be plotted, e.g. "ME18"
+  # module_name: a character indicating what module should be plotted, e.g. "ME19"
   # expression_mat: The full gene expression matrix. Default is `normalized_counts`.
   # metadata_df: a data frame with refinebio_accession_code and time_point
   #              as columns. Default is `metadata`.
@@ -686,23 +686,23 @@ make_module_heatmap <- function(module_name,
 
 ## Make module heatmaps
 
-Let's try out the custom heatmap function with module 18 (our most differentially expressed module).
+Let's try out the custom heatmap function with module 19 (our most differentially expressed module).
 
 ```{r}
-mod_18_heatmap <- make_module_heatmap(module_name = "ME18")
+mod_19_heatmap <- make_module_heatmap(module_name = "ME19")
 
 # Print out the plot
-mod_18_heatmap
+mod_19_heatmap
 ```
 
-From the barplot portion of our plot, we can see `acute illness` samples tend to have higher expression values for the module 18 eigengene.
-In the heatmap portion, we can see how the individual genes that make up module 18 are overall higher than in the `recovering` samples. 
+From the barplot portion of our plot, we can see `acute illness` samples tend to have higher expression values for the module 19 eigengene.
+In the heatmap portion, we can see how the individual genes that make up module 19 are overall higher than in the `recovering` samples. 
 
 We can save this plot to PDF.
 
 ```{r}
-pdf(file.path("results", "SRP140558_module_18_heatmap.pdf"))
-mod_18_heatmap
+pdf(file.path("results", "SRP140558_module_19_heatmap.pdf"))
+mod_19_heatmap
 dev.off()
 ```
 
@@ -716,6 +716,7 @@ mod_25_heatmap
 ```
 
 In this non-significant module's heatmap, there's not a particularly strong pattern between acute illness and recovery samples.
+Though we can still see the genes in this module seem to be very correlated with each other (which is how we found them in the first place, so this makes sense!).
 
 Save this plot also.
 
