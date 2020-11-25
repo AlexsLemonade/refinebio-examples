@@ -33,7 +33,7 @@ If you need more detailed instructions about how to obtain the data files from r
 
 ## Directory structure and required files
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd) and moving the `.Rmd` file to your preferred analysis folder.
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd) and move the `.Rmd` file to your preferred analysis folder.
 
 The data we are using is from the SRA project SRP140558 as processed by refine.bio. 
 To obtain this data, go to the [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP140558/identification-of-transcription-factor-relationships-associated-with-androgen-deprivation-therapy-response-and-metastatic-progression-in-prostate-cancer) and click the "Download Now" button. 
