@@ -13,7 +13,7 @@ output:
 
 In this example, we use weighted gene co-expression network analysis (WGCNA) to identify co-expressed gene modules [@Langfelder2008]. 
 WGCNA uses a series of correlations to identify sets of genes that are expressed together in your data set. 
-This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & rna-seq data. 
+This is a fairly intuitive approach to gene network analysis which can aid in interpretation of microarray & RNA-seq data. 
 
 As output, WGCNA gives groups of co-expressed genes as well as an eigengene x sample matrix (where the values for each eigengene represent the summarized expression for a group of co-expressed genes) [@Langfelder2007]. 
 This eigengene x sample data can, in many instances, be used as you would the original gene expression values. 
@@ -546,10 +546,10 @@ ggplot(
     color = time_point
   )
 ) +
-  ggforce::geom_sina(maxwidth = 0.3) +
   # Putting on a boxplot, but making it see through and so we don't put outliers
   # with boxplot
-  geom_boxplot(width = 0.2, alpha = 0, outlier.shape = NA) +
+  geom_boxplot(width = 0.2, outlier.shape = NA) +
+  ggforce::geom_sina(maxwidth = 0.3) +
   theme_classic()
 ```
 
