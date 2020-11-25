@@ -20,6 +20,7 @@ This means that GSVA scores will depend on the samples included in the dataset w
 
 GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach.
 GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
+You can use these scores for other downstream analyses; in this analysis we will perform differential expression to determine what pathway is most different across our variable of interest. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -91,8 +92,8 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [medulloblastoma dataset](https://www.refine.bio/experiments/GSE37382) [@Northcott2012].
 The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
-The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
-We will use the `subgroup` variable from our metadata to perform differential expression with our GSVA scores. 
+Medulloblastoma is the most common childhood brain cancer and is often categorized by subgroups. 
+We will use these `subgroup` labels from our metadata to perform differential expression with our GSVA scores. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -176,6 +177,8 @@ In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/pac
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
+We'll also be performing differential expression test on our GSVA scores, and for that we will use `limma` [@Ritchie2015] and we'll make a sina plot of the scores of our most significant pathway using a ggplot2 companion package, `ggforce`.
+
 ```{r}
 if (!("GSVA" %in% installed.packages())) {
   # Install this package if it isn't installed yet
@@ -190,6 +193,11 @@ if (!("qusage" %in% installed.packages())) {
 if (!("org.Hs.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+
+if (!("limma" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("limma", update = FALSE)
 }
 
 if (!("ggforce" %in% installed.packages())) {
@@ -209,6 +217,9 @@ library(GSVA)
 
 # Human annotation package we'll use for gene identifier conversion
 library(org.Hs.eg.db)
+
+# Attach the ggplot2 package for plotting
+library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
@@ -452,6 +463,8 @@ head(gsva_results)
 
 ## Find the pathway with the most significant differences across treatment groups
 
+If we want to know which pathway is most differentially expressed across subgroups, we can pretty easily use GSVA scores with differential expression steps using the limma package. 
+
 ### Create the design matrix
 
 `limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma.
@@ -581,25 +594,25 @@ Now let's make a sina plot so we can look at the differences between the `subgro
 ```{r}
 # Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` the `subgroup` groups in our dataset
 sina_plot <-
-  ggplot2::ggplot(
+  ggplot(
     annotated_results_df,
-    ggplot2::aes(
+    aes(
       x = subgroup, # Replace with a variable relevant to your data
       y = HALLMARK_UNFOLDED_PROTEIN_RESPONSE,
       color = subgroup
     )
   ) +
   # Add a boxplot that will have summary values
-  ggplot2::geom_boxplot(outlier.shape = NA) +
+  geom_boxplot(outlier.shape = NA) +
   # Make a sina plot that's a pretty blue!
   ggforce::geom_sina() +
   # Add plot labels
-  ggplot2::labs(
+  labs(
     x = "subgroup",
     y = "HALLMARK_UNFOLDED_PROTEIN_RESPONSE score"
   ) +
   # Adjust the plot background for better visualization
-  ggplot2::theme_bw()
+  theme_bw()
 
 # Display plot
 sina_plot
@@ -610,7 +623,7 @@ Looks like the `Group 4` samples have lower GSVA scores for `HALLMARK_UNFOLDED_P
 Let's save this plot to PNG.
 
 ```{r}
-ggplot2::ggsave(file.path(plots_dir, "GSE37382_gsva_sina_plot.png"),
+ggsave(file.path(plots_dir, "GSE37382_gsva_HALLMARK_UNFOLDED_PROTEIN_RESPONSE_sina_plot.png"),
   plot = sina_plot
 )
 ```
