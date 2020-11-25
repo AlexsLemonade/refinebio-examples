@@ -3773,7 +3773,9 @@ div.tocify {
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example is one of pathway analysis module set, we recommend looking at the <a href="#how-to-choose-a-pathway-analysis">pathway analysis table below</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
-<p>This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random. This pathway analysis method does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
+<p>This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.</p>
+<p>ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don’t fit the requirements of other pathway analyses methods. It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
+<p>If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html">GSEA</a> for your pathway analysis questions.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 <div id="what-is-pathway-analysis" class="section level3">
 <h3><span class="header-section-number">1.0.1</span> What is pathway analysis?</h3>
@@ -3887,7 +3889,9 @@ div.tocify {
 </div>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
-<p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
+<p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend replacing the <code>dge_url</code> with a different file path to a gene list that you are interested in. The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the <a href="#determined-our-genes-of-interest-list"><code>Determine our genes of interest list</code> section</a>).</p>
+<p>If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html">GSEA</a> for your pathway analysis questions.</p>
+<p>We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -3991,7 +3995,8 @@ div.tocify {
 </div>
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import data</h2>
-<p>We will read in the differential expression results we will download from online. These results are from a zebrafish microarray experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html">differential expression analysis for two groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case). We can identify differentially regulated genes by filtering these results and use this list as input to ORA.</p>
+<p>For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.</p>
+<p>For this example, we will read in results from a differential expression analysis that we have already performed. Rather than reading from a local file, we will download the results table directly from a URL. These results are from a zebrafish microarray experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_2-groups.html">differential expression analysis for two groups</a> using <a href="https://bioconductor.org/packages/release/bioc/html/limma.html"><code>limma</code></a> <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. The table contains Ensembl gene IDs, log fold-changes for each group, and adjusted p-values (FDR in this case). We can identify differentially regulated genes by filtering these results and use this list as input to ORA.</p>
 <p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results. First we will assign the URL to its own variable called, <code>dge_url</code>.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Define the url to your differential expression results file</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a>dge_url &lt;-<span class="st"> &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv&quot;</span></span></code></pre></div>
@@ -4001,7 +4006,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4056,7 +4061,6 @@ C7: immunologic signatures</code></pre>
 <span id="cb38-5"><a href="#cb38-5"></a>    gs_cat <span class="op">==</span><span class="st"> &quot;C2&quot;</span>, <span class="co"># This is to filter only to the C2 curated gene sets</span></span>
 <span id="cb38-6"><a href="#cb38-6"></a>    gs_subcat <span class="op">==</span><span class="st"> &quot;CP:KEGG&quot;</span> <span class="co"># This is because we only want KEGG pathways</span></span>
 <span id="cb38-7"><a href="#cb38-7"></a>  )</span></code></pre></div>
-<p>Note: We could have specified that we wanted the KEGG gene sets using the <code>category</code> and <code>subcategory</code> arguments of <code>msigdbr()</code>, but we’re going for general steps! – use <code>?msigdbr</code> to see more information.</p>
 <p>The <code>clusterProfiler()</code> function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.</p>
 <p>Our data frame with KEGG terms contains Entrez IDs and gene symbols.</p>
 <p>In our differential expression results data frame, <code>dge_df</code> we have Ensembl gene identifiers. So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.</p>
@@ -4127,18 +4131,17 @@ C7: immunologic signatures</code></pre>
 </div>
 <div id="over-representation-analysis-ora" class="section level2">
 <h2><span class="header-section-number">4.5</span> Over-representation Analysis (ORA)</h2>
-<p>Over-representation testing using <code>clusterProfiler</code> is based on a hypergeometric test <span class="citation">(Yu)</span>.</p>
-<p><span class="math inline">\(p = 1 - \displaystyle\sum_{i = 0}^{k-1}\frac{ {M \choose i}{ {N-M} \choose {n-i} } } { {N \choose n} }\)</span></p>
-<p>Where <code>N</code> is the number of genes in the background distribution, <code>M</code> is the number of genes in a pathway, <code>n</code> is the number of genes we are interested in (our differentially expressed genes), and <code>k</code> is the number of genes that overlap between the pathway and our genes of interest.</p>
-<p>So, we will need to provide to <code>clusterProfiler</code> two genes lists:</p>
+<p>Over-representation testing using <code>clusterProfiler</code> is based on a hypergeometric test <span class="citation">(Yu)</span>. For more background on hypergeometric tests, this <a href="https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html">handy tutorial</a> explains more about how hypergeometric tests work <span class="citation">(Puthier and van Helden 2015)</span>.</p>
+<p>We will need to provide to <code>clusterProfiler</code> two genes lists:</p>
 <ol style="list-style-type: decimal">
-<li>Our genes of interest (<code>n</code>)</li>
-<li>What genes were in our total background set (<code>N</code>). (All genes that originally had an opportunity to be measured).</li>
+<li>Our genes of interest</li>
+<li>What genes were in our total background set. (All genes that originally had an opportunity to be measured).</li>
 </ol>
 </div>
 <div id="determine-our-genes-of-interest-list" class="section level2">
 <h2><span class="header-section-number">4.6</span> Determine our genes of interest list</h2>
 <p>We will use our differential expression results to get a genes of interest list. Let’s use our adjusted p values as a cutoff.</p>
+<p>This step is highly variable depending on what your gene list is, what information it contains and what your goals are. You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Select genes that are below a cutoff</span></span>
 <span id="cb47-2"><a href="#cb47-2"></a>genes_of_interest &lt;-<span class="st"> </span>dge_annot_df <span class="op">%&gt;%</span></span>
 <span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span><span class="co"># Here we want the top differentially expressed genes and we will use downregulated genes</span></span>
@@ -4179,7 +4182,6 @@ C7: immunologic signatures</code></pre>
 <span id="cb51-12"><a href="#cb51-12"></a>  )</span>
 <span id="cb51-13"><a href="#cb51-13"></a>)</span></code></pre></div>
 <p><em>Note: using <code>enrichKEGG()</code> is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you’d like!</em></p>
-<p>What is returned by <code>enricher()</code>? You can run <code>View(kegg_ora_results)</code> or click on the object in your Environment panel.</p>
 <p>The information we’re most likely interested in is in the <code>results</code> slot. Let’s convert this into a data frame that we can write to file.</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>kegg_result_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(kegg_ora_results<span class="op">@</span>result)</span></code></pre></div>
 <p>Let’s print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of <code>0.1</code> FDR?</p>
@@ -4231,6 +4233,8 @@ C7: immunologic signatures</code></pre>
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
+<li><a href="https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html">Hypergeometric test exercises</a><span class="citation">(Puthier and van Helden 2015)</span>.</li>
+<li><a href="https://learn.gencore.bio.nyu.edu/rna-seq-analysis/over-representation-analysis/#:~:text=Over%2Drepresentation%20(or%20enrichment),a%20subset%20of%20your%20data.">clusterProfiler ORA tutorial</a></li>
 <li><a href="https://doi.org/10.1089/omi.2011.0118">clusterProfiler paper</a> <span class="citation">(Yu <em>et al.</em> 2012)</span>.</li>
 <li><a href="https://yulab-smu.github.io/clusterProfiler-book/index.html">clusterProfiler book</a> <span class="citation">(Yu)</span>.</li>
 <li><a href="https://doi.org/10.1371/journal.pcbi.1002375">This handy review</a> which summarizes the different types of pathway analysis and their limitations <span class="citation">(Khatri <em>et al.</em> 2012)</span>.</li>
@@ -4316,6 +4320,9 @@ C7: immunologic signatures</code></pre>
 </div>
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: Current approaches and outstanding challenges. PLOS Computational Biology 8: e1002375. <a href="https://doi.org/10.1371/journal.pcbi.1002375">https://doi.org/10.1371/journal.pcbi.1002375</a></p>
+</div>
+<div id="ref-Puthier2015">
+<p>Puthier D., and J. van Helden, 2015 <em>Statistics for Bioinformatics - Practicals - Gene enrichment statistics</em>. <a href="https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html">https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html</a></p>
 </div>
 <div id="ref-Ritchie2015">
 <p>Ritchie M. E., B. Phipson, D. Wu, Y. Hu, and C. W. Law <em>et al.</em>, 2015 limma powers differential expression analyses for RNA-sequencing and microarray studies. Nucleic Acids Research 43: e47. <a href="https://doi.org/10.1093/nar/gkv007">https://doi.org/10.1093/nar/gkv007</a></p>
