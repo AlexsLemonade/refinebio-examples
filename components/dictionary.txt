@@ -15,6 +15,7 @@ bioinformatics
 Brainarray
 Brainarray’s
 Brems
+bronchiolitis
 CCDL
 CCDL's
 cDNA
@@ -28,6 +29,7 @@ Cmd
 ColorBrewer
 Compara
 ComplexHeatmap
+ComplexHeatmap's
 concordantly
 CPMs
 CREB
@@ -93,6 +95,7 @@ maxBlockSize
 medulloblastoma
 microarray’s
 molecularly
+mononuclear
 musculus
 MSigDB
 myeloid
@@ -104,6 +107,7 @@ orthologs
 orthology
 overexpressing
 overexpression
+PBMCs
 permutated
 permutating
 pheatmap
