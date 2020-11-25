@@ -546,7 +546,7 @@ ggplot(
     color = time_point
   )
 ) +
- # a boxplot with outlier points hidden (they will be in the sina plot)
+  # a boxplot with outlier points hidden (they will be in the sina plot)
   geom_boxplot(width = 0.2, outlier.shape = NA) +
   # A sina plot to show all of the individual data points
   ggforce::geom_sina(maxwidth = 0.3) +
