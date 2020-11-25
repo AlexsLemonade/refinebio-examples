@@ -41,27 +41,26 @@ Follow the instructions, being sure to select "Skip quantile normalization for R
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
 
-
 Once you have downloaded and unzipped the refine.bio dataset, place the `SRP140558` folder in a `data` subdirectory of your analysis folder.
 
-You will also want to create `plots` and `results` folders for future use. 
-At this point, your analysis directory should contain:
+We will also create `plots` and `results` folders for future use.
+The analysis folder will have the following content:
 
-- The example analysis `.Rmd`   
+- The example analysis `.Rmd` notebook
 - A folder called `data` which contains:
   - The `SRP140558` folder which contains:
     - The gene expression  
     - The metadata TSV  
-- A `plots` folder (currently empty)
-- A `results` folder (currently empty)
+- A `plots` folder 
+- A `results` folder 
 
-Your analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
+Your analysis folder will end up looking something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
 
 ## Define file paths
 
-We will define variables for the files and directories we are using in the chunk below, assuming the folder structure we have defined.
+We will define variables for the files and directories we are using in the chunk below.
 
 ```{r}
 # Define the file path to the accession data directory
@@ -73,10 +72,17 @@ data_file <- file.path(data_dir, "SRP140558.tsv")
 metadata_file <- file.path(data_dir, "metadata_SRP140558.tsv")
 
 # Define the file path to the plots directory
+# (create it if missing)
 plots_dir <- "plots"
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
 
 # Define the file path to the results directory
 results_dir <- "results"
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
 ```
 
 It is always worth checking that the paths we defined above are correct and the files are where we expect!
@@ -88,6 +94,7 @@ file.exists(data_file)
 # Check for the metadata file
 file.exists(metadata_file)
 ```
+
 
 ## Using a different refine.bio dataset with this analysis?
 
@@ -109,7 +116,6 @@ In this example we use RNA-seq and [normalize and transform the data with DESeq2
 If you end up wanting to run WGCNA with a microarray dataset, the normalization done by refine.bio _should_ be sufficient, but you will likely want to [apply a minimum expression filter](#define-a-minimum-counts-cutoff) as we do in this example. 
 If you have troubles finding a `power` parameter that yields a sufficient R^2 even after applying a stringent cutoff, you may want to look into using a different dataset. 
 
-***
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
