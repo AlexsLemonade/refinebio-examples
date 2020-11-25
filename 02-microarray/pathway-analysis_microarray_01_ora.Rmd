@@ -13,7 +13,7 @@ output:
 
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
 
-This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect at random.
+This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes (e.g., those differentially expressed using some cutoff) shares more or fewer genes with gene sets/pathways than we would expect by chance.
 
 ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don't fit the requirements of other pathway analyses methods.
 It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
@@ -346,7 +346,7 @@ head(dge_annot_df)
 
 ## Over-representation Analysis (ORA)
 
-Over-representation testing using `clusterProfiler` is based on a hypergeometric test [@clusterProfiler-book].
+Over-representation testing using `clusterProfiler` is based on a hypergeometric test (often referred to as Fisher's exact test) [@clusterProfiler-book].
 For more background on hypergeometric tests, this [handy tutorial](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html) explains more about how hypergeometric tests work [@Puthier2015]. 
 
 We will need to provide to `clusterProfiler` two genes lists:
