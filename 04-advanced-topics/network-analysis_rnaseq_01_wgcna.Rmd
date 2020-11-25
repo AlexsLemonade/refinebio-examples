@@ -35,18 +35,21 @@ If you need more detailed instructions about how to obtain the data files from r
 
 To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential_expression_rnaseq_01_rnaseq.Rmd) and moving the `.Rmd` file to your preferred analysis folder.
 
-The data we are using is from the SRA project SRP133573 as processed by refine.bio. 
-To obtain this data, go to the [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP133573/identification-of-transcription-factor-relationships-associated-with-androgen-deprivation-therapy-response-and-metastatic-progression-in-prostate-cancer) and click the "Download Now" button. 
+The data we are using is from the SRA project SRP140558 as processed by refine.bio. 
+To obtain this data, go to the [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP140558/identification-of-transcription-factor-relationships-associated-with-androgen-deprivation-therapy-response-and-metastatic-progression-in-prostate-cancer) and click the "Download Now" button. 
 Follow the instructions, being sure to select "Skip quantile normalization for RNA-seq samples".
 
-Once you have downloaded and unzipped the refine.bio dataset, place the `SRP133573` folder in a `data` subdirectory of your analysis folder.
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
+
+
+Once you have downloaded and unzipped the refine.bio dataset, place the `SRP140558` folder in a `data` subdirectory of your analysis folder.
 
 You will also want to create `plots` and `results` folders for future use. 
 At this point, your analysis directory should contain:
 
 - The example analysis `.Rmd`   
 - A folder called `data` which contains:
-  - The `SRP133573` folder which contains:
+  - The `SRP140558` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A `plots` folder (currently empty)
@@ -62,12 +65,12 @@ We will define variables for the files and directories we are using in the chunk
 
 ```{r}
 # Define the file path to the accession data directory
-data_dir <- file.path("data", "SRP133573")
+data_dir <- file.path("data", "SRP140558")
 
 # path to the refine.bio expression matrix
-data_file <- file.path(data_dir, "SRP133573.tsv")
+data_file <- file.path(data_dir, "SRP140558.tsv")
 # file path to the refine.bio metadata file
-metadata_file <- file.path(data_dir, "metadata_SRP133573.tsv")
+metadata_file <- file.path(data_dir, "metadata_SRP140558.tsv")
 
 # Define the file path to the plots directory
 plots_dir <- "plots"
