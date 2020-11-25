@@ -610,8 +610,8 @@ make_module_heatmap <- function(module_name,
 
   # Set up the module eigengene with its refinebio_accession_code
   module_eigengene <- module_eigengenes_df %>%
-   dplyr::select(all_of(module_name)) %>%
-   tibble::rownames_to_column("refinebio_accession_code")
+    dplyr::select(all_of(module_name)) %>%
+    tibble::rownames_to_column("refinebio_accession_code")
 
   # Set up column annotation from metadata
   col_annot_df <- metadata_df %>%
