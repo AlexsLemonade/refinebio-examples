@@ -245,7 +245,7 @@ all.equal(colnames(df), metadata$geo_accession)
 We'll need the gene names in a place we can grab them more easily, so we'll put them back as their own column. 
 
 ```{r}
-df <- df %>% 
+df <- df %>%
   tibble::rownames_to_column("Gene")
 ```
 
@@ -558,9 +558,9 @@ Let's make a sina plot to look at the differences among subgroups using our GSVA
 First we need to get this data in an appropriate format for `ggplot2`.
 
 ```{r}
-annotated_results_df <- 
+annotated_results_df <-
   # Pull out only the results for this pathway
-  gsva_results['HALLMARK_UNFOLDED_PROTEIN_RESPONSE', ] %>%
+  gsva_results["HALLMARK_UNFOLDED_PROTEIN_RESPONSE", ] %>%
   # Make this into a tidy data frame
   tibble::enframe("sample", "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
   # Join the column with the group labels that we would like to plot and compare --
@@ -577,13 +577,15 @@ Now let's make a sina plot so we can look at the differences between the `subgro
 
 ```{r}
 # Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` the `subgroup` groups in our dataset
-sina_plot <- 
-  ggplot2::ggplot(annotated_results_df, 
-                  ggplot2::aes(
-    x = subgroup, # Replace with a variable relevant to your data
-    y = HALLMARK_UNFOLDED_PROTEIN_RESPONSE, 
-    color = subgroup
-  )) +
+sina_plot <-
+  ggplot2::ggplot(
+    annotated_results_df,
+    ggplot2::aes(
+      x = subgroup, # Replace with a variable relevant to your data
+      y = HALLMARK_UNFOLDED_PROTEIN_RESPONSE,
+      color = subgroup
+    )
+  ) +
   # Add a boxplot that will have summary values
   geom_boxplot(outlier.shape = NA) +
   # Make a sina plot that's a pretty blue!
