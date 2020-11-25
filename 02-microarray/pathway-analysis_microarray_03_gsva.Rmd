@@ -394,7 +394,7 @@ max_dup_df <- mapped_df %>%
 max_dup_df
 ```
 
-We can see `GSM917111` now has the `0.1104345` value for Entrez ID `6013` like expected. 
+We can see `GSM917111` now has the `0.2294387` value for Entrez ID `6013` like expected. 
 Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers!
 
 Now let's combine our de-duplicated data with the rest of the mapped data!
@@ -448,8 +448,8 @@ gsva_results <- gsva(
   max.sz = 500,
   # Compute Gaussian-distributed scores
   mx.diff = TRUE,
-  # Print out information about each calculation step
-  verbose = TRUE
+  # Don't print out the progress bar
+  verbose = FALSE
 )
 ```
 
@@ -458,7 +458,7 @@ See `?gsva` for more options.
 
 ```{r}
 # Let's explore what the output of gsva() looks like
-head(gsva_results)
+head(gsva_results[, 1:10])
 ```
 
 ## Find the pathway with the most significant differences across treatment groups
@@ -484,7 +484,7 @@ Let's take a look at the design matrix we created.
 head(des_mat)
 ```
 
-The design matrix column names are a bit messy, so we will neaten them up by dropping the `metadata$subgroup` designation they all have and for simplicity, we want to drop spaces as well. 
+The design matrix column names are a bit messy, so we will neaten them up by dropping the `metadata$subgroup` designation they all have and for being able to reference them easily later, we want to drop spaces as well. 
 
 ```{r}
 # Make the column names less messy
@@ -514,7 +514,7 @@ Depending on your scientific questions, you will need to customize the next step
 Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to set up your model based on your hypothesis is a good idea.
 
 In this contrasts matrix, we are comparing each subgroup to the average of the other subgroups.  
-We're dividing by three in this expression so that each group is compared to the average of the other two groups (`makeContrasts()` doesn't allow you to use functions like `mean()`; it wants a formula).
+We're dividing by two in this expression so that each group is compared to the average of the other two groups (`makeContrasts()` doesn't allow you to use functions like `mean()`; it wants a formula).
 
 ```{r}
 contrast_matrix <- makeContrasts(
@@ -569,8 +569,7 @@ Let's make a plot for our most significant pathway, `HALLMARK_UNFOLDED_PROTEIN_R
 
 ### Sina plot
 
-Let's make a sina plot to look at the differences among subgroups using our GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE`.
-First we need to get this data in an appropriate format for `ggplot2`.
+First we need to get our GSVA scores for this pathway in an appropriate format for `ggplot2`.
 
 ```{r}
 annotated_results_df <-
