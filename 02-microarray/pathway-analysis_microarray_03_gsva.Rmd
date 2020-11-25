@@ -237,7 +237,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   # Tuck away the gene ID  column as row names
   tibble::column_to_rownames("Gene")
 ```
@@ -246,23 +246,23 @@ Let’s ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
+all.equal(colnames(expression_df), metadata$geo_accession)
 ```
 
 We'll need the gene names in a place we can grab them more easily, so we'll put them back as their own column. 
 
 ```{r}
-df <- df %>%
+expression_df <- expression_df %>%
   tibble::rownames_to_column("Gene")
 ```
 
 ### Import Gene Sets
 
-The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame that we used with `clusterProfiler` (although it does accept other formats).
+The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
 
 We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package like we did in earlier notebooks [@Igor2020].
 
@@ -285,12 +285,12 @@ head(hallmarks_list)
 
 Looks like we have a list of gene sets with associated Entrez IDs.
 
-In our gene expression data frame, `df` we have Ensembl gene identifiers.
+In our gene expression data frame, `expression_df` we have Ensembl gene identifiers.
 So we will need to convert our Ensembl IDs into Entrez IDs for GSVA.
 
 ### Gene identifier conversion
 
-We're going to convert our identifiers in `df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+We're going to convert our identifiers in `expression_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
 The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2020-human].
 `org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
@@ -315,7 +315,7 @@ Let's create a data frame that shows the mapped Entrez IDs along with the gene e
 mapped_df <- data.frame(
   "entrez_id" = mapIds(
     org.Hs.eg.db, # Replace with annotation package for the organism relevant to your data
-    keys = df$Gene,
+    keys = expression_df$Gene,
     column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
     keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
     multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
@@ -327,7 +327,7 @@ mapped_df <- data.frame(
   # Make an `Ensembl` column to store the row names
   tibble::rownames_to_column("Ensembl") %>%
   # Now let's join the rest of the expression data
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  dplyr::inner_join(expression_df, by = c("Ensembl" = "Gene"))
 ```
 
 This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
@@ -382,7 +382,7 @@ Now, let's implement our choose the max value method for all samples and Entrez 
 ```{r}
 max_dup_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
-  dplyr::select(-"Ensembl") %>%
+  dplyr::select(-Ensembl) %>%
   # Filter to include only the rows associated with the duplicate Entrez gene identifiers
   dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
   # Group by Entrez IDs
@@ -402,7 +402,7 @@ Now let's combine our de-duplicated data with the rest of the mapped data!
 ```{r}
 filtered_mapped_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
-  dplyr::select(-"Ensembl") %>%
+  dplyr::select(-Ensembl) %>%
   # First let's get the data associated with the Entrez gene identifiers that aren't duplicated
   dplyr::filter(!entrez_id %in% dup_entrez_ids) %>%
   # Now let's bind the rows of the maximum expression data we stored in `max_dup_df`
@@ -547,7 +547,7 @@ The `topTable()` function default is to use Benjamini-Hochberg but this can be c
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-stats_df <- topTable(contrasts_fit, number = nrow(df)) %>%
+stats_df <- topTable(contrasts_fit, number = nrow(expression_df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
