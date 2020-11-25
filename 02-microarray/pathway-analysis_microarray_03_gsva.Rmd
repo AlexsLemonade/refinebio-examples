@@ -18,8 +18,7 @@ Gene set variation analysis (GSVA) constitutes a starting point to build pathway
 Rather than contextualizing some results you have received from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment.
 This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and reran GSVA, you would expect the scores to change [@Hanzelmann2013].
 
-GSVA determines the relative enrichment of gene sets across samples using
-a non-parametric approach.
+GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach.
 GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
@@ -75,7 +74,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE7696/glioblastoma-from-a-homogenous-cohort-of-patients-treated-within-clinical-trial).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/GSE37382).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -90,9 +89,10 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [glioblastoma dataset](https://www.refine.bio/experiments/GSE7696/glioblastoma-from-a-homogenous-cohort-of-patients-treated-within-clinical-trial).
-
-This dataset contains the measured microarray gene expression of 79 glioblastoma samples from a homogenous cohort of clinical patients.
+For this example analysis, we will use this [medulloblastoma dataset](https://www.refine.bio/experiments/GSE37382) [@Northcott2012].
+The data that we downloaded from refine.bio for this analysis has 285 microarray samples obtained from patients with medulloblastoma.
+The purpose of the experiment is to identify the predominant regions with somatic copy number aberrations in each medulloblastoma subgroup.
+We will use the `subgroup` variable from our metadata to perform differential expression with our GSVA scores. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -104,10 +104,10 @@ Double clicking should unzip this for you and create a folder of the same name.
 
 For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
 
-The `GSE7696` folder has the data and metadata TSV files you will need for this example analysis.
+The `GSE37382` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `GSE7696` folder into your newly created `data/` folder.
+Copy and paste the `GSE37382` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -115,7 +115,7 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `GSE7696` folder which contains:
+  - The `GSE37382` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
@@ -133,13 +133,13 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE7696") # Replace with accession number which will be the name of the folder the files will be in
+data_dir <- file.path("data", "GSE37382") # Replace with accession number which will be the name of the folder the files will be in
 
 # Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "GSE7696.tsv") # Replace with file path to your dataset
+data_file <- file.path(data_dir, "GSE37382.tsv") # Replace with file path to your dataset
 
 # Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_GSE7696.tsv") # Replace with file path to your metadata
+metadata_file <- file.path(data_dir, "metadata_GSE37382.tsv") # Replace with file path to your metadata
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above.  
@@ -191,6 +191,11 @@ if (!("org.Hs.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Hs.eg.db", update = FALSE)
 }
+
+if (!("ggforce" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  install.packages("ggforce")
+}
 ```
 
 Attach the packages we need for this analysis.
@@ -226,7 +231,7 @@ df <- readr::read_tsv(data_file) %>%
   tibble::column_to_rownames("Gene")
 ```
 
-Let's ensure that the metadata and data are in the same sample order. 
+Let’s ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
@@ -235,9 +240,12 @@ df <- df %>%
 
 # Check if this is in the same order
 all.equal(colnames(df), metadata$geo_accession)
+```
 
-# Bring back the "Gene" column in preparation for mapping
-df <- df %>%
+We'll need the gene names in a place we can grab them more easily, so we'll put them back as their own column. 
+
+```{r}
+df <- df %>% 
   tibble::rownames_to_column("Gene")
 ```
 
@@ -355,7 +363,7 @@ mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
-As an example using the strategy we described, for `GSM187153`'s data in the first column, `-0.007355525` is larger than `-0.136553967` so moving forward, Entrez gene `6013` will have ``-0.007355525` value and the `-0.136553967` would be dropped from the dataset. 
+As an example using the strategy we described, for `GSM917111`'s data in the first column, `0.2294387` is larger than `0.1104345` so moving forward, Entrez gene `6013` will have `0.2294387` value and the `0.1104345` would be dropped from the dataset. 
 However, this is just one method of handling duplicate gene identifiers.
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
 Now, let's implement our choose the max value method for all samples and Entrez IDs using tidyverse functions. 
@@ -375,7 +383,7 @@ max_dup_df <- mapped_df %>%
 max_dup_df
 ```
 
-We can see `GSM187153` now has the `-0.007355525` value for Entrez ID `6013` like expected. 
+We can see `GSM917111` now has the `0.1104345` value for Entrez ID `6013` like expected. 
 Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers!
 
 Now let's combine our de-duplicated data with the rest of the mapped data!
@@ -442,36 +450,38 @@ See `?gsva` for more options.
 head(gsva_results)
 ```
 
-### Find the pathway with the most significant differences across treatment groups
+## Find the pathway with the most significant differences across treatment groups
 
-First, let's prepare the metadata.
+### Create the design matrix
 
-```{r}
-# We need to create a column variable to combine and store the information
-# we need from `refinebio_disease` and `refinebio_treatment` -- first we need
-# to replace the NAs in the treatment column with "none"
-metadata <- metadata %>%
-  dplyr::mutate(
-    refinebio_treatment = dplyr::case_when(
-      refinebio_treatment == "na" ~ "none",
-      TRUE ~ refinebio_treatment
-    ),
-    disease_status_treatment = paste0(refinebio_disease, "-", refinebio_treatment)
-  )
-```
-
-Now let's double check that our samples are still in order.
+`limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma.
+Now we will create a model matrix based on our `subgroup` variable.
+We are using a `+ 0` in the model which sets the intercept to 0 so the subgroup effects capture expression for that group, rather than difference from the first group.
+If you have a control group, you might want that to be the intercept.
 
 ```{r}
-all.equal(metadata$refinebio_accession_code, colnames(gsva_results))
+# Create the design matrix
+des_mat <- model.matrix(~ metadata$subgroup + 0)
 ```
 
-Now let's prepare the design matrix.
+Let's take a look at the design matrix we created.
 
 ```{r}
-# Create the design matrix from the `disease_status_treatmen` variable
-des_mat <- model.matrix(~ metadata$disease_status_treatment)
+# Print out the design matrix
+head(des_mat)
 ```
+
+The design matrix column names are a bit messy, so we will neaten them up by dropping the `metadata$subgroup` designation they all have and for simplicity, we want to drop spaces as well. 
+
+```{r}
+# Make the column names less messy
+colnames(des_mat) <- stringr::str_remove(colnames(des_mat), "metadata\\$subgroup| ")
+```
+
+Side note: If you are wondering why there are two `\` above in `"filtered_metadata\\$subgroup"`, that's called an [escape character](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html#escaping) and the `| ` is a way to say "or" a space. 
+There's a whole universe of things called [regular expressions (regex)](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html) that can be super handy for string manipulations.
+
+## Perform differential expression on pathway scores
 
 Run the linear model on each pathway (each row of `gsva_results`).
 
@@ -483,108 +493,126 @@ fit <- limma::lmFit(gsva_results, design = des_mat)
 fit <- limma::eBayes(fit)
 ```
 
-Apply multiple testing correction and obtain a data frame containing the stats. 
+Now that we have our basic model fitting, we will want to make the contrasts among all our groups.
+Depending on your scientific questions, you will need to customize the next steps.
+Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to set up your model based on your hypothesis is a good idea.
+
+In this contrasts matrix, we are comparing each subgroup to the average of the other subgroups.  
+We're dividing by three in this expression so that each group is compared to the average of the other three groups (`makeContrasts()` doesn't allow you to use functions like `mean()`; it wants a formula).
+
+```{r}
+contrast_matrix <- makeContrasts(
+  "G3vsOther" = Group3 - (Group4 + SHH) / 2,
+  "G4vsOther" = Group4 - (Group3 + SHH) / 2,
+  "SHHvsOther" = SHH - (Group3 + Group4) / 2,
+  levels = des_mat
+)
+```
+
+Side note: If you did have a control group you wanted to compare each group to, you could make each contrast to that control group, so the formulate would look like `Group3 = Group3 - Control` for each one.
+We highly recommend consulting the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `model.matrix()` setups should look like [@Ritchie2015].
+
+Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`.
+
+```{r}
+# Fit the model according to the contrasts matrix
+contrasts_fit <- contrasts.fit(fit, contrast_matrix)
+
+# Re-smooth the Bayes
+contrasts_fit <- eBayes(contrasts_fit)
+```
+
+Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
+
+Now let's create the results table based on the contrasts fitted model.
+
+This step will provide the Benjamini-Hochberg multiple testing correction.
+The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
 
 ```{r}
 # Apply multiple testing correction and obtain stats
-gsva_stats_df <- limma::topTable(fit, number = nrow(gsva_results)) %>%
-  tibble::rownames_to_column("gene set")
+stats_df <- topTable(contrasts_fit, number = nrow(df)) %>%
+  tibble::rownames_to_column("Gene")
 ```
 
-Now let's arrange the `gsva_stats_df` by the smallest adjusted p values. 
+Let's take a peek at our results table.
 
 ```{r}
-gsva_stats_df %>%
-  dplyr::arrange(adj.P.Val)
+head(stats_df)
 ```
 
-`HALLMARK_DNA_REPAIR` appears to be the pathway that contains the most significant distribution of scores across `disease_status_treatment` groups. 
+For each gene, each group's fold change in expression, compared to the average of the other groups is reported.
+
+By default, results are ordered from largest `F` value to the smallest, which means your most differentially expressed genes across all groups should be toward the top.
+
+See the help page by using `?topTable` for more information and options for this table.
+
+`HALLMARK_UNFOLDED_PROTEIN_RESPONSE` appears to be the pathway that contains the most significant distribution of scores across subgroups. 
 
 ## Visualizing Results
 
-### Violin plot
+### Sina plot
 
-The goal of the study associated with our dataset is to identify the molecular profiles associated with resistance in patients treated with concomitant chemoradiotherapy with the alkylating agent temozolomide (distinguished by the `tmz/radiotherapy` value in the `refinebio_treatment` column) [@Murat2008].
-Let's make a violin plot to look at the differences between the disease status and treatment groups using our GSVA scores.
+Let's make a sina plot to look at the differences among subgroups using our GSVA scores.
 
 First we need to get this data in an appropriate format for `ggplot2`.
 
 ```{r}
-annotated_results_df <- gsva_results %>%
-  # The results are a matrix
-  data.frame() %>%
-  # Gene set names are row names
-  tibble::rownames_to_column("gene_set") %>%
-  # Get into long format using the `tidyr::pivot_longer()` function
-  tidyr::pivot_longer(
-    cols = -gene_set,
-    names_to = "sample",
-    values_to = "gsva_score"
-  ) %>%
-  # dplyr::arrange(dplyr::desc(gsva_score)) %>%
+annotated_results_df <- 
+  # Pull out only the results for this pathway
+  gsva_results['HALLMARK_UNFOLDED_PROTEIN_RESPONSE', ] %>%
+  # Make this into a tidy data frame
+  tibble::enframe("sample", "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
   # Join the column with the group labels that we would like to plot and compare --
   # Select the variables relevant to your data
-  dplyr::left_join(dplyr::select(
-    metadata,
+  dplyr::left_join(metadata %>% dplyr::select(
     refinebio_accession_code,
-    disease_status_treatment
+    subgroup
   ),
   by = c("sample" = "refinebio_accession_code")
   )
 ```
 
-Now let's make a violin plot so we can look at the differences between the `disease_status_treatment` groups using our GSVA scores.
+Now let's make a sina plot so we can look at the differences between the `subgroup` groups using our GSVA scores.
 
 ```{r}
-# Violin plot comparing GSVA scores of the `disease_status_treatment` groups in our dataset
-violin_plot <- annotated_results_df %>%
-  # Filter for the scores associated with the most signficant pathway found in
-  # the previous step -- HALLMARK_DNA_REPAIR
-  dplyr::filter(gene_set == "HALLMARK_DNA_REPAIR") %>%
-  ggplot2::ggplot(ggplot2::aes(
-    x = disease_status_treatment, # Replace with a variable relevant to your data
-    y = gsva_score
+# Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` the `subgroup` groups in our dataset
+sina_plot <- 
+  ggplot2::ggplot(annotated_results_df, 
+                  ggplot2::aes(
+    x = subgroup, # Replace with a variable relevant to your data
+    y = HALLMARK_UNFOLDED_PROTEIN_RESPONSE, 
+    color = subgroup
   )) +
-  # Make a violin plot that's a pretty blue!
-  ggplot2::geom_violin(fill = "#99CCFF", alpha = 0.5) +
-  # Add a point with the median value
-  ggplot2::stat_summary(
-    geom = "point",
-    fun = "median",
-    # Change the aesthetics of the points
-    size = 3,
-    color = "#0066CC",
-    shape = 18
-  ) +
-  # Flip the axes
-  ggplot2::coord_flip() +
+  # Add a boxplot that will have summary values
+  geom_boxplot(outlier.shape = NA) +
+  # Make a sina plot that's a pretty blue!
+  ggforce::geom_sina() +
   # Add plot labels
   ggplot2::labs(
-    title = "GSVA Scores Across Glioblastoma Treatment Groups",
-    x = "Glioblastoma disease status and treatment group",
-    y = "GSVA score"
+    x = "subgroup",
+    y = "HALLMARK_UNFOLDED_PROTEIN_RESPONSE score"
   ) +
   # Adjust the plot background for better visualization
   ggplot2::theme_bw()
 
 # Display plot
-violin_plot
+sina_plot
 ```
 
-Now we can interpret our violin plot showing the distribution of GSVA scores across `disease_status_treatment` groups.
-Looks like the `non-tumoral` samples which received no treatment are associated with the lowest GSVA scores, while the `recurrent gbm` and `gbm` samples which received the concomitant chemoradiotherapy (`tmz/radiotherapy`) treatment are associated with the higher GSVA scores.
+Looks like the `Group 4` samples have lower GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` as compared to the `SHH` and `Group 3`.
 
 Let's save this plot to PNG.
 
 ```{r}
-ggplot2::ggsave(file.path(plots_dir, "GSE7696_gsva_violin_plot.png"),
-  plot = violin_plot
+ggplot2::ggsave(file.path(plots_dir, "GSE37382_gsva_sina_plot.png"),
+  plot = sina_plot
 )
 ```
 
 ## Write results to file
 
-Now let's write our GSVA results to file.
+Now let's write our all of our GSVA results to file.
 
 ```{r}
 gsva_results %>%
@@ -592,7 +620,7 @@ gsva_results %>%
   tibble::rownames_to_column("pathway") %>%
   readr::write_tsv(file.path(
     results_dir,
-    "GSE7696_gsva_results.tsv"
+    "GSE37382_gsva_results.tsv"
   ))
 ```
 
@@ -605,6 +633,7 @@ gsva_results %>%
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
 This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
 ```{r}
 # Print session info
 sessioninfo::session_info()
