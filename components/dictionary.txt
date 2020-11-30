@@ -76,6 +76,7 @@ hexamer
 HGNC
 histological
 Hochberg
+Hs
 hypomethylating
 IDH
 Illumina
@@ -98,6 +99,7 @@ myeloid
 nb
 NES
 Northcott
+oocyte
 ortholog
 orthologs
 orthology
