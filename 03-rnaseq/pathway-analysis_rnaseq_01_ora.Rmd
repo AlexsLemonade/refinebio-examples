@@ -9,6 +9,8 @@ output:
     number_sections: true
 ---
 
+
+**IDENTICAL TO MICROARRAY EXAMPLE** (except microarray --> rnaseq)
 # Purpose of this analysis
 
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
@@ -87,6 +89,7 @@ if (!dir.exists(results_dir)) {
 
 In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
+**REVIEW**
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
@@ -107,6 +110,7 @@ Here's a heatmap to show a preview of this module.
 Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
 This plot demonstrates how these genes, together as a module, are differentially expressed between our two sample groups. 
 
+**IDENTICAL TO MICROARRAY EXAMPLE**
 ## Check out our file structure!
 
 Your new analysis folder should contain:
@@ -120,11 +124,13 @@ Your example analysis folder should contain your `.Rmd` and three empty folders 
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
+**REVIEW**
 # Using a different refine.bio dataset with this analysis?
 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a gene list that you are interested in. 
-The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `gene_module_url` with a different file path to a gene list that you are interested in. 
+The file we use here has two columns from our WGCNA module results, so if your gene list differs, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
 
+**IDENTICAL TO MICROARRAY EXAMPLE**
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.
 
@@ -140,7 +146,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
 
-We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019-human; @Ahlmann-Eltze2020].
+We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019; @Ahlmann-Eltze2020].
 
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
@@ -181,6 +187,7 @@ library(org.Hs.eg.db)
 library(magrittr)
 ```
 
+**REVIEW** 
 ## Import data
 
 For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
@@ -200,7 +207,7 @@ gene_module_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/04-adv
 ```
 
 Read in the file that has WGCNA results.
-Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP140558_results_gene_list.tsv")`.
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `gene_module_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP140558_results_gene_list.tsv")`.
 
 ```{r}
 # Read in the contents of your differential expression results file
@@ -216,6 +223,7 @@ Let's take a look at what this gene module list looks like.
 gene_module_df
 ```
 
+**IDENTICAL TO MICROARRAY EXAMPLE** (except Dr --> Hs)
 ## Getting familiar with `clusterProfiler`'s options
 
 Let's take a look at what organisms the package supports.
@@ -274,7 +282,7 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 
 We're going to convert our identifiers in `gene_module_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
-The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019-human].
+The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019].
 `org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the s` in the package name is referencing.
 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
@@ -329,6 +337,7 @@ Let's see a preview of `gene_key_df`.
 ```{r}
 head(gene_key_df)
 ```
+
 Now we are ready to add the `gene_key_df` to our data frame with the module labels, `gene_module_df`.
 Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `gene_module_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
 
@@ -361,6 +370,8 @@ We will need to provide to `clusterProfiler` two genes lists:
 2) What genes were in our total background set. (All genes that originally had an opportunity to be measured).
 
 ## Determine our genes of interest list
+
+**REVIEW**
 
 This step is highly variable depending on what your gene list is, what information it contains and what your goals are. 
 You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names. 
@@ -395,6 +406,8 @@ We can obtain our detected genes list from our data frame, `module_annot_df` (wh
 ```{r}
 background_set <- unique(as.character(module_annot_df$gene_symbol))
 ```
+
+**IDENTICAL TO MICROARRAY EXAMPLE** (except plot names changed and results summaries altered)
 
 ## Run ORA using the `enricher()` function
 
@@ -464,8 +477,9 @@ We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/
 enrichplot::upsetplot(kegg_ora_results)
 ```
 
-See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common.
-Gene sets or pathways aren't independent!
+See that `KEGG_CELL_CYCLE` and `KEGG_OOCYTE_MEIOSIS` have genes in common, as do `KEGG_CELL_CYCLE` and `KEGG_DNA_REPLICATION`. 
+Gene sets or pathways aren't independent! 
+Based on the context of your samples, you may be able to narrow down which ones make sense, like in this instance, we are dealing with PBMCs, so the oocyte meiosis is not relevant to the biology of the samples at hand. 
 
 Let's also save this to a PNG.
 
