@@ -8,7 +8,9 @@
   - [Setting up the docker container](#setting-up-the-docker-container)
   - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
-- [Add a new analysis](#add-a-new-analysis)
+- [Adding a new analysis](#adding-a-new-analysis)
+  - [Draft PR: Big picture reviews](#draft-pr-big-picture-reviews)
+  - [Refined PRs: Detailed reviews](#refined-prs-detailed-reviews)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
     - [How to use the template.Rmd](#how-to-use-the-templatermd)
     - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
@@ -31,11 +33,18 @@
   - [Mechanics of the rendering](#mechanics-of-the-rendering)
   - [How to re-render the notebooks locally](#how-to-re-render-the-notebooks-locally)
   - [Run snakemake without queueing up a web browser for the Docker container](#run-snakemake-without-queueing-up-a-web-browser-for-the-docker-container)
-  - [Automatic rendering using GitHub actions](#automatic-rendering-using-github-actions)
+- [Pull Requests](#pull-requests)
+    - [Add to the testing branch: merges to staging](#add-to-the-testing-branch-merges-to-staging)
+    - [Publish: staged changes merged to master](#publish-staged-changes-merged-to-master)
+    - [Publish a change, but quickly: direct merges to master, hotfixes](#publish-a-change-but-quickly-direct-merges-to-master-hotfixes)
+    - [A summary of types of PRs.](#a-summary-of-types-of-prs)
+  - [Github actions](#github-actions)
+    - [Automatic Spell checking and styling](#automatic-spell-checking-and-styling)
+    - [Automatic Docker image and rendering](#automatic-docker-image-and-rendering)
+    - [Automatic rendering](#automatic-rendering)
   - [About the render-notebooks.R script](#about-the-render-notebooksr-script)
   - [Add new analyses to the Snakefile](#add-new-analyses-to-the-snakefile)
   - [Add new analyses to the navbar](#add-new-analyses-to-the-navbar)
-- [Pull request status checks](#pull-request-status-checks)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -82,18 +91,35 @@ For development purposes, you can download all the datasets for the example note
 scripts/download-data.sh
 ```
 
-## Add a new analysis
+## Adding a new analysis
 
-Here are the summarized steps for adding a new analysis.
-Click on the links to go to the detailed instructions for each step.
+Our PR process for adding a new analysis involves two stages which are 2-3 (or more) PRs.
+This splitting up an analysis into multiple PRs helps make the review process more manageable.
+This process ensures that discussions around the big picture: conceptual decisions, what steps are included, which packages are used, are generally concluded before review moves on to the details and further polishing.
+Note that all the following steps describe PRs to `staging` branch only (see more [about the branch set up](#pull-requests)).
+
+### Draft PR: Big picture reviews  
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
-- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
+- Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% word-smithed, but the general steps/outline should be reflected).
+- Try to highlight things that encapsulate main concepts as ready for review using a `**REVIEW**` tag and/or use a `**DRAFT**` tag to indicate a section that hasn't really been worked on much yet.
+- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process before you split off new branches to file your refined PRs.
+- Keep the original draft PR open for easy reference.
+
+### Refined PRs: Detailed reviews  
+
+Break up the steps of the analysis into manageable review chunks on their own branches for detailed review (you may want to discuss what the chunks should be on the Draft PR).
+- Delete any `**REVIEW/DRAFT**` tags leftover from the draft PR.
+- Make sure each steps' explanations are fully realized for these PRs.
+- Ensure that the notebook adheres to [the guidelines](#guidelines-for-analysis-notebooks).
 - [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
+- If the file has been [added to snakemake](#add-new-analyses-to-the-snakefile), in the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally) to make sure it runs.
+
+These steps should be done in the first refined PR, but don't need to be done again:
+- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
 
 ### Setting up a new analysis file
 
@@ -171,6 +197,9 @@ These analyses follow the [Google R Style Guide](https://google.github.io/styleg
 
 Snakemake will automatically runs the [r-lib/styler package](https://github.com/r-lib/styler)  on each `.Rmd` file called in the `Snakefile`.
 This will help fix some spacing and formatting issues automatically.
+
+Github actions will also automatically run styler and commit back to your branch any changes.
+See the [Github actions section](#github-actions) for more info on how the automation steps for this works.
 
 #### Session Info
 
@@ -284,7 +313,7 @@ Had no year associated with it, so it has keywords for its tag `pca-visually-exp
 
 #### Spell checking
 
-Spell checks are run automatically using GitHub actions upon opening a PR for master or prior to merging to master.
+Spell checks are [run automatically using GitHub actions](#github-actions) upon opening a PR for `master` or `staging`.
 GitHub actions will abort if there are more than 2 spelling errors and you will need to fix those before continuing.
 You can obtain the list of spelling errors on GitHub by going to `Actions` and clicking the workflow of PR you are working on.
 Click on the `style-n-check` step and in the upper right hand corner, there is a button that says "Artifacts" which should list a file called `spell-check-results`.
@@ -300,11 +329,11 @@ If you want to run a spell check of all `.Rmd` files locally, you can use run `R
 
 ### Mechanics of the rendering
 
-The `Snakefile` calls the `scripts/render-notebooks.R` which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
+The [`Snakefile`](#add-new-analyses-to-the-snakefile) calls the [`scripts/render-notebooks.R`](#about-the-render-notebooksr-script) which renders the `.html` files but leaves these `.Rmd` files ready for download and use [without the `pandoc` error](https://github.com/AlexsLemonade/refinebio-examples/pull/148#issuecomment-669170681).
 However, the `snakemake` workflow should also be run locally during development so that the author and reviewers can see the rendered output of the new material during the `Pull Request` process.
 
 Ideally snakemake will not re-render the `.html` for `.Rmd` files you have not edited, but if it does, you should only commit and push the files you have intended to change.
-All `.html` files will be re-rendered upon merging to master, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
+All `.html` files will be re-rendered upon merging to `master` or `staging`, but by not committing files that are only altered incidentally, the `Files changed` page of your PR on GitHub will be more focused, easing the burden on reviewers.
 
 ### How to re-render the notebooks locally
 
@@ -329,11 +358,137 @@ If you already have the `refinebio-examples` docker image:
 docker run --mount type=bind,target=/home/rstudio,source=$PWD ccdl/refinebio-examples snakemake --cores 4
 ```
 
-### Automatic rendering using GitHub actions
+## Pull Requests
+
+There are two protected branches in this repo:
+
+`staging` - where changes are initially sent for testing and previewing.
+`master` - where changes that were tested are made user-facing.
+
+This two branch set up allows us to make incremental changes that we can test before publishing to our user-facing github pages.
+It also means that pull requests have some extra methodology.
+
+#### Add to the testing branch: merges to staging
+
+After you've prepared the new or altered material for this repository, you can file a pull request to the `staging` branch this is the default branch for this repository so you should not have to change anything.
+The `staging` branch does not feed into the published, user-facing material so you can feel free to make your pull requests as iterative and incremental as it is useful.
+Use `squash and merge` when merging these pull requests into `staging` after approval.
+`squash and merge` will be helpful for us if we need to "cherry pick" commits if particular project or example is not yet ready for user-facing but other material is.
+
+After merging a pull request into `staging`, check that all the changes are correct by reviewing the newly generated pages using html preview.
+Go here and navigate to the pertinent pages that you've changed.
+`http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
+You may also want to spot-check other pages to be sure that there have not been inadvertent or unexpected  changes introduced.
+
+#### Publish: staged changes merged to master
+
+Once a set of changes that are merged to `staging` are ready to be published, you can file a merge to `master` pull request.
+
+These types of PRs should only involve well-polished and ready for the public material.
+
+**Scenario 1: All changes from staging should be published**  
+
+- Create a new branch from the most up-to-date `master` branch, call it `publish-mychanges` where `mychanges` is a short tag relevant to the changes.
+- Checkout your newly created `publish` branch.
+- If you are certain that all changes in `staging` should be carried over to `master` (aka published to Github pages), then you can do a `git merge staging` into your new branch.
+- Now you can use the new branch to create the pull request to master as you would normally do.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/all-changes-pr.png" width=600>
+
+In this example above, the blue project is ready to be published and there are no other incomplete projects that have been merged in, so all commits from `staging` are wanted to be brought over `master`.
+
+By checking out a separate `publish` branch, we can resolve any merge conflicts in this `publish` branch so we don't do a bad thing by committing conflict resolutions directly to `staging`.
+This also provides us with a "snapshot" if merges are continuing to happen to `staging` on other PRs -- this can make review hard if it keeps changing.
+
+**Scenario 2: Only some changes from staging should be published**  
+
+- Create a new branch from the most up-to-date `master` branch, call it `publish-mychanges` where `mychanges` is a short tag relevant to the changes.
+- Checkout your newly created `publish` branch.
+- For each commit that needs to be published, add it to your new branch by using `git cherry-pick <commit_id>`.
+Or in GitKraken, you can right click on the commit and choose `Cherry pick commit`.
+- Now you can use the new branch to [create the pull request where the `master` branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository) is the base branch.
+- Try to be as specific as possible about what PRs (and by relation, their commits) you are requesting to merge to `master`.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/some-changes-pr.png" width=600>
+
+In this example above, the blue project is ready to be published, but the red project is not.
+So in this scenario, we would cherry pick both commits from the blue project but ignore the one commit from the incomplete red project.
+
+This allows us to move forward changes from `staging` that are ready to be public facing even if other changes aren't ready (or if there isn't great timing for when the other changes will be ready).
+
+_Tips for getting commits ids_
+To perform the cherry picks, you will need the commit ids for finished projects only.
+GitKraken shows commits, but sometimes I find it hard to follow which commits belong to which branch.
+If you checkout `staging` and use `git log` you can see all the most recent commits for the `staging` branch.
+If you want to save it to a file for easy browsing and copy/pasting you can use this command `git log --pretty=format:'%h was %an, %ar, message: %s' > git.log`
+
+#### Publish a change, but quickly: direct merges to master, hotfixes
+
+In (hopefully rare) scenarios where something that has already been published is noted to be broken and should be addressed quickly, [hotfix branch](https://nvie.com/posts/a-successful-git-branching-model/#hotfix-branches) pull requests are allowed.
+These PRs should only be fairly small PRs and not anything that would require intense review.
+This more for situations where "this is broken and here's a fix".
+
+- Create a new branch from the most up-to-date `master` branch and call it `hotfix-mybug`, where where `mybug` is a short tag relevant to the changes.
+- Checkout your newly created `hotfix` branch.
+- Make the hotfix change.
+- Create a [pull request with `master` branch as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
+- After your PR to `master` is approved and merged, merge the most up-to-date `staging` branch into your `hotfix` branch.
+- File a second PR for `hotfix` but this time with [`staging` as the base branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request#changing-the-branch-range-and-destination-repository).
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/hotfix-pr.png" width=600>
+
+In this scenario, we start by making a branch from `master` and make the hotfix change on this `hotfix` branch.
+Once the change is approved and merged into `master` from the first PR, we start the second PR and merge in `staging` to our `hotfix` branch.
+This makes sure we don't accidentally undo any changes in `staging` that have not made it to `master` at this time.
+
+#### A summary of types of PRs.
+
+- `some-branch` -> `staging` -> NOT published to user-facing content.
+This will be how most material is prepared so we can be more incremental with our changes and ultimately make sure only the very polished material is made user-facing.
+
+- Group of changes in `staging` -> `master` -> published to user-facing.
+This is for when the updates from the previous kinds of PRs are "ready for prime time".
+
+- Hotfix PR: `hotfix` -> `master` -> published to user-facing.
+For "this-is-broken" type changes that should be hastened to the user-facing content.
+This requires a follow up pull request and merge to `staging`.
+
+### Github actions
+
+This repository has a lot of little moving parts, so to help make sure changes are where they are supposed to be and that some items aren't missed, we use Github actions to automate things where we can.
+
+Github action workflows are initiated either when a pull request is started or when a merge to `master` or `staging` is initiated.
+The following sections explain more details about which Github actions happen when and what they do.
+
+#### Automatic Spell checking and styling
+
+When pull requests are initiated, spell check and styler are run by Github actions.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/gha-spell-check.png" width=600>
+
+If the styling introduces changes to the files, these changes will be committed back to your branch.
+However if there are no styling changes, no commit will be made.
+
+If spell check finds more than 2 errors, Github actions will fail.
+See the [spell check section](#spell-checking) for instructions on how to see your spelling errors and otherwise use spell check.
+
+#### Automatic Docker image and rendering
+
+After a pull request to `staging` or `master` branch is approved and a merge to one of these branches has been initiated, a sequence of Github actions makes sure that the rendered html files are pushed to the correct branch and that the updated docker image is pushed to Dockerhub.
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/4f76c140d109afc6026dc41f8a5af73e88bf0450/components/pr-diagrams/gha-docker.png" width=600>
+
+See the [Docker](#docker-for-refinebio-examples) and the next section about automatic rendering for more on how these steps are conducted.
+
+#### Automatic rendering
 
 This repository uses [snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) to render all notebooks.
-All notebooks are automatically re-rendered by GitHub actions upon merges to master.
-The newly rendered html files are all pushed to the `gh-pages` branch which will publish the material to https://alexslemonade.github.io/refinebio-examples/.
+All notebooks are automatically re-rendered by GitHub actions upon merges to `master` or `staging`.
+The newly rendered html files are all pushed to the `gh-pages` branch (if merging to `master`) and `gh-pages-stages` branch (if merging to `staging`).
+
+The `gh-pages` branch is where material is publshed to https://alexslemonade.github.io/refinebio-examples/.
+The `gh-pages-stages` staging branch can be viewed using html preview at `http://htmlpreview.github.io/?https://github.com/AlexsLemonade/refinebio-examples/gh-pages-stages/01-getting-started/getting-started.html`
 
 If this automatic rendering fails, you will see a failed check at at the bottom of your PR on GitHub (and probably an email).
 You can see the details of this error on  by going to `Actions` and clicking the workflow of PR you are working on that also says `Build Docker` underneath.
@@ -343,6 +498,7 @@ Hopefully the error message helps you track down the problem, but you can also c
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+It also adds other components like CSS styling, a footer, and Google Analytics (these items are all hard-coded into the script).
 
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
@@ -377,11 +533,3 @@ Follow these steps to add the `.html` link to the navigation bar upon rendering.
 6) Replace  `tech-section`, `analysis_file_name` with the corresponding file names.  
 7) Save the file!  
 8) After you [render the notebook with snakemake](#rendering-notebooks), test the link to make sure it works.  
-
-## Pull request status checks
-
-To require that branches are up-to-date with `master` before merging, we need to require that a status check passes before merging to `master`.
-Turning on this setting mitigates the risk that changes that have been merged will be undone by a pull request that was filed first and alters the same file.
-The status check used is a GitHub Action that test builds the docker image.
-Most of the time, this should pull cached docker layers, so this will complete in a matter of minutes.
-As a bonus, this process also checks that any changes to the Dockerfile result in a buildable image.
