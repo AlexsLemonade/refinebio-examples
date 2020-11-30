@@ -454,7 +454,7 @@ head(gsva_results[, 1:10])
 ## Find differentially expressed pathways
 
 If we want to identify most differentially expressed pathways across subgroups, we can use functionality in the `limma` package to test the GSVA scores.
-Keep in mind that the `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which will be evident in downstream analyses.
+Keep in mind that the `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which will be evident in our downstream analyses.
 
 ### Create the design matrix
 
@@ -604,6 +604,8 @@ sina_plot <-
   geom_boxplot(outlier.shape = NA) +
   # Make a sina plot that shows individual values
   ggforce::geom_sina() +
+  # Rename the y-axis label
+  labs(y = "HALLMARK_UNFOLDED_PROTEIN_RESPONSE_score") +
   # Adjust the plot background for better visualization
   theme_bw()
 
