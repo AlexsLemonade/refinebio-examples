@@ -3775,7 +3775,7 @@ div.tocify {
 <p>This example is one of pathway analysis module set, we recommend looking at the <a href="#how-to-choose-a-pathway-analysis">pathway analysis table below</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
 <p>This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes shares more or fewer genes with gene sets/pathways than we would expect by chance.</p>
 <p>ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don’t fit the requirements of other pathway analyses methods. It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest <span class="citation">(Yaari <em>et al.</em> 2013)</span>.</p>
-<p>If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html">GSEA</a> for your pathway analysis questions. ⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
+<p>If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.html">GSEA</a> for your pathway analysis questions. ⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 <div id="what-is-pathway-analysis" class="section level3">
 <h3><span class="header-section-number">0.0.1</span> What is pathway analysis?</h3>
 <p>Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment. In the context of <a href="https://www.refine.bio/">refine.bio</a>, we use these techniques to analyze and interpret genome-wide gene expression experiments. The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest. In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.</p>
@@ -3831,7 +3831,7 @@ div.tocify {
 <p>For general information about our tutorials and the basic software packages you will need, please see our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured">‘Getting Started’ section</a>. We recommend taking a look at our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r">Resources for Learning R</a> if you have not written code in R before.</p>
 <div id="obtain-the-.rmd-file" class="section level2">
 <h2><span class="header-section-number">1.1</span> Obtain the <code>.Rmd</code> file</h2>
-<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
+<p>To run this example yourself, <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_01_ora.Rmd">download the <code>.Rmd</code> for this analysis by clicking this link</a>.</p>
 <p>Clicking this link will most likely send this to your downloads folder on your computer. Move this <code>.Rmd</code> file to where you would like this example and its files to be stored.</p>
 <p>You can open this <code>.Rmd</code> file in RStudio and follow the rest of these steps from there. (See our <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds">section about getting started with R notebooks</a> if you are unfamiliar with <code>.Rmd</code> files.)</p>
 </div>
@@ -3998,7 +3998,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
@@ -4079,7 +4079,7 @@ C7: immunologic signatures</code></pre>
 <span id="cb41-12"><a href="#cb41-12"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
 <span id="cb41-13"><a href="#cb41-13"></a>)</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
-<p>This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols. In this case, it’s also possible that a gene symbol will map to multiple Ensembl IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene ID conversion example</a>.</p>
+<p>This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols. In this case, it’s also possible that a gene symbol will map to multiple Ensembl IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion example</a>.</p>
 <p>Let’s create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># We would like a data frame we can join to the differential expression stats</span></span>
 <span id="cb43-2"><a href="#cb43-2"></a>gene_key_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
@@ -4143,8 +4143,7 @@ C7: immunologic signatures</code></pre>
 </div>
 <div id="determine-our-background-set-gene-list" class="section level2">
 <h2><span class="header-section-number">2.5</span> Determine our background set gene list</h2>
-<p>Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set. In other words, if we are unable to detect a gene, it should not be in our background set.</p>
-<p>We can obtain our detected genes list from our data frame, <code>module_annot_df</code> (which we haven’t done filtering on).</p>
+<p>Sometimes folks consider genes from the entire genome to comprise the background, but for this RNA-seq example, we will consider all detectable genes as our background set. The dataset that these genes are from already had unreliably detected, <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html#prepare-data-for-deseq2">low count genes removed it</a>. Because of this, we can obtain our detected genes list from our data frame, <code>module_annot_df</code> (which we have not done any further filtering on in this notebook).</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>background_set &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">as.character</span>(module_annot_df<span class="op">$</span>gene_symbol))</span></code></pre></div>
 <p><strong>IDENTICAL TO MICROARRAY EXAMPLE</strong> (except plot names changed and results summaries altered)</p>
 </div>

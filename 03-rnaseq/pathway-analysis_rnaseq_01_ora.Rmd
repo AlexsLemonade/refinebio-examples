@@ -20,7 +20,7 @@ This particular example analysis shows how you can use over-representation analy
 ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don't fit the requirements of other pathway analyses methods.
 It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
 
-If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
+If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.html) for your pathway analysis questions. 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 ### What is pathway analysis?
@@ -49,7 +49,7 @@ We recommend taking a look at our [Resources for Learning R](https://alexslemona
 
 ## Obtain the `.Rmd` file
 
-To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.Rmd).
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_01_ora.Rmd).
 
 Clicking this link will most likely send this to your downloads folder on your computer.
 Move this `.Rmd` file to where you would like this example and its files to be stored.
@@ -316,7 +316,7 @@ symbols_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
 
 This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols.
 In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
-For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+For more about how to explore this, take a look at our [RNA-seq gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
 Let's create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.
 
@@ -398,10 +398,9 @@ head(genes_of_interest)
 
 ## Determine our background set gene list
 
-Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set.
-In other words, if we are unable to detect a gene, it should not be in our background set.
-
-We can obtain our detected genes list from our data frame, `module_annot_df` (which we haven't done filtering on).
+Sometimes folks consider genes from the entire genome to comprise the background, but for this RNA-seq example, we will consider all detectable genes as our background set.
+The dataset that these genes are from already had unreliably detected, [low count genes removed it](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html#prepare-data-for-deseq2). 
+Because of this, we can obtain our detected genes list from our data frame, `module_annot_df` (which we have not done any further filtering on in this notebook).
 
 ```{r}
 background_set <- unique(as.character(module_annot_df$gene_symbol))
