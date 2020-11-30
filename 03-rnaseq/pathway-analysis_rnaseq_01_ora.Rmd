@@ -90,6 +90,7 @@ if (!dir.exists(results_dir)) {
 In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
 **REVIEW**
+
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
@@ -105,7 +106,7 @@ We have provided this file for you and the code in this notebook will read in th
 In this example, we will focus on one gene module, called module 19, to see what pathways these genes in this module may be associated with. 
 Here's a heatmap to show a preview of this module. 
 
-<img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.pdf", width = 500>
+<img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.pdf" width = 500/>
 
 Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
 This plot demonstrates how these genes, together as a module, are differentially expressed between our two sample groups. 
