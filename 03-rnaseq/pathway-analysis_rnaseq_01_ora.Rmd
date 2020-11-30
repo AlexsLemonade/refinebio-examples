@@ -188,7 +188,8 @@ For ORA, we only need a list of gene IDs as our input, so this example can work 
 For this example, we will read in results from a co-expression network analysis that we have already performed.
 Rather than reading from a local file, we will download the results table directly from a URL.
 These results are from a acute bronchiolitis experiment we used for [an example WGCNA analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) [@Langfelder2008].
-The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of. 
+The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of.
+We will perform ORA on one of . 
 
 Instead of using the URL below, you can use a file path to a TSV file with your desired gene list.
 First we will assign the URL to its own variable called, `gene_module_url`.

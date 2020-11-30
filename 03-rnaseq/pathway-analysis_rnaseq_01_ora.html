@@ -3732,6 +3732,7 @@ div.tocify {
             <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
+            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -3997,7 +3998,7 @@ div.tocify {
 <div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import data</h2>
 <p>For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.</p>
-<p>For this example, we will read in results from a co-expression network analysis that we have already performed. Rather than reading from a local file, we will download the results table directly from a URL. These results are from a acute bronchiolitis experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">an example WGCNA analysis</a> <span class="citation">(Langfelder and Horvath 2008)</span>. The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of.</p>
+<p>For this example, we will read in results from a co-expression network analysis that we have already performed. Rather than reading from a local file, we will download the results table directly from a URL. These results are from a acute bronchiolitis experiment we used for <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">an example WGCNA analysis</a> <span class="citation">(Langfelder and Horvath 2008)</span>. The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of. We will perform ORA on one of .</p>
 <p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list. First we will assign the URL to its own variable called, <code>gene_module_url</code>.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># Define the url to your gene list file</span></span>
 <span id="cb30-2"><a href="#cb30-2"></a>gene_module_url &lt;-<span class="st"> &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_wgcna_gene_to_module.tsv&quot;</span></span></code></pre></div>
@@ -4007,7 +4008,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
