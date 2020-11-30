@@ -1,0 +1,507 @@
+---
+title: "Over-representation analysis - RNA-Seq"
+author: "CCDL for ALSF"
+date: "`r format(Sys.time(), '%B %Y')`"
+output:   
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
+
+This particular example analysis shows how you can use over-representation analysis (ORA) to determine if a set of genes shares more or fewer genes with gene sets/pathways than we would expect by chance.
+
+ORA is a broadly applicable technique that may be good in scenarios where your dataset or scientific questions don't fit the requirements of other pathway analyses methods.
+It also does not require any particular sample size, since the only input from your dataset is a set of genes of interest [@Yaari2013].
+
+If you have differential expression results or something with a gene-level ranking and a two-group comparison, we recommend considering [GSEA](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html) for your pathway analysis questions. 
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+### What is pathway analysis?
+
+Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment.
+In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
+The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
+In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
+
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+
+### How to choose a pathway analysis?
+
+This table summarizes the pathway analyses examples in this module.
+
+|Analysis|What is required for input|What output looks like |✅ Pros| ⚠️ Cons|
+|--------|--------------------------|-----------------------|-------|-------|
+|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|- Simple<br><br> - Inexpensive computationally to calculate p-values| - Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways|
+|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes|- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible|
+|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis|- Does not require two groups to compare upfront<br><br> - Normally distributed scores|- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n > 10|
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer.
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you.
+Run this next chunk to set up your folders!
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations.
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
+The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
+Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
+
+## Obtain the gene set for this example
+
+In this example, we are using a set of co-expressed genes we obtained from an [example analysis of acute viral bronchiolitis  dataset](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
+
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
+
+In this example, we will focus on one gene module, called module 19, to see what pathways these genes in this module may be associated with. 
+Here's a heatmap to show a preview of this module. 
+
+<img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.pdf", width = 500>
+
+Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
+This plot demonstrates how these genes, together as a module, are differentially expressed between our two sample groups. 
+
+## Check out our file structure!
+
+Your new analysis folder should contain:
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called `data` (currently empty)
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+
+Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a gene list that you are interested in. 
+The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
+
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences.
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Over-Representation Analysis with `clusterProfiler` - RNA-seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Igor2020; @Subramanian2005].
+
+We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Carlson2019-human; @Ahlmann-Eltze2020].
+
+```{r}
+if (!("clusterProfiler" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("clusterProfiler", update = FALSE)
+}
+
+# This is required to make one of the plots that clusterProfiler will make
+if (!("ggupset" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("ggupset", update = FALSE)
+}
+
+if (!("msigdbr" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("msigdbr", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library(clusterProfiler)
+
+# Package that contains MSigDB gene sets in tidy format
+library(msigdbr)
+
+# Homo sapiens annotation package we'll use for gene identifier conversion
+library(org.Hs.eg.db)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import data
+
+For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
+
+For this example, we will read in results from a co-expression network analysis that we have already performed.
+Rather than reading from a local file, we will download the results table directly from a URL.
+These results are from a acute bronchiolitis experiment we used for [an example WGCNA analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) [@Langfelder2008].
+The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of. 
+
+Instead of using the URL below, you can use a file path to a TSV file with your desired gene list.
+First we will assign the URL to its own variable called, `gene_module_url`.
+
+```{r}
+# Define the url to your gene list file
+gene_module_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_wgcna_gene_to_module.tsv"
+```
+
+Read in the file that has WGCNA results.
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP140558_results_gene_list.tsv")`.
+
+```{r}
+# Read in the contents of your differential expression results file
+# `gene_module_url` can be replaced with a file path to a TSV file with your
+# desired gene list results
+gene_module_df <- readr::read_tsv(gene_module_url)
+```
+
+`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
+Let's take a look at what this gene module list looks like.
+
+```{r}
+gene_module_df 
+```
+
+## Getting familiar with `clusterProfiler`'s options
+
+Let's take a look at what organisms the package supports.
+
+```{r}
+msigdbr_species()
+```
+
+The data we're interested in here comes from human samples, so we can obtain just the gene sets relevant to _H. sapiens_ with the `species` argument to `msigdbr()`.
+
+```{r}
+hs_msigdb_df <- msigdbr(species = "Homo sapiens")
+```
+
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005].
+
+    H: hallmark gene sets
+    C1: positional gene sets
+    C2: curated gene sets
+    C3: motif gene sets
+    C4: computational gene sets
+    C5: GO gene sets
+    C6: oncogenic signatures
+    C7: immunologic signatures
+
+In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005].
+
+Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000].
+
+First, let's take a look at what information is included in this data frame.
+
+```{r}
+head(hs_msigdb_df)
+```
+
+We will need to use `gs_cat` and `gs_subcat` columns to construct a filter step that will only keep curated gene sets and KEGG pathways.
+
+```{r}
+# Filter the human data frame to the KEGG pathways that are included in the
+# curated gene sets
+hs_kegg_df <- hs_msigdb_df %>%
+  dplyr::filter(
+    gs_cat == "C2", # This is to filter only to the C2 curated gene sets
+    gs_subcat == "CP:KEGG" # This is because we only want KEGG pathways
+  )
+```
+
+The `clusterProfiler()` function we will use requires a data frame with two columns, where one column contains the term identifier or name and one column contains gene identifiers that match our gene lists we want to check for enrichment.
+
+Our data frame with KEGG terms contains Entrez IDs and gene symbols.
+
+In our differential expression results data frame, `gene_module_df` we have Ensembl gene identifiers.
+So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs.
+
+## Gene identifier conversion
+
+We're going to convert our identifiers in `gene_module_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+
+The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019-human].
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the s` in the package name is referencing.
+
+Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+We can see what types of IDs are available to us in an annotation package with `keytypes()`.
+
+```{r}
+keytypes(org.Hs.eg.db)
+```
+
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to Entrez IDs (`ENTREZID`).
+
+The function we will use to map from Ensembl gene IDs to gene symbols is called `mapIds()`.
+
+```{r}
+# This returns a named vector which we can convert to a data frame, where
+# the keys (Ensembl IDs) are the names
+symbols_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
+  # The vector of gene identifiers we want to map
+  keys = gene_module_df$gene,
+  # The type of gene identifier we want returned
+  column = "SYMBOL",
+  # What type of gene identifiers we're starting with
+  keytype = "ENSEMBL",
+  # In the case of 1:many mappings, return the
+  # first one. This is default behavior!
+  multiVals = "first"
+)
+```
+
+This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols.
+In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
+For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+
+Let's create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.
+
+```{r}
+# We would like a data frame we can join to the differential expression stats
+gene_key_df <- data.frame(
+  ensembl_id = names(symbols_vector),
+  gene_symbol = symbols_vector,
+  stringsAsFactors = FALSE
+) %>%
+  # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
+  # from the data frame
+  dplyr::filter(!is.na(gene_symbol))
+```
+
+Let's see a preview of `gene_key_df`.
+
+```{r}
+head(gene_key_df)
+```
+Now we are ready to add the `gene_key_df` to our data frame with the module labels, `gene_module_df`.
+Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `gene_module_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
+
+```{r}
+module_annot_df <- gene_key_df %>%
+  # Using a left join removes the rows without gene symbols because those rows
+  # have already been removed in `gene_symbols_df`
+  dplyr::left_join(gene_module_df,
+    # The name of the column that contains the Ensembl gene IDs
+    # in the left data frame and right data frame
+    by = c("ensembl_id" = "gene")
+  )
+```
+
+Let's take a look at what this data frame looks like.
+
+```{r}
+# Print out a preview
+head(module_annot_df)
+```
+
+## Over-representation Analysis (ORA)
+
+Over-representation testing using `clusterProfiler` is based on a hypergeometric test (often referred to as Fisher's exact test) [@clusterProfiler-book].
+For more background on hypergeometric tests, this [handy tutorial](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html) explains more about how hypergeometric tests work [@Puthier2015]. 
+
+We will need to provide to `clusterProfiler` two genes lists:
+
+1) Our genes of interest 
+2) What genes were in our total background set. (All genes that originally had an opportunity to be measured).
+
+## Determine our genes of interest list
+
+This step is highly variable depending on what your gene list is, what information it contains and what your goals are. 
+You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names. 
+
+ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach's weaknesses -- to get to a gene list we've removed all other context.
+
+In this example, we will focus on one module, module 19, which we previously identified as differentially expressed across our time point variable.  
+
+```{r}
+module_19_genes <- module_annot_df %>% 
+  dplyr::filter(module == "ME19") %>% 
+  dplyr::pull("gene_symbol")
+```
+
+Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list.
+
+```{r}
+# Reduce to only unique gene symbols
+genes_of_interest <- unique(as.character(module_19_genes))
+
+# Let's print out some of these genes
+head(genes_of_interest)
+```
+
+## Determine our background set gene list
+
+Sometimes folks consider genes from the entire genome to comprise the background, but for our microarray data, we should consider all genes that were measured as our background set.
+In other words, if we are unable to detect a gene, it should not be in our background set.
+
+We can obtain our detected genes list from our data frame, `module_annot_df` (which we haven't done filtering on).
+
+```{r}
+background_set <- unique(as.character(module_annot_df$gene_symbol))
+```
+
+## Run ORA using the `enricher()` function
+
+Now that we have our background set, our genes of interest, and our pathway information, we're ready to run ORA using the `enricher()` function.
+
+```{r}
+kegg_ora_results <- enricher(
+  gene = genes_of_interest, # A vector of your genes of interest
+  pvalueCutoff = 0.1, # Can choose a FDR cutoff
+  pAdjustMethod = "BH", # What method for multiple testing correction should we use
+  universe = background_set, # A vector containing your background set genes
+  # The pathway information should be a data frame with a term name or
+  # identifier and the gene identifiers
+  TERM2GENE = dplyr::select(
+    hs_kegg_df,
+    gs_name,
+    gene_symbol
+  )
+)
+```
+
+*Note: using `enrichKEGG()` is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you'd like!*
+
+The information we're most likely interested in is in the `results` slot.
+Let's convert this into a data frame that we can write to file.
+
+```{r}
+kegg_result_df <- data.frame(kegg_ora_results@result)
+```
+
+Let's print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of `0.1` FDR?
+
+```{r}
+kegg_result_df %>%
+  dplyr::filter(p.adjust < 0.1)
+```
+
+Looks like there are four KEGG sets returned as significant at FDR of `0.1`.
+
+## Visualizing results
+
+We can use a dot plot to visualize our significant enrichment results.
+The `enrichplot::dotplot()` function will only plot gene sets that are significant according to the multiple testing corrected p values (in the `p.adjust` column) and the `pvalueCutoff` you provided in the [`enricher()` step](#run-ora-using-the-enricher-function).
+
+```{r}
+enrich_plot <- enrichplot::dotplot(kegg_ora_results)
+
+# Print out the plot here
+enrich_plot
+```
+
+Use `?enrichplot::dotplot` to see the help page for more about how to use this function.
+
+This plot is arguably more useful when we have a large number of significant pathways.
+
+Let's save it to a PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_enrich_plot_module_19.png"),
+  plot = enrich_plot
+)
+```
+
+We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
+
+```{r}
+enrichplot::upsetplot(kegg_ora_results)
+```
+
+See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common.
+Gene sets or pathways aren't independent!
+
+Let's also save this to a PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_upset_plot_module_19.png"),
+  plot = enrich_plot
+)
+```
+
+## Write results to file
+
+```{r}
+readr::write_tsv(
+  kegg_result_df,
+  file.path(
+    results_dir,
+    "SRP140558_module_19_pathway_analysis_results.tsv"
+  )
+)
+```
+
+# Resources for further learning
+
+- [Hypergeometric test exercises](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html)[@Puthier2015].
+- [clusterProfiler ORA tutorial](https://learn.gencore.bio.nyu.edu/rna-seq-analysis/over-representation-analysis/#:~:text=Over%2Drepresentation%20(or%20enrichment),a%20subset%20of%20your%20data.)
+- [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012].
+- [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
+- [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info.
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
+
+```{r}
+# Print session info
+sessioninfo::session_info()
+```
+
+# References
