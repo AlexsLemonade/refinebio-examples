@@ -173,7 +173,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/packages/release/bioc/html/GSVA.html) package to perform GSVA and the [`qusage`](https://www.bioconductor.org/packages/release/bioc/html/qusage.html) package to read in the GMT file containing the gene set data [@Hanzelmann2013; @Meng2019].
+In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/packages/release/bioc/html/GSVA.html) package to perform GSVA and the [`qusage`](https://www.bioconductor.org/packages/release/bioc/html/qusage.html) package to read in the GMT file containing the gene set data [@Hanzelmann2013; @Yaari2013].
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
@@ -237,9 +237,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-expression_df <- readr::read_tsv(data_file) %>%
-  # Tuck away the gene ID  column as row names
-  tibble::column_to_rownames("Gene")
+expression_df <- readr::read_tsv(data_file)
 ```
 
 Let’s ensure that the metadata and data are in the same sample order.
@@ -247,17 +245,10 @@ Let’s ensure that the metadata and data are in the same sample order.
 ```{r}
 # Make the data in the order of the metadata
 expression_df <- expression_df %>%
-  dplyr::select(metadata$geo_accession)
+  dplyr::select(c(Gene, metadata$geo_accession))
 
 # Check if this is in the same order
-all.equal(colnames(expression_df), metadata$geo_accession)
-```
-
-We'll need the gene names in a place we can grab them more easily, so we'll put them back as their own column. 
-
-```{r}
-expression_df <- expression_df %>%
-  tibble::rownames_to_column("Gene")
+all.equal(colnames(expression_df)[-1], metadata$geo_accession)
 ```
 
 ### Import Gene Sets
@@ -434,6 +425,7 @@ The output is a gene set by sample matrix of GSVA scores.
 ### Perform GSVA
 
 Let's perform GSVA using the `gsva()` function.
+See `?gsva` for more options.
 
 ```{r}
 gsva_results <- gsva(
@@ -453,17 +445,16 @@ gsva_results <- gsva(
 )
 ```
 
-Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we have expression values that are continuous such as log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
-See `?gsva` for more options.
+Let's explore what the output of gsva() looks like.
 
 ```{r}
-# Let's explore what the output of gsva() looks like
 head(gsva_results[, 1:10])
 ```
 
-## Find the pathway with the most significant differences across treatment groups
+## Find differentially expressed pathways
 
-If we want to know which pathway is most differentially expressed across subgroups, we can pretty easily use GSVA scores with differential expression steps using the limma package. 
+If we want to identify most differentially expressed pathways across subgroups, we can use functionality in the `limma` package to test the GSVA scores.
+Keep in mind that the `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which will be evident in downstream analyses.
 
 ### Create the design matrix
 
@@ -572,11 +563,19 @@ Let's make a plot for our most significant pathway, `HALLMARK_UNFOLDED_PROTEIN_R
 First we need to get our GSVA scores for this pathway in an appropriate format for `ggplot2`.
 
 ```{r}
-annotated_results_df <-
-  # Pull out only the results for this pathway
-  gsva_results["HALLMARK_UNFOLDED_PROTEIN_RESPONSE", ] %>%
-  # Make this into a tidy data frame format
-  tibble::enframe("sample", "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
+top_pathway_annotated_results_df <- gsva_results %>%
+  # Make this into a data frame
+  data.frame() %>%
+  # Gene set names are row names
+  tibble::rownames_to_column("pathway") %>%
+  # Get into long format using the `tidyr::pivot_longer()` function
+  tidyr::pivot_longer(
+    cols = -pathway,
+    names_to = "sample",
+    values_to = "gsva_score"
+  ) %>%
+  # Filter for only scores associated with our most significant pathway
+  dplyr::filter(pathway == "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
   # Join the column with the group labels that we would like to plot and compare --
   # Select the variables relevant to your data
   dplyr::left_join(metadata %>% dplyr::select(
@@ -594,10 +593,10 @@ Now let's make a sina plot so we can look at the differences between the `subgro
 # Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` the `subgroup` groups in our dataset
 sina_plot <-
   ggplot(
-    annotated_results_df, # Supply our annotated data frame
+    top_pathway_annotated_results_df, # Supply our annotated data frame
     aes(
       x = subgroup, # Replace with a grouping variable relevant to your data
-      y = HALLMARK_UNFOLDED_PROTEIN_RESPONSE, # Our pathway of interest
+      y = gsva_score, # Column we created to store the GSVA scores in the last chunk
       color = subgroup # Let's make the groups different colors too
     )
   ) +
