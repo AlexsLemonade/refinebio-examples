@@ -563,7 +563,7 @@ Let's make a plot for our most significant pathway, `HALLMARK_UNFOLDED_PROTEIN_R
 First we need to get our GSVA scores for this pathway in an appropriate format for `ggplot2`.
 
 ```{r}
-top_pathway_annotated_results_df <- gsva_results %>%
+annotated_results_df <- gsva_results %>%
   # Make this into a data frame
   data.frame() %>%
   # Gene set names are row names
@@ -573,7 +573,16 @@ top_pathway_annotated_results_df <- gsva_results %>%
     cols = -pathway,
     names_to = "sample",
     values_to = "gsva_score"
-  ) %>%
+  )
+
+# Preview the annotated results object
+head(annotated_results_df)
+```
+
+Now let's filter to include only the scores associated with our most significant pathway, `HALLMARK_UNFOLDED_PROTEIN_RESPONSE`, and join the relevant group labels from the metadata for plotting. 
+
+```{r}
+top_pathway_annotated_results_df <- annotated_results_df %>%
   # Filter for only scores associated with our most significant pathway
   dplyr::filter(pathway == "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
   # Join the column with the group labels that we would like to plot and compare --
@@ -585,6 +594,9 @@ top_pathway_annotated_results_df <- gsva_results %>%
   # Tell the join what columns are equivalent and should be used as a key
   by = c("sample" = "refinebio_accession_code")
   )
+
+# Preview the filtered annotated results object
+head(top_pathway_annotated_results_df)
 ```
 
 Now let's make a sina plot so we can look at the differences between the `subgroup` groups using our GSVA scores.
@@ -625,7 +637,7 @@ ggsave(file.path(plots_dir, "GSE37382_gsva_HALLMARK_UNFOLDED_PROTEIN_RESPONSE_si
 
 ## Write results to file
 
-Now let's write our all of our GSVA results to file.
+Now let's write all of our GSVA results to file.
 
 ```{r}
 gsva_results %>%
