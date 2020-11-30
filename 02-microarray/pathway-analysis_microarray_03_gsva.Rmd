@@ -445,7 +445,7 @@ gsva_results <- gsva(
 )
 ```
 
-Let's explore what the output of gsva() looks like.
+Let's explore what the output of `gsva()` looks like.
 
 ```{r}
 head(gsva_results[, 1:10])
@@ -454,7 +454,8 @@ head(gsva_results[, 1:10])
 ## Find differentially expressed pathways
 
 If we want to identify most differentially expressed pathways across subgroups, we can use functionality in the `limma` package to test the GSVA scores.
-Keep in mind that the `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which will be evident in our downstream analyses.
+This is one approach for working with GSVA scores.
+The `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which allows downstream analyses that make this assumption about the distribution.
 
 ### Create the design matrix
 
