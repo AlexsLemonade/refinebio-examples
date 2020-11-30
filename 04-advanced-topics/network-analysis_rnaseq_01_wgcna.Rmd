@@ -698,10 +698,10 @@ mod_19_heatmap
 From the barplot portion of our plot, we can see `acute illness` samples tend to have higher expression values for the module 19 eigengene.
 In the heatmap portion, we can see how the individual genes that make up module 19 are overall higher than in the `recovering` samples. 
 
-We can save this plot to PDF.
+We can save this plot to PNG.
 
 ```{r}
-pdf(file.path("results", "SRP140558_module_19_heatmap.pdf"))
+png(file.path("results", "SRP140558_module_19_heatmap.png"))
 mod_19_heatmap
 dev.off()
 ```
@@ -721,7 +721,7 @@ Though we can still see the genes in this module seem to be very correlated with
 Save this plot also.
 
 ```{r}
-pdf(file.path("results", "SRP140558_module_25_heatmap.pdf"))
+png(file.path("results", "SRP140558_module_25_heatmap.png"))
 mod_25_heatmap
 dev.off()
 ```
