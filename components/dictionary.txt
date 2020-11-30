@@ -28,6 +28,7 @@ ColorBrewer
 Compara
 ComplexHeatmap
 ComplexHeatmap's
+concordantly
 CREB
 Crouser
 cytosolic
