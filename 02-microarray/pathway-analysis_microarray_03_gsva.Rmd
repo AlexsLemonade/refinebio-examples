@@ -455,7 +455,7 @@ head(gsva_results[, 1:10])
 
 If we want to identify most differentially expressed pathways across subgroups, we can use functionality in the `limma` package to test the GSVA scores.
 This is one approach for working with GSVA scores.
-The `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which allows downstream analyses that make this assumption about the distribution.
+The `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which allows downstream analyses that make this assumption about the distribution [@Hanzelmann-gsva-vignette].
 
 ### Create the design matrix
 
@@ -561,7 +561,17 @@ Let's make a plot for our most significant pathway, `HALLMARK_UNFOLDED_PROTEIN_R
 
 ### Sina plot
 
-First we need to get our GSVA scores for this pathway in an appropriate format for `ggplot2`.
+First we need to get our GSVA scores for this pathway into a long data frame, an appropriate format for `ggplot2`.
+
+Let's look at the current format of `gsva_results`.
+
+```{r}
+head(gsva_results[, 1:10])
+```
+
+We can see that they are in a wide format with the gsva scores for each sample spread across a row associated with each pathway.
+
+Now let's convert these results into a data frame and into a long format, using the `tidyr::pivot_longer()` function.
 
 ```{r}
 annotated_results_df <- gsva_results %>%
