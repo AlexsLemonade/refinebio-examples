@@ -1,7 +1,6 @@
 actin
 ADT
 al
-alkylating
 AML
 AnaLysis
 ASXL
@@ -22,7 +21,6 @@ cDNA
 centric
 cheatsheet
 cheatsheets
-chemoradiotherapy
 ChIP
 clusterProfiler
 Cmd
@@ -31,7 +29,6 @@ Compara
 ComplexHeatmap
 ComplexHeatmap's
 concordantly
-CPMs
 CREB
 Crouser
 cytosolic
@@ -136,7 +133,6 @@ SuperSeries
 str
 subtype
 subtypes
-temozolomide
 tidyverse
 TPM
 TPMs
