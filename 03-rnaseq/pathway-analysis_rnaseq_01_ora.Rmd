@@ -212,7 +212,7 @@ gene_module_df <- readr::read_tsv(gene_module_url)
 Let's take a look at what this gene module list looks like.
 
 ```{r}
-gene_module_df 
+gene_module_df
 ```
 
 ## Getting familiar with `clusterProfiler`'s options
@@ -369,8 +369,8 @@ ORA generally requires you make some sort of arbitrary decision to obtain your g
 In this example, we will focus on one module, module 19, which we previously identified as differentially expressed across our time point variable.  
 
 ```{r}
-module_19_genes <- module_annot_df %>% 
-  dplyr::filter(module == "ME19") %>% 
+module_19_genes <- module_annot_df %>%
+  dplyr::filter(module == "ME19") %>%
   dplyr::pull("gene_symbol")
 ```
 
