@@ -93,23 +93,25 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
+For this example analysis, we will use this [acute viral bronchiolitis dataset](https://www.refine.bio/experiments/SRP140558).
 The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
 Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
 
 ## Obtain the gene set for this example
 
-In this example, we are using a set of co-expressed genes we obtained from an [example analysis of acute viral bronchiolitis  dataset](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
+In this example, we are using a set of co-expressed genes we obtained from an [example analysis of acute viral bronchiolitis dataset](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
 
 We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
 
 In this example, we will focus on one gene module, called module 19, to see what pathways these genes in this module may be associated with. 
-Here's a heatmap to show a preview of this module. 
+We identified this module 19 as the most differentially expressed between our data's two time points (during illness and recovering from illness).
+
+Here's a heatmap to show a preview of this module and the genes that make it up. 
 
 <img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.png" width = 500/>
 
 Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
-This plot demonstrates how these genes, together as a module, are differentially expressed between our two sample groups. 
+This plot demonstrates how these genes, together as a module, are differentially expressed between our two time points. 
 
 **IDENTICAL TO MICROARRAY EXAMPLE**
 ## Check out our file structure!
@@ -197,9 +199,10 @@ For this example, we will read in results from a co-expression network analysis 
 Rather than reading from a local file, we will download the results table directly from a URL.
 These results are from a acute bronchiolitis experiment we used for [an example WGCNA analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) [@Langfelder2008].
 The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of.
-We will perform ORA on one of . 
+We will perform ORA on one of the modules we identified in the WGCNA analysis. 
+In order to know which genes are a part of this module, we will import a saved results file that's stored online and contains the genes and what module they were identified to be a part of. 
 
-Instead of using the URL below, you can use a file path to a TSV file with your desired gene list.
+Instead of using this URL below, you can use a file path to a TSV file with your desired gene list.
 First we will assign the URL to its own variable called, `gene_module_url`.
 
 ```{r}
@@ -207,7 +210,7 @@ First we will assign the URL to its own variable called, `gene_module_url`.
 gene_module_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_wgcna_gene_to_module.tsv"
 ```
 
-Read in the file that has WGCNA results.
+Read in the file that has WGCNA gene and module results.
 Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `gene_module_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP140558_results_gene_list.tsv")`.
 
 ```{r}
@@ -379,7 +382,8 @@ You may want to delete this next chunk entirely if you supply an already determi
 
 ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach's weaknesses -- to get to a gene list we've removed all other context.
 
-In this example, we will focus on one module, module 19, which we previously identified as differentially expressed across our time point variable.  
+In this example, we will focus on one module, module 19, which we previously identified as differentially expressed between our time points (during the acute bronchiolitis illness and during recovery from bronchiolitis). 
+See [the previous section](#about-the-dataset-we-are-using-for-this-example) for more background on this gene list. 
 
 ```{r}
 module_19_genes <- module_annot_df %>%
@@ -474,7 +478,10 @@ ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_enrich_plot_module_19.png"),
 We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
 
 ```{r}
-enrichplot::upsetplot(kegg_ora_results)
+upset_plot <- enrichplot::upsetplot(kegg_ora_results)
+
+# Print out the plot here
+upset_plot
 ```
 
 See that `KEGG_CELL_CYCLE` and `KEGG_OOCYTE_MEIOSIS` have genes in common, as do `KEGG_CELL_CYCLE` and `KEGG_DNA_REPLICATION`. 
@@ -485,7 +492,7 @@ Let's also save this to a PNG.
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_upset_plot_module_19.png"),
-  plot = enrich_plot
+  plot = upset_plot
 )
 ```
 
