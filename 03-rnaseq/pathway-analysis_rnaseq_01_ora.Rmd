@@ -298,18 +298,18 @@ We can see what types of IDs are available to us in an annotation package with `
 keytypes(org.Hs.eg.db)
 ```
 
-Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to Entrez IDs (`ENTREZID`).
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`).
 
-The function we will use to map from Ensembl gene IDs to gene symbols is called `mapIds()`.
+The function we will use to map from Ensembl gene IDs to Entrez IDs is called `mapIds()`.
 
 ```{r}
 # This returns a named vector which we can convert to a data frame, where
 # the keys (Ensembl IDs) are the names
-symbols_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
+entrez_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
   # The vector of gene identifiers we want to map
   keys = gene_module_df$gene,
   # The type of gene identifier we want returned
-  column = "SYMBOL",
+  column = "ENTREZID",
   # What type of gene identifiers we're starting with
   keytype = "ENSEMBL",
   # In the case of 1:many mappings, return the
@@ -318,8 +318,8 @@ symbols_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
 )
 ```
 
-This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols.
-In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
+This message is letting us know that sometimes Ensembl gene identifiers will map to multiple Entrez IDs.
+In this case, it's also possible that an Entrez ID will map to multiple Ensembl IDs.
 For more about how to explore this, take a look at our [RNA-seq gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
 Let's create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.
@@ -327,28 +327,28 @@ Let's create a two column data frame that shows the gene symbols and their Ensem
 ```{r}
 # We would like a data frame we can join to the differential expression stats
 gene_key_df <- data.frame(
-  ensembl_id = names(symbols_vector),
-  gene_symbol = symbols_vector,
+  ensembl_id = names(entrez_vector),
+  entrez_id = entrez_vector,
   stringsAsFactors = FALSE
 ) %>%
   # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
   # from the data frame
-  dplyr::filter(!is.na(gene_symbol))
+  dplyr::filter(!is.na(entrez_id))
 ```
 
-Let's see a preview of `gene_key_df`.
+Let's see a preview of `entrez_id`.
 
 ```{r}
 head(gene_key_df)
 ```
 
 Now we are ready to add the `gene_key_df` to our data frame with the module labels, `gene_module_df`.
-Here we're using a `dplyr::left_join()` because we only want to retain the genes that have gene symbols and this will filter out anything in our `gene_module_df` that does not have gene symbols when we join using the Ensembl gene identifiers.
+Here we're using a `dplyr::left_join()` because we only want to retain the genes that have Entrez IDs and this will filter out anything in our `gene_module_df` that does not have an Entrez ID when we join using the Ensembl gene identifiers.
 
 ```{r}
 module_annot_df <- gene_key_df %>%
   # Using a left join removes the rows without gene symbols because those rows
-  # have already been removed in `gene_symbols_df`
+  # have already been removed in `gene_key_df`
   dplyr::left_join(gene_module_df,
     # The name of the column that contains the Ensembl gene IDs
     # in the left data frame and right data frame
@@ -388,13 +388,13 @@ See [the previous section](#about-the-dataset-we-are-using-for-this-example) for
 ```{r}
 module_19_genes <- module_annot_df %>%
   dplyr::filter(module == "ME19") %>%
-  dplyr::pull("gene_symbol")
+  dplyr::pull("entrez_id")
 ```
 
-Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list.
+Because one `entrez_id` may map to multiple Ensembl IDs, we need to make sure we have no repeated Entrez IDs in this list.
 
 ```{r}
-# Reduce to only unique gene symbols
+# Reduce to only unique Entrez IDs
 genes_of_interest <- unique(as.character(module_19_genes))
 
 # Let's print out some of these genes
@@ -408,7 +408,7 @@ The dataset that these genes are from already had unreliably detected, [low coun
 Because of this, we can obtain our detected genes list from our data frame, `module_annot_df` (which we have not done any further filtering on in this notebook).
 
 ```{r}
-background_set <- unique(as.character(module_annot_df$gene_symbol))
+background_set <- unique(as.character(module_annot_df$entrez_id))
 ```
 
 **IDENTICAL TO MICROARRAY EXAMPLE** (except plot names changed and results summaries altered)
@@ -428,7 +428,7 @@ kegg_ora_results <- enricher(
   TERM2GENE = dplyr::select(
     hs_kegg_df,
     gs_name,
-    gene_symbol
+    human_entrez_gene
   )
 )
 ```
