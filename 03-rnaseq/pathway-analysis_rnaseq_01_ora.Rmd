@@ -99,7 +99,6 @@ We have provided this file for you and the code in this notebook will read in th
 If you'd like to follow the steps for creating this results file from the refine.bio data, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
 
 Module 19 was the most differentially expressed between the datasets' two time points (during illness and recovering from illness).
-We identified this module 19 as the most differentially expressed between the datasets' two time points (during illness and recovering from illness).
 
 The heatmap below summarizes the expression of the genes that make up module 19. 
 
