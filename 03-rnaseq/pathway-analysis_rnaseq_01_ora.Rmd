@@ -288,7 +288,7 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 We're going to convert our identifiers in `gene_module_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
 The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019].
-`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the s` in the package name is referencing.
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
 [the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
