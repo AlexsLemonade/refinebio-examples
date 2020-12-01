@@ -115,8 +115,9 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 
 # Using a different refine.bio dataset with this analysis?
 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a gene list that you are interested in. 
-The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
+The file we use here has several columns of differential expression summary statistics. 
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a read in a similar table of genes with the information that you are interested in. 
+If your gene table differs, many steps will need to be changed or deleted entirely depending on the contents of that file (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
 
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.

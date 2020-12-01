@@ -3890,7 +3890,7 @@ div.tocify {
 </div>
 <div id="using-a-different-refine.bio-dataset-with-this-analysis" class="section level1">
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
-<p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend replacing the <code>dge_url</code> with a different file path to a gene list that you are interested in. The file we use here has several columns of differential expression summary statistics, so if your gene list does not have the exact same information, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the <a href="#determined-our-genes-of-interest-list"><code>Determine our genes of interest list</code> section</a>).</p>
+<p>The file we use here has several columns of differential expression summary statistics. If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend replacing the <code>dge_url</code> with a different file path to a read in a similar table of genes with the information that you are interested in. If your gene table differs, many steps will need to be changed or deleted entirely depending on the contents of that file (particularly in the <a href="#determined-our-genes-of-interest-list"><code>Determine our genes of interest list</code> section</a>).</p>
 <p>We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
 <hr />
 <!-- Do not delete this line -->
@@ -4006,7 +4006,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
