@@ -682,11 +682,11 @@ mod_52_heatmap
 From the barplot portion of our plot, we can see `post-adt` samples have higher values for this eigengene for module 52.
 In the heatmap portion, we can see how the individual genes that make up module 52 have more extreme values (very high or very low) in the `post-adt` samples. 
 
-We can save this plot to PDF.
+We can save this plot to PNG.
 
 ```{r}
-pdf(file.path("results", "SRP133573_module_52_heatmap.pdf"))
-mod_52_heatmap
+png(file.path("results", "SRP140558_module_19_heatmap.png"))
+mod_19_heatmap
 dev.off()
 ```
 
@@ -706,8 +706,8 @@ There are a few samples and some genes that show higher expression, but it is no
 Save this plot also.
 
 ```{r}
-pdf(file.path("results", "SRP133573_module_10_heatmap.pdf"))
-mod_10_heatmap
+png(file.path("results", "SRP140558_module_25_heatmap.png"))
+mod_25_heatmap
 dev.off()
 ```
 
