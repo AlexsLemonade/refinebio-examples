@@ -1,7 +1,7 @@
 ---
 title: "Over-representation analysis - RNA-Seq"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "December 2020"
 output:   
   html_notebook:
     toc: true
@@ -9,8 +9,6 @@ output:
     number_sections: true
 ---
 
-
-**IDENTICAL TO MICROARRAY EXAMPLE** (except microarray --> rnaseq)
 # Purpose of this analysis
 
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
@@ -89,31 +87,26 @@ if (!dir.exists(results_dir)) {
 
 In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
 
-**REVIEW**
-
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [acute viral bronchiolitis dataset](https://www.refine.bio/experiments/SRP140558).
 The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
 Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
 
-## Obtain the gene set for this example
+We used this dataset to identify modules of co-expressed genes in an [example analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
 
-In this example, we are using a set of co-expressed genes we obtained from an [example analysis of acute viral bronchiolitis dataset](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
+We have provided this file for you and the code in this notebook will read in the results that are stored online.
+If you'd like to follow the steps for creating this results file from the refine.bio data, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
 
-We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
+Module 19 was the most differentially expressed between the datasets' two time points (during illness and recovering from illness).
 
-In this example, we will focus on one gene module, called module 19, to see what pathways these genes in this module may be associated with. 
-We identified this module 19 as the most differentially expressed between our data's two time points (during illness and recovering from illness).
-
-Here's a heatmap to show a preview of this module and the genes that make it up. 
+The heatmap below summarizes the expression of the genes that make up module 19. 
 
 <img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.png" width = 500/>
 
 Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
-This plot demonstrates how these genes, together as a module, are differentially expressed between our two time points. 
+This plot demonstrates how these genes, together as a module, are differentially expressed between the two time points. 
 
-**IDENTICAL TO MICROARRAY EXAMPLE**
 ## Check out our file structure!
 
 Your new analysis folder should contain:
@@ -127,13 +120,12 @@ Your example analysis folder should contain your `.Rmd` and three empty folders 
 
 If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
-**REVIEW**
 # Using a different refine.bio dataset with this analysis?
 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `gene_module_url` with a different file path to a gene list that you are interested in. 
-The file we use here has two columns from our WGCNA module results, so if your gene list differs, many steps will need to be changed or deleted entirely depending on what your gene list file looks like (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
+The file we use here has two columns from our WGCNA module results: the id of each gene and the module it is part of. 
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `gene_module_url` with a different file path to a read in a similar table of genes with the information that you are interested in. 
+If your gene table differs, many steps will need to be changed or deleted entirely depending on the contents of that file (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
 
-**IDENTICAL TO MICROARRAY EXAMPLE**
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences.
 
@@ -190,17 +182,16 @@ library(org.Hs.eg.db)
 library(magrittr)
 ```
 
-**REVIEW** 
 ## Import data
 
-For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
+For ORA, we only need a list of genes of interest and a background gene set as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways are significantly represented.
 
 For this example, we will read in results from a co-expression network analysis that we have already performed.
 Rather than reading from a local file, we will download the results table directly from a URL.
 These results are from a acute bronchiolitis experiment we used for [an example WGCNA analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) [@Langfelder2008].
+
 The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of.
-We will perform ORA on one of the modules we identified in the WGCNA analysis. 
-In order to know which genes are a part of this module, we will import a saved results file that's stored online and contains the genes and what module they were identified to be a part of. 
+We will perform ORA on one of the modules we identified in the WGCNA analysis but the rest of the genes will be used as "background genes".
 
 Instead of using this URL below, you can use a file path to a TSV file with your desired gene list.
 First we will assign the URL to its own variable called, `gene_module_url`.
@@ -221,13 +212,12 @@ gene_module_df <- readr::read_tsv(gene_module_url)
 ```
 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
-Let's take a look at what this gene module list looks like.
+Let's take a look at this gene module table.
 
 ```{r}
 gene_module_df
 ```
 
-**IDENTICAL TO MICROARRAY EXAMPLE** (except Dr --> Hs)
 ## Getting familiar with `clusterProfiler`'s options
 
 Let's take a look at what organisms the package supports.
@@ -284,10 +274,10 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 
 ## Gene identifier conversion
 
-We're going to convert our identifiers in `gene_module_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+We're going to convert our identifiers in `gene_module_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
 The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019].
-`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the s` in the package name is referencing.
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
 [the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
