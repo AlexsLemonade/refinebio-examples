@@ -1,7 +1,7 @@
 ---
 title: "Over-representation analysis - Microarray"
 author: "CCDL for ALSF"
-date: "`r format(Sys.time(), '%B %Y')`"
+date: "November 2020"
 output:   
   html_notebook:
     toc: true
@@ -461,7 +461,10 @@ ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_enrich_plot.png"),
 We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
 
 ```{r}
-enrichplot::upsetplot(kegg_ora_results)
+upset_plot <- enrichplot::upsetplot(kegg_ora_results)
+
+# Print out the plot here
+upset_plot
 ```
 
 See that `KEGG_ANTIGEN_PROCESSING_AND_PRESENTATION` and `KEGG_LYSOSOME` have all their genes in common.
@@ -471,7 +474,7 @@ Let's also save this to a PNG.
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_ora_upset_plot.png"),
-  plot = enrich_plot
+  plot = upset_plot
 )
 ```
 
