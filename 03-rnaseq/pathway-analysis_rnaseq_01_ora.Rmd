@@ -378,11 +378,10 @@ We will need to provide to `clusterProfiler` two genes lists:
 **REVIEW**
 
 This step is highly variable depending on what your gene list is, what information it contains and what your goals are. 
-You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names. 
+You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to introduce cutoffs and filters that we don't need here, given the nature of our data.  
 
-ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach's weaknesses -- to get to a gene list we've removed all other context.
-
-In this example, we will focus on one module, module 19, which we previously identified as differentially expressed between our time points (during the acute bronchiolitis illness and during recovery from bronchiolitis). 
+Here, we will focus on one module, module 19, to identify pathway's associated with it. 
+We previously identified this module as differentially expressed between our datasets' two time points (during acute illness and during recovery). 
 See [the previous section](#about-the-dataset-we-are-using-for-this-example) for more background on this gene list. 
 
 ```{r}

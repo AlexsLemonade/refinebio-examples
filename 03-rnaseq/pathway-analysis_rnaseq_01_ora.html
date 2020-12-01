@@ -4002,7 +4002,7 @@ div.tocify {
 <span id="cb31-3"><a href="#cb31-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb31-4"><a href="#cb31-4"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
@@ -4131,9 +4131,8 @@ C7: immunologic signatures</code></pre>
 <div id="determine-our-genes-of-interest-list" class="section level2">
 <h2><span class="header-section-number">2.4</span> Determine our genes of interest list</h2>
 <p><strong>REVIEW</strong></p>
-<p>This step is highly variable depending on what your gene list is, what information it contains and what your goals are. You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names.</p>
-<p>ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach’s weaknesses – to get to a gene list we’ve removed all other context.</p>
-<p>In this example, we will focus on one module, module 19, which we previously identified as differentially expressed between our time points (during the acute bronchiolitis illness and during recovery from bronchiolitis). See <a href="#about-the-dataset-we-are-using-for-this-example">the previous section</a> for more background on this gene list.</p>
+<p>This step is highly variable depending on what your gene list is, what information it contains and what your goals are. You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to introduce cutoffs and filters that we don’t need here, given the nature of our data.</p>
+<p>Here, we will focus on one module, module 19, to identify pathway’s associated with it. We previously identified this module as differentially expressed between our datasets’ two time points (during acute illness and during recovery). See <a href="#about-the-dataset-we-are-using-for-this-example">the previous section</a> for more background on this gene list.</p>
 <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>module_<span class="dv">19</span>_genes &lt;-<span class="st"> </span>module_annot_df <span class="op">%&gt;%</span></span>
 <span id="cb47-2"><a href="#cb47-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(module <span class="op">==</span><span class="st"> &quot;ME19&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">pull</span>(<span class="st">&quot;entrez_id&quot;</span>)</span></code></pre></div>
