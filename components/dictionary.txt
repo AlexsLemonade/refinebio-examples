@@ -16,6 +16,7 @@ Brainarray’s
 Brems
 CCDL
 CCDL's
+cDNA
 cheatsheet
 cheatsheets
 ChIP
@@ -24,6 +25,7 @@ Cmd
 ColorBrewer
 Compara
 ComplexHeatmap
+ComplexHeatmap's
 CREB
 Crouser
 cytosolic
