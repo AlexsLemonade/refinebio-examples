@@ -97,21 +97,19 @@ For this example analysis, we will use this [acute viral bronchiolitis dataset](
 The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
 Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
 
-## Obtain the gene set for this example
-
-In this example, we are using a set of co-expressed genes we obtained from an [example analysis of acute viral bronchiolitis dataset](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
+We used this dataset, to identify co-expressed genes in an [example analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) using [`WGCNA`](https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/) [@Langfelder2008].
 
 We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that WGCNA example](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html).
 
-In this example, we will focus on one gene module, called module 19, to see what pathways these genes in this module may be associated with. 
-We identified this module 19 as the most differentially expressed between our data's two time points (during illness and recovering from illness).
+In this example, we will focus on one gene module we identified through WGCNA, called module 19, to see what pathways these genes in this module may be associated with. 
+We identified this module 19 as the most differentially expressed between the datasets' two time points (during illness and recovering from illness).
 
 Here's a heatmap to show a preview of this module and the genes that make it up. 
 
 <img src="https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_module_19_heatmap.png" width = 500/>
 
 Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. 
-This plot demonstrates how these genes, together as a module, are differentially expressed between our two time points. 
+This plot demonstrates how these genes, together as a module, are differentially expressed between the two time points. 
 
 **IDENTICAL TO MICROARRAY EXAMPLE**
 ## Check out our file structure!
@@ -193,14 +191,14 @@ library(magrittr)
 **REVIEW** 
 ## Import data
 
-For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
+For ORA, we only need a list of genes as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
 
 For this example, we will read in results from a co-expression network analysis that we have already performed.
 Rather than reading from a local file, we will download the results table directly from a URL.
 These results are from a acute bronchiolitis experiment we used for [an example WGCNA analysis](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html) [@Langfelder2008].
+
 The table contains two columns, one with Ensembl gene IDs, and the other with the name of the module they are a part of.
-We will perform ORA on one of the modules we identified in the WGCNA analysis. 
-In order to know which genes are a part of this module, we will import a saved results file that's stored online and contains the genes and what module they were identified to be a part of. 
+We will perform ORA on one of the modules we identified in the WGCNA analysis but the rest of the genes will be used as "background genes".
 
 Instead of using this URL below, you can use a file path to a TSV file with your desired gene list.
 First we will assign the URL to its own variable called, `gene_module_url`.
@@ -285,7 +283,7 @@ So we will need to convert our Ensembl IDs into either gene symbols or Entrez ID
 
 ## Gene identifier conversion
 
-We're going to convert our identifiers in `gene_module_df` to gene symbols because they are a bit more human readable, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+We're going to convert our identifiers in `gene_module_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
 
 The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2019].
 `org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
