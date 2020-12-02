@@ -117,7 +117,7 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute viral bronchiolitis  dataset](https://www.refine.bio/experiments/SRP140558).
+For this example analysis, we will use this [acute viral bronchiolitis dataset](https://www.refine.bio/experiments/SRP140558).
 The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
 Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
 
@@ -209,7 +209,7 @@ In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/pac
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
-We'll also be performing differential expression test on our GSVA scores, and for that we will use `limma` [@Ritchie2015] and we'll make a sina plot of the scores of our most significant pathway using a ggplot2 companion package, `ggforce`.
+We'll create a heatmap from our pathway analysis results and for that we'll use `pheatmap` [@Slowikowski2017]
 
 ```{r}
 if (!("GSVA" %in% installed.packages())) {
@@ -227,14 +227,9 @@ if (!("org.Hs.eg.db" %in% installed.packages())) {
   BiocManager::install("org.Hs.eg.db", update = FALSE)
 }
 
-if (!("limma" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("limma", update = FALSE)
-}
-
-if (!("ggforce" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  install.packages("ggforce")
+if (!("pheatmap" %in% installed.packages())) {
+  # Install pheatmap
+  install.packages("pheatmap", update = FALSE)
 }
 ```
 
@@ -252,9 +247,6 @@ library(GSVA)
 
 # Human annotation package we'll use for gene identifier conversion
 library(org.Hs.eg.db)
-
-# Attach the ggplot2 package for plotting
-library(ggplot2)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
@@ -308,36 +300,6 @@ expression_df <- round(expression_df) %>%
   # Only keep rows that have total counts above the cutoff
   dplyr::filter(rowSums(.) >= 50)
 ```
-
-Another thing we need to do is set up our main experimental group variable. 
-Unfortunately the metadata for this dataset are not set up into separate, neat columns, but we can accomplish that ourselves. 
-
-For this study, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
-
-For handier use of this information, we can create a new variable, `time_point`, that states this info more clearly. 
-This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
-
-```{r}
-metadata <- metadata %>%
-  dplyr::mutate(
-    time_point = dplyr::case_when(
-      # Create our new variable based on refinebio_title containing AV/CV
-      stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
-      stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
-    ),
-    # It's easier for future items if this is already set up as a factor
-    time_point = as.factor(time_point)
-  )
-```
-
-Let's double check that our factor set up is right. 
-We want `acute illness` to be the first level since it was the first time point collected. 
-
-```{r}
-levels(metadata$time_point)
-```
-
-Great! We're all set. 
 
 ## Create a DESeqDataset
 
@@ -479,66 +441,55 @@ Let's find out which Entrez IDs have been duplicated.
 dup_entrez_ids <- mapped_df %>%
   dplyr::filter(duplicated(entrez_id)) %>%
   dplyr::pull(entrez_id)
-
-dup_entrez_ids
 ```
 
-**STILL mostly IDENTICAL TO MICROARRAY GSVA** (except data refs changed and only one entrez id data shown)
+**Review** 
 
 #### Handling duplicate gene identifiers
 
 As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
-GSVA is executed on a per sample basis so let's keep the maximum expression value per sample associated with the duplicate Entrez gene identifiers.
-In other words, we will keep only the maximum expression value found across the duplicate Entrez gene identifier instances for each sample or column in this case.
+In other words, we will narrow down one Ensembl ID's data for a particular Entrez gene identifier instances for each sample or column in this case.
 
-Let's take a look at the one of rows associated with the duplicated Entrez IDs and see how this will play out. 
-
-```{r}
-mapped_df %>%
-  dplyr::filter(entrez_id %in% dup_entrez_ids[1])
-```
-
-As an example using the strategy we described, for `SRR7011789`'s data in the first column, `4.264957` is larger than `4.099752` so moving forward, Entrez gene `6013` will have `4.264957` value and the `4.099752` would be dropped from the dataset. 
-However, this is just one method of handling duplicate gene identifiers.
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
-Now, let's implement our choose the max value method for all samples and Entrez IDs using tidyverse functions. 
+
+First we need to calcuate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way. 
 
 ```{r}
-max_dup_df <- mapped_df %>%
-  # We won't be using Ensembl IDs moving forward, so we will drop this column
-  dplyr::select(-Ensembl) %>%
-  # Filter to include only the rows associated with the duplicate Entrez gene identifiers
-  dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
-  # Group by Entrez IDs
-  dplyr::group_by(entrez_id) %>%
-  # Get the maximum expression value using all values associated with each duplicate
-  # Entrez ID for each column or sample in this case
-  dplyr::summarize_all(max)
+# First let's determine the gene means
+gene_means <- rowMeans(mapped_df %>% dplyr::select(-Ensembl, -entrez_id))
 
-max_dup_df %>%
-  dplyr::filter(entrez_id %in% dup_entrez_ids[1])
+# Let's add this as a column in our `mapped_df`.
+mapped_df <- mapped_df %>%
+  dplyr::mutate(gene_means) %>%
+  # Reorder the columns so `gene_means` column is upfront
+  dplyr::select(Ensembl, entrez_id, gene_means, dplyr::everything())
 ```
 
-We can see `SRR7011789` now has the `4.264957` value for Entrez ID `6013` like expected. 
-Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers!
-
-Now let's combine our de-duplicated data with the rest of the mapped data!
+Now we can filter out the duplicate gene identifiers using the mean expression value.
+If we do an `dplyr::arrange()` by `gene_means` first, then this means the first row encountered will be the one with the higher gene mean and `dplyr::distinct()` keeps the first row of any duplicates it finds by default. 
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
-  # We won't be using Ensembl IDs moving forward, so we will drop this column
-  dplyr::select(-Ensembl) %>%
-  # First let's get the data associated with the Entrez gene identifiers that aren't duplicated
-  dplyr::filter(!entrez_id %in% dup_entrez_ids) %>%
-  # Now let's bind the rows of the maximum expression data we stored in `max_dup_df`
-  dplyr::bind_rows(max_dup_df)
+  # Sort so that the highest absolute mean expression values are at the top
+  dplyr::arrange(dplyr::desc(gene_means)) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`
+  dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-As mentioned earlier, we need a matrix for GSVA.
-Let's now convert our data frame into a matrix and prepare our object for GSVA.
+Let's check on one of the duplicate Entrez IDs and see if we only get one row back. 
+
+```{r}
+filtered_mapped_df %>%
+  dplyr::filter(entrez_id %in% dup_entrez_ids[1])
+```
+
+That worked. 
+Now we should prep this data so GSVA can use it. 
 
 ```{r}
 filtered_mapped_matrix <- filtered_mapped_df %>%
+  # GSVA can't the Ensembl IDs so we should drop this column as well as the means
+  dplyr::select(-Ensembl, -gene_means) %>%
   # We need to store our gene identifiers as row names
   tibble::column_to_rownames("entrez_id") %>%
   # Now we can convert our object into a matrix
@@ -546,6 +497,8 @@ filtered_mapped_matrix <- filtered_mapped_df %>%
 ```
 
 Note that if we had duplicate gene identifiers here, we would not be able to set them as row names.
+
+**IDENTICAL TO MICROARRAY GSVA**
 
 ## GSVA - Microarray
 
@@ -555,9 +508,6 @@ The pathway-level score calculated is a way of asking how genes _within_ a gene 
 The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) [@Hanzelmann2013].
 
 The output is a gene set by sample matrix of GSVA scores.
-
-
-**STILL mostly IDENTICAL TO MICROARRAY GSVA**
 
 ### Perform GSVA
 
@@ -582,7 +532,7 @@ gsva_results <- gsva(
 )
 ```
 
-Here we are using `kcdf = "Poisson"` because we are using normalized and transformed counts. 
+Here we are using `kcdf = "Gaussian"` because we are using continous, normalized and transformed data. 
 
 Let's explore what the output of `gsva()` looks like.
 
@@ -590,183 +540,9 @@ Let's explore what the output of `gsva()` looks like.
 head(gsva_results[, 1:10])
 ```
 
-**STILL mostly IDENTICAL TO MICROARRAY GSVA** (except dataset changed and no contrast matrix needed)
-
-## Find differentially expressed pathways
-
-If we want to identify most differentially expressed pathways across time points, we can use functionality in the `limma` package to test the GSVA scores.
-This is one approach for working with GSVA scores.
-The `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which allows downstream analyses that make this assumption about the distribution [@Hanzelmann-gsva-vignette].
-
-### Create the design matrix
-
-`limma` needs a numeric design matrix to signify which samples are from which time points.
-Now we will create a model matrix based on our `time_point` variable.
-We are using a `+ 0` in the model which sets the intercept to 0 so the time point effects capture expression for that group, rather than difference from the first group.
-If you have a control group, you might want that to be the intercept.
-
-```{r}
-# Create the design matrix
-des_mat <- model.matrix(~ metadata$time_point + 0)
-```
-
-Let's take a look at the design matrix we created.
-
-```{r}
-# Print out the design matrix
-head(des_mat)
-```
-
-The design matrix column names are a bit messy, so we will neaten them up by dropping the `metadata$time_point` designation they all have and for being able to reference them easily later, we want to drop spaces as well. 
-
-```{r}
-# Make the column names less messy
-colnames(des_mat) <- stringr::str_remove(colnames(des_mat), "metadata\\$time_point")
-
-# Do a similar thing but remove spaces in names
-colnames(des_mat) <- stringr::str_remove(colnames(des_mat), " ")
-```
-
-Side note: If you are wondering why there are two `\` above in `"filtered_metadata\\$time_point"`, that's called an [escape character](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html#escaping).
-There's a whole universe of things called [regular expressions (regex)](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html) that can be super handy for string manipulations.
-
-## Perform differential expression on pathway scores
-
-Run the linear model on each pathway (each row of `gsva_results`).
-
-```{r}
-# Apply linear model to data
-fit <- limma::lmFit(gsva_results, design = des_mat)
-
-# Apply empirical Bayes to smooth standard errors
-fit <- limma::eBayes(fit)
-```
-
-Now that we have our basic model fitting, we will want to make the contrasts among all our groups.
-Depending on your scientific questions, you will need to customize the next steps.
-Consulting the [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) for how to set up your model based on your hypothesis is a good idea.
-
-Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
-
-Now let's create the results table based on the contrasts fitted model.
-
-This step will provide the Benjamini-Hochberg multiple testing correction.
-The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
-
-```{r}
-# Apply multiple testing correction and obtain stats
-stats_df <- topTable(fit, number = nrow(normalized_counts)) %>%
-  tibble::rownames_to_column("Gene")
-```
-
-Let's take a peek at our results table.
-
-```{r}
-head(stats_df)
-```
-
-For each gene, each group's fold change in expression, compared to the average of the other groups is reported.
-
-By default, results are ordered from largest `F` value to the smallest, which means your most differentially expressed genes across all groups should be toward the top.
-
-This means `HALLMARK_PROTEIN_SECRETION` appears to be the pathway that contains the most significant distribution of scores across time points. 
-
-**STILL mostly IDENTICAL TO MICROARRAY GSVA** (except pathway changed to `HALLMARK_PROTEIN_SECRETION`)
-
-## Visualizing Results
-
-Let's make a plot for our most significant pathway, `HALLMARK_PROTEIN_SECRETION`.
-
-### Sina plot
-
-First we need to get our GSVA scores for this pathway into a long data frame, an appropriate format for `ggplot2`.
-
-Let's look at the current format of `gsva_results`.
-
-```{r}
-head(gsva_results[, 1:10])
-```
-
-We can see that they are in a wide format with the gsva scores for each sample spread across a row associated with each pathway.
-
-Now let's convert these results into a data frame and into a long format, using the `tidyr::pivot_longer()` function.
-
-```{r}
-annotated_results_df <- gsva_results %>%
-  # Make this into a data frame
-  data.frame() %>%
-  # Gene set names are row names
-  tibble::rownames_to_column("pathway") %>%
-  # Get into long format using the `tidyr::pivot_longer()` function
-  tidyr::pivot_longer(
-    cols = -pathway,
-    names_to = "sample",
-    values_to = "gsva_score"
-  )
-
-# Preview the annotated results object
-head(annotated_results_df)
-```
-
-Now let's filter to include only the scores associated with our most significant pathway, `HALLMARK_PROTEIN_SECRETION`, and join the relevant group labels from the metadata for plotting. 
-
-```{r}
-top_pathway_annotated_results_df <- annotated_results_df %>%
-  # Filter for only scores associated with our most significant pathway
-  dplyr::filter(pathway == "HALLMARK_PROTEIN_SECRETION") %>%
-  # Join the column with the group labels that we would like to plot and compare --
-  # Select the variables relevant to your data
-  dplyr::left_join(metadata %>% dplyr::select(
-    refinebio_accession_code,
-    time_point
-  ),
-  # Tell the join what columns are equivalent and should be used as a key
-  by = c("sample" = "refinebio_accession_code")
-  )
-
-# Preview the filtered annotated results object
-head(top_pathway_annotated_results_df)
-```
-
-Now let's make a sina plot so we can look at the differences between the `time_point` groups using our GSVA scores.
-
-```{r}
-# Sina plot comparing GSVA scores for `HALLMARK_PROTEIN_SECRETION` the `time_point` groups in our dataset
-sina_plot <-
-  ggplot(
-    top_pathway_annotated_results_df, # Supply our annotated data frame
-    aes(
-      x = time_point, # Replace with a grouping variable relevant to your data
-      y = gsva_score, # Column we created to store the GSVA scores in the last chunk
-      color = time_point # Let's make the groups different colors too
-    )
-  ) +
-  # Add a boxplot that will have summary stats
-  geom_boxplot(outlier.shape = NA) +
-  # Make a sina plot that shows individual values
-  ggforce::geom_sina() +
-  # Rename the y-axis label
-  labs(y = "HALLMARK_PROTEIN_SECRETION score") +
-  # Adjust the plot background for better visualization
-  theme_bw()
-
-# Display plot
-sina_plot
-```
-
-Looks like the `acute illness` samples have higher GSVA scores for `HALLMARK_PROTEIN_SECRETION` as compared to the `recovering` samples.
-
-Let's save this plot to PNG.
-
-```{r}
-ggsave(file.path(plots_dir, "SRP140558_gsva_HALLMARK_PROTEIN_SECRETION_sina_plot.png"),
-  plot = sina_plot
-)
-```
-
 ## Write results to file
 
-Now let's write all of our GSVA results to file.
+Let's write all of our GSVA results to file.
 
 ```{r}
 gsva_results %>%
@@ -778,11 +554,97 @@ gsva_results %>%
   ))
 ```
 
+**Review**
+
+## Visualizing Results with a heatmap
+
+Let's make a heatmap for our pathways! 
+
+## Neaten up our metadata labels
+
+We will want our heatmap to include our metadata labels, but unfortunately some of the metadata for this dataset are not set up into separate, neat columns. 
+No worries, this is something we will accomplish ourselves by creating a new data frame with the labels we want shown in the heatmap. 
+
+For this study, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
+
+We can create a new variable, `time_point`, that states this info more clearly. 
+This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
+
+```{r}
+annot_df <- metadata %>%
+  # We need the sample IDs and the main column that contains the metadata info
+  dplyr::select(
+    refinebio_accession_code,
+    refinebio_title
+  ) %>%
+  # Create our `time_point` variable based on `refinebio_title`
+  dplyr::mutate(
+    time_point = dplyr::case_when(
+      # Create our new variable based on refinebio_title containing AV/CV
+      stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
+      stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
+    ),
+    # It's easier for future items if this is already set up as a factor
+    time_point = as.factor(time_point)
+  ) %>%
+  # We don't need the older version of the variable anymore
+  dplyr::select(-refinebio_title)
+```
+
+Let's double check that our factor set up is right. 
+We want `acute illness` to be the first level since it was the first time point collected. 
+
+```{r}
+levels(annot_df$time_point)
+```
+
+The `pheatmap::pheatmap()` will want the annotation data frame to have matching row names to the data we supply it (which is our `gsva_results`).
+
+```{r}
+annot_df <- annot_df %>%
+  # pheatmap will want our sample names that match our data to
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+### Set up the heatmap itself
+
+Great! We're all set. 
+We can see that they are in a wide format with the gsva scores for each sample spread across a row associated with each pathway.
+
+```{r}
+heatmap <- pheatmap::pheatmap(gsva_results,
+  annotation_col = annot_df, # Add metadata labels!
+  show_colnames = FALSE, # Don't show sample labels
+  fontsize_row = 6 # Shrink the labels a tad
+)
+
+# Print out heatmap here
+heatmap
+```
+
+Let's save this plot to PNG.
+
+```{r}
+# Open a PNG file
+png(file.path(
+  plots_dir,
+  "SRP140558_heatmap.png" # Replace file name with a relevant output plot name
+))
+
+# Print your heatmap
+heatmap
+
+# Close the PNG file:
+dev.off()
+```
+
 # Resources for further learning
 
 - [GSVA Paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7) [@Hanzelmann2013]
 - See this article on [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
-- [limma users guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf) []
+- [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
+- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
+
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
