@@ -557,7 +557,7 @@ The idea here is that we will get pathway-level scores for each sample that indi
 The output is a gene set by sample matrix of GSVA scores.
 
 
-**STILL mostly IDENTICAL TO MICROARRAY GSVA** (except `kcdf = "Poisson"`)
+**STILL mostly IDENTICAL TO MICROARRAY GSVA**
 
 ### Perform GSVA
 
@@ -570,7 +570,7 @@ gsva_results <- gsva(
   hallmarks_list,
   method = "gsva",
   # Appropriate for our normalized counts data
-  kcdf = "Poisson",
+  kcdf = "Gaussian",
   # Minimum gene set size
   min.sz = 15,
   # Maximum gene set size
