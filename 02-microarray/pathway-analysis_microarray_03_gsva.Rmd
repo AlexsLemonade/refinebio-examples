@@ -208,7 +208,7 @@ if (!("ggforce" %in% installed.packages())) {
 
 Attach the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the `qusage` library
 library(qusage)
 

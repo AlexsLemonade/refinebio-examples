@@ -170,7 +170,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 Attach the packages we need for this analysis:
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(ggplot2)
 
