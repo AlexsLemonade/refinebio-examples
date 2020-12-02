@@ -3900,52 +3900,17 @@ div.tocify {
 <span id="cb7-5"><a href="#cb7-5"></a>}</span></code></pre></div>
 <p>Attach the packages we need for this analysis.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Attach the library</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">library</span>(org.Mm.eg.db)</span></code></pre></div>
-<pre><code>## Loading required package: AnnotationDbi</code></pre>
-<pre><code>## Loading required package: stats4</code></pre>
-<pre><code>## Loading required package: BiocGenerics</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<pre><code>## 
-## Attaching package: &#39;BiocGenerics&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:parallel&#39;:
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     IQR, mad, sd, var, xtabs</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which.max, which.min</code></pre>
-<pre><code>## Loading required package: Biobase</code></pre>
-<pre><code>## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     &#39;browseVignettes()&#39;. To cite Bioconductor, see
-##     &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
-<pre><code>## Loading required package: IRanges</code></pre>
-<pre><code>## Loading required package: S4Vectors</code></pre>
-<pre><code>## 
-## Attaching package: &#39;S4Vectors&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
-## 
-##     expand.grid</code></pre>
-<pre><code>## </code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">library</span>(org.Mm.eg.db)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
 </div>
 <div id="import-and-set-up-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import and set up data</h2>
 <p>Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. This chunk of code will read the both TSV files and add them as data frames to your environment.</p>
 <p>We stored our file paths as objects named <code>metadata_file</code> and <code>data_file</code> in <a href="#check-out-our-file-structure">this previous step</a>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Read in metadata TSV file</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -3969,10 +3934,10 @@ div.tocify {
 ##   taxid_ch1 = col_double()
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Read in data TSV file</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="co"># Tuck away the Gene ID column as rownames</span></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Read in data TSV file</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Tuck away the Gene ID column as rownames</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -3994,36 +3959,36 @@ div.tocify {
 ##   GSM340078 = col_double()
 ## )</code></pre>
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Make the data in the order of the metadata</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>geo_accession)</span>
-<span id="cb29-4"><a href="#cb29-4"></a></span>
-<span id="cb29-5"><a href="#cb29-5"></a><span class="co"># Check if this is in the same order</span></span>
-<span id="cb29-6"><a href="#cb29-6"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(df), metadata<span class="op">$</span>geo_accession)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Make the data in the order of the metadata</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>geo_accession)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># Check if this is in the same order</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(df), metadata<span class="op">$</span>geo_accession)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># Bring back the &quot;Gene&quot; column in preparation for mapping</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Bring back the &quot;Gene&quot; column in preparation for mapping</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 </div>
 <div id="map-ensembl-ids-to-gene-symbols" class="section level2">
 <h2><span class="header-section-number">4.3</span> Map Ensembl IDs to gene symbols</h2>
 <p>The <code>mapIds()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. Use <code>?mapIds</code> to see more options or strategies.</p>
 <p>In the next chunk, we will run the <code>mapIds()</code> function and supply the <code>multiVals</code> argument with the <code>&quot;list&quot;</code> option in order to get a large list with all the mapped values found for each gene identifier.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Map ensembl IDs to their associated gene symbols</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>mapped_list &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
-<span id="cb32-3"><a href="#cb32-3"></a>  org.Mm.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb32-4"><a href="#cb32-4"></a>  <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
-<span id="cb32-5"><a href="#cb32-5"></a>  <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb32-6"><a href="#cb32-6"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb32-7"><a href="#cb32-7"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;list&quot;</span></span>
-<span id="cb32-8"><a href="#cb32-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Map ensembl IDs to their associated gene symbols</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>mapped_list &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb16-3"><a href="#cb16-3"></a>  org.Mm.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>  <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;list&quot;</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>)</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 </div>
 <div id="explore-gene-id-conversion" class="section level2">
 <h2><span class="header-section-number">4.4</span> Explore gene ID conversion</h2>
 <p>Now, let’s take a look at our <code>mapped_list</code> to see how the mapping went.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Let&#39;s use the `head()` function to take a preview at our mapped list</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">head</span>(mapped_list)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Let&#39;s use the `head()` function to take a preview at our mapped list</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">head</span>(mapped_list)</span></code></pre></div>
 <pre><code>## $ENSMUSG00000000001
 ## [1] &quot;Gnai3&quot;
 ## 
@@ -4042,39 +4007,39 @@ div.tocify {
 ## $ENSMUSG00000000049
 ## [1] &quot;Apoh&quot;</code></pre>
 <p>It looks like we have gene symbols that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a>mapped_df &lt;-<span class="st"> </span>mapped_list <span class="op">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">enframe</span>(<span class="dt">name =</span> <span class="st">&quot;Ensembl&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;Symbol&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="st">  </span><span class="co"># enframe makes a `list` column, so we will convert that to simpler format with `unnest()</span></span>
-<span id="cb36-5"><a href="#cb36-5"></a><span class="st">  </span><span class="co"># This will result in one row of our data frame per list item</span></span>
-<span id="cb36-6"><a href="#cb36-6"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">unnest</span>(<span class="dt">cols =</span> Symbol)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>mapped_df &lt;-<span class="st"> </span>mapped_list <span class="op">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">enframe</span>(<span class="dt">name =</span> <span class="st">&quot;Ensembl&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;Symbol&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="co"># enframe makes a `list` column, so we will convert that to simpler format with `unnest()</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="st">  </span><span class="co"># This will result in one row of our data frame per list item</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">unnest</span>(<span class="dt">cols =</span> Symbol)</span></code></pre></div>
 <p>Now let’s take a peek at our data frame.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">head</span>(mapped_df)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">head</span>(mapped_df)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Symbol"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"ENSMUSG00000000001","2":"Gnai3"},{"1":"ENSMUSG00000000003","2":"Pbsn"},{"1":"ENSMUSG00000000028","2":"Cdc45"},{"1":"ENSMUSG00000000031","2":"H19"},{"1":"ENSMUSG00000000037","2":"Scml2"},{"1":"ENSMUSG00000000049","2":"Apoh"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>We can see that our data frame has a new column <code>Symbol</code>. Let’s get a summary of the gene symbols returned in the <code>Symbol</code> column of our mapped data frame.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column</span></span>
-<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">summary</span>(mapped_df<span class="op">$</span>Symbol)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">summary</span>(mapped_df<span class="op">$</span>Symbol)</span></code></pre></div>
 <pre><code>##    Length     Class      Mode 
 ##     17973 character character</code></pre>
 <p>There are 998 NAs in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols. 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected. Regardless, it is always good to be aware of how many genes you are potentially “losing” if you rely on this new gene identifier you’ve mapped to for downstream analyses.</p>
 <p>However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.</p>
 <p>Now let’s check to see if we have any genes that were mapped to multiple symbols.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>multi_mapped &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="co"># Let&#39;s group by the Ensembl IDs in the `Ensembl` column</span></span>
-<span id="cb40-3"><a href="#cb40-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(Ensembl) <span class="op">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4"></a><span class="st">  </span><span class="co"># Create a new variable containing the number of symbols mapped to each ID</span></span>
-<span id="cb40-5"><a href="#cb40-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">gene_symbol_count =</span> dplyr<span class="op">::</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb40-6"><a href="#cb40-6"></a><span class="st">  </span><span class="co"># Arrange by the genes with the highest number of symbols mapped</span></span>
-<span id="cb40-7"><a href="#cb40-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(gene_symbol_count)) <span class="op">%&gt;%</span></span>
-<span id="cb40-8"><a href="#cb40-8"></a><span class="st">  </span><span class="co"># Filter to include only the rows with multi mappings</span></span>
-<span id="cb40-9"><a href="#cb40-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(gene_symbol_count <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</span>
-<span id="cb40-10"><a href="#cb40-10"></a></span>
-<span id="cb40-11"><a href="#cb40-11"></a><span class="co"># Let&#39;s look at the first 6 rows of our `multi_mapped` object</span></span>
-<span id="cb40-12"><a href="#cb40-12"></a><span class="kw">head</span>(multi_mapped)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>multi_mapped &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="co"># Let&#39;s group by the Ensembl IDs in the `Ensembl` column</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(Ensembl) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="co"># Create a new variable containing the number of symbols mapped to each ID</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">gene_symbol_count =</span> dplyr<span class="op">::</span><span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a><span class="st">  </span><span class="co"># Arrange by the genes with the highest number of symbols mapped</span></span>
+<span id="cb24-7"><a href="#cb24-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(gene_symbol_count)) <span class="op">%&gt;%</span></span>
+<span id="cb24-8"><a href="#cb24-8"></a><span class="st">  </span><span class="co"># Filter to include only the rows with multi mappings</span></span>
+<span id="cb24-9"><a href="#cb24-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(gene_symbol_count <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</span>
+<span id="cb24-10"><a href="#cb24-10"></a></span>
+<span id="cb24-11"><a href="#cb24-11"></a><span class="co"># Let&#39;s look at the first 6 rows of our `multi_mapped` object</span></span>
+<span id="cb24-12"><a href="#cb24-12"></a><span class="kw">head</span>(multi_mapped)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Symbol"],"name":[2],"type":["chr"],"align":["left"]},{"label":["gene_symbol_count"],"name":[3],"type":["int"],"align":["right"]}],"data":[{"1":"ENSMUSG00000071415","2":"Rpl23","3":"3"},{"1":"ENSMUSG00000071415","2":"LOC100044627","3":"3"},{"1":"ENSMUSG00000071415","2":"LOC100862455","3":"3"},{"1":"ENSMUSG00000093803","2":"Ppp2r3d","3":"3"},{"1":"ENSMUSG00000093803","2":"LOC108167320","3":"3"},{"1":"ENSMUSG00000093803","2":"LOC108167694","3":"3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -4085,30 +4050,30 @@ div.tocify {
 <div id="map-ensembl-ids-to-gene-symbols-filtering-out-multi-mappings" class="section level2">
 <h2><span class="header-section-number">4.5</span> Map Ensembl IDs to gene symbols – filtering out multi mappings</h2>
 <p>The next code chunk we will rerun the <code>mapIds()</code> function, this time supplying the <code>&quot;filter&quot;</code> option to the <code>multiVals</code> argument. This will remove all instances of multiple mappings and return a list of only the gene identifiers and symbols that had 1:1 mapping. Use <code>?mapIds</code> to see more options or strategies.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Map ensembl IDs to their associated gene symbols</span></span>
-<span id="cb41-2"><a href="#cb41-2"></a>filtered_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb41-3"><a href="#cb41-3"></a>  <span class="st">&quot;Symbol&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
-<span id="cb41-4"><a href="#cb41-4"></a>    org.Mm.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb41-5"><a href="#cb41-5"></a>    <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
-<span id="cb41-6"><a href="#cb41-6"></a>    <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb41-7"><a href="#cb41-7"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb41-8"><a href="#cb41-8"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;filter&quot;</span> <span class="co"># This will drop any `Gene`s that have multiple matches</span></span>
-<span id="cb41-9"><a href="#cb41-9"></a>  )</span>
-<span id="cb41-10"><a href="#cb41-10"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb41-11"><a href="#cb41-11"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
-<span id="cb41-12"><a href="#cb41-12"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb41-13"><a href="#cb41-13"></a><span class="st">  </span><span class="co"># Join the remaining data from `df` using the Ensembl IDs</span></span>
-<span id="cb41-14"><a href="#cb41-14"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Map ensembl IDs to their associated gene symbols</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>filtered_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb25-3"><a href="#cb25-3"></a>  <span class="st">&quot;Symbol&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb25-4"><a href="#cb25-4"></a>    org.Mm.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a>    <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
+<span id="cb25-6"><a href="#cb25-6"></a>    <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb25-7"><a href="#cb25-7"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb25-8"><a href="#cb25-8"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;filter&quot;</span> <span class="co"># This will drop any `Gene`s that have multiple matches</span></span>
+<span id="cb25-9"><a href="#cb25-9"></a>  )</span>
+<span id="cb25-10"><a href="#cb25-10"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb25-11"><a href="#cb25-11"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
+<span id="cb25-12"><a href="#cb25-12"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb25-13"><a href="#cb25-13"></a><span class="st">  </span><span class="co"># Join the remaining data from `df` using the Ensembl IDs</span></span>
+<span id="cb25-14"><a href="#cb25-14"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>Now, let’s write our filtered and mapped results to file!</p>
 </div>
 <div id="write-mapped-results-to-file" class="section level2">
 <h2><span class="header-section-number">4.6</span> Write mapped results to file</h2>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="co"># Write mapped and annotated data frame to output file</span></span>
-<span id="cb43-2"><a href="#cb43-2"></a>readr<span class="op">::</span><span class="kw">write_tsv</span>(filtered_mapped_df, <span class="kw">file.path</span>(</span>
-<span id="cb43-3"><a href="#cb43-3"></a>  results_dir,</span>
-<span id="cb43-4"><a href="#cb43-4"></a>  <span class="st">&quot;GSE13490_Gene_Symbols.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
-<span id="cb43-5"><a href="#cb43-5"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Write mapped and annotated data frame to output file</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>readr<span class="op">::</span><span class="kw">write_tsv</span>(filtered_mapped_df, <span class="kw">file.path</span>(</span>
+<span id="cb27-3"><a href="#cb27-3"></a>  results_dir,</span>
+<span id="cb27-4"><a href="#cb27-4"></a>  <span class="st">&quot;GSE13490_Gene_Symbols.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a>))</span></code></pre></div>
 </div>
 </div>
 <div id="resources-for-further-learning" class="section level1">
@@ -4121,8 +4086,8 @@ div.tocify {
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># Print session info</span></span>
-<span id="cb44-2"><a href="#cb44-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># Print session info</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
@@ -4165,7 +4130,7 @@ div.tocify {
 ##  magrittr      * 1.5     2014-11-22 [1] RSPM (R 4.0.0)
 ##  memoise         1.1.0   2017-04-21 [1] RSPM (R 4.0.0)
 ##  optparse      * 1.6.6   2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Mm.eg.db  * 3.12.0  2020-12-02 [1] Bioconductor  
+##  org.Mm.eg.db  * 3.12.0  2020-12-01 [1] Bioconductor  
 ##  pillar          1.4.6   2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig       2.0.3   2019-09-22 [1] RSPM (R 4.0.0)
 ##  ps              1.4.0   2020-10-07 [1] RSPM (R 4.0.2)

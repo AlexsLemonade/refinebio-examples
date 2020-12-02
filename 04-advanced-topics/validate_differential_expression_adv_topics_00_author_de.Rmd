@@ -36,9 +36,9 @@ if (!("GEOquery" %in% installed.packages())) {
 
 Attach the `limma` library:
 
-```{r}
-# Magrittr pipe
-`%>%` <- dplyr::`%>%`
+```{r message=FALSE}
+# We will need this so we can use the pipe: %>%
+library(magrittr)
 
 # Attach library
 library(limma)

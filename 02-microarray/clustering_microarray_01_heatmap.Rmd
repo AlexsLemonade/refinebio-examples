@@ -175,7 +175,7 @@ if (!("pheatmap" %in% installed.packages())) {
 
 Attach the `pheatmap` library:
 
-```{r}
+```{r message=FALSE}
 # Attach the `pheatmap` library
 library(pheatmap)
 

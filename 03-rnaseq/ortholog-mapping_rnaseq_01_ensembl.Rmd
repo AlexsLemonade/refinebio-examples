@@ -175,7 +175,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 Attach a package we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```

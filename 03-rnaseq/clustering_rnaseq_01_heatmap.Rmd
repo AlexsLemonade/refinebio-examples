@@ -186,7 +186,7 @@ if (!("DESeq2" %in% installed.packages())) {
 
 Attach the `pheatmap` and `DESeq2` libraries:
 
-```{r}
+```{r message=FALSE}
 # Attach the `pheatmap` library
 library(pheatmap)
 

@@ -190,7 +190,7 @@ if (!("apeglm" %in% installed.packages())) {
 
 Attach the libraries we need for this analysis:
 
-```{r}
+```{r message=FALSE}
 # Attach the DESeq2 library
 library(DESeq2)
 

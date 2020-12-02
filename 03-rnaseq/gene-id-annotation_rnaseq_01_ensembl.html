@@ -3901,52 +3901,17 @@ div.tocify {
 <span id="cb7-5"><a href="#cb7-5"></a>}</span></code></pre></div>
 <p>Attach the packages we need for this analysis.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Attach the library</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">library</span>(org.Dr.eg.db)</span></code></pre></div>
-<pre><code>## Loading required package: AnnotationDbi</code></pre>
-<pre><code>## Loading required package: stats4</code></pre>
-<pre><code>## Loading required package: BiocGenerics</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<pre><code>## 
-## Attaching package: &#39;BiocGenerics&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:parallel&#39;:
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     IQR, mad, sd, var, xtabs</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which.max, which.min</code></pre>
-<pre><code>## Loading required package: Biobase</code></pre>
-<pre><code>## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     &#39;browseVignettes()&#39;. To cite Bioconductor, see
-##     &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.</code></pre>
-<pre><code>## Loading required package: IRanges</code></pre>
-<pre><code>## Loading required package: S4Vectors</code></pre>
-<pre><code>## 
-## Attaching package: &#39;S4Vectors&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
-## 
-##     expand.grid</code></pre>
-<pre><code>## </code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw">library</span>(org.Dr.eg.db)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># We will need this so we can use the pipe: %&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">library</span>(magrittr)</span></code></pre></div>
 </div>
 <div id="import-and-set-up-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Import and set up data</h2>
 <p>Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file. This chunk of code will read the both TSV files and add them as data frames to your environment.</p>
 <p>We stored our file paths as objects named <code>metadata_file</code> and <code>data_file</code> in <a href="#check-out-our-file-structure">this previous step</a>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Read in metadata TSV file</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -3959,10 +3924,10 @@ div.tocify {
 ##   refinebio_title = col_character()
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Read in data TSV file</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span><span class="co"># Tuck away the Gene ID column as rownames</span></span>
-<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Read in data TSV file</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Tuck away the Gene ID column as rownames</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
@@ -3971,36 +3936,36 @@ div.tocify {
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Make the data in the order of the metadata</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>refinebio_accession_code)</span>
-<span id="cb29-4"><a href="#cb29-4"></a></span>
-<span id="cb29-5"><a href="#cb29-5"></a><span class="co"># Check if this is in the same order</span></span>
-<span id="cb29-6"><a href="#cb29-6"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(df), metadata<span class="op">$</span>refinebio_accession_code)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Make the data in the order of the metadata</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>refinebio_accession_code)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># Check if this is in the same order</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(df), metadata<span class="op">$</span>refinebio_accession_code)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># Bring back the &quot;Gene&quot; column in preparation for mapping</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
-<span id="cb31-3"><a href="#cb31-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Bring back the &quot;Gene&quot; column in preparation for mapping</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 </div>
 <div id="map-ensembl-ids-to-entrez-ids" class="section level2">
 <h2><span class="header-section-number">4.3</span> Map Ensembl IDs to Entrez IDs</h2>
 <p>The <code>mapIds()</code> function has a <code>multiVals</code> argument which denotes what to do when there are multiple mapped values for a single gene identifier. The default behavior is to return just the first mapped value. It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. Use <code>?mapIds</code> to see more options or strategies.</p>
 <p>In the next chunk, we will run the <code>mapIds()</code> function and supply the <code>multiVals</code> argument with the <code>&quot;list&quot;</code> option in order to get a large list with all the mapped values found for each gene identifier.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Map Ensembl IDs to their associated Entrez IDs</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>mapped_list &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
-<span id="cb32-3"><a href="#cb32-3"></a>  org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb32-4"><a href="#cb32-4"></a>  <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
-<span id="cb32-5"><a href="#cb32-5"></a>  <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb32-6"><a href="#cb32-6"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb32-7"><a href="#cb32-7"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;list&quot;</span></span>
-<span id="cb32-8"><a href="#cb32-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Map Ensembl IDs to their associated Entrez IDs</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>mapped_list &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb16-3"><a href="#cb16-3"></a>  org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>  <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;list&quot;</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>)</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 </div>
 <div id="explore-gene-id-conversion" class="section level2">
 <h2><span class="header-section-number">4.4</span> Explore gene ID conversion</h2>
 <p>Now, let’s take a look at our mapped object to see how the mapping went.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># Let&#39;s use the `head()` function to take a preview at our mapped list</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="kw">head</span>(mapped_list)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Let&#39;s use the `head()` function to take a preview at our mapped list</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="kw">head</span>(mapped_list)</span></code></pre></div>
 <pre><code>## $ENSDARG00000000001
 ## [1] &quot;368418&quot;
 ## 
@@ -4019,22 +3984,22 @@ div.tocify {
 ## $ENSDARG00000000069
 ## [1] &quot;58093&quot;</code></pre>
 <p>It looks like we have Entrez IDs that were successfully mapped to the Ensembl IDs we provided. However, the data is now in a <code>list</code> object, making it a little more difficult to explore. We are going to turn our list object into a data frame object in the next chunk.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a>mapped_df &lt;-<span class="st"> </span>mapped_list <span class="op">%&gt;%</span></span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">enframe</span>(<span class="dt">name =</span> <span class="st">&quot;Ensembl&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;Entrez&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="st">  </span><span class="co"># enframe makes a `list` column, so we will convert that to simpler format with `unnest()</span></span>
-<span id="cb36-5"><a href="#cb36-5"></a><span class="st">  </span><span class="co"># This will result in one row of our data frame per list item</span></span>
-<span id="cb36-6"><a href="#cb36-6"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">unnest</span>(<span class="dt">cols =</span> Entrez)</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Let&#39;s make our object a bit more manageable for exploration by turning it into a data frame</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>mapped_df &lt;-<span class="st"> </span>mapped_list <span class="op">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">enframe</span>(<span class="dt">name =</span> <span class="st">&quot;Ensembl&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;Entrez&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="co"># enframe makes a `list` column, so we will convert that to simpler format with `unnest()</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="st">  </span><span class="co"># This will result in one row of our data frame per list item</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">unnest</span>(<span class="dt">cols =</span> Entrez)</span></code></pre></div>
 <p>Now let’s take a peek at our data frame.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="kw">head</span>(mapped_df)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">head</span>(mapped_df)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Entrez"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"ENSDARG00000000001","2":"368418"},{"1":"ENSDARG00000000002","2":"368419"},{"1":"ENSDARG00000000018","2":"64604"},{"1":"ENSDARG00000000019","2":"368425"},{"1":"ENSDARG00000000068","2":"327272"},{"1":"ENSDARG00000000069","2":"58093"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>We can see that our data frame has a new column <code>Entrez</code>. Let’s get a summary of the values returned in the <code>Entrez</code> column of our mapped data frame.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="co"># We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column</span></span>
-<span id="cb38-2"><a href="#cb38-2"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Entrez)) <span class="co"># We need to use the `as.factor()` function here in order to get the count of each unique value returned</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Entrez)) <span class="co"># We need to use the `as.factor()` function here in order to get the count of each unique value returned</span></span></code></pre></div>
 <pre><code>## 100126027 100150038 100331412    794549    554097    794406 100536331 100148591 
 ##        28        28        28        28        11         7         6         5 
 ## 100329290 100334559 100170822 100333446    393541    562179    795394 100000956 
@@ -4063,14 +4028,14 @@ div.tocify {
 ##         2         2     22898      9026</code></pre>
 <p>There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>multi_mapped_df &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb40-2"><a href="#cb40-2"></a><span class="st">  </span><span class="co"># Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column</span></span>
-<span id="cb40-3"><a href="#cb40-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(Ensembl, <span class="dt">name =</span> <span class="st">&quot;entrez_id_count&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb40-4"><a href="#cb40-4"></a><span class="st">  </span><span class="co"># Arrange by the genes with the highest number of Entrez IDs mapped</span></span>
-<span id="cb40-5"><a href="#cb40-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(entrez_id_count))</span>
-<span id="cb40-6"><a href="#cb40-6"></a></span>
-<span id="cb40-7"><a href="#cb40-7"></a><span class="co"># Let&#39;s look at the first 6 rows of our `multi_mapped` object</span></span>
-<span id="cb40-8"><a href="#cb40-8"></a><span class="kw">head</span>(multi_mapped_df)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>multi_mapped_df &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a><span class="st">  </span><span class="co"># Let&#39;s count the number of times each Ensembl ID appears in `Ensembl` column</span></span>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(Ensembl, <span class="dt">name =</span> <span class="st">&quot;entrez_id_count&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="co"># Arrange by the genes with the highest number of Entrez IDs mapped</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(<span class="kw">desc</span>(entrez_id_count))</span>
+<span id="cb24-6"><a href="#cb24-6"></a></span>
+<span id="cb24-7"><a href="#cb24-7"></a><span class="co"># Let&#39;s look at the first 6 rows of our `multi_mapped` object</span></span>
+<span id="cb24-8"><a href="#cb24-8"></a><span class="kw">head</span>(multi_mapped_df)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["entrez_id_count"],"name":[2],"type":["int"],"align":["right"]}],"data":[{"1":"ENSDARG00000097337","2":"15"},{"1":"ENSDARG00000006220","2":"7"},{"1":"ENSDARG00000092636","2":"7"},{"1":"ENSDARG00000061547","2":"5"},{"1":"ENSDARG00000095051","2":"5"},{"1":"ENSDARG00000098788","2":"5"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -4080,18 +4045,18 @@ div.tocify {
 <div id="store-all-mapped-values" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Store all mapped values</h3>
 <p>If we are not sure which Entrez ID is most relevant to our downstream analyses, we could store all of the mapped information for future use. In the next chunk, we show how we can collapse all the Entrez IDs into one column where we store them all for each unique Ensembl ID.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>collapsed_mapped_df &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb41-2"><a href="#cb41-2"></a><span class="st">  </span><span class="co"># Group by Ensembl IDs</span></span>
-<span id="cb41-3"><a href="#cb41-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(Ensembl) <span class="op">%&gt;%</span></span>
-<span id="cb41-4"><a href="#cb41-4"></a><span class="st">  </span><span class="co"># Collapse the mapped values in `mapped_df` into one column named `all_entrez_ids`</span></span>
-<span id="cb41-5"><a href="#cb41-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">all_entrez_ids =</span> <span class="kw">paste</span>(Entrez, <span class="dt">collapse =</span> <span class="st">&quot;;&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>collapsed_mapped_df &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">  </span><span class="co"># Group by Ensembl IDs</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(Ensembl) <span class="op">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="st">  </span><span class="co"># Collapse the mapped values in `mapped_df` into one column named `all_entrez_ids`</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">all_entrez_ids =</span> <span class="kw">paste</span>(Entrez, <span class="dt">collapse =</span> <span class="st">&quot;;&quot;</span>))</span></code></pre></div>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 <p>Let’s take a look at our new collapsed <code>all_entrez_ids</code> column in the <code>collapsed_mapped_df</code> object.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>collapsed_mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb43-2"><a href="#cb43-2"></a><span class="st">  </span><span class="co"># Filter `collapsed_mapped_df` to include only the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values</span></span>
-<span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(stringr<span class="op">::</span><span class="kw">str_detect</span>(all_entrez_ids, <span class="st">&quot;;&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb43-4"><a href="#cb43-4"></a><span class="st">  </span><span class="co"># We only need a preview here</span></span>
-<span id="cb43-5"><a href="#cb43-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>collapsed_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">  </span><span class="co"># Filter `collapsed_mapped_df` to include only the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(stringr<span class="op">::</span><span class="kw">str_detect</span>(all_entrez_ids, <span class="st">&quot;;&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="st">  </span><span class="co"># We only need a preview here</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["all_entrez_ids"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"ENSDARG00000000540","2":"368827;110631416"},{"1":"ENSDARG00000006220","2":"406731;641488;100379286;100384891;100384896;100384897;100384901"},{"1":"ENSDARG00000010145","2":"550133;101886311"},{"1":"ENSDARG00000019797","2":"336260;110437857"},{"1":"ENSDARG00000020811","2":"405787;572703"},{"1":"ENSDARG00000021149","2":"337696;792137"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -4103,27 +4068,27 @@ div.tocify {
 <h3><span class="header-section-number">4.4.2</span> Map Ensembl IDs to gene symbols – keeping only the first mapped value</h3>
 <p>If we don’t have a particular preference of which Entrez ID is returned, we can have <code>mapIds()</code> use its default of returning the first Entrez ID listed.</p>
 <p>Let’s re-run <code>mapIds()</code>, this time using <code>multiVals = &quot;first&quot;</code>.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>final_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb44-2"><a href="#cb44-2"></a>  <span class="st">&quot;first_mapped_entrez_id&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
-<span id="cb44-3"><a href="#cb44-3"></a>    org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb44-4"><a href="#cb44-4"></a>    <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
-<span id="cb44-5"><a href="#cb44-5"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb44-6"><a href="#cb44-6"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb44-7"><a href="#cb44-7"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span> <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
-<span id="cb44-8"><a href="#cb44-8"></a>  )</span>
-<span id="cb44-9"><a href="#cb44-9"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb44-10"><a href="#cb44-10"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
-<span id="cb44-11"><a href="#cb44-11"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb44-12"><a href="#cb44-12"></a><span class="st">  </span><span class="co"># Join the multiple mappings data from `collapsed_mapped_df` using the Ensembl IDs</span></span>
-<span id="cb44-13"><a href="#cb44-13"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(collapsed_mapped_df, <span class="dt">by =</span> <span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb44-14"><a href="#cb44-14"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
-<span id="cb44-15"><a href="#cb44-15"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>final_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb28-2"><a href="#cb28-2"></a>  <span class="st">&quot;first_mapped_entrez_id&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb28-3"><a href="#cb28-3"></a>    org.Dr.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>    <span class="dt">keys =</span> df<span class="op">$</span>Gene,</span>
+<span id="cb28-5"><a href="#cb28-5"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb28-6"><a href="#cb28-6"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb28-7"><a href="#cb28-7"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span> <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
+<span id="cb28-8"><a href="#cb28-8"></a>  )</span>
+<span id="cb28-9"><a href="#cb28-9"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb28-10"><a href="#cb28-10"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
+<span id="cb28-11"><a href="#cb28-11"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb28-12"><a href="#cb28-12"></a><span class="st">  </span><span class="co"># Join the multiple mappings data from `collapsed_mapped_df` using the Ensembl IDs</span></span>
+<span id="cb28-13"><a href="#cb28-13"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(collapsed_mapped_df, <span class="dt">by =</span> <span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb28-14"><a href="#cb28-14"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
+<span id="cb28-15"><a href="#cb28-15"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>Our <code>final_mapped_df</code> object now has a column named <code>first_mapped_entrez_id</code> that contains only the first mapped Entrez ID, in addition to the <code>all_entrez_ids</code> column that contains all mapped Entrez IDs per Ensembl ID.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>final_mapped_df <span class="op">%&gt;%</span></span>
-<span id="cb46-2"><a href="#cb46-2"></a><span class="st">  </span><span class="co"># Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values</span></span>
-<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(stringr<span class="op">::</span><span class="kw">str_detect</span>(all_entrez_ids, <span class="st">&quot;;&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb46-4"><a href="#cb46-4"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>final_mapped_df <span class="op">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="st">  </span><span class="co"># Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values include the &quot;;&quot; character -- we know that these are the rows with multiple mapped values</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(stringr<span class="op">::</span><span class="kw">str_detect</span>(all_entrez_ids, <span class="st">&quot;;&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Ensembl"],"name":[1],"type":["chr"],"align":["left"]},{"label":["first_mapped_entrez_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["all_entrez_ids"],"name":[3],"type":["chr"],"align":["left"]},{"label":["SRR1205173"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["SRR1205166"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["SRR1205151"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["SRR1205167"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["SRR1205171"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["SRR1205168"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["SRR1205154"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["SRR1205169"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["SRR1205163"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["SRR1205172"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["SRR1205158"],"name":[14],"type":["dbl"],"align":["right"]},{"label":["SRR1205160"],"name":[15],"type":["dbl"],"align":["right"]},{"label":["SRR1205152"],"name":[16],"type":["dbl"],"align":["right"]},{"label":["SRR1205170"],"name":[17],"type":["dbl"],"align":["right"]},{"label":["SRR1205174"],"name":[18],"type":["dbl"],"align":["right"]},{"label":["SRR1205162"],"name":[19],"type":["dbl"],"align":["right"]},{"label":["SRR1205156"],"name":[20],"type":["dbl"],"align":["right"]},{"label":["SRR1205161"],"name":[21],"type":["dbl"],"align":["right"]},{"label":["SRR1205157"],"name":[22],"type":["dbl"],"align":["right"]},{"label":["SRR1205153"],"name":[23],"type":["dbl"],"align":["right"]},{"label":["SRR1205165"],"name":[24],"type":["dbl"],"align":["right"]},{"label":["SRR1205155"],"name":[25],"type":["dbl"],"align":["right"]},{"label":["SRR1205164"],"name":[26],"type":["dbl"],"align":["right"]},{"label":["SRR1205159"],"name":[27],"type":["dbl"],"align":["right"]}],"data":[{"1":"ENSDARG00000000540","2":"368827","3":"368827;110631416","4":"0.9901324","5":"0.9336348","6":"0.9447219","7":"0.9707928","8":"0.8947301","9":"1.0350372","10":"0.9062361","11":"0.7365067","12":"0.9201981","13":"0.9872643","14":"1.0699393","15":"0.7284615","16":"0.9511675","17":"0.9277571","18":"0.9472631","19":"0.8357555","20":"0.8926381","21":"0.9336348","22":"0.9417886","23":"0.9213082","24":"0.9565752","25":"0.9109620","26":"1.0047735","27":"1.1365578","_rn_":"1"},{"1":"ENSDARG00000006220","2":"406731","3":"406731;641488;100379286;100384891;100384896;100384897;100384901","4":"0.6655282","5":"0.5585076","6":"0.3988464","7":"0.7089964","8":"0.7773924","9":"0.3884749","10":"0.7888222","11":"0.9310478","12":"0.7029666","13":"0.5182886","14":"0.5084905","15":"0.8834053","16":"0.5844631","17":"0.8938344","18":"0.6658205","19":"0.7637008","20":"0.8356637","21":"0.9022873","22":"0.5676206","23":"0.7825670","24":"0.8665206","25":"0.8356637","26":"0.7683183","27":"0.4806491","_rn_":"2"},{"1":"ENSDARG00000010145","2":"550133","3":"550133;101886311","4":"0.7058364","5":"0.7395471","6":"0.6601366","7":"0.6620915","8":"1.0155840","9":"0.7584339","10":"0.7639539","11":"0.9227509","12":"0.9381937","13":"0.6661967","14":"0.8192576","15":"0.9540403","16":"0.6268148","17":"1.0150010","18":"0.7393792","19":"1.0163834","20":"0.6993486","21":"1.0424352","22":"0.7178217","23":"0.6477634","24":"0.9751066","25":"0.7318299","26":"0.9506292","27":"0.8097920","_rn_":"3"},{"1":"ENSDARG00000019797","2":"336260","3":"336260;110437857","4":"1.4504907","5":"1.4487838","6":"1.3222460","7":"1.5628957","8":"1.4384051","9":"1.4120403","10":"1.4438694","11":"1.3078293","12":"1.3941832","13":"1.5133750","14":"1.1599954","15":"1.1795348","16":"1.3582363","17":"1.2476268","18":"1.4475407","19":"1.5015166","20":"1.7135557","21":"1.4148311","22":"0.9202943","23":"1.3277514","24":"1.2207574","25":"1.4586061","26":"1.2734774","27":"1.2315386","_rn_":"4"},{"1":"ENSDARG00000020811","2":"405787","3":"405787;572703","4":"0.7176636","5":"0.7466297","6":"0.6673898","7":"0.7361904","8":"0.7024317","9":"0.7716012","10":"0.8266388","11":"0.7857751","12":"0.7673962","13":"0.6700022","14":"0.7004191","15":"0.8797663","16":"0.8220890","17":"0.8118034","18":"0.7048320","19":"0.9559255","20":"0.7268546","21":"0.8805299","22":"0.8254772","23":"0.7145699","24":"0.7358817","25":"0.8411399","26":"0.7500696","27":"0.7917731","_rn_":"5"},{"1":"ENSDARG00000021149","2":"337696","3":"337696;792137","4":"1.1852220","5":"0.9619579","6":"1.0466243","7":"1.0885286","8":"1.6057540","9":"1.0411261","10":"1.2206058","11":"1.4295779","12":"1.2487842","13":"1.2201493","14":"1.1504810","15":"1.4953971","16":"1.0379411","17":"1.4244594","18":"1.1156921","19":"1.4706718","20":"1.0121543","21":"1.5129104","22":"1.3318635","23":"0.9191876","24":"1.2769344","25":"1.2179832","26":"1.3145863","27":"1.1227333","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -4134,11 +4099,11 @@ div.tocify {
 </div>
 <div id="write-mapped-results-to-file" class="section level2">
 <h2><span class="header-section-number">4.5</span> Write mapped results to file</h2>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Write mapped and annotated data frame to output file</span></span>
-<span id="cb47-2"><a href="#cb47-2"></a>readr<span class="op">::</span><span class="kw">write_tsv</span>(final_mapped_df, <span class="kw">file.path</span>(</span>
-<span id="cb47-3"><a href="#cb47-3"></a>  results_dir,</span>
-<span id="cb47-4"><a href="#cb47-4"></a>  <span class="st">&quot;SRP040561_Entrez_IDs.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
-<span id="cb47-5"><a href="#cb47-5"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># Write mapped and annotated data frame to output file</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>readr<span class="op">::</span><span class="kw">write_tsv</span>(final_mapped_df, <span class="kw">file.path</span>(</span>
+<span id="cb31-3"><a href="#cb31-3"></a>  results_dir,</span>
+<span id="cb31-4"><a href="#cb31-4"></a>  <span class="st">&quot;SRP040561_Entrez_IDs.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
+<span id="cb31-5"><a href="#cb31-5"></a>))</span></code></pre></div>
 </div>
 </div>
 <div id="resources-for-further-learning" class="section level1">
@@ -4151,8 +4116,8 @@ div.tocify {
 <div id="session-info" class="section level1">
 <h1><span class="header-section-number">6</span> Session info</h1>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># Print session info</span></span>
-<span id="cb48-2"><a href="#cb48-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Print session info</span></span>
+<span id="cb32-2"><a href="#cb32-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
@@ -4195,7 +4160,7 @@ div.tocify {
 ##  magrittr      * 1.5     2014-11-22 [1] RSPM (R 4.0.0)
 ##  memoise         1.1.0   2017-04-21 [1] RSPM (R 4.0.0)
 ##  optparse      * 1.6.6   2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Dr.eg.db  * 3.12.0  2020-12-02 [1] Bioconductor  
+##  org.Dr.eg.db  * 3.12.0  2020-12-01 [1] Bioconductor  
 ##  pillar          1.4.6   2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig       2.0.3   2019-09-22 [1] RSPM (R 4.0.0)
 ##  ps              1.4.0   2020-10-07 [1] RSPM (R 4.0.2)
