@@ -365,14 +365,12 @@ We will need to provide to `clusterProfiler` two genes lists:
 
 ## Determine our genes of interest list
 
-**REVIEW**
-
-This step is highly variable depending on what your gene list is, what information it contains and what your goals are. 
+This step is highly variable depending on the format of your gene table, what information it contains and what your goals are. 
 You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to introduce cutoffs and filters that we don't need here, given the nature of our data.  
 
-Here, we will focus on one module, module 19, to identify pathway's associated with it. 
-We previously identified this module as differentially expressed between our datasets' two time points (during acute illness and during recovery). 
-See [the previous section](#about-the-dataset-we-are-using-for-this-example) for more background on this gene list. 
+Here, we will focus on one module, module 19, to identify pathways associated with it. 
+We previously identified this module as differentially expressed between our dataset's two time points (during acute illness and during recovery). 
+See [the previous section](#about-the-dataset-we-are-using-for-this-example) for more background on the structure and content of the data table we are using. 
 
 ```{r}
 module_19_genes <- module_annot_df %>%
@@ -393,14 +391,13 @@ head(genes_of_interest)
 ## Determine our background set gene list
 
 Sometimes folks consider genes from the entire genome to comprise the background, but for this RNA-seq example, we will consider all detectable genes as our background set.
-The dataset that these genes are from already had unreliably detected, [low count genes removed it](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html#prepare-data-for-deseq2). 
+The dataset that these genes were selected from already had unreliably detected, [low count genes removed](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html#prepare-data-for-deseq2). 
 Because of this, we can obtain our detected genes list from our data frame, `module_annot_df` (which we have not done any further filtering on in this notebook).
 
 ```{r}
+# Remove any duplicated entrez_ids
 background_set <- unique(as.character(module_annot_df$entrez_id))
 ```
-
-**IDENTICAL TO MICROARRAY EXAMPLE** (except plot names changed and results summaries altered)
 
 ## Run ORA using the `enricher()` function
 
@@ -431,7 +428,7 @@ Let's convert this into a data frame that we can write to file.
 kegg_result_df <- data.frame(kegg_ora_results@result)
 ```
 
-Let's print out a sneak peek of it here and take a look at how many sets do we have that fit our cutoff of `0.1` FDR?
+Let's print out a sneak peek of the results here and take a look at how many gene sets we have using an FDR cutoff of `0.1`.
 
 ```{r}
 kegg_result_df %>%
@@ -475,7 +472,8 @@ upset_plot
 
 See that `KEGG_CELL_CYCLE` and `KEGG_OOCYTE_MEIOSIS` have genes in common, as do `KEGG_CELL_CYCLE` and `KEGG_DNA_REPLICATION`. 
 Gene sets or pathways aren't independent! 
-Based on the context of your samples, you may be able to narrow down which ones make sense, like in this instance, we are dealing with PBMCs, so the oocyte meiosis is not relevant to the biology of the samples at hand. 
+Based on the context of your samples, you may be able to narrow down which ones make sense. 
+In this instance, we are dealing with PBMCs, so the oocyte meiosis is not relevant to the biology of the samples at hand, and all of the identified genes in that pathway are also part of the cell cycle pathway. 
 
 Let's also save this to a PNG.
 
