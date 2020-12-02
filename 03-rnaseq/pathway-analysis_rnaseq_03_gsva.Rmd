@@ -453,11 +453,11 @@ dup_entrez_ids <- mapped_df %>%
 #### Handling duplicate gene identifiers
 
 As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
-In other words, we will narrow down one Ensembl ID's data for a particular Entrez gene identifier instances for each sample or column in this case.
+In other words, we will narrow down one Ensembl ID's data for each particular Entrez gene identifier.
 
 See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
 
-First we need to calcuate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way. 
+First we need to calcuate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
 
 ```{r}
 # First let's determine the gene means

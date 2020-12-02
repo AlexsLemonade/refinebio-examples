@@ -4073,7 +4073,7 @@ div.tocify {
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb41-2"><a href="#cb41-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -4090,7 +4090,7 @@ div.tocify {
 <span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later</span></span>
 <span id="cb43-4"><a href="#cb43-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4318,9 +4318,9 @@ div.tocify {
 <p><strong>Review</strong></p>
 <div id="handling-duplicate-gene-identifiers" class="section level4">
 <h4><span class="header-section-number">4.4.2.1</span> Handling duplicate gene identifiers</h4>
-<p>As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later. In other words, we will narrow down one Ensembl ID’s data for a particular Entrez gene identifier instances for each sample or column in this case.</p>
+<p>As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later. In other words, we will narrow down one Ensembl ID’s data for each particular Entrez gene identifier.</p>
 <p>See the <a href="https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html">Gene Set Enrichment Analysis (GSEA) User guide</a> for more information on other expression values that can be used, like the median expression value for example <span class="citation">(Broad Institute Team 2019)</span>.</p>
-<p>First we need to calcuate the gene means, but we’ll need to move our non-numeric variables (the gene ID columns) out of the way.</p>
+<p>First we need to calcuate the gene means, but we’ll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation.</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a><span class="co"># First let&#39;s determine the gene means</span></span>
 <span id="cb63-2"><a href="#cb63-2"></a>gene_means &lt;-<span class="st"> </span><span class="kw">rowMeans</span>(mapped_df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Ensembl, <span class="op">-</span>entrez_id))</span>
 <span id="cb63-3"><a href="#cb63-3"></a></span>
