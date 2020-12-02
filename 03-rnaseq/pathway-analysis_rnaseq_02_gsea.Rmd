@@ -1,0 +1,556 @@
+---
+title: "Gene set enrichment analysis - RNA-seq"
+author: "CCDL for ALSF"
+date: "November 2020"
+output:  
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
+
+**IDENTICAL TO MICROARRAY EXAMPLE**
+
+This particular example analysis shows how you can use gene set enrichment analysis (GSEA) to detect situations where all genes in a predefined gene set change in a coordinated way, detecting even small statistical but coordinated changes between two biological states.
+Genes are ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic, for each gene set.
+More specifically, an ES is calculated by starting with the most highly ranked genes (based on the gene-level statistic selected for ranking) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+Normalized enrichment scores (NES) are enrichment scores that are scaled to account for gene sets of different sizes [@Subramanian2005; @Korotkevich2019].
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+**IDENTICAL TO OTHER PATHWAY ANALYSIS EXAMPLES**
+
+### What is pathway analysis?
+
+Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment.
+In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
+The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
+In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
+
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+
+### How to choose a pathway analysis?
+
+This table summarizes the pathway analyses examples in this module.
+
+|Analysis|What is required for input|What output looks like |✅ Pros| ⚠️ Cons|
+|--------|--------------------------|-----------------------|-------|-------|
+|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|- Simple<br><br> - Inexpensive computationally to calculate p-values| - Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways|
+|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes|- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible|
+|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis|- Does not require two groups to compare upfront<br><br> - Normally distributed scores|- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n > 10|
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots" # Can replace with path to desired output plots directory
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results" # Can replace with path to desired output results directory
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the gene set for this example
+
+**DRAFT**
+
+In this example, we are using differential expression results table we obtained from an [example analysis of an acute myeloid leukemia (AML) dataset](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential-expression_rnaseq_01.html) using the `DESeq2` package [@Love2014].
+The table contains summary statistics including Ensembl gene IDs, log fold change values, and adjusted p-values (FDR in this case).
+
+We have provided this file for you and the code in this notebook will read in the results that are stored online, but if you'd like to follow the steps for obtaining this results file yourself, we suggest going through [that differential expression analysis example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential-expression_rnaseq_01.html).
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017].
+
+@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called `data` (currently empty) 
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+    
+Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Gene set enrichment analysis - RNA-seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform GSEA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Yu2012; @Igor2020; @Subramanian2005].
+
+We will also need the [`org.Hs.eg.db`](http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
+
+```{r}
+if (!("clusterProfiler" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("clusterProfiler", update = FALSE)
+}
+
+if (!("msigdbr" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("msigdbr", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the library
+library(clusterProfiler)
+
+# Package that contains MSigDB gene sets in tidy format
+library(msigdbr)
+
+# Human annotation package we'll use for gene identifier conversion
+library(org.Hs.eg.db)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import data 
+
+**DRAFT**
+
+We will read in the differential expression results we will download from online.
+These results are from a acute myeloid leukemia (AML) RNA-seq dataset we used for [differential expression analysis](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential-expression_rnaseq_01.html) using `DESeq2` [@Love2014].
+The table contains summary statistics including Ensembl gene IDs, log fold change values, and adjusted p-values (FDR in this case).
+We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.
+
+**REVIEW**
+
+Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results.
+First we will assign the URL to its own variable called, `dge_url`. 
+
+```{r}
+# Define the url to your differential expression results file
+dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/03-rnaseq/results/SRP078441/SRP078441_differential_expression_results.tsv"
+```
+
+Read in the file that has differential expression results. 
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP078441_differential_expression_results.tsv")`.
+
+```{r}
+# Read in the contents of your differential expression results file
+# `dge_url` can be replaced with a file path to a TSV file with your
+# desired gene list results
+dge_df <- readr::read_tsv(dge_url)
+```
+
+`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
+Let's take a look at what these contrast results from the differential expression analysis look like. 
+
+```{r}
+dge_df
+```
+
+## Getting familiar with `clusterProfiler`'s options
+
+Let's take a look at what organisms the package supports.
+
+```{r}
+msigdbr_species()
+```
+
+MSigDB contains 8 different gene set collections [@Subramanian2005].
+
+    H: hallmark gene sets
+    C1: positional gene sets
+    C2: curated gene sets
+    C3: motif gene sets
+    C4: computational gene sets
+    C5: GO gene sets
+    C6: oncogenic signatures
+    C7: immunologic signatures
+
+MSigDB includes a collection called Hallmark gene sets.
+Here's an excerpt of the collection description [@Liberzon2015]:
+
+Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression.
+These gene sets were generated by a computational methodology based on identifying gene set overlaps and retaining genes that display coordinate expression.
+The hallmarks reduce noise and redundancy and provide a better delineated biological space for GSEA.
+
+**REVIEW** 
+
+The data we're interested in here comes from human samples, so we can obtain just the gene sets relevant to _Homo sapiens_ by specifying `species = "Homo sapiens"`
+
+```{r}
+hs_gene_sets <- msigdbr(
+  species = "Homo sapiens" # Replace with species name relevant to your data
+)
+```
+
+If you run the chunk above with specifying `category = "H"` to the `msigdbr()` function, it will return only the Hallmark gene sets for _Homo sapiens_.
+
+Let's preview what's in `hs_gene_sets`.
+
+```{r}
+head(hs_gene_sets)
+```
+
+Looks like we have a data frame of gene sets with associated gene symbols and Entrez IDs.
+
+In our differential expression results data frame, `dge_df` we have Ensembl gene identifiers. 
+So we will need to convert our Ensembl IDs into either gene symbols or Entrez IDs for GSEA.
+
+**IDENTICAL TO MICROARRAY EXAMPLE** (except "ENTREZID" --> "SYMBOL" and "Dr" --> "Hs")
+## Gene identifier conversion
+
+We're going to convert our identifiers in `dge_df` to gene symbols, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+
+The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2020-human].
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
+
+We can see what types of IDs are available to us in an annotation package with `keytypes()`.
+
+```{r}
+keytypes(org.Hs.eg.db)
+```
+
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to Entrez IDs (`ENTREZID`).
+
+Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+The function we will use to map from Ensembl gene IDs to gene symbols is called `mapIds()`.
+
+Let's create a data frame that shows the mapped gene symbols along with the differential expression stats for the respective Ensembl IDs.
+
+```{r}
+# First let's create a mapped data frame we can join to the differential expression stats
+dge_mapped_df <- data.frame(
+  "gene_symbol" = mapIds(
+    org.Hs.eg.db, # Replace with annotation package for the organism relevant to your data
+    keys = dge_df$Gene,
+    column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
+    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+  )
+) %>%
+  # If an Ensembl gene identifier doesn't map to a gene symbol, drop that
+  # from the data frame
+  dplyr::filter(!is.na(gene_symbol)) %>%
+  # Make an `Ensembl` column to store the rownames
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
+  dplyr::inner_join(dge_df, by = c("Ensembl" = "Gene"))
+```
+
+This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple gene symbols.
+In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
+For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs.
+For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+
+Let's see a preview of `dge_mapped_df`.
+
+```{r}
+head(dge_mapped_df)
+```
+
+We will want to keep in mind that GSEA requires that genes are ranked from most highly positive to most highly negative and weighted according to their gene-level statistic, which is essential to the calculation of the enrichment score (ES), a pathway-level statistic.
+GSEA also requires unique gene identifiers to produce the most accurate results.
+This means if any duplicate gene identifiers are found in our dataset, we will want to retain the instance with the higher absolute value as this will be the instance most likely to be ranked most highly negative or most highly positive.
+Otherwise the enrichment score results may be skewed and the `GSEA()` function will throw a warning.
+
+Let's check to see if we have any gene symbols that mapped to multiple Ensembl IDs.
+
+```{r}
+any(duplicated(dge_mapped_df$gene_symbol))
+```
+
+Looks like we do have duplicated gene symbols.
+Let's find out which gene symbols have been duplicated.
+
+```{r}
+dup_gene_symbols <- dge_mapped_df %>%
+  dplyr::filter(duplicated(gene_symbol)) %>%
+  dplyr::pull(gene_symbol)
+
+dup_gene_symbols
+```
+
+Now let's take a look at the rows associated with the duplicated gene symbols.
+
+```{r}
+dge_mapped_df %>%
+  dplyr::filter(gene_symbol %in% dup_gene_symbols) %>%
+  dplyr::arrange(gene_symbol)
+```
+**IDENTICAL TO MICROARRAY EXAMPLE** (except using absolute log2 fold change value instead of t-statistic value)
+
+We can see that the associated values vary for each row.
+
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later, so let's keep the gene symbols associated with the higher absolute value of the log fold change.
+GSEA relies on genes' rankings on the basis of this statistic.
+Retaining the instance of the gene symbol with the higher absolute value means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, the values less likely to be towards the middle of the ranked gene list.
+We should keep this decision in mind when interpreting our results.
+For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value.
+
+```{r}
+filtered_dge_mapped_df <- dge_mapped_df %>%
+  # Sort so that the highest absolute values of the log fold change are at the top
+  dplyr::arrange(dplyr::desc(abs(log2FoldChange))) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
+  # the first row with the duplicated value thus keeping the row with the
+  # highest absolute value of the log fold change
+  dplyr::distinct(gene_symbol, .keep_all = TRUE)
+```
+
+Let's check to see that we removed the duplicate gene symbols and kept the rows with the higher absolute value of the log fold change.
+
+```{r}
+filtered_dge_mapped_df %>%
+  dplyr::filter(gene_symbol %in% dup_gene_symbols) %>%
+  dplyr::arrange(gene_symbol)
+```
+
+Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the log fold change!
+
+## Perform gene set enrichment analysis (GSEA)
+
+The goal of GSEA is to detect situations where all genes in a gene set change in a coordinated way, detecting even small statistical but coordinated changes.
+This is done by ranking genes within a gene set from most highly positive to most highly negative, weighting them according to their gene-level statistic, to calculate the enrichment score (ES), which is a pathway-level statistic [@clusterProfiler-book].
+
+### Determine our pre-ranked genes list
+
+The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, where the names in the vector are gene identifiers.
+We will therefore need to create a gene list with statistics that GSEA will rank by.
+
+In the next chunk, we will create a named vector ranked based on the gene-level log fold change values.
+
+```{r}
+# Let's create a named vector ranked based on the log fold change values
+lfc_vector <- filtered_dge_mapped_df$log2FoldChange
+names(lfc_vector) <- filtered_dge_mapped_df$gene_symbol
+
+# We need to sort the log fold change values in descending order here
+lfc_vector <- sort(lfc_vector, decreasing = TRUE)
+```
+
+Let's preview our pre-ranked named vector.
+
+```{r}
+# Look at first entries of the ranked log fold change vector
+head(lfc_vector)
+```
+
+### Run GSEA using the `GSEA()` function
+
+Genes were ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, in the previous section.
+In this section, we will implement GSEA to calculate the enrichment score (ES) for each gene set using our pre-ranked gene list.
+
+We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
+
+```{r}
+gsea_results <- GSEA(
+  geneList = lfc_vector, # ordered ranked gene list
+  minGSSize = 25, # minimum gene set size
+  maxGSSize = 500, # maximum gene set set
+  pvalueCutoff = 0.05, # p value cutoff
+  eps = 0, # boundary for calculating the p value
+  seed = TRUE, # set seed to make results reproducible
+  pAdjustMethod = "BH", # Benjamini-Hochberg correction
+  TERM2GENE = dplyr::select(
+    hs_gene_sets,
+    gs_name,
+    gene_symbol
+  )
+)
+```
+
+Let's take a look at the results.
+
+```{r}
+# We can access the results from our gseaResult object using `@result`
+head(gsea_results@result)
+```
+
+Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES.
+The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
+Looks like we have gene sets returned as significant at FDR of `0.05`.
+If we didn't have any, our visualizations below would show up blank as nothing would have met our `pvalueCutoff` above.
+
+The information we're most likely interested in is in the `results` slot.
+Let's convert this into a data frame that we can use for further analysis and write to file.
+
+```{r}
+gsea_result_df <- data.frame(gsea_results@result)
+```
+
+**IDENTICAL TO MICROARRAY EXAMPLE**
+
+## Visualizing results
+
+We can visualize GSEA results for individual pathways or gene sets using `enrichplot::gseaplot()`.
+Let's take a look at 2 different pathways -- one with a highly positive NES and one with a highly negative NES -- to get more insight into how ES are calculated.
+
+### Most Positive NES
+
+Let's look for the gene set with the most positive NES.
+
+```{r}
+gsea_result_df %>%
+  # Use `top_n()` to return the top n observation using `NES` as the ordering variable
+  dplyr::top_n(n = 3, wt = NES)
+```
+
+The gene set `HP_VERTEBRAL_CLEFTING` has the most positive NES score.
+
+```{r}
+most_positive_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HP_VERTEBRAL_CLEFTING",
+  title = "HP_VERTEBRAL_CLEFTING",
+  color.line = "#0d76ff"
+)
+
+most_positive_nes_plot
+```
+
+Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
+The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
+As mentioned earlier, an ES is calculated by starting with the most highly ranked genes (according to the gene-level log fold change values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+In this case, the most highly positive enrichment score's data are being displayed.
+
+The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
+
+Let's save to PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP078441_gsea_enrich_positive_plot.png"),
+  plot = most_positive_nes_plot
+)
+```
+
+### Most Negative NES
+
+Let's look for the gene set with the most negative NES.
+
+```{r}
+gsea_result_df %>%
+  # Use `top_n()` to return the top n observation using `NES` as the ordering
+  # variable -- note the use of `-n` to display the top n values when sorted
+  # in descending order
+  dplyr::top_n(n = -3, wt = NES)
+```
+
+The gene set `HOLLERN_EMT_BREAST_TUMOR_DN` has the most negative NES.
+
+```{r}
+most_negative_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HOLLERN_EMT_BREAST_TUMOR_DN",
+  title = "HOLLERN_EMT_BREAST_TUMOR_DN",
+  color.line = "#0d76ff"
+)
+
+most_negative_nes_plot
+```
+
+This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
+Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
+As we know, the ES is calculated by starting with the most highly ranked genes (according to the gene-level log fold change values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+A negative enrichment score will be returned when not many of the genes are found at the top of the list, as this would mean decreasing the score a great deal thus producing a negative value.
+In this case, the most negative enrichment score's data are being displayed.
+
+Let's save this plot to PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP078441_gsea_enrich_negative_plot.png"),
+  plot = most_negative_nes_plot
+)
+```
+
+## Write results to file
+
+```{r}
+readr::write_tsv(
+  gsea_result_df,
+  file.path(
+    results_dir,
+    "SRP078441_gsea_results.tsv"
+  )
+)
+```
+
+# Resources for further learning
+
+- [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012].
+- [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
+- [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
+- See this [Broad Institute page](https://www.gsea-msigdb.org/gsea/index.jsp) for more on GSEA and MSigDB [@GSEA-broad-institute].
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessioninfo::session_info()
+```
+
+# References
