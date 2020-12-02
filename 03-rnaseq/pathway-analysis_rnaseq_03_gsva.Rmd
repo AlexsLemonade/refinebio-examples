@@ -351,17 +351,25 @@ normalized_counts <- assay(dds_norm) %>%
 
 The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
 
-We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Igor2020].
-
-Note that when reading in the Hallmark collection file in this manner, the data is only compatible with _Homo sapiens_ datasets.
+Here we are obtaining the pathway information from the main function of the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Igor2020].
+Because we are using human data in this example, we supply the formal organism name to the `species` argument. 
+We will want only the hallmark pathways, so to narrow that down we use the `category = "H"` argument.
 
 ```{r}
-# R can often read in data from a URL
-hallmarks_url <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt"
+hallmark_gene_sets <- msigdbr::msigdbr(
+  species = "Homo sapiens", # Can change this to what species you need
+  category = "H" # Only hallmark genes
+)
+```
 
-# QuSAGE is another pathway analysis method, the `qusage` package has a function
-# for reading GMT files and turning them into a list
-hallmarks_list <- qusage::read.gmt(hallmarks_url)
+Now we are going to extract the information but put it in a list format in the way that GSVA will want it. 
+We will use the `split()` function to do this for us. 
+
+```{r}
+hallmarks_list <- split(
+  hallmark_gene_sets$entrez_gene, # The genes we want split into lists
+  hallmark_gene_sets$gs_name # The pathways made as the higher level of the list
+)
 ```
 
 What does this `hallmarks_list` look like?
