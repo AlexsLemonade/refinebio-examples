@@ -197,7 +197,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 **IDENTICAL TO MICROARRRAY GSVA** (Except DESeq2 package added)
 
-# Gene set variation analysis - RNAA-Seq
+# Gene set variation analysis - RNA-Seq
 
 ## Install libraries
 
@@ -212,6 +212,11 @@ We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release
 We'll create a heatmap from our pathway analysis results and for that we'll use `pheatmap` [@Slowikowski2017]
 
 ```{r}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+
 if (!("GSVA" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("GSVA", update = FALSE)
@@ -532,7 +537,8 @@ gsva_results <- gsva(
 )
 ```
 
-Here we are using `kcdf = "Gaussian"` because we are using continous, normalized and transformed data. 
+Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we have expression values that are continuous such as log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
+Our `vst()` transformed data is log, so `Gaussian` works for us. 
 
 Let's explore what the output of `gsva()` looks like.
 
