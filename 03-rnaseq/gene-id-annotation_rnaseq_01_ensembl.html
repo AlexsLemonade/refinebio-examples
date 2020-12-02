@@ -3913,7 +3913,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -3929,7 +3929,7 @@ div.tocify {
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Tuck away the Gene ID column as rownames</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4000,32 +4000,36 @@ div.tocify {
 <p>We can see that our data frame has a new column <code>Entrez</code>. Let’s get a summary of the values returned in the <code>Entrez</code> column of our mapped data frame.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Entrez)) <span class="co"># We need to use the `as.factor()` function here in order to get the count of each unique value returned</span></span></code></pre></div>
-<pre><code>## 100126027 100150038 100331412    794549    554097    794406 100536331 100148591 
-##        28        28        28        28        11         7         6         5 
-## 100329290 100334559 100170822 100333446    393541    562179    795394 100000956 
-##         5         5         3         3         3         3         3         2 
-## 100002012 100002312 100002647 100002917 100004335 100005482 100006972 100007523 
-##         2         2         2         2         2         2         2         2 
-## 100007836 100034531 100037365 100124612 100126123 100144555 100150193 100150195 
-##         2         2         2         2         2         2         2         2 
-## 100151764 100170660 100191016 100318255 100330526 100330579 100334190 100334824 
-##         2         2         2         2         2         2         2         2 
-## 100422734 100535828 100536566 100537891 101883724 101885111 101885541 101887034 
-##         2         2         2         2         2         2         2         2 
-## 101887190 103908643 103908654 103909414 108182725 108182861 108190101 108190662 
-##         2         2         2         2         2         2         2         2 
-## 108191494 108191539 110437858 110437953 110438456 110438861 110438889 110438898 
-##         2         2         2         2         2         2         2         2 
-## 110438962 110438964 110439267 110439798 110440092     30459    323832    323951 
-##         2         2         2         2         2         2         2         2 
-##    327020    336702    368925    378480    393135    393320    393518    405787 
-##         2         2         2         2         2         2         2         2 
-##    415097    445235    449796    493590    541321    550342    550507    553461 
-##         2         2         2         2         2         2         2         2 
-##    553501    553976    559771    561678    563398    563587    564790    566030 
-##         2         2         2         2         2         2         2         2 
-##    566190    568680   (Other)      NA&#39;s 
-##         2         2     22898      9026</code></pre>
+<pre><code>## 100126027 100150038 100331412    794549    554097    794406 100536331 
+##        28        28        28        28        11         7         6 
+## 100148591 100329290 100334559 100170822 100333446    393541    562179 
+##         5         5         5         3         3         3         3 
+##    795394 100000956 100002012 100002312 100002647 100002917 100004335 
+##         3         2         2         2         2         2         2 
+## 100005482 100006972 100007523 100007836 100034531 100037365 100124612 
+##         2         2         2         2         2         2         2 
+## 100126123 100144555 100150193 100150195 100151764 100170660 100191016 
+##         2         2         2         2         2         2         2 
+## 100318255 100330526 100330579 100334190 100334824 100422734 100535828 
+##         2         2         2         2         2         2         2 
+## 100536566 100537891 101883724 101885111 101885541 101887034 101887190 
+##         2         2         2         2         2         2         2 
+## 103908643 103908654 103909414 108182725 108182861 108190101 108190662 
+##         2         2         2         2         2         2         2 
+## 108191494 108191539 110437858 110437953 110438456 110438861 110438889 
+##         2         2         2         2         2         2         2 
+## 110438898 110438962 110438964 110439267 110439798 110440092     30459 
+##         2         2         2         2         2         2         2 
+##    323832    323951    327020    336702    368925    378480    393135 
+##         2         2         2         2         2         2         2 
+##    393320    393518    405787    415097    445235    449796    493590 
+##         2         2         2         2         2         2         2 
+##    541321    550342    550507    553461    553501    553976    559771 
+##         2         2         2         2         2         2         2 
+##    561678    563398    563587    564790    566030    566190    568680 
+##         2         2         2         2         2         2         2 
+##   (Other)      NA&#39;s 
+##     22898      9026</code></pre>
 <p>There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs. This means if you are depending on <code>Entrez</code> IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.</p>
 <p>Now let’s check to see how many genes we have that were mapped to multiple IDs.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>multi_mapped_df &lt;-<span class="st"> </span>mapped_df <span class="op">%&gt;%</span></span>
@@ -4118,7 +4122,7 @@ div.tocify {
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Print session info</span></span>
 <span id="cb32-2"><a href="#cb32-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ─────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
 ##  os       Ubuntu 20.04 LTS            
@@ -4130,7 +4134,7 @@ div.tocify {
 ##  tz       Etc/UTC                     
 ##  date     2020-12-02                  
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────
+## ─ Packages ─────────────────────────────────────────────────────────
 ##  package       * version date       lib source        
 ##  AnnotationDbi * 1.52.0  2020-10-27 [1] Bioconductor  
 ##  assertthat      0.2.1   2019-03-21 [1] RSPM (R 4.0.0)

@@ -3903,7 +3903,7 @@ div.tocify {
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_character(),
 ##   refinebio_age = col_double(),
@@ -3930,7 +3930,7 @@ div.tocify {
 <span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID  column as rownames</span></span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -3957,20 +3957,20 @@ div.tocify {
 <p>Let’s take a preview at the PCA results. We are using indexing to only print out the first 10 PCs: <code>[, 1:10]</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># We can access the results from our `pca` object using `$x`</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">head</span>(pca<span class="op">$</span>x[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</span></code></pre></div>
-<pre><code>##                   PC1        PC2        PC3       PC4       PC5        PC6
-## GSM917111 -18.1468442 -63.659225   1.136901 -5.242875  10.29114 -17.724403
-## GSM917250 -51.2350460  45.762776  -2.183100  7.948304 -21.26658 -24.668972
-## GSM917281 -42.4774592   2.216351  19.941918 -5.664602 -49.00085 -13.306383
-## GSM917062  -7.6116070 -25.887243 -65.257099 -6.226487  32.73786  -7.159006
-## GSM917288 -54.9540801  51.804918  42.332093 28.506307  54.17483  46.601027
-## GSM917230  -0.0325771 -11.070407  -6.555240 28.661922 -20.85879  17.266892
-##                  PC7        PC8        PC9       PC10
-## GSM917111   6.527599 -15.023332   7.640187 -16.155061
-## GSM917250  -8.472525  -1.592417  -6.242858  -5.730141
-## GSM917281  39.499111   3.513968 -18.804197  -3.578259
-## GSM917062 -10.549933 -47.861391   3.256229 -29.137628
-## GSM917288  24.893176   5.242399  67.374223  -8.003784
-## GSM917230  19.109068  33.763989 -17.114146   1.061423</code></pre>
+<pre><code>##                   PC1        PC2        PC3       PC4       PC5
+## GSM917111 -18.1468442 -63.659225   1.136901 -5.242875  10.29114
+## GSM917250 -51.2350460  45.762776  -2.183100  7.948304 -21.26658
+## GSM917281 -42.4774592   2.216351  19.941918 -5.664602 -49.00085
+## GSM917062  -7.6116070 -25.887243 -65.257099 -6.226487  32.73786
+## GSM917288 -54.9540801  51.804918  42.332093 28.506307  54.17483
+## GSM917230  -0.0325771 -11.070407  -6.555240 28.661922 -20.85879
+##                  PC6        PC7        PC8        PC9       PC10
+## GSM917111 -17.724403   6.527599 -15.023332   7.640187 -16.155061
+## GSM917250 -24.668972  -8.472525  -1.592417  -6.242858  -5.730141
+## GSM917281 -13.306383  39.499111   3.513968 -18.804197  -3.578259
+## GSM917062  -7.159006 -10.549933 -47.861391   3.256229 -29.137628
+## GSM917288  46.601027  24.893176   5.242399  67.374223  -8.003784
+## GSM917230  17.266892  19.109068  33.763989 -17.114146   1.061423</code></pre>
 <p>In total, we do have 285 principal component values, because we provided 285 sample’s data.</p>
 </div>
 <div id="explore-variance-in-pca-results" class="section level2">
@@ -3982,14 +3982,14 @@ div.tocify {
 <p>By accessing the <code>importance</code> element, which contains the proportion of variance explained by each principal component, with <code>pca_summary$importance</code>, we can use indexing to only look at the first <code>n</code> PCs.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Now access the importance information for the first 10 PCs -- we can access this information `pca_summary$importance`</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a>pca_summary<span class="op">$</span>importance[, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]</span></code></pre></div>
-<pre><code>##                             PC1      PC2      PC3      PC4      PC5      PC6
-## Standard deviation     45.50502 33.87890 30.50038 27.51175 23.99828 22.88496
-## Proportion of Variance  0.09560  0.05299  0.04295  0.03494  0.02659  0.02418
-## Cumulative Proportion   0.09560  0.14858  0.19153  0.22647  0.25306  0.27724
-##                             PC7      PC8      PC9     PC10
-## Standard deviation     21.17880 18.73075 18.13267 17.95956
-## Proportion of Variance  0.02071  0.01620  0.01518  0.01489
-## Cumulative Proportion   0.29795  0.31414  0.32932  0.34421</code></pre>
+<pre><code>##                             PC1      PC2      PC3      PC4      PC5
+## Standard deviation     45.50502 33.87890 30.50038 27.51175 23.99828
+## Proportion of Variance  0.09560  0.05299  0.04295  0.03494  0.02659
+## Cumulative Proportion   0.09560  0.14858  0.19153  0.22647  0.25306
+##                             PC6      PC7      PC8      PC9     PC10
+## Standard deviation     22.88496 21.17880 18.73075 18.13267 17.95956
+## Proportion of Variance  0.02418  0.02071  0.01620  0.01518  0.01489
+## Cumulative Proportion   0.27724  0.29795  0.31414  0.32932  0.34421</code></pre>
 <p>Now that we’ve seen the proportion of variance for the first ten PCs, let’s prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset.</p>
 </div>
 <div id="prepare-a-final-data-frame-with-pca-results-for-plotting" class="section level2">
@@ -4071,7 +4071,7 @@ div.tocify {
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Print session info</span></span>
 <span id="cb25-2"><a href="#cb25-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ─────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
 ##  os       Ubuntu 20.04 LTS            
@@ -4083,7 +4083,7 @@ div.tocify {
 ##  tz       Etc/UTC                     
 ##  date     2020-12-02                  
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────
+## ─ Packages ─────────────────────────────────────────────────────────
 ##  package     * version date       lib source        
 ##  assertthat    0.2.1   2019-03-21 [1] RSPM (R 4.0.0)
 ##  backports     1.1.10  2020-09-15 [1] RSPM (R 4.0.2)
