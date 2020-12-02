@@ -1,2 +1,2 @@
 # set width for text output
-options(width = 60)
+options(width = 70)
