@@ -351,7 +351,7 @@ normalized_counts <- assay(dds_norm) %>%
 
 The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
 
-We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package like we did in earlier notebooks [@Igor2020].
+We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Igor2020].
 
 Note that when reading in the Hallmark collection file in this manner, the data is only compatible with _Homo sapiens_ datasets.
 
@@ -433,13 +433,13 @@ head(mapped_df)
 We will want to keep in mind that GSVA requires that data is in a matrix with the gene identifiers as row names.
 In order to successfully turn our data frame into a matrix, we will need to ensure that we do not have any duplicate gene identifiers.
 
-Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+Let's count up how many Entrez IDs that mapped to multiple Ensembl IDs.
 
 ```{r}
-any(duplicated(mapped_df$entrez_id))
+sum(duplicated(mapped_df$entrez_id))
 ```
 
-Looks like we do have duplicated Entrez IDs.
+Looks like we have 68 duplicated Entrez IDs.
 
 **Review** 
 
@@ -458,6 +458,7 @@ gene_means <- rowMeans(mapped_df %>% dplyr::select(-Ensembl, -entrez_id))
 
 # Let's add this as a column in our `mapped_df`.
 mapped_df <- mapped_df %>%
+  # Add gene_means as a column called gene_means
   dplyr::mutate(gene_means) %>%
   # Reorder the columns so `gene_means` column is upfront
   dplyr::select(Ensembl, entrez_id, gene_means, dplyr::everything())
@@ -468,7 +469,7 @@ If we do an `dplyr::arrange()` by `gene_means` first, then this means the first 
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
-  # Sort so that the highest absolute mean expression values are at the top
+  # Sort so that the highest mean expression values are at the top
   dplyr::arrange(dplyr::desc(gene_means)) %>%
   # Filter out the duplicated rows using `dplyr::distinct()`
   dplyr::distinct(entrez_id, .keep_all = TRUE)
@@ -477,10 +478,10 @@ filtered_mapped_df <- mapped_df %>%
 Let's do our check again to see if we still have duplicates
 
 ```{r}
-any(duplicated(mapped_df$entrez_id))
+sum(duplicated(mapped_df$entrez_id))
 ```
 
-All set!
+We now have `0` duplicates which is what we want. All set!
 
 Now we should prep this data so GSVA can use it. 
 
@@ -531,7 +532,7 @@ gsva_results <- gsva(
 ```
 
 Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we have expression values that are continuous such as log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
-Our `vst()` transformed data is log, so `Gaussian` works for us. 
+Our `vst()` transformed data is on a log2-like scale, so `Gaussian` works for us. 
 
 Let's explore what the output of `gsva()` looks like.
 
@@ -582,20 +583,13 @@ annot_df <- metadata %>%
       # Create our new variable based on refinebio_title containing AV/CV
       stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
       stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
-    ),
-    # It's easier for future items if this is already set up as a factor
-    time_point = as.factor(time_point)
+    )
   ) %>%
   # We don't need the older version of the variable anymore
   dplyr::select(-refinebio_title)
 ```
 
-Let's double check that our factor set up is right. 
-We want `acute illness` to be the first level since it was the first time point collected. 
-
-```{r}
-levels(annot_df$time_point)
-```
+These time point samples are paired, so you could also add the `refinebio_subject` to the labels, but for simplicity we've left them off for now. 
 
 The `pheatmap::pheatmap()` will want the annotation data frame to have matching row names to the data we supply it (which is our `gsva_results`).
 
@@ -608,17 +602,17 @@ annot_df <- annot_df %>%
 ### Set up the heatmap itself
 
 Great! We're all set. 
-We can see that they are in a wide format with the gsva scores for each sample spread across a row associated with each pathway.
+We can see that they are in a wide format with the GSVA scores for each sample spread across a row associated with each pathway.
 
 ```{r}
-heatmap <- pheatmap::pheatmap(gsva_results,
+pathway_heatmap <- pheatmap::pheatmap(gsva_results,
   annotation_col = annot_df, # Add metadata labels!
   show_colnames = FALSE, # Don't show sample labels
-  fontsize_row = 6 # Shrink the labels a tad
+  fontsize_row = 6 # Shrink the pathway labels a tad
 )
 
 # Print out heatmap here
-heatmap
+pathway_heatmap
 ```
 
 
@@ -635,7 +629,7 @@ height = 800
 )
 
 # Print your heatmap
-heatmap
+pathway_heatmap
 
 # Close the PNG file:
 dev.off()
