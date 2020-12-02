@@ -58,6 +58,7 @@ RUN Rscript -e "options(warn = 2); BiocManager::install( \
       'DESeq2', \
       'EnhancedVolcano', \
       'ggupset', \
+      'GSVA', \
       'impute', \
       'limma', \
       'marray', \
