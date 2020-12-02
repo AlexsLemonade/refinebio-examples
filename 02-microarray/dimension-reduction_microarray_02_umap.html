@@ -3915,7 +3915,7 @@ div.tocify {
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_character(),
 ##   refinebio_age = col_double(),
@@ -3942,7 +3942,7 @@ div.tocify {
 <span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID  column as rownames</span></span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4059,7 +4059,7 @@ div.tocify {
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Print session info</span></span>
 <span id="cb23-2"><a href="#cb23-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ─────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
 ##  os       Ubuntu 20.04 LTS            
@@ -4071,7 +4071,7 @@ div.tocify {
 ##  tz       Etc/UTC                     
 ##  date     2020-12-02                  
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────
+## ─ Packages ─────────────────────────────────────────────────────────
 ##  package     * version date       lib source        
 ##  askpass       1.1     2019-01-13 [1] RSPM (R 4.0.0)
 ##  assertthat    0.2.1   2019-03-21 [1] RSPM (R 4.0.0)
