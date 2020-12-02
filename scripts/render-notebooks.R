@@ -45,6 +45,11 @@ option_list <- list(
     opt_str = c("-s", "--style"), action = "store_true",
     default = FALSE,
     help = "Style input file before processing"
+  ),
+  make_option(
+    opt_str = c("-i", "--include_file"), type = "character",
+    default = NULL,
+    help = "file with R code to include for rendering"
   )
 )
 
@@ -53,9 +58,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 
 # Get working directory
 base_dir <- getwd()
-
-# Normalize file path
-opt$bib_file <- normalizePath(opt$bib_file)
 
 # Check that the rmd file exists
 if (!file.exists(opt$rmd)) {
@@ -66,7 +68,7 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  header_line <- paste("bibliography:", opt$bib_file)
+  header_line <- paste("bibliography:", normalizePath(opt$bib_file))
 }
 # Check for a citation style
 if (!is.null(opt$cite_style)){
@@ -76,6 +78,22 @@ if (!is.null(opt$cite_style)){
     header_line <- paste0(header_line, "\n", "csl: ", normalizePath(opt$cite_style))
   }
 }
+
+# Check for an R code inclusion file
+if (!is.null(opt$include_file)){
+  if (!file.exists(opt$include_file)) {
+    stop("File specified for --include_file option is not at the specified file path.")
+  } else {
+    # create a hidden chunk to source the include file
+    include_chunk <- paste0(
+      '```{r, include = FALSE}\n',
+      'source("', normalizePath(opt$include_file), '")\n',
+      '```'
+    )
+
+  }
+}
+
 
 # If no output html filename specification, make one from the original filename
 if (is.null(opt$html)) {
@@ -100,12 +118,19 @@ lines <- readr::read_lines(opt$rmd)
 header_range <- which(lines == "---")
 
 # Stop if no chunk found
-if (length(header_range) == 0) {
-  stop("Not finding the `---` which is at the beginning of the header.")
+if (length(header_range) < 2) {
+  stop("Not finding the `---` which are at the beginning and end of the header.")
+}
+
+
+# Add the include chunk after the header
+if (!is.null(opt$include_file)){
+  lines <- append(lines, include_chunk, header_range[2])
 }
 
 # Add the bibliography specification line at the beginning of the chunk
 new_lines <- append(lines, header_line, header_range[1])
+
 
 # Write to an tmp file
 readr::write_lines(new_lines, tmp_file)
