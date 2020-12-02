@@ -3922,7 +3922,7 @@ div.tocify {
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -3939,7 +3939,7 @@ div.tocify {
 <span id="cb12-2"><a href="#cb12-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   SRR3895734 = col_double(),
@@ -3969,8 +3969,9 @@ div.tocify {
 <pre><code>## [1] TRUE</code></pre>
 <p>The information we need to make the comparison is in the <code>refinebio_title</code> column of the metadata data.frame.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">head</span>(metadata<span class="op">$</span>refinebio_title)</span></code></pre></div>
-<pre><code>## [1] &quot;CBF54-BM-ASXLwt&quot;      &quot;49060-2010-BM-ASXLwt&quot; &quot;CBF234-BM-ASXLwt&quot;    
-## [4] &quot;CBF124-BM-ASXLwt&quot;     &quot;41267-BM-ASXL2&quot;       &quot;45565-BM-ASXL1&quot;</code></pre>
+<pre><code>## [1] &quot;CBF54-BM-ASXLwt&quot;      &quot;49060-2010-BM-ASXLwt&quot;
+## [3] &quot;CBF234-BM-ASXLwt&quot;     &quot;CBF124-BM-ASXLwt&quot;    
+## [5] &quot;41267-BM-ASXL2&quot;       &quot;45565-BM-ASXL1&quot;</code></pre>
 </div>
 <div id="set-up-metadata" class="section level2">
 <h2><span class="header-section-number">4.3</span> Set up metadata</h2>
@@ -3999,7 +4000,7 @@ div.tocify {
 <p>Before we set up our model in the next step, we want to check if our modeling variable is set correctly. We want our “control” to to be set as the first level in the variable we provide as our experimental variable. Here we will use the <code>str()</code> function to print out a preview of the <strong>str</strong>ucture of our variable</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Print out a preview of `asxl_mutation_status`</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="kw">str</span>(metadata<span class="op">$</span>asxl_mutation_status)</span></code></pre></div>
-<pre><code>##  chr [1:16] &quot;no_mutation&quot; &quot;no_mutation&quot; &quot;no_mutation&quot; &quot;no_mutation&quot; ...</code></pre>
+<pre><code>##  chr [1:16] &quot;no_mutation&quot; &quot;no_mutation&quot; &quot;no_mutation&quot; ...</code></pre>
 <p>Currently, <code>asxl_mutation_status</code> is a character. To make sure it is set how we want for the <code>DESeq</code> object and subsequent testing, let’s mutate it to a factor so we can explicitly set the levels.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Make asxl_mutation_status a factor and set the levels appropriately</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a>metadata &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
@@ -4064,14 +4065,22 @@ div.tocify {
 <pre><code>## log2 fold change (MAP): asxl mutation status asxl mutation vs no mutation 
 ## Wald test p-value: asxl mutation status asxl mutation vs no mutation 
 ## DataFrame with 6 rows and 5 columns
-##                    baseMean log2FoldChange      lfcSE    pvalue      padj
-##                   &lt;numeric&gt;      &lt;numeric&gt;  &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-## ENSG00000000003   52.852059    9.64776e-07 0.00144269 0.6604581  0.998525
-## ENSG00000000005    0.260056    2.03330e-07 0.00144269 0.5791283        NA
-## ENSG00000000419  406.161355   -1.38160e-06 0.00144268 0.7076357  0.998525
-## ENSG00000000457  564.784021   -2.36497e-06 0.00144268 0.3719972  0.998525
-## ENSG00000000460  401.130684    3.87280e-06 0.00144269 0.1627644  0.998525
-## ENSG00000000938 1500.527448    3.07307e-06 0.00144269 0.0354596  0.720601</code></pre>
+##                    baseMean log2FoldChange      lfcSE    pvalue
+##                   &lt;numeric&gt;      &lt;numeric&gt;  &lt;numeric&gt; &lt;numeric&gt;
+## ENSG00000000003   52.852059    9.64776e-07 0.00144269 0.6604581
+## ENSG00000000005    0.260056    2.03308e-07 0.00144269 0.5791283
+## ENSG00000000419  406.161355   -1.38160e-06 0.00144268 0.7076357
+## ENSG00000000457  564.784021   -2.36497e-06 0.00144268 0.3719972
+## ENSG00000000460  401.130684    3.87280e-06 0.00144269 0.1627644
+## ENSG00000000938 1500.527448    3.07435e-06 0.00144269 0.0354596
+##                      padj
+##                 &lt;numeric&gt;
+## ENSG00000000003  0.998525
+## ENSG00000000005        NA
+## ENSG00000000419  0.998525
+## ENSG00000000457  0.998525
+## ENSG00000000460  0.998525
+## ENSG00000000938  0.720601</code></pre>
 <p>Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file. Sort and filter the results.</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="co"># this is of class DESeqResults -- we want a data frame</span></span>
 <span id="cb44-2"><a href="#cb44-2"></a>deseq_df &lt;-<span class="st"> </span>deseq_results <span class="op">%&gt;%</span></span>
@@ -4165,7 +4174,7 @@ div.tocify {
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># Print session info</span></span>
 <span id="cb53-2"><a href="#cb53-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ─────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
 ##  os       Ubuntu 20.04 LTS            
@@ -4177,7 +4186,7 @@ div.tocify {
 ##  tz       Etc/UTC                     
 ##  date     2020-12-02                  
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────
+## ─ Packages ─────────────────────────────────────────────────────────
 ##  package              * version    date       lib source        
 ##  annotate               1.68.0     2020-10-27 [1] Bioconductor  
 ##  AnnotationDbi          1.52.0     2020-10-27 [1] Bioconductor  

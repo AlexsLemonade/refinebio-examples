@@ -3950,7 +3950,7 @@ div.tocify {
 <span id="cb5-3"><a href="#cb5-3"></a><span class="co"># desired gene list results</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_url)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
@@ -4011,12 +4011,13 @@ C7: immunologic signatures</code></pre>
 <p>Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">keytypes</span>(org.Hs.eg.db)</span></code></pre></div>
-<pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot;  &quot;ENSEMBLTRANS&quot;
-##  [6] &quot;ENTREZID&quot;     &quot;ENZYME&quot;       &quot;EVIDENCE&quot;     &quot;EVIDENCEALL&quot;  &quot;GENENAME&quot;    
-## [11] &quot;GO&quot;           &quot;GOALL&quot;        &quot;IPI&quot;          &quot;MAP&quot;          &quot;OMIM&quot;        
-## [16] &quot;ONTOLOGY&quot;     &quot;ONTOLOGYALL&quot;  &quot;PATH&quot;         &quot;PFAM&quot;         &quot;PMID&quot;        
-## [21] &quot;PROSITE&quot;      &quot;REFSEQ&quot;       &quot;SYMBOL&quot;       &quot;UCSCKG&quot;       &quot;UNIGENE&quot;     
-## [26] &quot;UNIPROT&quot;</code></pre>
+<pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot; 
+##  [5] &quot;ENSEMBLTRANS&quot; &quot;ENTREZID&quot;     &quot;ENZYME&quot;       &quot;EVIDENCE&quot;    
+##  [9] &quot;EVIDENCEALL&quot;  &quot;GENENAME&quot;     &quot;GO&quot;           &quot;GOALL&quot;       
+## [13] &quot;IPI&quot;          &quot;MAP&quot;          &quot;OMIM&quot;         &quot;ONTOLOGY&quot;    
+## [17] &quot;ONTOLOGYALL&quot;  &quot;PATH&quot;         &quot;PFAM&quot;         &quot;PMID&quot;        
+## [21] &quot;PROSITE&quot;      &quot;REFSEQ&quot;       &quot;SYMBOL&quot;       &quot;UCSCKG&quot;      
+## [25] &quot;UNIGENE&quot;      &quot;UNIPROT&quot;</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to Entrez IDs (<code>ENTREZID</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to gene symbols (<code>SYMBOL</code>).</p>
 <p>The function we will use to map from Ensembl gene IDs to Entrez IDs is called <code>mapIds()</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># This returns a named vector which we can convert to a data frame, where</span></span>
@@ -4182,7 +4183,7 @@ C7: immunologic signatures</code></pre>
 <p>At the end of every analysis, before saving your notebook, we recommend printing out your session info. This helps make your code more reproducible by recording what versions of software and packages you used to run this.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="co"># Print session info</span></span>
 <span id="cb37-2"><a href="#cb37-2"></a>sessioninfo<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
+<pre><code>## ─ Session info ─────────────────────────────────────────────────────
 ##  setting  value                       
 ##  version  R version 4.0.2 (2020-06-22)
 ##  os       Ubuntu 20.04 LTS            
@@ -4194,7 +4195,7 @@ C7: immunologic signatures</code></pre>
 ##  tz       Etc/UTC                     
 ##  date     2020-12-02                  
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────
+## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
 ##  AnnotationDbi   * 1.52.0   2020-10-27 [1] Bioconductor  
 ##  assertthat        0.2.1    2019-03-21 [1] RSPM (R 4.0.0)
