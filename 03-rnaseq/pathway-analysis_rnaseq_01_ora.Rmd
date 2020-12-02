@@ -353,7 +353,147 @@ Let's take a look at what this data frame looks like.
 head(module_annot_df)
 ```
 
-_NEXT SECTIONS IN NEXT PRS_ 
+## Over-representation Analysis (ORA)
+
+Over-representation testing using `clusterProfiler` is based on a hypergeometric test (often referred to as Fisher's exact test) [@clusterProfiler-book].
+For more background on hypergeometric tests, this [handy tutorial](https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html) explains more about how hypergeometric tests work [@Puthier2015]. 
+
+We will need to provide to `clusterProfiler` two genes lists:
+
+1) Our genes of interest 
+2) What genes were in our total background set. (All genes that originally had an opportunity to be measured).
+
+## Determine our genes of interest list
+
+This step is highly variable depending on the format of your gene table, what information it contains and what your goals are. 
+You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to introduce cutoffs and filters that we don't need here, given the nature of our data.  
+
+Here, we will focus on one module, module 19, to identify pathways associated with it. 
+We previously identified this module as differentially expressed between our dataset's two time points (during acute illness and during recovery). 
+See [the previous section](#about-the-dataset-we-are-using-for-this-example) for more background on the structure and content of the data table we are using. 
+
+```{r}
+module_19_genes <- module_annot_df %>%
+  dplyr::filter(module == "ME19") %>%
+  dplyr::pull("entrez_id")
+```
+
+Because one `entrez_id` may map to multiple Ensembl IDs, we need to make sure we have no repeated Entrez IDs in this list.
+
+```{r}
+# Reduce to only unique Entrez IDs
+genes_of_interest <- unique(as.character(module_19_genes))
+
+# Let's print out some of these genes
+head(genes_of_interest)
+```
+
+## Determine our background set gene list
+
+Sometimes folks consider genes from the entire genome to comprise the background, but for this RNA-seq example, we will consider all detectable genes as our background set.
+The dataset that these genes were selected from already had unreliably detected, [low count genes removed](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html#prepare-data-for-deseq2). 
+Because of this, we can obtain our detected genes list from our data frame, `module_annot_df` (which we have not done any further filtering on in this notebook).
+
+```{r}
+# Remove any duplicated entrez_ids
+background_set <- unique(as.character(module_annot_df$entrez_id))
+```
+
+## Run ORA using the `enricher()` function
+
+Now that we have our background set, our genes of interest, and our pathway information, we're ready to run ORA using the `enricher()` function.
+
+```{r}
+kegg_ora_results <- enricher(
+  gene = genes_of_interest, # A vector of your genes of interest
+  pvalueCutoff = 0.1, # Can choose a FDR cutoff
+  pAdjustMethod = "BH", # What method for multiple testing correction should we use
+  universe = background_set, # A vector containing your background set genes
+  # The pathway information should be a data frame with a term name or
+  # identifier and the gene identifiers
+  TERM2GENE = dplyr::select(
+    hs_kegg_df,
+    gs_name,
+    human_entrez_gene
+  )
+)
+```
+
+*Note: using `enrichKEGG()` is a shortcut for doing ORA using KEGG, but the approach we covered here can be used with any gene sets you'd like!*
+
+The information we're most likely interested in is in the `results` slot.
+Let's convert this into a data frame that we can write to file.
+
+```{r}
+kegg_result_df <- data.frame(kegg_ora_results@result)
+```
+
+Let's print out a sneak peek of the results here and take a look at how many gene sets we have using an FDR cutoff of `0.1`.
+
+```{r}
+kegg_result_df %>%
+  dplyr::filter(p.adjust < 0.1)
+```
+
+Looks like there are four KEGG sets returned as significant at FDR of `0.1`.
+
+## Visualizing results
+
+We can use a dot plot to visualize our significant enrichment results.
+The `enrichplot::dotplot()` function will only plot gene sets that are significant according to the multiple testing corrected p values (in the `p.adjust` column) and the `pvalueCutoff` you provided in the [`enricher()` step](#run-ora-using-the-enricher-function).
+
+```{r}
+enrich_plot <- enrichplot::dotplot(kegg_ora_results)
+
+# Print out the plot here
+enrich_plot
+```
+
+Use `?enrichplot::dotplot` to see the help page for more about how to use this function.
+
+This plot is arguably more useful when we have a large number of significant pathways.
+
+Let's save it to a PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_enrich_plot_module_19.png"),
+  plot = enrich_plot
+)
+```
+
+We can use an [UpSet plot](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4720993/) to visualize the **overlap** between the gene sets that were returned as significant.
+
+```{r}
+upset_plot <- enrichplot::upsetplot(kegg_ora_results)
+
+# Print out the plot here
+upset_plot
+```
+
+See that `KEGG_CELL_CYCLE` and `KEGG_OOCYTE_MEIOSIS` have genes in common, as do `KEGG_CELL_CYCLE` and `KEGG_DNA_REPLICATION`. 
+Gene sets or pathways aren't independent! 
+Based on the context of your samples, you may be able to narrow down which ones make sense. 
+In this instance, we are dealing with PBMCs, so the oocyte meiosis is not relevant to the biology of the samples at hand, and all of the identified genes in that pathway are also part of the cell cycle pathway. 
+
+Let's also save this to a PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP140558_ora_upset_plot_module_19.png"),
+  plot = upset_plot
+)
+```
+
+## Write results to file
+
+```{r}
+readr::write_tsv(
+  kegg_result_df,
+  file.path(
+    results_dir,
+    "SRP140558_module_19_pathway_analysis_results.tsv"
+  )
+)
+```
 
 # Resources for further learning
 
