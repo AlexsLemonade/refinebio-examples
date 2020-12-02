@@ -56,6 +56,7 @@ ENSDARG
 Ensembl
 ENSG
 Entrez
+ENTREZID
 et
 FACS
 frac
@@ -77,6 +78,7 @@ hexamer
 HGNC
 histological
 Hochberg
+Hs
 hypomethylating
 IDH
 Illumina
@@ -126,6 +128,7 @@ ribosomes
 RMA
 RPKMs
 RStudio
+sina
 ssGSEA
 StatQuest
 Subramanian
