@@ -621,6 +621,7 @@ heatmap <- pheatmap::pheatmap(gsva_results,
 heatmap
 ```
 
+
 Let's save this plot to PNG.
 
 ```{r}
@@ -628,7 +629,10 @@ Let's save this plot to PNG.
 png(file.path(
   plots_dir,
   "SRP140558_heatmap.png" # Replace file name with a relevant output plot name
-))
+),
+width = 1000, # Make the plot a tad bigger
+height = 800
+)
 
 # Print your heatmap
 heatmap
