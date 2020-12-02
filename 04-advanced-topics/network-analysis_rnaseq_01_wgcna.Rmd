@@ -229,7 +229,7 @@ if (!("ComplexHeatmap" %in% installed.packages())) {
 
 Attach some of the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the DESeq2 library
 library(DESeq2)
 

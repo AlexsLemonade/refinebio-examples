@@ -168,7 +168,7 @@ if (!("org.Hs.eg.db" %in% installed.packages())) {
 
 Attach the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(clusterProfiler)
 

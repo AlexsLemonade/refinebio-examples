@@ -208,7 +208,7 @@ if (!("ggforce" %in% installed.packages())) {
 
 Attach the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the `qusage` library
 library(qusage)
 
@@ -569,7 +569,7 @@ Let's look at the current format of `gsva_results`.
 head(gsva_results[, 1:10])
 ```
 
-We can see that they are in a wide format with the gsva scores for each sample spread across a row associated with each pathway.
+We can see that they are in a wide format with the GSVA scores for each sample spread across a row associated with each pathway.
 
 Now let's convert these results into a data frame and into a long format, using the `tidyr::pivot_longer()` function.
 

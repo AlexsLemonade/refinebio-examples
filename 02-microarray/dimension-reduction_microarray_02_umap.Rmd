@@ -180,7 +180,7 @@ if (!("umap" %in% installed.packages())) {
 
 Attach the packages we need for this analysis:
 
-```{r}
+```{r message=FALSE}
 # Attach the `umap` library
 library(umap)
 
