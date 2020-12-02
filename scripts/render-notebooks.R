@@ -49,7 +49,7 @@ option_list <- list(
   make_option(
     opt_str = c("-i", "--include_file"), type = "character",
     default = NULL,
-    help = "file with R code to include for rendering"
+    help = "File with R code to include for rendering"
   )
 )
 
@@ -79,7 +79,7 @@ if (!is.null(opt$cite_style)){
   }
 }
 
-# Check for an R code inclusion file
+# Check for an R code inclusion file and create a chunk to source it
 if (!is.null(opt$include_file)){
   if (!file.exists(opt$include_file)) {
     stop("File specified for --include_file option is not at the specified file path.")
@@ -109,7 +109,7 @@ if (opt$style) {
 }
 
 # Specify the temp file
-tmp_file <- stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
+tmp_file <- stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-torender.Rmd")
 
 # Read in as lines
 lines <- readr::read_lines(opt$rmd)
@@ -117,7 +117,7 @@ lines <- readr::read_lines(opt$rmd)
 # Find which lines are the beginning and end of the header chunk
 header_range <- which(lines == "---")
 
-# Stop if no chunk found
+# Stop if no header found
 if (length(header_range) < 2) {
   stop("Not finding the `---` which are at the beginning and end of the header.")
 }
@@ -132,7 +132,7 @@ if (!is.null(opt$include_file)){
 new_lines <- append(lines, header_line, header_range[1])
 
 
-# Write to an tmp file
+# Write to a tmp file
 readr::write_lines(new_lines, tmp_file)
 
 # Declare path to google analytics bit
@@ -141,7 +141,7 @@ google_analytics_file <- normalizePath(file.path("components", "google-analytics
 # Declare path to footer
 footer_file <- normalizePath(file.path("components", "footer.html"))
 
-# Render the header added notebook
+# Render the modified notebook
 rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
     toc = TRUE, toc_depth = 2,
@@ -156,5 +156,5 @@ rmarkdown::render(tmp_file,
   output_file = output_file
 )
 
-# Remove the temporary header change .Rmd tmp file
+# Remove the modified .Rmd tmp file
 file.remove(tmp_file)
