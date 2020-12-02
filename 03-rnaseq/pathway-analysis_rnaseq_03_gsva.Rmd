@@ -440,13 +440,6 @@ any(duplicated(mapped_df$entrez_id))
 ```
 
 Looks like we do have duplicated Entrez IDs.
-Let's find out which Entrez IDs have been duplicated.
-
-```{r}
-dup_entrez_ids <- mapped_df %>%
-  dplyr::filter(duplicated(entrez_id)) %>%
-  dplyr::pull(entrez_id)
-```
 
 **Review** 
 
@@ -481,14 +474,14 @@ filtered_mapped_df <- mapped_df %>%
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-Let's check on one of the duplicate Entrez IDs and see if we only get one row back. 
+Let's do our check again to see if we still have duplicates
 
 ```{r}
-filtered_mapped_df %>%
-  dplyr::filter(entrez_id %in% dup_entrez_ids[1])
+any(duplicated(mapped_df$entrez_id))
 ```
 
-That worked. 
+All set!
+
 Now we should prep this data so GSVA can use it. 
 
 ```{r}
