@@ -68,7 +68,10 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  header_line <- paste("bibliography:", normalizePath(opt$bib_file))
+  header_line <- paste0(
+    "bibliography: ", normalizePath(opt$bib_file), "\n",
+    "link-citations: TRUE"
+  )
 }
 # Check for a citation style
 if (!is.null(opt$cite_style)){
