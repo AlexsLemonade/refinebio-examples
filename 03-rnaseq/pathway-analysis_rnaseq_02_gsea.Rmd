@@ -1,7 +1,7 @@
 ---
 title: "Gene set enrichment analysis - RNA-seq"
 author: "CCDL for ALSF"
-date: "November 2020"
+date: "December 2020"
 output:  
   html_notebook:
     toc: true
@@ -198,7 +198,7 @@ dge_df <- readr::read_tsv(dge_url)
 ```
 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first. 
-Let's take a look at what these contrast results from the differential expression analysis look like. 
+Let's take a look at what the contrast results from the differential expression analysis looks like. 
 
 ```{r}
 dge_df
@@ -258,10 +258,7 @@ We can see what types of IDs are available to us in an annotation package with `
 keytypes(org.Hs.eg.db)
 ```
 
-Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to Entrez IDs (`ENTREZID`).
-
-Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
-[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert to and from any of these `keytypes()` listed above.
 
 The function we will use to map from Ensembl gene IDs to gene symbols is called `mapIds()`.
 
@@ -290,7 +287,8 @@ dge_mapped_df <- data.frame(
 This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple gene symbols.
 In this case, it's also possible that a gene symbol will map to multiple Ensembl IDs.
 For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs.
-For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html).
+Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
 Let's see a preview of `dge_mapped_df`.
 
@@ -316,8 +314,6 @@ Let's find out which gene symbols have been duplicated.
 dup_gene_symbols <- dge_mapped_df %>%
   dplyr::filter(duplicated(gene_symbol)) %>%
   dplyr::pull(gene_symbol)
-
-dup_gene_symbols
 ```
 
 Now let's take a look at the rows associated with the duplicated gene symbols.
@@ -336,13 +332,14 @@ Retaining the instance of the gene symbol with the higher absolute value means t
 We should keep this decision in mind when interpreting our results.
 For example, if the duplicate identifiers tended to be enriched in a particular gene set, we may get an optimistic view of how perturbed that gene set is by preferentially selecting values that have a higher absolute value.
 
+In the next chunk, we are going to filter out the duplicated row using the `dplyr::distinct()` function
+This will keep the first row with the duplicated value thus keeping the row with the highest absolute value of the log2 fold change.
+
 ```{r}
 filtered_dge_mapped_df <- dge_mapped_df %>%
   # Sort so that the highest absolute values of the log2 fold change are at the top
   dplyr::arrange(dplyr::desc(abs(log2FoldChange))) %>%
-  # Filter out the duplicated rows using `dplyr::distinct()`-- this will keep
-  # the first row with the duplicated value thus keeping the row with the
-  # highest absolute value of the log2 fold change
+  # Filter out the duplicated rows using `dplyr::distinct()`
   dplyr::distinct(gene_symbol, .keep_all = TRUE)
 ```
 
@@ -352,9 +349,7 @@ See the [`DESeq2` package vignette](https://bioconductor.org/packages/release/bi
 Let's check to see that we removed the duplicate gene symbols and kept the rows with the higher absolute value of the log2 fold change.
 
 ```{r}
-filtered_dge_mapped_df %>%
-  dplyr::filter(gene_symbol %in% dup_gene_symbols) %>%
-  dplyr::arrange(gene_symbol)
+any(duplicated(filtered_dge_mapped_df$gene_symbol))
 ```
 
 Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the log2 fold change!
