@@ -21,6 +21,7 @@ rule target:
         "03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html",
         "03-rnaseq/pathway-analysis_rnaseq_01_ora.html",
         "03-rnaseq/pathway-analysis_rnaseq_02_gsea.html",
+        "03-rnaseq/pathway-analysis_rnaseq_03_gsva.html",
         "04-advanced-topics/00-intro-to-advanced-topics.html",
         "04-advanced-topics/network-analysis_rnaseq_01_wgcna.html"
 
