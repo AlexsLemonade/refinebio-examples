@@ -355,7 +355,7 @@ We want a list where each element of the list is a vector that contains the Entr
 
 ```{r}
 hallmarks_list <- split(
-  hallmark_gene_sets$entrez_gene, # The genes we want split into lists
+  hallmark_gene_sets$entrez_gene, # The genes we want split into pathways
   hallmark_gene_sets$gs_name # The pathways made as the higher levels of the list
 )
 ```
