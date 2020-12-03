@@ -498,12 +498,15 @@ Hopefully the error message helps you track down the problem, but you can also c
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+A file with other R code to include can also be specified, which should be used to set options for rendering, such as the output width.
+No code that affects the computational behavior of the notebook should be included here, as it will be sourced in a hidden chunk and not visible to users.
 It also adds other components like CSS styling, a footer, and Google Analytics (these items are all hard-coded into the script).
 
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
-Default is the `references.bib` in the `components` folder.  
+- `--cite_style`: File path for a CSL file to control citation style 
+- `--include_file`: File path for code to be sourced at the start of the notebook but hidden from rendering.
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
 ### Add new analyses to the Snakefile

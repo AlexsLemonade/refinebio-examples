@@ -183,7 +183,7 @@ if (!({{PACKAGE}} %in% installed.packages())) {
 
 Attach the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library({{PACKAGE}})
 
