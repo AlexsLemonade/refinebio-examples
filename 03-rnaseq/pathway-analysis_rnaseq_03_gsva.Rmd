@@ -437,12 +437,10 @@ Looks like we have 68 duplicated Entrez IDs.
 
 #### Handling duplicate gene identifiers
 
-As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
+As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for running GSVA.
 In other words, we will narrow down one Ensembl ID's data for each particular Entrez gene identifier.
 
-See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
-
-First we need to calcuate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
+First, we need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
 
 ```{r}
 # First let's determine the gene means
@@ -456,8 +454,8 @@ mapped_df <- mapped_df %>%
   dplyr::select(Ensembl, entrez_id, gene_means, dplyr::everything())
 ```
 
-Now we can filter out the duplicate gene identifiers using the mean expression value.
-If we do an `dplyr::arrange()` by `gene_means` first, then this means the first row encountered will be the one with the higher gene mean and `dplyr::distinct()` keeps the first row of any duplicates it finds by default. 
+Now we can filter out the duplicate gene identifiers using the gene mean values.
+If we do an `dplyr::arrange()` by `gene_means` first, then this means the first row encountered by `dplyr::distinct()` will be the one with the higher gene mean and by default the first row of any duplicates is kept. 
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
@@ -548,7 +546,7 @@ gsva_results %>%
 
 Let's make a heatmap for our pathways! 
 
-## Neaten up our metadata labels
+### Neaten up our metadata labels
 
 We will want our heatmap to include our metadata labels, but unfortunately some of the metadata for this dataset are not set up into separate, neat columns. 
 No worries, this is something we will accomplish ourselves by creating a new data frame with the labels we want shown in the heatmap. 
@@ -602,9 +600,25 @@ pathway_heatmap <- pheatmap::pheatmap(gsva_results,
 # Print out heatmap here
 pathway_heatmap
 ```
+Here we've used clustering and can see that samples somewhat cluster by `time_point`. 
 
+We can also see the conceptually similar pathways seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
+This is probably mostly because they share many of the same genes, but to a certain smaller extent because they are biologically related. 
 
-Let's save this plot to PNG.
+Taking this example, how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`? 
+
+```{r}
+length(intersect(
+  hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE,
+  hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE
+))
+```
+
+These `73` genes out of `HALLMARK_INTERFERON_ALPHA_RESPONSE`'s `97` and `hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE`'s `200` is probably why those cluster together. 
+
+The pathway gene sets are all very overlapping!
+
+Now, let's save this plot to PNG.
 
 ```{r}
 # Open a PNG file
@@ -626,7 +640,8 @@ dev.off()
 # Resources for further learning
 
 - [GSVA Paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7) [@Hanzelmann2013]
-- See this article on [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
+- [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) [@GSEA-user-guide].
+- [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
 - [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
 - To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
 
