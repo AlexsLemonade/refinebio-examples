@@ -43,16 +43,16 @@ if (!dir.exists("data")) {
   dir.create("data")
 }
 
-# Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+# Define the path to the directory where plots will be saved
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
   dir.create(plots_dir)
 }
 
-# Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+# Define the path to the results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -111,7 +111,7 @@ Your new analysis folder should contain:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
-- A folder for `results` (currently empty)  
+- A folder for `results` (currently empty)
 
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using):
 
@@ -125,19 +125,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE24862") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "GSE24862")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "GSE24862.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "GSE24862.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_GSE24862.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_GSE24862.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -196,7 +201,8 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  # Here we are going to store the gene IDs as row names so that
+  # we have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 
@@ -221,7 +227,7 @@ Now we are going to use a combination of functions from base R and the `pheatmap
 ## Choose genes of interest
 
 Although you may want to create a heatmap including all of the genes in the set, alternatively, the heatmap could be created using only genes of interest.
-For this example, we will sort genes by variance, but there are many alternative criterion by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership to a particular gene ontology, so on.
+For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criteria by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, and so on.
 
 ```{r}
 # Calculate the variance for each gene
@@ -230,7 +236,7 @@ variances <- apply(df, 1, var)
 # Determine the upper quartile variance cutoff value
 upper_var <- quantile(variances, 0.75)
 
-# Subset the data choosing only genes whose variances are in the upper quartile
+# Filter the data choosing only genes whose variances are in the upper quartile
 df_by_var <- data.frame(df) %>%
   dplyr::filter(variances > upper_var)
 ```
@@ -244,9 +250,9 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 heatmap <-
   pheatmap(
     df_by_var,
-    cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
-    cluster_cols = TRUE, # We also want to cluster the heatmap by columns (samples in this case),
-    show_rownames = FALSE, # We don't want to show the rownames because there are too many genes for the labels to be clearly seen
+    cluster_rows = TRUE, # Cluster the rows of the heatmap (genes in this case)
+    cluster_cols = TRUE, # Cluster the columns of the heatmap (samples)
+    show_rownames = FALSE, # There are too many genes to clearly show the labels
     main = "Non-Annotated Heatmap",
     colorRampPalette(c(
       "deepskyblue",
@@ -269,7 +275,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "GSE24862_heatmap_non_annotated.png" # Replace file name with a relevant output plot name
+  "GSE24862_heatmap_non_annotated.png" # Replace with a relevant file name
 ))
 
 # Print your heatmap
