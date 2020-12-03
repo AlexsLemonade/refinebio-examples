@@ -186,7 +186,7 @@ if (!("DESeq2" %in% installed.packages())) {
 
 Attach the `DESeq2` and `ggplot2` libraries:
 
-```{r}
+```{r message=FALSE}
 # Attach the `DESeq2` library
 library(DESeq2)
 

@@ -35,5 +35,6 @@ rule render_citations:
         " --rmd {input.rmd}"
         " --bib_file components/references.bib"
         " --cite_style components/genetics.csl"
+        " --include_file components/include.R"
         " --html {output}"
         " --style"
