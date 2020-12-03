@@ -4070,7 +4070,7 @@ div.tocify {
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb41-2"><a href="#cb41-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ─────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -4087,7 +4087,7 @@ div.tocify {
 <span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later</span></span>
 <span id="cb43-4"><a href="#cb43-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ─────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4146,7 +4146,7 @@ div.tocify {
 <span id="cb52-3"><a href="#cb52-3"></a>  <span class="dt">category =</span> <span class="st">&quot;H&quot;</span> <span class="co"># Only hallmark gene sets</span></span>
 <span id="cb52-4"><a href="#cb52-4"></a>)</span></code></pre></div>
 <p><code>hallmark_gene_sets</code> has which genes are a part of which pathway in a data frame format. For this example we will use Entrez IDs (but note that there are gene symbols we could use just as easily). The info we need is in two columns: <code>entrez_gene</code> contains the gene ID and <code>gs_name</code> contains the name of the pathway that the gene is a part of.</p>
-<p>To make this into the list format we need, we can use <code>split()</code> function. We want a list where each element of the list is a vector that contains the Entrez gene IDs from the <code>entrez_gene</code> column that are in the particular gene set from the <code>gs_name</code> column.</p>
+<p>To make this into the list format we need, we can use the <code>split()</code> function. We want a list where each element of the list is a vector that contains the Entrez gene IDs that are in a particular pathway set.</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>hallmarks_list &lt;-<span class="st"> </span><span class="kw">split</span>(</span>
 <span id="cb53-2"><a href="#cb53-2"></a>  hallmark_gene_sets<span class="op">$</span>entrez_gene, <span class="co"># The genes we want split into lists</span></span>
 <span id="cb53-3"><a href="#cb53-3"></a>  hallmark_gene_sets<span class="op">$</span>gs_name <span class="co"># The pathways made as the higher levels of the list</span></span>

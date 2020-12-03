@@ -350,8 +350,8 @@ hallmark_gene_sets <- msigdbr::msigdbr(
 For this example we will use Entrez IDs (but note that there are gene symbols we could use just as easily).
 The info we need is in two columns: `entrez_gene` contains the gene ID and `gs_name` contains the name of the pathway that the gene is a part of. 
 
-To make this into the list format we need, we can use `split()` function.
-We want a list where each element of the list is a vector that contains the Entrez gene IDs from the `entrez_gene` column that are in the particular gene set from the `gs_name` column.
+To make this into the list format we need, we can use the `split()` function.
+We want a list where each element of the list is a vector that contains the Entrez gene IDs that are in a particular pathway set. 
 
 ```{r}
 hallmarks_list <- split(
