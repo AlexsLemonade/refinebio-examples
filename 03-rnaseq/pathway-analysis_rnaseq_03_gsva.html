@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3775,13 +3775,13 @@ div.tocify {
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
 <p>This example is one of pathway analysis module set, we recommend looking at the <a href="#how-to-choose-a-pathway-analysis">pathway analysis table below</a> to help you determine which pathway analysis method is best suited for your purposes.</p>
-<p>In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis. Gene set variation analysis (GSVA) constitutes a starting point to build pathway-centric models of biology. Rather than contextualizing some results you have received from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment. This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change <span class="citation">(H&quot;anzelmann <em>et al.</em> 2013)</span>.</p>
-<p>GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach. GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix <span class="citation">(Hänzelmann <em>et al.</em> 2013)</span>. You can use these scores for other downstream analyses like differential expressioon.</p>
+<p>In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis. Gene set variation analysis (GSVA) constitutes a starting point to build pathway-centric models of biology. Rather than contextualizing some results you have received from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment. This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann2013" role="doc-biblioref">2013</a>)</span>.</p>
+<p>GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach. GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann-github" role="doc-biblioref">2013</a>)</span>. You can use these scores for other downstream analyses like differential expressioon.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 <div id="what-is-pathway-analysis" class="section level3">
 <h3><span class="header-section-number">1.0.1</span> What is pathway analysis?</h3>
 <p>Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment. In the context of <a href="https://www.refine.bio/">refine.bio</a>, we use these techniques to analyze and interpret genome-wide gene expression experiments. The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest. In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.</p>
-<p>We highly recommend taking a look at <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375">Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges</a> from <span class="citation">Khatri <em>et al.</em> (2012)</span> for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the <a href="#resources-for-further-learning"><code>Resources for further learning</code> section</a>.</p>
+<p>We highly recommend taking a look at <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375">Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges</a> from <span class="citation">Khatri <em>et al.</em> (<a href="#ref-Khatri2012" role="doc-biblioref">2012</a>)</span> for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the <a href="#resources-for-further-learning"><code>Resources for further learning</code> section</a>.</p>
 </div>
 <div id="how-to-choose-a-pathway-analysis" class="section level3">
 <h3><span class="header-section-number">1.0.2</span> How to choose a pathway analysis?</h3>
@@ -3941,10 +3941,10 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>We will be using <code>DESeq2</code> to normalize and transform our RNA-seq data before running GSVA, so we will need to install that <span class="citation">(Love <em>et al.</em> 2014)</span>.</p>
-<p>In this analysis, we will be using the <a href="https://www.bioconductor.org/packages/release/bioc/html/GSVA.html"><code>GSVA</code></a> package to perform GSVA and the <a href="https://www.bioconductor.org/packages/release/bioc/html/qusage.html"><code>qusage</code></a> package to read in the GMT file containing the gene set data <span class="citation">(H&quot;anzelmann <em>et al.</em> 2013; Yaari <em>et al.</em> 2013)</span>.</p>
-<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html"><code>org.Hs.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson 2020)</span>.</p>
-<p>We’ll create a heatmap from our pathway analysis results using <code>pheatmap</code> <span class="citation">(Slowikowski 2017)</span>.</p>
+<p>We will be using <code>DESeq2</code> to normalize and transform our RNA-seq data before running GSVA, so we will need to install that <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>.</p>
+<p>In this analysis, we will be using the <a href="https://www.bioconductor.org/packages/release/bioc/html/GSVA.html"><code>GSVA</code></a> package to perform GSVA and the <a href="https://www.bioconductor.org/packages/release/bioc/html/qusage.html"><code>qusage</code></a> package to read in the GMT file containing the gene set data <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann2013" role="doc-biblioref">2013</a>; Yaari <em>et al.</em> <a href="#ref-Yaari2013" role="doc-biblioref">2013</a>)</span>.</p>
+<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html"><code>org.Hs.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson <a href="#ref-Carlson2020-human" role="doc-biblioref">2020</a>)</span>.</p>
+<p>We’ll create a heatmap from our pathway analysis results using <code>pheatmap</code> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;DESeq2&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;DESeq2&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -4116,7 +4116,7 @@ div.tocify {
 </div>
 <div id="create-a-deseqdataset" class="section level2">
 <h2><span class="header-section-number">4.3</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> 2014)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
+<p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># Create a `DESeqDataSet` object</span></span>
 <span id="cb48-2"><a href="#cb48-2"></a>dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(</span>
 <span id="cb48-3"><a href="#cb48-3"></a>  <span class="dt">countData =</span> expression_df, <span class="co"># Our prepped data frame with counts</span></span>
@@ -4140,7 +4140,7 @@ div.tocify {
 <div id="import-gene-sets" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Import Gene Sets</h3>
 <p>The function that we will use to run GSVA wants the gene sets to be in a list where each pathway has its own gene list inside of it.</p>
-<p>Here we are obtaining the pathway information from the main function of the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package <span class="citation">(Dolgalev 2020)</span>. Because we are using human data in this example, we supply the formal organism name to the <code>species</code> argument. We will want only the hallmark pathways, so we use the <code>category = &quot;H&quot;</code> argument.</p>
+<p>Here we are obtaining the pathway information from the main function of the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package <span class="citation">(Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>)</span>. Because we are using human data in this example, we supply the formal organism name to the <code>species</code> argument. We will want only the hallmark pathways, so we use the <code>category = &quot;H&quot;</code> argument.</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>hallmark_gene_sets &lt;-<span class="st"> </span>msigdbr<span class="op">::</span><span class="kw">msigdbr</span>(</span>
 <span id="cb52-2"><a href="#cb52-2"></a>  <span class="dt">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>, <span class="co"># Can change this to what species you need</span></span>
 <span id="cb52-3"><a href="#cb52-3"></a>  <span class="dt">category =</span> <span class="st">&quot;H&quot;</span> <span class="co"># Only hallmark gene sets</span></span>
@@ -4258,7 +4258,7 @@ div.tocify {
 <div id="gene-identifier-conversion" class="section level3">
 <h3><span class="header-section-number">4.4.2</span> Gene identifier conversion</h3>
 <p>We’re going to convert our identifiers in <code>expression_df</code> to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!</p>
-<p>The annotation package <code>org.Hs.eg.db</code> contains information for different identifiers <span class="citation">(Carlson 2020)</span>. <code>org.Hs.eg.db</code> is specific to <em>Homo sapiens</em> – this is what the <code>Hs</code> in the package name is referencing.</p>
+<p>The annotation package <code>org.Hs.eg.db</code> contains information for different identifiers <span class="citation">(Carlson <a href="#ref-Carlson2020-human" role="doc-biblioref">2020</a>)</span>. <code>org.Hs.eg.db</code> is specific to <em>Homo sapiens</em> – this is what the <code>Hs</code> in the package name is referencing.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a><span class="kw">keytypes</span>(org.Hs.eg.db)</span></code></pre></div>
 <pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot; 
@@ -4310,10 +4310,10 @@ div.tocify {
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7">GSVA Paper</a> <span class="citation">(H&quot;anzelmann <em>et al.</em> 2013)</span></li>
-<li>See this article on <a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Decoding Gene Set Variation Analysis</a> <span class="citation">(Malhotra 2018)</span></li>
-<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski 2017)</span></li>
-<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> 2016)</span></li>
+<li><a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7">GSVA Paper</a> <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann2013" role="doc-biblioref">2013</a>)</span></li>
+<li>See this article on <a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Decoding Gene Set Variation Analysis</a> <span class="citation">(Malhotra <a href="#ref-Malhotra2018" role="doc-biblioref">2018</a>)</span></li>
+<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span></li>
+<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> <a href="#ref-Gu2016" role="doc-biblioref">2016</a>)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -4449,7 +4449,7 @@ div.tocify {
 <p>Gu Z., R. Eils, and M. Schlesner, 2016 Complex heatmaps reveal patterns and correlations in multidimensional genomic data. Bioinformatics. <a href="https://doi.org/10.1093/bioinformatics/btw313">https://doi.org/10.1093/bioinformatics/btw313</a></p>
 </div>
 <div id="ref-Hanzelmann2013">
-<p>H&quot;anzelmann S., R. Castelo, and J. Guinney, 2013 Biases in Illumina transcriptome sequencing caused by random hexamer priming. BMC Bioinformatics 14. <a href="https://doi.org/10.1186/1471-2105-14-7">https://doi.org/10.1186/1471-2105-14-7</a></p>
+<p>Hänzelmann S., R. Castelo, and J. Guinney, 2013 Biases in Illumina transcriptome sequencing caused by random hexamer priming. BMC Bioinformatics 14. <a href="https://doi.org/10.1186/1471-2105-14-7">https://doi.org/10.1186/1471-2105-14-7</a></p>
 </div>
 <div id="ref-Hanzelmann-github">
 <p>Hänzelmann S., R. Castelo, and J. Guinney, 2013 GSVA. <a href="https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd">https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd</a></p>

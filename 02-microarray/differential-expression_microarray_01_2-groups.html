@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3824,7 +3824,7 @@ div.tocify {
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
-<p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process">CREB overexpression zebrafish</a>. <span class="citation">Tregnago <em>et al.</em> (2016)</span> measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples. In this analysis, we will test differential expression between the control and CREB-overexpressing groups.</p>
+<p>For this example analysis, we will use this <a href="https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process">CREB overexpression zebrafish</a>. <span class="citation">Tregnago <em>et al.</em> (<a href="#ref-Tregnago2016" role="doc-biblioref">2016</a>)</span> measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples. In this analysis, we will test differential expression between the control and CREB-overexpressing groups.</p>
 </div>
 <div id="place-the-dataset-in-your-new-data-folder" class="section level2">
 <h2><span class="header-section-number">2.5</span> Place the dataset in your new <code>data/</code> folder</h2>
@@ -3889,7 +3889,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <code>limma</code> for differential expression <span class="citation">(Ritchie <em>et al.</em> 2015)</span>. We will also use <code>EnhancedVolcano</code> for plotting and <code>apeglm</code> for some log fold change estimates in the results table <span class="citation">(Zhu <em>et al.</em> 2018; Blighe <em>et al.</em> 2020)</span>.</p>
+<p>In this analysis, we will be using <code>limma</code> for differential expression <span class="citation">(Ritchie <em>et al.</em> <a href="#ref-Ritchie2015" role="doc-biblioref">2015</a>)</span>. We will also use <code>EnhancedVolcano</code> for plotting and <code>apeglm</code> for some log fold change estimates in the results table <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>; Blighe <em>et al.</em> <a href="#ref-Blighe2020" role="doc-biblioref">2020</a>)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;limma&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;limma&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -4048,7 +4048,7 @@ Accessing variable that have names with special characters like <code>/</code>, 
 </div>
 <div id="make-a-volcano-plot" class="section level2">
 <h2><span class="header-section-number">4.7</span> Make a volcano plot</h2>
-<p>We’ll use the <code>EnhancedVolcano</code> package’s main function to plot our data <span class="citation">(Zhu <em>et al.</em> 2018)</span>.</p>
+<p>We’ll use the <code>EnhancedVolcano</code> package’s main function to plot our data <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>EnhancedVolcano<span class="op">::</span><span class="kw">EnhancedVolcano</span>(stats_df,</span>
 <span id="cb26-2"><a href="#cb26-2"></a>  <span class="dt">lab =</span> stats_df<span class="op">$</span>Gene, <span class="co"># This has to be a vector with our labels we want for our genes</span></span>
 <span id="cb26-3"><a href="#cb26-3"></a>  <span class="dt">x =</span> <span class="st">&quot;logFC&quot;</span>, <span class="co"># This is the column name in `stats_df` that contains what we want on the x axis</span></span>
@@ -4087,10 +4087,10 @@ But there are no genes that meet the p value cutoff, which by default is <code>1
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
 <li><a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/differential-expression_microarray_02_several-groups.html">The refine.bio example for differential expression with more than 2 groups</a></li>
-<li><a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">The full users guide on limma</a> shows examples of limma functions for different experimental models <span class="citation">(Ritchie <em>et al.</em> 2015)</span>.</li>
-<li><a href="http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf">A general guide to differential expression, including a section about interpreting results</a> <span class="citation">(Gonzalez 2014)</span>.</li>
-<li><a href="https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html">End to End workflow for Affymetrix microarray data</a> <span class="citation">(Klaus and Reisenauer 2018)</span>.</li>
-<li><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/EnhancedVolcano/inst/doc/EnhancedVolcano.html">The <code>EnhancedVolcano</code> vignette</a> has more examples on how to tailor your volcano plot <span class="citation">(Blighe <em>et al.</em> 2020)</span>.</li>
+<li><a href="https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf">The full users guide on limma</a> shows examples of limma functions for different experimental models <span class="citation">(Ritchie <em>et al.</em> <a href="#ref-Ritchie2015" role="doc-biblioref">2015</a>)</span>.</li>
+<li><a href="http://www.nathalievialaneix.eu/doc/pdf/tutorial-rnaseq.pdf">A general guide to differential expression, including a section about interpreting results</a> <span class="citation">(Gonzalez <a href="#ref-Gonzalez2014" role="doc-biblioref">2014</a>)</span>.</li>
+<li><a href="https://www.bioconductor.org/packages/devel/workflows/vignettes/maEndToEnd/inst/doc/MA-Workflow.html">End to End workflow for Affymetrix microarray data</a> <span class="citation">(Klaus and Reisenauer <a href="#ref-Klaus2018" role="doc-biblioref">2018</a>)</span>.</li>
+<li><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/EnhancedVolcano/inst/doc/EnhancedVolcano.html">The <code>EnhancedVolcano</code> vignette</a> has more examples on how to tailor your volcano plot <span class="citation">(Blighe <em>et al.</em> <a href="#ref-Blighe2020" role="doc-biblioref">2020</a>)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">

@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3774,7 +3774,7 @@ div.tocify {
 
 <div id="purpose-of-this-analysis" class="section level1">
 <h1><span class="header-section-number">1</span> Purpose of this analysis</h1>
-<p>The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using <code>AnnotationDbi</code> packages <span class="citation">(Carlson 2020a)</span>.</p>
+<p>The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using <code>AnnotationDbi</code> packages <span class="citation">(Carlson <a href="#ref-Carlson2020-package" role="doc-biblioref">2020</a><a href="#ref-Carlson2020-package" role="doc-biblioref">a</a>)</span>.</p>
 <p>⬇️ <a href="#analysis"><strong>Jump to the analysis code</strong></a> ⬇️</p>
 </div>
 <div id="how-to-run-this-example" class="section level1">
@@ -3882,7 +3882,7 @@ div.tocify {
 <h1><span class="header-section-number">3</span> Using a different refine.bio dataset with this analysis?</h1>
 <p>If you’d like to adapt an example analysis to use a different dataset from <a href="https://www.refine.bio/">refine.bio</a>, we recommend placing the files in the <code>data/</code> directory you created and changing the filenames and paths in the notebook to match these files (we’ve put comments to signify where you would need to change the code). We suggest saving plots and results to <code>plots/</code> and <code>results/</code> directories, respectively, as these are automatically created by the notebook. From here you can customize this analysis example to fit your own scientific questions and preferences.</p>
 <p>refine.bio data comes with gene level data with Ensembl IDs. Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.</p>
-<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team 2003)</span>.</p>
+<p><b>For different species</b>, wherever the abbreviation <code>org.Mm.eg.db</code> or <code>Mm</code> is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> <code>org.Hs.eg.db</code> or <code>Hs</code> would be used. In the case of our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene identifier annotation example notebook</a>, a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning <code>org.Dr.eg.db</code> or <code>Dr</code> would also need to be used there. A full list of the annotation R packages from Bioconductor is at this <a href="https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData">link</a> <span class="citation">(R Bioconductor Team <a href="#ref-annotation-packages" role="doc-biblioref">2003</a>)</span>.</p>
 <hr />
 <!-- Do not delete this line -->
 <p><a name="analysis" style="padding-top:56px;margin-top:-56px;"> </a></p>
@@ -3893,7 +3893,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson 2019)</span>. <a href="#using-a-different-refinebio-dataset-with-this-analysis">Other species can be used</a>.</p>
+<p>In this analysis, we will be using the <code>org.Mm.eg.db</code> R package <span class="citation">(Carlson <a href="#ref-Carlson2019" role="doc-biblioref">2019</a>)</span>. <a href="#using-a-different-refinebio-dataset-with-this-analysis">Other species can be used</a>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Install the mouse package</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;org.Mm.eg.db&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
@@ -4080,8 +4080,8 @@ div.tocify {
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson 2020b)</span></li>
-<li>See our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(Childhood Cancer Data Lab 2020)</span>.</li>
+<li>Marc Carlson has prepared a nice <a href="https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf">Introduction to Bioconductor Annotation Packages</a> <span class="citation">(Carlson <a href="#ref-Carlson2020-vignette" role="doc-biblioref">2020</a><a href="#ref-Carlson2020-vignette" role="doc-biblioref">b</a>)</span></li>
+<li>See our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion notebook</a> as another applicable example, since the steps for this workflow do not change with technology <span class="citation">(Childhood Cancer Data Lab <a href="#ref-gene-id-annotation-rna-seq" role="doc-biblioref">2020</a>)</span>.</li>
 </ul>
 </div>
 <div id="session-info" class="section level1">

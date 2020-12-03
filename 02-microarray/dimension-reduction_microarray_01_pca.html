@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3976,7 +3976,7 @@ div.tocify {
 </div>
 <div id="explore-variance-in-pca-results" class="section level2">
 <h2><span class="header-section-number">4.4</span> Explore Variance in PCA Results</h2>
-<p>Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component. The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset. If the largest variance component, PC1, explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset! On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned <span class="citation">(Childhood Cancer Data Lab 2020)</span>.</p>
+<p>Before visualizing and interpreting the results, it can be useful to understand the proportion of variance explained by each principal component. The principal components are automatically ordered by the variance they explain, meaning PC1 would always be the principal component that explains the most variance in your dataset. If the largest variance component, PC1, explained 96% of the variance in your data and very clearly showed a difference between sample batches you would be very concerned about your dataset! On the other hand, if a separation of batches was apparent in a different principal component that explained a low proportion of variance and the first few PCs explained most of the variance and appeared to correspond to something like tissue type and treatment, you would be less concerned <span class="citation">(Childhood Cancer Data Lab <a href="#ref-CCDL2020-cluster-validation" role="doc-biblioref">2020</a>)</span>.</p>
 <p>The <code>summary()</code> function reports the proportion of variance explained by each principal component.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Save the summary of the PCA results using the `summary()` function</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>pca_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(pca)</span></code></pre></div>
@@ -4008,7 +4008,7 @@ div.tocify {
 <div id="plot-pca-results" class="section level2">
 <h2><span class="header-section-number">4.6</span> Plot PCA Results</h2>
 <p>Now let’s plot the PC scores for the first two principal components since we know that they are responsible for the most explained proportion of variance in our dataset.</p>
-<p>Let’s also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles <span class="citation">(Northcott <em>et al.</em> 2012)</span>.</p>
+<p>Let’s also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles <span class="citation">(Northcott <em>et al.</em> <a href="#ref-Northcott2012" role="doc-biblioref">2012</a>)</span>.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Make a scatterplot using `ggplot2` functionality</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a>pca_plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(</span>
 <span id="cb21-3"><a href="#cb21-3"></a>  pca_df,</span>
@@ -4061,10 +4061,10 @@ div.tocify {
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c">Overall PCA Explanation by Matt Brems</a> <span class="citation">(Brems 2017)</span></li>
+<li><a href="https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c">Overall PCA Explanation by Matt Brems</a> <span class="citation">(Brems <a href="#ref-Brems2017" role="doc-biblioref">2017</a>)</span></li>
 <li><a href="http://setosa.io/ev/principal-component-analysis/">A visual explanation of PCA</a> <span class="citation">(Powell and Lehe)</span></li>
-<li><a href="https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&amp;type=printable">Guidelines on choosing dimension reduction methods</a> <span class="citation">(Nguyen and Holmes 2019)</span></li>
-<li><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">More on <code>ggplot2</code></a> <span class="citation">(Prabhakaran 2016)</span></li>
+<li><a href="https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&amp;type=printable">Guidelines on choosing dimension reduction methods</a> <span class="citation">(Nguyen and Holmes <a href="#ref-Nguyen2019" role="doc-biblioref">2019</a>)</span></li>
+<li><a href="http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html">More on <code>ggplot2</code></a> <span class="citation">(Prabhakaran <a href="#ref-Prabhakaran2016" role="doc-biblioref">2016</a>)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">

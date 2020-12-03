@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3890,7 +3890,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the R package <code>pheatmap</code> for clustering and creating a heatmap <span class="citation">(Slowikowski 2017)</span>.</p>
+<p>In this analysis, we will be using the R package <code>pheatmap</code> for clustering and creating a heatmap <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;pheatmap&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install pheatmap</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="kw">install.packages</span>(<span class="st">&quot;pheatmap&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -3971,7 +3971,7 @@ div.tocify {
 </div>
 <div id="create-a-heatmap" class="section level2">
 <h2><span class="header-section-number">4.4</span> Create a heatmap</h2>
-<p>To further customize the heatmap, see a vignette for a guide at this <a href="https://slowkow.com/notes/pheatmap-tutorial/">link</a> <span class="citation">(Slowikowski 2017)</span>.</p>
+<p>To further customize the heatmap, see a vignette for a guide at this <a href="https://slowkow.com/notes/pheatmap-tutorial/">link</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span>.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Create and store the heatmap object</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>heatmap &lt;-</span>
 <span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">pheatmap</span>(</span>
@@ -4011,7 +4011,7 @@ div.tocify {
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Prepare metadata for annotation</h2>
-<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> 2010)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data. We are also going to create a new column variable from our existing metadata called <code>cell_line_type</code>, that will distinguish whether the <code>refinebio_cell_line</code> is parental or resistant – since this is also a key aspect of the experimental design. Note that this step is very specific to our metadata, you may find that you also need to tailor the metadata for your own needs.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> <a href="#ref-Nazarian2010" role="doc-biblioref">2010</a>)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data. We are also going to create a new column variable from our existing metadata called <code>cell_line_type</code>, that will distinguish whether the <code>refinebio_cell_line</code> is parental or resistant – since this is also a key aspect of the experimental design. Note that this step is very specific to our metadata, you may find that you also need to tailor the metadata for your own needs.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Let&#39;s prepare an annotation data frame for plotting</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a>annotation_df &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="co"># We want to select the variables that we want for annotating the heatmap</span></span>
@@ -4075,8 +4075,8 @@ div.tocify {
 <div id="further-learning-resources-about-this-analysis" class="section level1">
 <h1><span class="header-section-number">5</span> Further learning resources about this analysis</h1>
 <ul>
-<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski 2017)</span></li>
-<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> 2016)</span></li>
+<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span></li>
+<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> <a href="#ref-Gu2016" role="doc-biblioref">2016</a>)</span></li>
 </ul>
 </div>
 <div id="print-session-info" class="section level1">
