@@ -1,7 +1,7 @@
 ---
 title: "Gene set variation analysis - RNA-seq"
 author: "CCDL for ALSF"
-date: "November 2020"
+date: "December 2020"
 output:  
   html_notebook:
     toc: true
@@ -195,7 +195,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-**IDENTICAL TO MICROARRRAY GSVA** (Except DESeq2 package added)
+**IDENTICAL TO MICROARRAY GSVA** (Except DESeq2 package added)
 
 # Gene set variation analysis - RNA-Seq
 
@@ -209,7 +209,7 @@ In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/pac
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
-We'll create a heatmap from our pathway analysis results and for that we'll use `pheatmap` [@Slowikowski2017]
+We'll create a heatmap from our pathway analysis results using `pheatmap` [@Slowikowski2017]
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -293,8 +293,7 @@ There are two things we need to do to prep our expression data for DESeq2.
 
 First, we need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
 
-Then, we need to filter out the genes that have not been expressed or that have low expression counts. 
-Removing low count genes can also help improve results. 
+Then, we need to filter out the genes that have not been expressed or that have low expression counts since we can not be as confident in those genes being reliably measured. 
 We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
 
 ```{r}
@@ -336,7 +335,8 @@ dds_norm <- vst(dds)
 At this point, if your data set has any outlier samples, you should look into removing them as they can affect your results. 
 For this example data set, we will skip this step (there are no obvious outliers) and proceed.
 
-Extract the normalized counts to a matrix and make it into a data frame so we can use with tidyverse functions later. 
+But now we are ready to format our dataset for input into `gsva::gsva()`.
+We need to extract the normalized counts to a matrix and make it into a data frame so we can use with tidyverse functions later. 
 
 ```{r}
 # Retrieve the normalized data from the `DESeqDataSet`
@@ -345,15 +345,15 @@ normalized_counts <- assay(dds_norm) %>%
   tibble::rownames_to_column("ensembl_id") # Make Gene IDs into their own column
 ```
 
-**IDENTICAL TO MICROARRAY GSVA**
+**Review**
 
 ### Import Gene Sets
 
-The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
+The function that we will use to run GSVA wants the gene sets to be in a list where each pathway has its own gene list inside of it. 
 
 Here we are obtaining the pathway information from the main function of the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Igor2020].
 Because we are using human data in this example, we supply the formal organism name to the `species` argument. 
-We will want only the hallmark pathways, so to narrow that down we use the `category = "H"` argument.
+We will want only the hallmark pathways, so we use the `category = "H"` argument.
 
 ```{r}
 hallmark_gene_sets <- msigdbr::msigdbr(
@@ -362,13 +362,17 @@ hallmark_gene_sets <- msigdbr::msigdbr(
 )
 ```
 
-Now we are going to extract the information but put it in a list format in the way that GSVA will want it. 
-We will use the `split()` function to do this for us. 
+`hallmark_gene_sets` has which genes are a part of which pathway in a data frame format.
+For this example we will use Entrez IDs (but note that there's gene symbols we could just as easily use).
+The info we need is in two columns: `entrez_gene` contains the gene ID and `gs_name` contains the name of the pathway that the gene is a part of. 
+
+To make this into the list format we need, we can use `split()` function.
+Here we want `entrez_gene` to be made into smaller lists for each pathway.
 
 ```{r}
 hallmarks_list <- split(
   hallmark_gene_sets$entrez_gene, # The genes we want split into lists
-  hallmark_gene_sets$gs_name # The pathways made as the higher level of the list
+  hallmark_gene_sets$gs_name # The pathways made as the higher levels of the list
 )
 ```
 
@@ -383,7 +387,7 @@ Looks like we have a list of gene sets with associated Entrez IDs.
 In our gene expression data frame, `expression_df` we have Ensembl gene identifiers.
 So we will need to convert our Ensembl IDs into Entrez IDs for GSVA.
 
-**IDENTICAL TO MICROARRAY GSVA** (except `expression_df` -> `normalized_counts`)
+**ALMOST IDENTICAL TO MICROARRAY GSVA** (A few wording rearrangements and `expression_df` -> `normalized_counts`)
 
 ### Gene identifier conversion
 
@@ -398,10 +402,8 @@ We can see what types of IDs are available to us in an annotation package with `
 keytypes(org.Hs.eg.db)
 ```
 
-Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`).
-
-Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
-[the microarray example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+We' use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`) -- since this is the IDs we used in our `hallmarks_list` in the previous step. 
+But, we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`) if we had built `hallmarks_list` using gene symbols. 
 
 The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
 
@@ -430,7 +432,9 @@ mapped_df <- data.frame(
 This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
 In this case, it's also possible that a Entrez ID will map to multiple Ensembl IDs.
 For the purpose of performing GSVA later in this notebook, we keep only the first mapped IDs.
-For more about how to explore this, take a look at our [microarray gene ID conversion example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+For more info on gene ID conversion, take a look at our other examples:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
 Let's see a preview of `mapped_df`.
 
@@ -441,7 +445,7 @@ head(mapped_df)
 We will want to keep in mind that GSVA requires that data is in a matrix with the gene identifiers as row names.
 In order to successfully turn our data frame into a matrix, we will need to ensure that we do not have any duplicate gene identifiers.
 
-Let's count up how many Entrez IDs that mapped to multiple Ensembl IDs.
+Let's count up how many Entrez IDs mapped to multiple Ensembl IDs.
 
 ```{r}
 sum(duplicated(mapped_df$entrez_id))
