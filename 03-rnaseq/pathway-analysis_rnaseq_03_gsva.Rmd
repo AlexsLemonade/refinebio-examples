@@ -438,9 +438,9 @@ Looks like we have 68 duplicated Entrez IDs.
 #### Handling duplicate gene identifiers
 
 As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for running GSVA.
-In other words, we will narrow down one Ensembl ID's data for each particular Entrez gene identifier.
+For RNA-seq processing in refine.bio, reads were mapped to these Ensembl IDs, so as opposed to combining two (or more) Ensembl IDs data in a summary stat and getting a value that's not clearly representing any particular mapping, it might be a more representative of the original reads to just choose one Ensembl ID's data over the other(s). 
 
-First, we need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
+To do this, we first need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
 
 ```{r}
 # First let's determine the gene means
@@ -465,7 +465,7 @@ filtered_mapped_df <- mapped_df %>%
   dplyr::distinct(entrez_id, .keep_all = TRUE)
 ```
 
-Let's do our check again to see if we still have duplicates
+Let's do our check again to see if we still have duplicates.
 
 ```{r}
 sum(duplicated(mapped_df$entrez_id))
@@ -506,7 +506,7 @@ gsva_results <- gsva(
   filtered_mapped_matrix,
   hallmarks_list,
   method = "gsva",
-  # Appropriate for our normalized counts data
+  # Appropriate for our vst transformed data
   kcdf = "Gaussian",
   # Minimum gene set size
   min.sz = 15,
@@ -542,16 +542,24 @@ gsva_results %>%
   ))
 ```
 
-## Visualizing Results with a heatmap
+## Visualizing results with a heatmap
 
 Let's make a heatmap for our pathways! 
 
 ### Neaten up our metadata labels
 
 We will want our heatmap to include our metadata labels, but unfortunately some of the metadata for this dataset are not set up into separate, neat columns. 
-No worries, this is something we will accomplish ourselves by creating a new data frame with the labels we want shown in the heatmap. 
 
-For this study, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
+Our main information about these samples is squished into one column, `refinebio_title`. 
+Let's preview what this column looks like. 
+
+```{r}
+head(metadata$refinebio_title)
+```
+
+This information is not very clear as is. 
+
+Looking at the author's descriptions, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
 
 We can create a new variable, `time_point`, that states this info more clearly. 
 This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
@@ -600,12 +608,13 @@ pathway_heatmap <- pheatmap::pheatmap(gsva_results,
 # Print out heatmap here
 pathway_heatmap
 ```
+
 Here we've used clustering and can see that samples somewhat cluster by `time_point`. 
 
 We can also see the conceptually similar pathways seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
-This is probably mostly because they share many of the same genes, but to a certain smaller extent because they are biologically related. 
+Often pathways may look similar because their gene sets are not distinct from each other and can have a lot of overlap. 
 
-Taking this example, how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`? 
+Taking this example, we can look at how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`.
 
 ```{r}
 length(intersect(
@@ -614,9 +623,9 @@ length(intersect(
 ))
 ```
 
-These `73` genes out of `HALLMARK_INTERFERON_ALPHA_RESPONSE`'s `97` and `hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE`'s `200` is probably why those cluster together. 
+These `73` genes out of `HALLMARK_INTERFERON_ALPHA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE)` and `hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE)` is probably why those cluster together.
 
-The pathway gene sets are all very overlapping!
+The pathways share genes and are not independent!
 
 Now, let's save this plot to PNG.
 
