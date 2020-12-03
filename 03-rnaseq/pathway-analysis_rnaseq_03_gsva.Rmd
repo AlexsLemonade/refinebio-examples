@@ -195,7 +195,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 <!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
 
-**IDENTICAL TO MICROARRRAY GSVA** (Except DESeq2 package added)
+**IDENTICAL TO MICROARRAY GSVA** (Except DESeq2 package added)
 
 # Gene set variation analysis - RNA-Seq
 
@@ -387,7 +387,7 @@ Looks like we have a list of gene sets with associated Entrez IDs.
 In our gene expression data frame, `expression_df` we have Ensembl gene identifiers.
 So we will need to convert our Ensembl IDs into Entrez IDs for GSVA.
 
-**ALMOST IDENTICAL TO MICROARRAY GSVA** (A few wording rearrangments and `expression_df` -> `normalized_counts`)
+**ALMOST IDENTICAL TO MICROARRAY GSVA** (A few wording rearrangements and `expression_df` -> `normalized_counts`)
 
 ### Gene identifier conversion
 
