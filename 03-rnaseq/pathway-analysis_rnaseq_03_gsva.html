@@ -4134,7 +4134,7 @@ div.tocify {
 <p>At this point, if your data set has any outlier samples, you should look into removing them as they can affect your results. For this example data set, we will skip this step (there are no obvious outliers) and proceed.</p>
 <p>But now we are ready to format our dataset for input into <code>gsva::gsva()</code>. We need to extract the normalized counts to a matrix and make it into a data frame so we can use with tidyverse functions later.</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="co"># Retrieve the normalized data from the `DESeqDataSet`</span></span>
-<span id="cb51-2"><a href="#cb51-2"></a>normalized_df &lt;-<span class="st"> </span><span class="kw">assay</span>(dds_norm) <span class="op">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2"></a>vst_df &lt;-<span class="st"> </span><span class="kw">assay</span>(dds_norm) <span class="op">%&gt;%</span></span>
 <span id="cb51-3"><a href="#cb51-3"></a><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Make into a data frame</span></span>
 <span id="cb51-4"><a href="#cb51-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;ensembl_id&quot;</span>) <span class="co"># Make Gene IDs into their own column</span></span></code></pre></div>
 <div id="import-gene-sets" class="section level3">
@@ -4275,7 +4275,7 @@ div.tocify {
 <span id="cb58-2"><a href="#cb58-2"></a>mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
 <span id="cb58-3"><a href="#cb58-3"></a>  <span class="st">&quot;entrez_id&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
 <span id="cb58-4"><a href="#cb58-4"></a>    org.Hs.eg.db, <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb58-5"><a href="#cb58-5"></a>    <span class="dt">keys =</span> normalized_df<span class="op">$</span>ensembl_id,</span>
+<span id="cb58-5"><a href="#cb58-5"></a>    <span class="dt">keys =</span> vst_df<span class="op">$</span>ensembl_id,</span>
 <span id="cb58-6"><a href="#cb58-6"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
 <span id="cb58-7"><a href="#cb58-7"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>, <span class="co"># Replace with the type of gene identifiers in your data</span></span>
 <span id="cb58-8"><a href="#cb58-8"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span> <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
@@ -4287,7 +4287,7 @@ div.tocify {
 <span id="cb58-14"><a href="#cb58-14"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the row names</span></span>
 <span id="cb58-15"><a href="#cb58-15"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb58-16"><a href="#cb58-16"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
-<span id="cb58-17"><a href="#cb58-17"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(normalized_df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;ensembl_id&quot;</span>))</span></code></pre></div>
+<span id="cb58-17"><a href="#cb58-17"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(vst_df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;ensembl_id&quot;</span>))</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>This <code>1:many mapping between keys and columns</code> message means that some Ensembl gene identifiers map to multiple Entrez IDs. In this case, it’s also possible that a Entrez ID will map to multiple Ensembl IDs. For the purpose of performing GSVA later in this notebook, we keep only the first mapped IDs.</p>
 <p>For more info on gene ID conversion, take a look at our other examples: <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
