@@ -198,7 +198,7 @@ Using the file path we just declared, we can use the `destfile` argument to down
 download.file(
   paste0(
     "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
-    # Can replace with the file name of the species conversion you are looking for
+    # Replace with the file name of the species conversion you are looking for
     "human_zebrafish_hcop_fifteen_column.txt.gz"
   ),
   # The file will be saved to this location and with this name
@@ -206,8 +206,8 @@ download.file(
 )
 ```
 
-If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for
-If you are using Safari as your web browser see the directory using [this link](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
+If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for.
+**If you are using Safari** as your web browser see the directory using [this link](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
 This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
 If you are using a different dataset, in the last chunk you can replace `zebrafish` in `human_zebrafish_hcop_fifteen_column.txt.gz` with the name of the species you have data for (if you see it listed in the directory).
 
