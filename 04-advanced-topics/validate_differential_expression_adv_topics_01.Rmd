@@ -109,6 +109,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the data directory
+# Replace with the path of the folder the files will be in
 data_dir <- "data" # Replace with path to data directory
 ```
 
