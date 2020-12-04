@@ -303,7 +303,9 @@ annotation_df <- metadata %>%
     refinebio_cell_line,
     refinebio_treatment
   ) %>%
-  # Let's create a variable that specifically distinguishes whether the cell line is parental or resistant -- since this is a key aspect of the experimental design
+  # Let's create a variable that specifically distinguishes whether
+  # the cell line is parental or resistant.
+  # This is a key aspect of the experimental design
   dplyr::mutate(
     cell_line_type =
       dplyr::case_when(
@@ -311,7 +313,8 @@ annotation_df <- metadata %>%
         TRUE ~ "parental"
       )
   ) %>%
-  # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our dataset object
+  # The `pheatmap()` function requires that the row names of our
+  # annotation object matches the column names of our dataset object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
@@ -334,7 +337,7 @@ heatmap_annotated <-
       "black",
       "yellow"
     ))(25),
-    scale = "row" # Scale values in the direction of genes (rows)
+    scale = "row" # Scale values with respect to genes (rows)
   )
 ```
 
