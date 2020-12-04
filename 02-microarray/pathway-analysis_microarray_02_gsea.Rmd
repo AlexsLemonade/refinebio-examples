@@ -49,7 +49,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots" 
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -57,7 +57,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results" 
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
