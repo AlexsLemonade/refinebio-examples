@@ -75,7 +75,6 @@ Fill out the pop up window with your email and our Terms and Conditions:
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>  
 
-
 {{DELETE THIS LINE}}
 We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
