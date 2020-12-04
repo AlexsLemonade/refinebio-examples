@@ -45,7 +45,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" 
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -53,7 +53,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" 
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -134,17 +134,17 @@ This is handy to do because if we want to switch the dataset (see next section f
 ```{r}
 # Define the file path to the data directory
 # Replace with the path of the folder the files will be in
-data_dir <- file.path("data", "SRP070849") 
+data_dir <- file.path("data", "SRP070849")
 
 # Declare the file path to the gene expression matrix file
 # inside directory saved as `data_dir`
 # Replace with the path to your dataset file
-data_file <- file.path(data_dir, "SRP070849.tsv") 
+data_file <- file.path(data_dir, "SRP070849.tsv")
 
 # Declare the file path to the metadata file
 # inside the directory saved as `data_dir`
 # Replace with the path to your metadata file
-metadata_file <- file.path(data_dir, "metadata_SRP070849.tsv") 
+metadata_file <- file.path(data_dir, "metadata_SRP070849.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 

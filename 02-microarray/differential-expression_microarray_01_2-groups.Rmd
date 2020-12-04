@@ -125,7 +125,7 @@ This is handy to do because if we want to switch the dataset (see next section f
 ```{r}
 # Define the file path to the data directory
 # Replace with the path of the folder the files will be in
-data_dir <- file.path("data", "GSE71270") 
+data_dir <- file.path("data", "GSE71270")
 
 # Declare the file path to the gene expression matrix file
 # inside directory saved as `data_dir`
