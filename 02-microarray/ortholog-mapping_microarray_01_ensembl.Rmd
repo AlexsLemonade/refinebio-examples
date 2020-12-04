@@ -194,6 +194,9 @@ zebrafish_hgnc_file <- file.path(
 
 Using the file path we just declared, we can use the `destfile` argument to download the file to this directory and use this file name. 
 
+We are downloading this orthology predictions file from the [HGNC database](https://www.genenames.org/).
+If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for.
+
 ```{r}
 download.file(
   paste0(
@@ -206,9 +209,6 @@ download.file(
 )
 ```
 
-If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for.
-**If you are using Safari** as your web browser see the directory using [this link](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
-This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
 If you are using a different dataset, in the last chunk you can replace `zebrafish` in `human_zebrafish_hcop_fifteen_column.txt.gz` with the name of the species you have data for (if you see it listed in the directory).
 
 Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
