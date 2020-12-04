@@ -3796,7 +3796,7 @@ div.tocify {
 <span id="cb1-4"><a href="#cb1-4"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5"></a></span>
 <span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Define the file path to the plots directory</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>plots_dir &lt;-<span class="st"> &quot;plots&quot;</span> <span class="co"># Can replace with path to desired output plots directory</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>plots_dir &lt;-<span class="st"> &quot;plots&quot;</span></span>
 <span id="cb1-8"><a href="#cb1-8"></a></span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Create the plots folder if it doesn&#39;t exist</span></span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(plots_dir)) {</span>
@@ -3804,7 +3804,7 @@ div.tocify {
 <span id="cb1-12"><a href="#cb1-12"></a>}</span>
 <span id="cb1-13"><a href="#cb1-13"></a></span>
 <span id="cb1-14"><a href="#cb1-14"></a><span class="co"># Define the file path to the results directory</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a>results_dir &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Can replace with path to desired output results directory</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>results_dir &lt;-<span class="st"> &quot;results&quot;</span></span>
 <span id="cb1-16"><a href="#cb1-16"></a></span>
 <span id="cb1-17"><a href="#cb1-17"></a><span class="co"># Create the results folder if it doesn&#39;t exist</span></span>
 <span id="cb1-18"><a href="#cb1-18"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(results_dir)) {</span>
@@ -3859,15 +3859,20 @@ div.tocify {
 <p>In order for our example here to run without a hitch, we need these files to be in these locations so we’ve constructed a test to check before we get started with the analysis. These chunks will declare your file paths and double check that your files are in the right place.</p>
 <p>First we will declare our file paths to our data and metadata files, which should be in our data directory. This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Define the file path to the data directory</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;GSE37418&quot;</span>) <span class="co"># Replace with accession number which will be the name of the folder the files will be in</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>data_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;GSE37418.tsv&quot;</span>) <span class="co"># Replace with file path to your dataset</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Declare the file path to the metadata file using the data directory saved as `data_dir`</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>metadata_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;metadata_GSE37418.tsv&quot;</span>) <span class="co"># Replace with file path to your metadata</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Replace with the path of the folder the files will be in</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;GSE37418&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># Declare the file path to the gene expression matrix file</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># inside directory saved as `data_dir`</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Replace with the path to your dataset file</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>data_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;GSE37418.tsv&quot;</span>)</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># Declare the file path to the metadata file</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co"># inside the directory saved as `data_dir`</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># Replace with the path to your metadata file</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>metadata_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;metadata_GSE37418.tsv&quot;</span>)</span></code></pre></div>
 <p>Now that our file paths are declared, we can use the <code>file.exists()</code> function to check that the files are where we specified above.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Check if the gene expression matrix file is at the file path stored in `data_file`</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Check if the gene expression matrix file is at the path stored in `data_file`</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">file.exists</span>(data_file)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Check if the metadata file is at the file path stored in `metadata_file`</span></span>
