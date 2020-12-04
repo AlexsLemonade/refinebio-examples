@@ -192,7 +192,7 @@ zebrafish_hgnc_file <- file.path(
 )
 ```
 
-Using the file path we just declared, we can use the `destfile` argument to download the file to this directory and use this file name. 
+Using the file path we just declared, we can use the `destfile` argument to download the file we need to this directory and use this file name. 
 
 We are downloading this orthology predictions file from the [HGNC database](https://www.genenames.org/).
 If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for.
