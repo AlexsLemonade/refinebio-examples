@@ -438,9 +438,15 @@ Looks like we have 68 duplicated Entrez IDs.
 #### Handling duplicate gene identifiers
 
 As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for running GSVA.
-For RNA-seq processing in refine.bio, reads were mapped to these Ensembl IDs, so as opposed to combining two (or more) Ensembl IDs data in a summary stat and getting a value that's not clearly representing any particular mapping, it might be a more representative of the original reads to just choose one Ensembl ID's data over the other(s). 
+ 
+For RNA-seq processing in refine.bio, transcripts were quantified (Ensembl transcript IDs) and aggregated to the gene-level (Ensembl gene IDs). 
+Rather than summarize the values for multiple Ensembl gene IDs that map to a single Entrez ID (e.g., take the mean or median), we will use the values associated with the Ensembl gene ID that seems to be more highly expressed.
+This strategy should maintain a bit more clarity of what these values are representing in terms of the original reads. 
 
-To do this, we first need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
+Our example doesn't contain too many duplicates so ultimately we only are losing 68 rows of data.
+But if you find yourself using a dataset that has large proportion of duplicates you may want to consider doing some interrogation into the data and Ensembl gene IDs you are dropping by performing correlations between Ensembl ID's data and writing a file of the dropped genes so you have it for record. 
+
+First, we first need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
 
 ```{r}
 # First let's determine the gene means
@@ -611,8 +617,8 @@ pathway_heatmap
 
 Here we've used clustering and can see that samples somewhat cluster by `time_point`. 
 
-We can also see the conceptually similar pathways seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
-Often pathways may look similar because their gene sets are not distinct from each other and can have a lot of overlap. 
+We can also see that some pathways that share biology seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
+Pathways may cluster together, or have similar GSVA scores, because the genes in those pathways overlap.
 
 Taking this example, we can look at how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`.
 
