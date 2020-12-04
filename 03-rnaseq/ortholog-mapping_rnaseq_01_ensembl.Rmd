@@ -189,7 +189,7 @@ The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/
 In general, an orthology prediction where most of the databases concur would be considered the reliable, and we will use this to prioritize mapping in cases where there is more than one possible ortholog for a gene.
 HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including mouse, which we will use in this notebook [@hcop-help].
 
-We can automatically download the human mouse file we need for this example using `download.file()` command. 
+We can download the human mouse file we need for this example using `download.file()` command. 
 For this notebook, we want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
 
 First we'll declare a sensible file path for this. 
