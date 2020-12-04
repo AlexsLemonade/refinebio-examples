@@ -354,7 +354,7 @@ You can easily switch this to save to a JPEG or TIFF by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "GSE24862_heatmap_annotated.png" # Replace file name with a relevant output plot name
+  "GSE24862_heatmap_annotated.png" # Replace with a relevant plot file name
 ))
 
 # Print your heatmap
