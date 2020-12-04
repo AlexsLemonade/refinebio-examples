@@ -2570,7 +2570,7 @@ var data = {
       "vtp_value":""
     },{
       "function":"__c",
-      "vtp_value":false
+      "vtp_value":0
     },{
       "function":"__aev",
       "vtp_varType":"URL",
@@ -3733,6 +3733,7 @@ div.tocify {
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
             <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
+            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_03_gsva.html">Pathway Analysis - GSVA</a></li>
 
           </ul>
         </li><!--/rna-seq dropdown-->
@@ -3794,16 +3795,16 @@ div.tocify {
 <span id="cb1-3"><a href="#cb1-3"></a>  <span class="kw">dir.create</span>(<span class="st">&quot;data&quot;</span>)</span>
 <span id="cb1-4"><a href="#cb1-4"></a>}</span>
 <span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Define the file path to the plots directory</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>plots_dir &lt;-<span class="st"> &quot;plots&quot;</span> <span class="co"># Can replace with path to desired output plots directory</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co"># Define the path to the directory where plots will be saved</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>plots_dir &lt;-<span class="st"> &quot;plots&quot;</span></span>
 <span id="cb1-8"><a href="#cb1-8"></a></span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Create the plots folder if it doesn&#39;t exist</span></span>
 <span id="cb1-10"><a href="#cb1-10"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(plots_dir)) {</span>
 <span id="cb1-11"><a href="#cb1-11"></a>  <span class="kw">dir.create</span>(plots_dir)</span>
 <span id="cb1-12"><a href="#cb1-12"></a>}</span>
 <span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co"># Define the file path to the results directory</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a>results_dir &lt;-<span class="st"> &quot;results&quot;</span> <span class="co"># Can replace with path to desired output results directory</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co"># Define the path to the results directory</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>results_dir &lt;-<span class="st"> &quot;results&quot;</span></span>
 <span id="cb1-16"><a href="#cb1-16"></a></span>
 <span id="cb1-17"><a href="#cb1-17"></a><span class="co"># Create the results folder if it doesn&#39;t exist</span></span>
 <span id="cb1-18"><a href="#cb1-18"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">dir.exists</span>(results_dir)) {</span>
@@ -3859,15 +3860,20 @@ div.tocify {
 <p>In order for our example here to run without a hitch, we need these files to be in these locations so we’ve constructed a test to check before we get started with the analysis. These chunks will declare your file paths and double check that your files are in the right place.</p>
 <p>First we will declare our file paths to our data and metadata files, which should be in our data directory. This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Define the file path to the data directory</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;GSE24862&quot;</span>) <span class="co"># Replace with accession number which will be the name of the folder the files will be in</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>data_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;GSE24862.tsv&quot;</span>) <span class="co"># Replace with file path to your dataset</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Declare the file path to the metadata file using the data directory saved as `data_dir`</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>metadata_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;metadata_GSE24862.tsv&quot;</span>) <span class="co"># Replace with file path to your metadata</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Replace with the path of the folder the files will be in</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>data_dir &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;GSE24862&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co"># Declare the file path to the gene expression matrix file</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># inside directory saved as `data_dir`</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Replace with the path to your dataset file</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>data_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;GSE24862.tsv&quot;</span>)</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># Declare the file path to the metadata file</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="co"># inside the directory saved as `data_dir`</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># Replace with the path to your metadata file</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>metadata_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(data_dir, <span class="st">&quot;metadata_GSE24862.tsv&quot;</span>)</span></code></pre></div>
 <p>Now that our file paths are declared, we can use the <code>file.exists()</code> function to check that the files are where we specified above.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Check if the gene expression matrix file is at the file path stored in `data_file`</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Check if the gene expression matrix file is at the path stored in `data_file`</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a><span class="kw">file.exists</span>(data_file)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Check if the metadata file is at the file path stored in `metadata_file`</span></span>
@@ -3889,7 +3895,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using the R package <code>pheatmap</code> for clustering and creating a heatmap <span class="citation">(Slowikowski 2017)</span>.</p>
+<p>In this analysis, we will be using the R package <code>pheatmap</code> for clustering and creating a heatmap <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span>.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;pheatmap&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install pheatmap</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="kw">install.packages</span>(<span class="st">&quot;pheatmap&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -3930,8 +3936,9 @@ div.tocify {
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Read in data TSV file</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as row names so that</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="co"># we have a numeric matrix to perform calculations on later</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ──────────────────────────────────────────────
 ## cols(
@@ -3957,27 +3964,27 @@ div.tocify {
 </div>
 <div id="choose-genes-of-interest" class="section level2">
 <h2><span class="header-section-number">4.3</span> Choose genes of interest</h2>
-<p>Although you may want to create a heatmap including all of the genes in the set, alternatively, the heatmap could be created using only genes of interest. For this example, we will sort genes by variance, but there are many alternative criterion by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership to a particular gene ontology, so on.</p>
+<p>Although you may want to create a heatmap including all of the genes in the set, alternatively, the heatmap could be created using only genes of interest. For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criteria by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, and so on.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Calculate the variance for each gene</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a>variances &lt;-<span class="st"> </span><span class="kw">apply</span>(df, <span class="dv">1</span>, var)</span>
 <span id="cb16-3"><a href="#cb16-3"></a></span>
 <span id="cb16-4"><a href="#cb16-4"></a><span class="co"># Determine the upper quartile variance cutoff value</span></span>
 <span id="cb16-5"><a href="#cb16-5"></a>upper_var &lt;-<span class="st"> </span><span class="kw">quantile</span>(variances, <span class="fl">0.75</span>)</span>
 <span id="cb16-6"><a href="#cb16-6"></a></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># Subset the data choosing only genes whose variances are in the upper quartile</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># Filter the data choosing only genes whose variances are in the upper quartile</span></span>
 <span id="cb16-8"><a href="#cb16-8"></a>df_by_var &lt;-<span class="st"> </span><span class="kw">data.frame</span>(df) <span class="op">%&gt;%</span></span>
 <span id="cb16-9"><a href="#cb16-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(variances <span class="op">&gt;</span><span class="st"> </span>upper_var)</span></code></pre></div>
 </div>
 <div id="create-a-heatmap" class="section level2">
 <h2><span class="header-section-number">4.4</span> Create a heatmap</h2>
-<p>To further customize the heatmap, see a vignette for a guide at this <a href="https://slowkow.com/notes/pheatmap-tutorial/">link</a> <span class="citation">(Slowikowski 2017)</span>.</p>
+<p>To further customize the heatmap, see a vignette for a guide at this <a href="https://slowkow.com/notes/pheatmap-tutorial/">link</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span>.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Create and store the heatmap object</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>heatmap &lt;-</span>
 <span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">pheatmap</span>(</span>
 <span id="cb17-4"><a href="#cb17-4"></a>    df_by_var,</span>
-<span id="cb17-5"><a href="#cb17-5"></a>    <span class="dt">cluster_rows =</span> <span class="ot">TRUE</span>, <span class="co"># We want to cluster the heatmap by rows (genes in this case)</span></span>
-<span id="cb17-6"><a href="#cb17-6"></a>    <span class="dt">cluster_cols =</span> <span class="ot">TRUE</span>, <span class="co"># We also want to cluster the heatmap by columns (samples in this case),</span></span>
-<span id="cb17-7"><a href="#cb17-7"></a>    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>, <span class="co"># We don&#39;t want to show the rownames because there are too many genes for the labels to be clearly seen</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="dt">cluster_rows =</span> <span class="ot">TRUE</span>, <span class="co"># Cluster the rows of the heatmap (genes in this case)</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>    <span class="dt">cluster_cols =</span> <span class="ot">TRUE</span>, <span class="co"># Cluster the columns of the heatmap (samples)</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>    <span class="dt">show_rownames =</span> <span class="ot">FALSE</span>, <span class="co"># There are too many genes to clearly show the labels</span></span>
 <span id="cb17-8"><a href="#cb17-8"></a>    <span class="dt">main =</span> <span class="st">&quot;Non-Annotated Heatmap&quot;</span>,</span>
 <span id="cb17-9"><a href="#cb17-9"></a>    <span class="kw">colorRampPalette</span>(<span class="kw">c</span>(</span>
 <span id="cb17-10"><a href="#cb17-10"></a>      <span class="st">&quot;deepskyblue&quot;</span>,</span>
@@ -3995,7 +4002,7 @@ div.tocify {
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Open a PNG file</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="kw">png</span>(<span class="kw">file.path</span>(</span>
 <span id="cb18-3"><a href="#cb18-3"></a>  plots_dir,</span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="st">&quot;GSE24862_heatmap_non_annotated.png&quot;</span> <span class="co"># Replace file name with a relevant output plot name</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="st">&quot;GSE24862_heatmap_non_annotated.png&quot;</span> <span class="co"># Replace with a relevant file name</span></span>
 <span id="cb18-5"><a href="#cb18-5"></a>))</span>
 <span id="cb18-6"><a href="#cb18-6"></a></span>
 <span id="cb18-7"><a href="#cb18-7"></a><span class="co"># Print your heatmap</span></span>
@@ -4010,7 +4017,7 @@ div.tocify {
 </div>
 <div id="prepare-metadata-for-annotation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Prepare metadata for annotation</h2>
-<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> 2010)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data. We are also going to create a new column variable from our existing metadata called <code>cell_line_type</code>, that will distinguish whether the <code>refinebio_cell_line</code> is parental or resistant – since this is also a key aspect of the experimental design. Note that this step is very specific to our metadata, you may find that you also need to tailor the metadata for your own needs.</p>
+<p>From the accompanying <a href="https://pubmed.ncbi.nlm.nih.gov/21107323/">paper</a>, we know that three PLX4032-sensitive parental cell lines (M229, M238 and M249) and three derived PLX4032-resistant (r) sub-lines (M229_r5, M238_r1, and M249_r4) were treated or not treated with the RAF-selective inhibitor, PLX4032 <span class="citation">(Nazarian <em>et al.</em> <a href="#ref-Nazarian2010" role="doc-biblioref">2010</a>)</span>. We are going to annotate our heatmap with the variables that hold the <code>refinebio_cell_line</code> and <code>refinebio_treatment</code> data. We are also going to create a new column variable from our existing metadata called <code>cell_line_type</code>, that will distinguish whether the <code>refinebio_cell_line</code> is parental or resistant – since this is also a key aspect of the experimental design. Note that this step is very specific to our metadata, you may find that you also need to tailor the metadata for your own needs.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Let&#39;s prepare an annotation data frame for plotting</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a>annotation_df &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
 <span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="co"># We want to select the variables that we want for annotating the heatmap</span></span>
@@ -4074,8 +4081,8 @@ div.tocify {
 <div id="further-learning-resources-about-this-analysis" class="section level1">
 <h1><span class="header-section-number">5</span> Further learning resources about this analysis</h1>
 <ul>
-<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski 2017)</span></li>
-<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> 2016)</span></li>
+<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span></li>
+<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> <a href="#ref-Gu2016" role="doc-biblioref">2016</a>)</span></li>
 </ul>
 </div>
 <div id="print-session-info" class="section level1">
@@ -4093,7 +4100,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-02                  
+##  date     2020-12-03                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package      * version date       lib source        
