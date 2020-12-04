@@ -45,14 +45,18 @@ A longer list of specific arrays that are supported by refine.bio can be found [
 
 As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
 
-### Microarray data **strengths**:  
+### Microarray data **strengths**:
 
-- Microarray is generally less expensive than RNA-seq - you can afford more replicates and get higher statistical power [@Tarca2006]. 
-- Microarray has generally had a faster turn-around than RNA-seq [@LCSciences2014].
+- Microarrays historically were less expensive than RNA-seq allowing for more replicates and greater statistical power [@Tarca2006].
+- Microarrays generally had a faster turn-around than RNA-seq [@LCSciences2014].
 
-### Microarray data **limitations**:  
+As a result of these historical advantages, vast quantities of data have been generated worldwide using microarrays.
+The microarray data compiled by refine.bio includes over 500,000 individual samples across over 25,000 experiments.
+For many scientific questions, the best available gene expression data may be microarray based!
 
-- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014]. 
+### Microarray data **limitations**:
+
+- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014].
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
