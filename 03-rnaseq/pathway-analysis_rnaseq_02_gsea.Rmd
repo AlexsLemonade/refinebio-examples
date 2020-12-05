@@ -227,9 +227,7 @@ The data we're interested in here comes from human samples, so we can obtain jus
 
 ```{r}
 hs_gene_sets <- msigdbr(
-  species = "Homo sapiens", # Replace with species name relevant to your data,
-  category = "C2",
-  subcategory = "KEGG"
+  species = "Homo sapiens", # Replace with species name relevant to your data
 )
 ```
 
@@ -341,9 +339,9 @@ This will keep the first row with the duplicated value thus keeping the row with
 filtered_dge_mapped_df <- dge_mapped_df %>%
   # First let's create a column to hold the rankings of our absolute log2 fold
   # change values -- this handles duplicate log2 fold change values
-  dplyr::mutate(rank = rank(abs(log2FoldChange), ties.method = "random")) %>%
+  # dplyr::mutate(rank = rank(abs(log2FoldChange), ties.method = "random")) %>%
   # Sort so that the highest ranked absolute values of the log2 fold change are at the top
-  dplyr::arrange(dplyr::desc(rank)) %>%
+  dplyr::arrange(dplyr::desc(abs(log2FoldChange))) %>%
   # Filter out the duplicated rows using `dplyr::distinct()`
   dplyr::distinct(gene_symbol, .keep_all = TRUE)
 ```
@@ -373,7 +371,7 @@ In the next chunk, we will create a named vector ranked based on the rankings of
 
 ```{r}
 # Let's create a named vector of the rankings based on the log2 fold change values
-ranked_vector <- filtered_dge_mapped_df$rank
+ranked_vector <- filtered_dge_mapped_df$log2FoldChange
 names(ranked_vector) <- filtered_dge_mapped_df$gene_symbol
 
 # We need to sort the ranked vector in descending order here
@@ -395,6 +393,12 @@ In this section, we will implement GSEA to calculate the enrichment score (ES) f
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
 
 ```{r}
+gene_terms <- hs_gene_sets %>%
+  dplyr::select(
+    gs_name,
+    gene_symbol
+  )
+
 gsea_results <- GSEA(
   geneList = ranked_vector, # ordered ranked gene list
   minGSSize = 25, # minimum gene set size
@@ -403,12 +407,7 @@ gsea_results <- GSEA(
   eps = 0, # boundary for calculating the p value
   seed = TRUE, # set seed to make results reproducible
   pAdjustMethod = "BH", # Benjamini-Hochberg correction
-  scoreType = "pos",
-  TERM2GENE = dplyr::select(
-    hs_gene_sets,
-    gs_name,
-    gene_symbol
-  )
+  TERM2GENE = gene_terms
 )
 ```
 
@@ -447,13 +446,13 @@ gsea_result_df %>%
   dplyr::slice_max(NES, n = 3)
 ```
 
-The gene set `KEGG_SELENOAMINO_ACID_METABOLISM` has the most positive NES score.
+The gene set `HP_VERTEBRAL_CLEFTING` has the most positive NES score.
 
 ```{r}
 most_positive_nes_plot <- enrichplot::gseaplot(
   gsea_results,
-  geneSetID = "KEGG_SELENOAMINO_ACID_METABOLISM",
-  title = "KEGG_SELENOAMINO_ACID_METABOLISM",
+  geneSetID = "HP_VERTEBRAL_CLEFTING",
+  title = "HP_VERTEBRAL_CLEFTING",
   color.line = "#0d76ff"
 )
 
@@ -485,13 +484,13 @@ gsea_result_df %>%
   dplyr::slice_min(NES, n = 3)
 ```
 
-The gene set `KEGG_TIGHT_JUNCTION` has the most negative NES.
+The gene set `GO_LATERAL_PLASMA_MEMBRANE` has the most negative NES.
 
 ```{r}
 most_negative_nes_plot <- enrichplot::gseaplot(
   gsea_results,
-  geneSetID = "KEGG_TIGHT_JUNCTION",
-  title = "KEGG_TIGHT_JUNCTION",
+  geneSetID = "GO_LATERAL_PLASMA_MEMBRANE",
+  title = "GO_LATERAL_PLASMA_MEMBRANE",
   color.line = "#0d76ff"
 )
 
@@ -508,6 +507,68 @@ Let's save this plot to PNG.
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "SRP078441_gsea_enrich_negative_plot.png"),
   plot = most_negative_nes_plot
+)
+```
+
+## Plot other pathways
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HP_DECREASED_CIRCULATING_CORTISOL_LEVEL",
+  title = "HP_DECREASED_CIRCULATING_CORTISOL_LEVEL",
+  color.line = "#0d76ff"
+)
+```
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "BENPORATH_NOS_TARGETS",
+  title = "BENPORATH_NOS_TARGETS",
+  color.line = "#0d76ff"
+)
+
+benporath_genes <- hs_gene_sets %>%
+  dplyr::filter(gs_name == "BENPORATH_NOS_TARGETS")
+
+sum(filtered_dge_mapped_df$gene_symbol %in% benporath_genes$gene_symbol)
+length(benporath_genes$gene_symbol)
+```
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "GO_REGULATION_OF_BINDING",
+  title = "GO_REGULATION_OF_BINDING",
+  color.line = "#0d76ff"
+)
+```
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "KEGG_APOPTOSIS",
+  title = "KEGG_APOPTOSIS",
+  color.line = "#0d76ff"
+)
+```
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "KEGG_AMINOACYL_TRNA_BIOSYNTHESIS",
+  title = "KEGG_AMINOACYL_TRNA_BIOSYNTHESIS",
+  color.line = "#0d76ff"
+)
+```
+
+```{r}
+enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY",
+  title = "KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY",
+  color.line = "#0d76ff"
 )
 ```
 
