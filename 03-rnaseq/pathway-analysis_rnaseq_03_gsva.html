@@ -4075,7 +4075,7 @@ div.tocify {
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb41-2"><a href="#cb41-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -4092,7 +4092,7 @@ div.tocify {
 <span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later</span></span>
 <span id="cb43-4"><a href="#cb43-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4347,8 +4347,8 @@ div.tocify {
 </div>
 <div id="gsva---microarray" class="section level2">
 <h2><span class="header-section-number">4.5</span> GSVA - Microarray</h2>
-<p>Rather than ranking genes based on some gene-level statistic selected by the user, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution. The pathway-level score calculated is a way of asking how genes <em>within</em> a gene set vary as compared to genes that are <em>outside</em> of that gene set <span class="citation">(Malhotra 2018)</span>.</p>
-<p>The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) <span class="citation">(H&quot;anzelmann <em>et al.</em> 2013)</span>.</p>
+<p>Rather than ranking genes based on some gene-level statistic selected by the user, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution. The pathway-level score calculated is a way of asking how genes <em>within</em> a gene set vary as compared to genes that are <em>outside</em> of that gene set <span class="citation">(Malhotra <a href="#ref-Malhotra2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann2013" role="doc-biblioref">2013</a>)</span>.</p>
 <p>The output is a gene set by sample matrix of GSVA scores.</p>
 <div id="perform-gsva" class="section level3">
 <h3><span class="header-section-number">4.5.1</span> Perform GSVA</h3>
@@ -4492,11 +4492,11 @@ div.tocify {
 <div id="resources-for-further-learning" class="section level1">
 <h1><span class="header-section-number">5</span> Resources for further learning</h1>
 <ul>
-<li><a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7">GSVA Paper</a> <span class="citation">(H&quot;anzelmann <em>et al.</em> 2013)</span></li>
-<li><a href="https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html">Gene Set Enrichment Analysis (GSEA) User guide</a> <span class="citation">(Broad Institute Team 2019)</span>.</li>
-<li><a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Decoding Gene Set Variation Analysis</a> <span class="citation">(Malhotra 2018)</span></li>
-<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski 2017)</span></li>
-<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> 2016)</span></li>
+<li><a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7">GSVA Paper</a> <span class="citation">(Hänzelmann <em>et al.</em> <a href="#ref-Hanzelmann2013" role="doc-biblioref">2013</a>)</span></li>
+<li><a href="https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html">Gene Set Enrichment Analysis (GSEA) User guide</a> <span class="citation">(Broad Institute Team <a href="#ref-GSEA-user-guide" role="doc-biblioref">2019</a>)</span>.</li>
+<li><a href="https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3">Decoding Gene Set Variation Analysis</a> <span class="citation">(Malhotra <a href="#ref-Malhotra2018" role="doc-biblioref">2018</a>)</span></li>
+<li><a href="https://slowkow.com/notes/pheatmap-tutorial/">Make heatmaps in R with pheatmap</a> <span class="citation">(Slowikowski <a href="#ref-Slowikowski2017" role="doc-biblioref">2017</a>)</span></li>
+<li>To customize heatmaps even further than the functions in the <code>pheatmap</code> package allow, see the <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference Manual</a> <span class="citation">(Gu <em>et al.</em> <a href="#ref-Gu2016" role="doc-biblioref">2016</a>)</span></li>
 </ul>
 </div>
 <div id="session-info" class="section level1">
@@ -4514,7 +4514,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-04                  
+##  date     2020-12-05                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package              * version  date       lib source        
@@ -4550,7 +4550,7 @@ div.tocify {
 ##  geneplotter            1.68.0   2020-10-27 [1] Bioconductor  
 ##  generics               0.0.2    2018-11-29 [1] RSPM (R 4.0.0)
 ##  GenomeInfoDb         * 1.26.1   2020-11-20 [1] Bioconductor  
-##  GenomeInfoDbData       1.2.4    2020-12-04 [1] Bioconductor  
+##  GenomeInfoDbData       1.2.4    2020-12-05 [1] Bioconductor  
 ##  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  
 ##  getopt                 1.20.3   2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggplot2                3.3.2    2020-06-19 [1] RSPM (R 4.0.1)
@@ -4579,7 +4579,7 @@ div.tocify {
 ##  mvtnorm                1.1-1    2020-06-09 [1] RSPM (R 4.0.0)
 ##  nlme                   3.1-148  2020-05-24 [2] CRAN (R 4.0.2)
 ##  optparse             * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Hs.eg.db         * 3.12.0   2020-11-25 [1] Bioconductor  
+##  org.Hs.eg.db         * 3.12.0   2020-12-05 [1] Bioconductor  
 ##  pheatmap               1.0.12   2019-01-04 [1] RSPM (R 4.0.0)
 ##  pillar                 1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig              2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
