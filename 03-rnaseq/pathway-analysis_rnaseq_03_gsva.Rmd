@@ -440,12 +440,228 @@ sum(duplicated(mapped_df$entrez_id))
 
 Looks like we have 68 duplicated Entrez IDs.
 
-_NEXT SECTIONS IN FUTURE PRs_
+#### Handling duplicate gene identifiers
+
+As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for running GSVA.
+ 
+For RNA-seq processing in refine.bio, transcripts were quantified (Ensembl transcript IDs) and aggregated to the gene-level (Ensembl gene IDs). 
+Rather than summarize the values for multiple Ensembl gene IDs that map to a single Entrez ID (e.g., take the mean or median), we will use the values associated with the Ensembl gene ID that seems to be more highly expressed.
+This strategy should maintain a bit more clarity of what these values are representing in terms of the original reads. 
+
+Our example doesn't contain too many duplicates so ultimately we only are losing 68 rows of data.
+But if you find yourself using a dataset that has large proportion of duplicates you may want to consider doing some interrogation into the data and Ensembl gene IDs you are dropping by performing correlations between Ensembl ID's data and writing a file of the dropped genes so you have it for record. 
+
+First, we first need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
+
+```{r}
+# First let's determine the gene means
+gene_means <- rowMeans(mapped_df %>% dplyr::select(-Ensembl, -entrez_id))
+
+# Let's add this as a column in our `mapped_df`.
+mapped_df <- mapped_df %>%
+  # Add gene_means as a column called gene_means
+  dplyr::mutate(gene_means) %>%
+  # Reorder the columns so `gene_means` column is upfront
+  dplyr::select(Ensembl, entrez_id, gene_means, dplyr::everything())
+```
+
+Now we can filter out the duplicate gene identifiers using the gene mean values.
+If we do an `dplyr::arrange()` by `gene_means` first, then this means the first row encountered by `dplyr::distinct()` will be the one with the higher gene mean and by default the first row of any duplicates is kept. 
+
+```{r}
+filtered_mapped_df <- mapped_df %>%
+  # Sort so that the highest mean expression values are at the top
+  dplyr::arrange(dplyr::desc(gene_means)) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`
+  dplyr::distinct(entrez_id, .keep_all = TRUE)
+```
+
+Let's do our check again to see if we still have duplicates.
+
+```{r}
+sum(duplicated(mapped_df$entrez_id))
+```
+
+We now have `0` duplicates which is what we want. All set!
+
+Now we should prep this data so GSVA can use it. 
+
+```{r}
+filtered_mapped_matrix <- filtered_mapped_df %>%
+  # GSVA can't the Ensembl IDs so we should drop this column as well as the means
+  dplyr::select(-Ensembl, -gene_means) %>%
+  # We need to store our gene identifiers as row names
+  tibble::column_to_rownames("entrez_id") %>%
+  # Now we can convert our object into a matrix
+  as.matrix()
+```
+
+Note that if we had duplicate gene identifiers here, we would not be able to set them as row names.
+
+## GSVA - Microarray
+
+Rather than ranking genes based on some gene-level statistic selected by the user, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution.
+The pathway-level score calculated is a way of asking how genes _within_ a gene set vary as compared to genes that are _outside_ of that gene set [@Malhotra2018].
+
+The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) [@Hanzelmann2013].
+
+The output is a gene set by sample matrix of GSVA scores.
+
+### Perform GSVA
+
+Let's perform GSVA using the `gsva()` function.
+See `?gsva` for more options.
+
+```{r}
+gsva_results <- gsva(
+  filtered_mapped_matrix,
+  hallmarks_list,
+  method = "gsva",
+  # Appropriate for our vst transformed data
+  kcdf = "Gaussian",
+  # Minimum gene set size
+  min.sz = 15,
+  # Maximum gene set size
+  max.sz = 500,
+  # Compute Gaussian-distributed scores
+  mx.diff = TRUE,
+  # Don't print out the progress bar
+  verbose = FALSE
+)
+```
+
+Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we have expression values that are continuous such as log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
+Our `vst()` transformed data is on a log2-like scale, so `Gaussian` works for us. 
+
+Let's explore what the output of `gsva()` looks like.
+
+```{r}
+head(gsva_results[, 1:10])
+```
+
+## Write results to file
+
+Let's write all of our GSVA results to file.
+
+```{r}
+gsva_results %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("pathway") %>%
+  readr::write_tsv(file.path(
+    results_dir,
+    "SRP140558_gsva_results.tsv"
+  ))
+```
+
+## Visualizing results with a heatmap
+
+Let's make a heatmap for our pathways! 
+
+### Neaten up our metadata labels
+
+We will want our heatmap to include our metadata labels, but unfortunately some of the metadata for this dataset are not set up into separate, neat columns. 
+
+Our main information about these samples is squished into one column, `refinebio_title`. 
+Let's preview what this column looks like. 
+
+```{r}
+head(metadata$refinebio_title)
+```
+
+This information is not very clear as is. 
+
+Looking at the author's descriptions, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
+
+We can create a new variable, `time_point`, that states this info more clearly. 
+This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
+
+```{r}
+annot_df <- metadata %>%
+  # We need the sample IDs and the main column that contains the metadata info
+  dplyr::select(
+    refinebio_accession_code,
+    refinebio_title
+  ) %>%
+  # Create our `time_point` variable based on `refinebio_title`
+  dplyr::mutate(
+    time_point = dplyr::case_when(
+      # Create our new variable based on refinebio_title containing AV/CV
+      stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
+      stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
+    )
+  ) %>%
+  # We don't need the older version of the variable anymore
+  dplyr::select(-refinebio_title)
+```
+
+These time point samples are paired, so you could also add the `refinebio_subject` to the labels, but for simplicity we've left them off for now. 
+
+The `pheatmap::pheatmap()` will want the annotation data frame to have matching row names to the data we supply it (which is our `gsva_results`).
+
+```{r}
+annot_df <- annot_df %>%
+  # pheatmap will want our sample names that match our data to
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+### Set up the heatmap itself
+
+Great! We're all set. 
+We can see that they are in a wide format with the GSVA scores for each sample spread across a row associated with each pathway.
+
+```{r}
+pathway_heatmap <- pheatmap::pheatmap(gsva_results,
+  annotation_col = annot_df, # Add metadata labels!
+  show_colnames = FALSE, # Don't show sample labels
+  fontsize_row = 6 # Shrink the pathway labels a tad
+)
+
+# Print out heatmap here
+pathway_heatmap
+```
+
+Here we've used clustering and can see that samples somewhat cluster by `time_point`. 
+
+We can also see that some pathways that share biology seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
+Pathways may cluster together, or have similar GSVA scores, because the genes in those pathways overlap.
+
+Taking this example, we can look at how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`.
+
+```{r}
+length(intersect(
+  hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE,
+  hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE
+))
+```
+
+These `73` genes out of `HALLMARK_INTERFERON_ALPHA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE)` and `hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE)` is probably why those cluster together.
+
+The pathways share genes and are not independent!
+
+Now, let's save this plot to PNG.
+
+```{r}
+# Open a PNG file
+png(file.path(
+  plots_dir,
+  "SRP140558_heatmap.png" # Replace file name with a relevant output plot name
+),
+width = 1000, # Make the plot a tad bigger
+height = 800
+)
+
+# Print your heatmap
+pathway_heatmap
+
+# Close the PNG file:
+dev.off()
+```
 
 # Resources for further learning
 
 - [GSVA Paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7) [@Hanzelmann2013]
-- See this article on [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
+- [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) [@GSEA-user-guide].
+- [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
 - [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
 - To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
 
