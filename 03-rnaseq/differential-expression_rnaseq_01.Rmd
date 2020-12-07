@@ -13,7 +13,7 @@ output:
 
 This notebook takes RNA-seq expression data and metadata from refine.bio and identifies differentially expressed genes between two experimental groups. 
 
-Differential expression analysis is popular technique for expression data that will tell you what genes are most much higher or much lower between your experimental groups. 
+Differential expression analysis identifies genes with significantly varying expression among experimental groups by comparing the variation among samples within a group to the variation between groups.
 The simplest version of this analysis is comparing two groups where one of those groups is a control group.
 
 Our refine.bio RNA-seq examples use DESeq2 for these analyses because it handles RNA-seq data well and has great documentation.  
