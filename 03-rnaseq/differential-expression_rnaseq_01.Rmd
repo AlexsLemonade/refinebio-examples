@@ -1,7 +1,7 @@
 ---
 title: "Differential Expression - RNA-seq"
 author: "CCDL for ALSF"
-date: "October 2020"
+date: "December 2020"
 output:   
   html_notebook:
     toc: true
@@ -11,7 +11,13 @@ output:
 
 # Purpose of this analysis
 
-This notebook takes RNA-seq data and metadata from refine.bio and identifies differentially expressed genes between experimental groups. 
+This notebook takes RNA-seq expression data and metadata from refine.bio and identifies differentially expressed genes between two experimental groups. 
+
+Differential expression analysis identifies genes with significantly varying expression among experimental groups by comparing the variation among samples within a group to the variation between groups.
+The simplest version of this analysis is comparing two groups where one of those groups is a control group.
+
+Our refine.bio RNA-seq examples use DESeq2 for these analyses because it handles RNA-seq data well and has great documentation.  
+Read more about DESeq2 and why we like it on our [Getting Started page](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2). 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -66,7 +72,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP123625).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -87,9 +93,9 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
-
-@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+For this example analysis, we are using RNA-seq data from an [acute lymphoblastic leukemia (ALL) mouse lymphoid cell model](https://www.refine.bio/experiments/SRP123625) [@Kampen2019]. 
+All of the lymphoid mouse cell samples in this experiment have a human RPL10 gene; three with a reference (wild-type) RPL10 gene and three with the R98S mutation. 
+We will perform our differential expression using these knock-in and wild-type mice designations. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -104,7 +110,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `SRP078441` folder into your newly created `data/` folder.
+Copy and paste the `SRP123625` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -112,7 +118,7 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `SRP078441` folder which contains:
+  - The `SRP123625` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)
@@ -131,17 +137,17 @@ This is handy to do because if we want to switch the dataset (see next section f
 ```{r}
 # Define the file path to the data directory
 # Replace with the path of the folder the files will be in
-data_dir <- file.path("data", "SRP078441")
+data_dir <- file.path("data", "SRP123625")
 
 # Declare the file path to the gene expression matrix file
 # inside directory saved as `data_dir`
 # Replace with the path to your dataset file
-data_file <- file.path(data_dir, "SRP078441.tsv")
+data_file <- file.path(data_dir, "SRP123625.tsv")
 
 # Declare the file path to the metadata file
 # inside the directory saved as `data_dir`
 # Replace with the path to your metadata file
-metadata_file <- file.path(data_dir, "metadata_SRP078441.tsv")
+metadata_file <- file.path(data_dir, "metadata_SRP123625.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
@@ -226,7 +232,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   tibble::column_to_rownames("Gene")
 ```
 
@@ -234,11 +240,11 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)
+all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 ```
 
 The information we need to make the comparison is in the `refinebio_title` column of the metadata data.frame.
@@ -249,31 +255,25 @@ head(metadata$refinebio_title)
 
 ## Set up metadata
 
-This dataset includes data from patients with and without ASXL gene mutations. 
-The authors of this data have ASXL mutation status along with other information is stored all in one string (this is not very convenient for us). 
+This dataset includes data from mouse lymphoid cells with human RPL10, with and without a `R98S` mutation.
+The mutation status is stored along with other information in a single string (this is not very convenient for us). 
 We need to extract the mutation status information into its own column to make it easier to use.
 
 ```{r}
 metadata <- metadata %>%
-  # The last bit of the title, separated by "-" contains the mutation
-  # information that we want to extract
-  dplyr::mutate(asxl_mutation_status = stringr::word(refinebio_title,
-    -1,
-    sep = "-"
-  )) %>%
-  # Now let's summarized the ASXL1 mutation status from this variable
-  dplyr::mutate(asxl_mutation_status = dplyr::case_when(
-    grepl("ASXL1|ASXL2", asxl_mutation_status) ~ "asxl_mutation",
-    grepl("ASXLwt", asxl_mutation_status) ~ "no_mutation"
+  # Let's get the RPL10 mutation status from this variable
+  dplyr::mutate(mutation_status = dplyr::case_when(
+    stringr::str_detect(refinebio_title, "R98S") ~ "R98S",
+    stringr::str_detect(refinebio_title, "WT") ~ "reference"
   ))
 ```
 
-Let's take a look at `metadata_df` to see if this worked.
+Let's take a look at `metadata` to see if this worked by looking at the `refinebio_title` and `mutation_status` columns. 
 
 ```{r}
-# looking at the first 6 rows of the metadata_df and only at the columns that
-# contain the title and the mutation status we extracted from the title
-head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
+# Let's take a look at the original metadata column's info
+# and our new `mutation_status` column
+dplyr::select(metadata, refinebio_title, mutation_status)
 ```
 
 Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
@@ -281,51 +281,34 @@ We want our "control" to to be set as the first level in the variable we provide
 Here we will use the `str()` function to print out a preview of the **str**ucture of our variable
 
 ```{r}
-# Print out a preview of `asxl_mutation_status`
-str(metadata$asxl_mutation_status)
+# Print out a preview of `mutation_status`
+str(metadata$mutation_status)
 ```
 
-Currently, `asxl_mutation_status` is a character.
-To make sure it is set how we want for the `DESeq` object and subsequent testing, let's mutate it to a factor so we can explicitly set the levels. 
+Currently, `mutation_status` is a character, which is not necessarily what we want.
+To make sure it is set how we want for the `DESeq` object and subsequent testing, let's change it to a factor so we can explicitly set the levels. 
+
+In the `levels` argument, we will list `reference` first since that is our control group. 
 
 ```{r}
-# Make asxl_mutation_status a factor and set the levels appropriately
+# Make mutation_status a factor and set the levels appropriately
 metadata <- metadata %>%
   dplyr::mutate(
     # Here we will set up the factor aspect of our new variable.
-    asxl_mutation_status = factor(asxl_mutation_status, levels = c("no_mutation", "asxl_mutation"))
+    mutation_status = factor(mutation_status, levels = c("reference", "R98S"))
   )
 ```
+
+Note if you don't specify `levels`, the `factor()` function will set levels in alphabetical order -- which sometimes means your control group will not be listed first!
 
 Let's double check if the levels are what we want using the `levels()` function. 
 
 ```{r}
-levels(metadata$asxl_mutation_status)
+levels(metadata$mutation_status)
 ```
 
-Yes! `no_mutation` is the first level as we want it to be. We're all set and ready to move on to making our `DESeq2Dataset` object. 
-
-## Create a DESeq2Dataset
-
-We will be using the `DESeq2` package for differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
-First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
-
-```{r}
-# We are making our data frame into a matrix and rounding the numbers
-gene_matrix <- round(as.matrix(df))
-```
-
-Now we need to create `DESeqDataSet` from our expression dataset. 
-We use the `asxl_mutation_status` variable we created in the design formula because that will allow us
-to model the presence/absence of _ASXL1/2_ mutation.
-
-```{r}
-ddset <- DESeqDataSetFromMatrix(
-  countData = gene_matrix,
-  colData = metadata,
-  design = ~asxl_mutation_status
-)
-```
+Yes! `reference` is the first level as we want it to be. 
+We're all set and ready to move on to making our `DESeq2Dataset` object. 
 
 ## Define a minimum counts cutoff
 
@@ -334,17 +317,44 @@ Removing these genes saves on memory usage during the tests.
 We are going to do some pre-filtering to keep only genes with 10 or more reads in total across the samples.
 
 ```{r}
-# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
-# only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(ddset)) >= 10
-ddset <- ddset[genes_to_keep, ]
+# Define a minimum counts cutoff and filter the data to include
+# only rows (genes) that have total counts above the cutoff
+filtered_expression_df <- expression_df %>%
+  dplyr::filter(rowSums(.) >= 10)
+```
+
+If you have a bigger dataset, you will probably want to make this cutoff larger. 
+
+## Create a DESeq2Dataset
+
+We will be using the `DESeq2` package for differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
+First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
+
+```{r}
+# We are making our data frame into a matrix and rounding the numbers
+gene_matrix <- round(as.matrix(filtered_expression_df))
+```
+
+Now we need to create `DESeqDataSet` from our expression dataset. 
+We use the `mutation_status` variable we created in the design formula because that will allow us
+to model the presence/absence of _R98S_ mutation.
+
+```{r}
+ddset <- DESeqDataSetFromMatrix(
+  # Here we supply non-normalized count data
+  countData = gene_matrix,
+  # Supply the `colData` with our metadata data frame
+  colData = metadata,
+  # Supply our experimental variable to `design`
+  design = ~mutation_status
+)
 ```
 
 ## Run differential expression analysis
 
 We'll use the wrapper function `DESeq()` to do our differential expression analysis.
-In our `DESeq2` object we designated our `asxl_mutation_status` variable as the `model` argument. 
-Because of this, the `DESeq` function will use groups defined by `asxl_mutation_status` to test for differential expression. 
+In our `DESeq2` object we designated our `mutation_status` variable as the `model` argument. 
+Because of this, the `DESeq` function will use groups defined by `mutation_status` to test for differential expression. 
 
 ```{r}
 deseq_object <- DESeq(ddset)
@@ -385,8 +395,8 @@ deseq_df <- deseq_results %>%
   # display
   tibble::rownames_to_column("Gene") %>%
   dplyr::mutate(threshold = padj < 0.05) %>%
-  # let's sort by statistic -- the highest values should be what is up in the
-  # ASXL mutated samples
+  # sort by statistic -- the highest values should be genes with higher expression
+  # RPL10 mutated samples
   dplyr::arrange(dplyr::desc(log2FoldChange))
 ```
 
@@ -401,10 +411,10 @@ head(deseq_df)
 To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function.
 
 ```{r}
-plotCounts(ddset, gene = "ENSG00000196074", intgroup = "asxl_mutation_status")
+plotCounts(ddset, gene = "ENSMUSG00000026623", intgroup = "mutation_status")
 ```
 
-The `mutation` group samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
+The `R98S` mutated samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
 
 ## Save results to TSV 
 
@@ -415,7 +425,7 @@ readr::write_tsv(
   deseq_df,
   file.path(
     results_dir,
-    "SRP078441_differential_expression_results.tsv" # Replace with a relevant output file name
+    "SRP123625_differential_expression_results.tsv" # Replace with a relevant output file name
   )
 )
 ```
@@ -423,26 +433,17 @@ readr::write_tsv(
 ## Create a volcano plot
 
 We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+
 Here we are plotting the `log2FoldChange` (which was estimated by `lfcShrink` step) on the x axis and `padj` on the y axis.
 The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the default from the `results()` step).
 
-```{r}
-EnhancedVolcano::EnhancedVolcano(
-  deseq_df,
-  lab = deseq_df$Gene, # A vector that contains our gene names
-  x = "log2FoldChange", # The variable in `deseq_df` you want to be plotted on the x axis
-  y = "padj" # The variable in `deseq_df` you want to be plotted on the y axis
-)
-```
+Because we are using adjusted p values we can feel safe in making our `pCutoff` argument `0.01` (default is `1e-05`).  
+Take a look at all the options for tailoring this plot using `?EnhancedVolcano`.
 
-Here the red point is the gene that meets both the default p value and log2 fold change cutoff (which are 10e-6 and 1 respectively). 
-
-We used the adjusted p values for our plot above, so you may want to loosen this cutoff with the `pCutoff` argument (Take a look at all the options for tailoring this plot using `?EnhancedVolcano`).
-
-Let's make the same plot again, but adjust the `pCutoff` since we are using multiple-testing corrected p values and this time we will assign the plot to our environment as `volcano_plot`. 
+We will save the plot to our environment as `volcano_plot` to make it easier to save the figure separately later.
 
 ```{r}
-# We'll assign this as `volcano_plot` this time
+# We'll assign this as `volcano_plot`
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
   deseq_df,
   lab = deseq_df$Gene,
@@ -455,13 +456,13 @@ volcano_plot <- EnhancedVolcano::EnhancedVolcano(
 volcano_plot
 ```
 
-This looks pretty good. 
+This looks pretty good! 
 Let's save it to a PNG. 
 
 ```{r}
 ggsave(
   plot = volcano_plot,
-  file.path(plots_dir, "SRP078441_volcano_plot.png")
+  file.path(plots_dir, "SRP123625_volcano_plot.png")
 ) # Replace with a plot name relevant to your data
 ```
 
