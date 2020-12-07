@@ -20,7 +20,7 @@ This means that GSVA scores will depend on the samples included in the dataset w
 
 GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach.
 GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
-You can use these scores for other downstream analyses like differential expressioon. 
+You can use these scores for other downstream analyses like differential expression. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
