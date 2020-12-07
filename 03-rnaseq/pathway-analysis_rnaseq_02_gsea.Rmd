@@ -1,7 +1,7 @@
 ---
 title: "Gene set enrichment analysis - RNA-seq"
 author: "CCDL for ALSF"
-date: "November 2020"
+date: "December 2020"
 output:  
   html_notebook:
     toc: true
@@ -95,9 +95,9 @@ We have provided this file for you and the code in this notebook will read in th
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017].
-
-@Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
+For this example analysis, we are using RNA-seq data from an [acute lymphoblastic leukemia (ALL) mouse lymphoid cell model](https://www.refine.bio/experiments/SRP123625) [@Kampen2019].
+All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human wildtype RPL10. 
+Differential expression was performed using these knock-in and wildtype mice designations.
 
 ## Check out our file structure!
 
@@ -130,7 +130,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform GSEA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Yu2012; @Igor2020; @Subramanian2005].
 
-We will also need the [`org.Hs.eg.db`](http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
+We will also need the [`org.Mm.eg.db`](http://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
 
 ```{r}
 if (!("clusterProfiler" %in% installed.packages())) {
@@ -143,9 +143,9 @@ if (!("msigdbr" %in% installed.packages())) {
   BiocManager::install("msigdbr", update = FALSE)
 }
 
-if (!("org.Hs.eg.db" %in% installed.packages())) {
+if (!("org.Mm.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
-  BiocManager::install("org.Hs.eg.db", update = FALSE)
+  BiocManager::install("org.Mm.eg.db", update = FALSE)
 }
 ```
 
@@ -159,7 +159,7 @@ library(clusterProfiler)
 library(msigdbr)
 
 # Human annotation package we'll use for gene identifier conversion
-library(org.Hs.eg.db)
+library(org.Mm.eg.db)
 
 # We will need this so we can use the pipe: %>%
 library(magrittr)
@@ -184,11 +184,11 @@ First we will assign the URL to its own variable called, `dge_url`.
 
 ```{r}
 # Define the url to your differential expression results file
-dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/03-rnaseq/results/SRP078441/SRP078441_differential_expression_results.tsv"
+dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/03-rnaseq/results/SRP123625/SRP123625_differential_expression_results.tsv"
 ```
 
 Read in the file that has differential expression results. 
-Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP078441_differential_expression_results.tsv")`.
+Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP123625_differential_expression_results.tsv")`.
 
 ```{r}
 # Read in the contents of your differential expression results file
@@ -226,8 +226,9 @@ MSigDB contains 8 different gene set collections [@Subramanian2005].
 The data we're interested in here comes from human samples, so we can obtain just the gene sets (from all of the gene set collections listed above) relevant to _Homo sapiens_ by specifying `species = "Homo sapiens"`.
 
 ```{r}
-hs_gene_sets <- msigdbr(
-  species = "Homo sapiens", # Replace with species name relevant to your data
+mm_gene_sets <- msigdbr(
+  species = "Mus musculus", # Replace with species name relevant to your data
+  category = "H"
 )
 ```
 
@@ -237,7 +238,7 @@ See `?msigdbr` for more options.
 Let's preview what's in `hs_gene_sets`.
 
 ```{r}
-head(hs_gene_sets)
+head(mm_gene_sets)
 ```
 
 Looks like we have a data frame of gene sets with associated gene symbols and Entrez IDs.
@@ -255,7 +256,7 @@ The annotation package `org.Hs.eg.db` contains information for different identif
 We can see what types of IDs are available to us in an annotation package with `keytypes()`.
 
 ```{r}
-keytypes(org.Hs.eg.db)
+keytypes(org.Mm.eg.db)
 ```
 
 Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to gene symbols (`SYMBOL`), we could just as easily use it to convert to and from any of these `keytypes()` listed above.
@@ -268,7 +269,7 @@ Let's create a data frame that shows the mapped gene symbols along with the diff
 # First let's create a mapped data frame we can join to the differential expression stats
 dge_mapped_df <- data.frame(
   "gene_symbol" = mapIds(
-    org.Hs.eg.db, # Replace with annotation package for the organism relevant to your data
+    org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
     keys = dge_df$Gene,
     column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
     keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
@@ -393,7 +394,7 @@ In this section, we will implement GSEA to calculate the enrichment score (ES) f
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
 
 ```{r}
-gene_terms <- hs_gene_sets %>%
+gene_terms <- mm_gene_sets %>%
   dplyr::select(
     gs_name,
     gene_symbol
@@ -407,7 +408,11 @@ gsea_results <- GSEA(
   eps = 0, # boundary for calculating the p value
   seed = TRUE, # set seed to make results reproducible
   pAdjustMethod = "BH", # Benjamini-Hochberg correction
-  TERM2GENE = gene_terms
+  TERM2GENE = dplyr::select(
+    mm_gene_sets,
+    gs_name,
+    gene_symbol
+  )
 )
 ```
 
@@ -446,13 +451,13 @@ gsea_result_df %>%
   dplyr::slice_max(NES, n = 3)
 ```
 
-The gene set `HP_VERTEBRAL_CLEFTING` has the most positive NES score.
+The gene set `HALLMARK_MYC_TARGETS_V2` has the most positive NES score.
 
 ```{r}
 most_positive_nes_plot <- enrichplot::gseaplot(
   gsea_results,
-  geneSetID = "HP_VERTEBRAL_CLEFTING",
-  title = "HP_VERTEBRAL_CLEFTING",
+  geneSetID = "HALLMARK_MYC_TARGETS_V2",
+  title = "HALLMARK_MYC_TARGETS_V2",
   color.line = "#0d76ff"
 )
 
@@ -468,7 +473,7 @@ The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2
 Let's save to PNG.
 
 ```{r}
-ggplot2::ggsave(file.path(plots_dir, "SRP078441_gsea_enrich_positive_plot.png"),
+ggplot2::ggsave(file.path(plots_dir, "SRP123625_gsea_enrich_positive_plot.png"),
   plot = most_positive_nes_plot
 )
 ```
@@ -484,13 +489,13 @@ gsea_result_df %>%
   dplyr::slice_min(NES, n = 3)
 ```
 
-The gene set `GO_LATERAL_PLASMA_MEMBRANE` has the most negative NES.
+The gene set `HALLMARK_HYPOXIA` has the most negative NES.
 
 ```{r}
 most_negative_nes_plot <- enrichplot::gseaplot(
   gsea_results,
-  geneSetID = "GO_LATERAL_PLASMA_MEMBRANE",
-  title = "GO_LATERAL_PLASMA_MEMBRANE",
+  geneSetID = "HALLMARK_HYPOXIA",
+  title = "HALLMARK_HYPOXIA",
   color.line = "#0d76ff"
 )
 
@@ -505,70 +510,8 @@ In this case, the most negative enrichment score's data are being displayed.
 Let's save this plot to PNG.
 
 ```{r}
-ggplot2::ggsave(file.path(plots_dir, "SRP078441_gsea_enrich_negative_plot.png"),
+ggplot2::ggsave(file.path(plots_dir, "SRP123625_gsea_enrich_negative_plot.png"),
   plot = most_negative_nes_plot
-)
-```
-
-## Plot other pathways
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "HP_DECREASED_CIRCULATING_CORTISOL_LEVEL",
-  title = "HP_DECREASED_CIRCULATING_CORTISOL_LEVEL",
-  color.line = "#0d76ff"
-)
-```
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "BENPORATH_NOS_TARGETS",
-  title = "BENPORATH_NOS_TARGETS",
-  color.line = "#0d76ff"
-)
-
-benporath_genes <- hs_gene_sets %>%
-  dplyr::filter(gs_name == "BENPORATH_NOS_TARGETS")
-
-sum(filtered_dge_mapped_df$gene_symbol %in% benporath_genes$gene_symbol)
-length(benporath_genes$gene_symbol)
-```
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "GO_REGULATION_OF_BINDING",
-  title = "GO_REGULATION_OF_BINDING",
-  color.line = "#0d76ff"
-)
-```
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "KEGG_APOPTOSIS",
-  title = "KEGG_APOPTOSIS",
-  color.line = "#0d76ff"
-)
-```
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "KEGG_AMINOACYL_TRNA_BIOSYNTHESIS",
-  title = "KEGG_AMINOACYL_TRNA_BIOSYNTHESIS",
-  color.line = "#0d76ff"
-)
-```
-
-```{r}
-enrichplot::gseaplot(
-  gsea_results,
-  geneSetID = "KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY",
-  title = "KEGG_ADIPOCYTOKINE_SIGNALING_PATHWAY",
-  color.line = "#0d76ff"
 )
 ```
 
@@ -579,7 +522,7 @@ readr::write_tsv(
   gsea_result_df,
   file.path(
     results_dir,
-    "SRP078441_gsea_results.tsv"
+    "SRP123625_gsea_results.tsv"
   )
 )
 ```
