@@ -271,7 +271,7 @@ metadata <- metadata %>%
 Let's take a look at `metadata` to see if this worked by looking at the `refinebio_title` and `mutation_status` columns. 
 
 ```{r}
-# Let's taake a look at the original metadata column's info 
+# Let's taake a look at the original metadata column's info
 # and our new `mutation_status` column
 dplyr::select(metadata, refinebio_title, mutation_status)
 ```
@@ -319,7 +319,7 @@ We are going to do some pre-filtering to keep only genes with 10 or more reads i
 ```{r}
 # Define a minimum counts cutoff and filter the data to include
 # only rows (genes) that have total counts above the cutoff
-filtered_expression_df <- expression_df %>% 
+filtered_expression_df <- expression_df %>%
   dplyr::filter(rowSums(.) >= 10)
 ```
 
