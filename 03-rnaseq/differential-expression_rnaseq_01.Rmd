@@ -66,7 +66,7 @@ In the same place you put this `.Rmd` file, you should now have three new empty 
 
 For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
 
-Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples).
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP123625).
 
 Click the "Download Now" button on the right side of this screen.  
 
@@ -87,7 +87,7 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP078441/rna-seq-of-primary-patient-aml-samples) [@Micol2017]
+For this example analysis, we will use this [acute myeloid leukemia (AML) dataset](https://www.refine.bio/experiments/SRP123625) [@Micol2017]
 
 @Micol2017 performed RNA-seq on primary peripheral blood and bone marrow samples from AML patients with and without _ASXL1/2_ mutations. 
 
@@ -104,7 +104,7 @@ For more details on the contents of this folder see [these docs on refine.bio](h
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
 
-Copy and paste the `SRP078441` folder into your newly created `data/` folder.
+Copy and paste the `SRP123625` folder into your newly created `data/` folder.
 
 ## Check out our file structure!
 
@@ -112,7 +112,7 @@ Your new analysis folder should contain:
 
 - The example analysis `.Rmd` you downloaded  
 - A folder called "data" which contains:
-  - The `SRP078441` folder which contains:
+  - The `SRP123625` folder which contains:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)
@@ -131,17 +131,17 @@ This is handy to do because if we want to switch the dataset (see next section f
 ```{r}
 # Define the file path to the data directory
 # Replace with the path of the folder the files will be in
-data_dir <- file.path("data", "SRP078441")
+data_dir <- file.path("data", "SRP123625")
 
 # Declare the file path to the gene expression matrix file
 # inside directory saved as `data_dir`
 # Replace with the path to your dataset file
-data_file <- file.path(data_dir, "SRP078441.tsv")
+data_file <- file.path(data_dir, "SRP123625.tsv")
 
 # Declare the file path to the metadata file
 # inside the directory saved as `data_dir`
 # Replace with the path to your metadata file
-metadata_file <- file.path(data_dir, "metadata_SRP078441.tsv")
+metadata_file <- file.path(data_dir, "metadata_SRP123625.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
@@ -255,16 +255,10 @@ We need to extract the mutation status information into its own column to make i
 
 ```{r}
 metadata <- metadata %>%
-  # The last bit of the title, separated by "-" contains the mutation
-  # information that we want to extract
-  dplyr::mutate(asxl_mutation_status = stringr::word(refinebio_title,
-    -1,
-    sep = "-"
-  )) %>%
   # Now let's summarized the ASXL1 mutation status from this variable
-  dplyr::mutate(asxl_mutation_status = dplyr::case_when(
-    grepl("ASXL1|ASXL2", asxl_mutation_status) ~ "asxl_mutation",
-    grepl("ASXLwt", asxl_mutation_status) ~ "no_mutation"
+  dplyr::mutate(mutation_status = dplyr::case_when(
+    stringr::str_detect("R98S", mutation_status) ~ "R98S",
+    stringr::str_detect("WT", mutation_status) ~ "wildtype"
   ))
 ```
 
@@ -273,7 +267,7 @@ Let's take a look at `metadata_df` to see if this worked.
 ```{r}
 # looking at the first 6 rows of the metadata_df and only at the columns that
 # contain the title and the mutation status we extracted from the title
-head(dplyr::select(metadata, refinebio_title, asxl_mutation_status))
+head(dplyr::select(metadata, refinebio_title, mutation_status))
 ```
 
 Before we set up our model in the next step, we want to check if our modeling variable is set correctly. 
@@ -281,26 +275,26 @@ We want our "control" to to be set as the first level in the variable we provide
 Here we will use the `str()` function to print out a preview of the **str**ucture of our variable
 
 ```{r}
-# Print out a preview of `asxl_mutation_status`
-str(metadata$asxl_mutation_status)
+# Print out a preview of `mutation_status`
+str(metadata$mutation_status)
 ```
 
-Currently, `asxl_mutation_status` is a character.
+Currently, `mutation_status` is a character.
 To make sure it is set how we want for the `DESeq` object and subsequent testing, let's mutate it to a factor so we can explicitly set the levels. 
 
 ```{r}
-# Make asxl_mutation_status a factor and set the levels appropriately
+# Make mutation_status a factor and set the levels appropriately
 metadata <- metadata %>%
   dplyr::mutate(
     # Here we will set up the factor aspect of our new variable.
-    asxl_mutation_status = factor(asxl_mutation_status, levels = c("no_mutation", "asxl_mutation"))
+    mutation_status = factor(mutation_status, levels = c("no_mutation", "asxl_mutation"))
   )
 ```
 
 Let's double check if the levels are what we want using the `levels()` function. 
 
 ```{r}
-levels(metadata$asxl_mutation_status)
+levels(metadata$mutation_status)
 ```
 
 Yes! `no_mutation` is the first level as we want it to be. We're all set and ready to move on to making our `DESeq2Dataset` object. 
@@ -316,14 +310,14 @@ gene_matrix <- round(as.matrix(df))
 ```
 
 Now we need to create `DESeqDataSet` from our expression dataset. 
-We use the `asxl_mutation_status` variable we created in the design formula because that will allow us
+We use the `mutation_status` variable we created in the design formula because that will allow us
 to model the presence/absence of _ASXL1/2_ mutation.
 
 ```{r}
 ddset <- DESeqDataSetFromMatrix(
   countData = gene_matrix,
   colData = metadata,
-  design = ~asxl_mutation_status
+  design = ~mutation_status
 )
 ```
 
@@ -343,8 +337,8 @@ ddset <- ddset[genes_to_keep, ]
 ## Run differential expression analysis
 
 We'll use the wrapper function `DESeq()` to do our differential expression analysis.
-In our `DESeq2` object we designated our `asxl_mutation_status` variable as the `model` argument. 
-Because of this, the `DESeq` function will use groups defined by `asxl_mutation_status` to test for differential expression. 
+In our `DESeq2` object we designated our `mutation_status` variable as the `model` argument. 
+Because of this, the `DESeq` function will use groups defined by `mutation_status` to test for differential expression. 
 
 ```{r}
 deseq_object <- DESeq(ddset)
@@ -401,7 +395,7 @@ head(deseq_df)
 To double check what a differentially expressed gene looks like, we can plot one with `DESeq2::plotCounts()` function.
 
 ```{r}
-plotCounts(ddset, gene = "ENSG00000196074", intgroup = "asxl_mutation_status")
+plotCounts(ddset, gene = "ENSG00000196074", intgroup = "mutation_status")
 ```
 
 The `mutation` group samples have higher expression of this gene than the control group, which helps assure us that the results are showing us what we are looking for. 
@@ -415,7 +409,7 @@ readr::write_tsv(
   deseq_df,
   file.path(
     results_dir,
-    "SRP078441_differential_expression_results.tsv" # Replace with a relevant output file name
+    "SRP123625_differential_expression_results.tsv" # Replace with a relevant output file name
   )
 )
 ```
@@ -461,7 +455,7 @@ Let's save it to a PNG.
 ```{r}
 ggsave(
   plot = volcano_plot,
-  file.path(plots_dir, "SRP078441_volcano_plot.png")
+  file.path(plots_dir, "SRP123625_volcano_plot.png")
 ) # Replace with a plot name relevant to your data
 ```
 
