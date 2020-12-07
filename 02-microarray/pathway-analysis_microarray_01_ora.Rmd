@@ -197,7 +197,7 @@ We will also declare a file path to where we want this filie to be downloaded to
 
 ```{r}
 dge_results_file <- file.path(
-  results_dir, 
+  results_dir,
   "GSE71270_limma_results.tsv"
 )
 ```
