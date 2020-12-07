@@ -3944,7 +3944,7 @@ div.tocify {
 <p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results. First we will assign the URL to its own variable called, <code>dge_url</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Define the url to your differential expression results file</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a>dge_url &lt;-<span class="st"> &quot;https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv&quot;</span></span></code></pre></div>
-<p>We will also declare a file path to where we want this filie to be downloaded to and we can use the same file path later for reading the file into R.</p>
+<p>We will also declare a file path to where we want this file to be downloaded to and we can use the same file path later for reading the file into R.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>dge_results_file &lt;-<span class="st"> </span><span class="kw">file.path</span>(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>  results_dir,</span>
 <span id="cb5-3"><a href="#cb5-3"></a>  <span class="st">&quot;GSE71270_limma_results.tsv&quot;</span></span>
@@ -3966,7 +3966,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -3976,7 +3976,7 @@ div.tocify {
 ##   adj.P.Val = col_double(),
 ##   B = col_double()
 ## )</code></pre>
-<p>Note you can also supply <code>dge_url</code> directly to the <code>readr::read_tsv()</code> function and read in the file without downloadnig it. <code>read_tsv()</code> can read TSV files online and doesn’t necessarily require you download the file first. Let’s take a look at what these results from the differential expression analysis look like.</p>
+<p>Note you can also supply <code>dge_url</code> directly to the <code>readr::read_tsv()</code> function and read in the file without downloading it. <code>read_tsv()</code> can read TSV files online and doesn’t necessarily require you download the file first. Let’s take a look at what these results from the differential expression analysis look like.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>dge_df</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">

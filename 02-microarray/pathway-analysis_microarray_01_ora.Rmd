@@ -193,7 +193,7 @@ First we will assign the URL to its own variable called, `dge_url`.
 dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv"
 ```
 
-We will also declare a file path to where we want this filie to be downloaded to and we can use the same file path later for reading the file into R. 
+We will also declare a file path to where we want this file to be downloaded to and we can use the same file path later for reading the file into R. 
 
 ```{r}
 dge_results_file <- file.path(
@@ -228,7 +228,7 @@ Read in the file that has differential expression results.
 dge_df <- readr::read_tsv(dge_results_file)
 ```
 
-Note you can also supply `dge_url` directly to the `readr::read_tsv()` function and read in the file without downloadnig it. 
+Note you can also supply `dge_url` directly to the `readr::read_tsv()` function and read in the file without downloading it. 
 `read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
 Let's take a look at what these results from the differential expression analysis look like.
 
