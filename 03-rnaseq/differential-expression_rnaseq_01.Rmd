@@ -94,8 +94,8 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we are using RNA-seq data from an [acute lymphoblastic leukemia (ALL) mouse lymphoid cell model](https://www.refine.bio/experiments/SRP123625) [@Kampen2019]. 
-All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human wildtype RPL10. 
-We will perform our differential expression using these knock-in and wildtype mice designations. 
+All of the lymphoid mouse cell samples in this experiment have a human RPL10 gene; three with a reference (wild-type) RPL10 gene and three with the R98S mutation. 
+We will perform our differential expression using these knock-in and wild-type mice designations. 
 
 ## Place the dataset in your new `data/` folder
 
@@ -256,7 +256,7 @@ head(metadata$refinebio_title)
 ## Set up metadata
 
 This dataset includes data from mouse lymphoid cells with human RPL10, with and without a `R98S` mutation.
-The authors of this data have the mutation status along with other information stored all in one string (this is not very convenient for us). 
+The mutation status is stored along with other information in a single string (this is not very convenient for us). 
 We need to extract the mutation status information into its own column to make it easier to use.
 
 ```{r}
@@ -264,14 +264,14 @@ metadata <- metadata %>%
   # Let's get the RPL10 mutation status from this variable
   dplyr::mutate(mutation_status = dplyr::case_when(
     stringr::str_detect(refinebio_title, "R98S") ~ "R98S",
-    stringr::str_detect(refinebio_title, "WT") ~ "wildtype"
+    stringr::str_detect(refinebio_title, "WT") ~ "reference"
   ))
 ```
 
 Let's take a look at `metadata` to see if this worked by looking at the `refinebio_title` and `mutation_status` columns. 
 
 ```{r}
-# Let's taake a look at the original metadata column's info
+# Let's take a look at the original metadata column's info
 # and our new `mutation_status` column
 dplyr::select(metadata, refinebio_title, mutation_status)
 ```
@@ -286,16 +286,16 @@ str(metadata$mutation_status)
 ```
 
 Currently, `mutation_status` is a character, which is not necessarily what we want.
-To make sure it is set how we want for the `DESeq` object and subsequent testing, let's mutate it to a factor so we can explicitly set the levels. 
+To make sure it is set how we want for the `DESeq` object and subsequent testing, let's change it to a factor so we can explicitly set the levels. 
 
-In the `levels` argument, we list `wildtype` first since that is our control group. 
+In the `levels` argument, we will list `reference` first since that is our control group. 
 
 ```{r}
 # Make mutation_status a factor and set the levels appropriately
 metadata <- metadata %>%
   dplyr::mutate(
     # Here we will set up the factor aspect of our new variable.
-    mutation_status = factor(mutation_status, levels = c("wildtype", "R98S"))
+    mutation_status = factor(mutation_status, levels = c("reference", "R98S"))
   )
 ```
 
@@ -307,7 +307,7 @@ Let's double check if the levels are what we want using the `levels()` function.
 levels(metadata$mutation_status)
 ```
 
-Yes! `wildtype` is the first level as we want it to be. 
+Yes! `reference` is the first level as we want it to be. 
 We're all set and ready to move on to making our `DESeq2Dataset` object. 
 
 ## Define a minimum counts cutoff
@@ -395,7 +395,7 @@ deseq_df <- deseq_results %>%
   # display
   tibble::rownames_to_column("Gene") %>%
   dplyr::mutate(threshold = padj < 0.05) %>%
-  # let's sort by statistic -- the highest values should be what is up in the
+  # sort by statistic -- the highest values should be genes with higher expression
   # RPL10 mutated samples
   dplyr::arrange(dplyr::desc(log2FoldChange))
 ```
@@ -440,10 +440,10 @@ The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the de
 Because we are using adjusted p values we can feel safe in making our `pCutoff` argument `0.01` (default is `1e-05`).  
 Take a look at all the options for tailoring this plot using `?EnhancedVolcano`.
 
-We will assign the plot to our environment as `volcano_plot`. 
+We will save the plot to our environment as `volcano_plot` to make it easier to save the figure separately later.
 
 ```{r}
-# We'll assign this as `volcano_plot` this time
+# We'll assign this as `volcano_plot`
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
   deseq_df,
   lab = deseq_df$Gene,

@@ -157,7 +157,7 @@ UpSet
 vivo
 WGCNA
 WGCNA's
-wildtype
+wild-type
 WNT
 Yaari
 zebrafish
