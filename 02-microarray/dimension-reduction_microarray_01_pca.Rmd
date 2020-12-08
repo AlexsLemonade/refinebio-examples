@@ -196,7 +196,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Tuck away the gene ID  column as rownames
+  # Tuck away the gene ID column as rownames
   tibble::column_to_rownames("Gene")
 ```
 
@@ -218,24 +218,28 @@ Now we are going to use a combination of functions from base R and the `ggplot2`
 
 In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
 We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here.
+The `prcomp()` function calculates principal component scores for each row of a matrix, but our data is arranged with each sample in a column, so we will need to transpose the data frame first.
+In most cases, we will want to use the `scale = TRUE` argument so that all of the expression measurements have the same variance.
+This prevents the PCA results from being dominated by a few highly variable genes.
 
 ```{r}
 # Perform Principal Component Analysis (PCA) using the `prcomp()` function
 pca <- prcomp(
-  t(df), # We have to transpose our data frame so we are obtaining PCA scores for samples instead of genes
-  scale = TRUE # This tells R that we want the variables scaled to have unit variance
+  t(df), # transpose our data frame to obtain PCA scores for samples, not genes
+  scale = TRUE # we want the data scaled to have unit variance for each gene
 )
 ```
 
-Let's take a preview at the PCA results.
-We are using indexing to only print out the first 10 PCs: `[, 1:10]`.
+Let's take a preview of the PCA results.
+Each row will be a sample, as in the transposed data matrix we used as input, and each column is one of the new principal component (PC) values.
+We are using indexing to only print out the first 5 PC columns: `[, 1:5]`.
 
 ```{r}
 # We can access the results from our `pca` object using `$x`
-head(pca$x[, 1:10])
+head(pca$x[, 1:5])
 ```
 
-In total, we do have 285 principal component values, because we provided 285 sample's data.
+In total, we have 285 principal component values, because we provided 285 samples' data (we will always have as many PCs as the smaller dimension of the input data matrix).
 
 ## Explore Variance in PCA Results
 
@@ -251,11 +255,11 @@ The `summary()` function reports the proportion of variance explained by each pr
 pca_summary <- summary(pca)
 ```
 
-By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
+The `importance` element of the summary object contains the proportion of variance explained by each principal component along with other statistics, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
 
 ```{r}
-# Now access the importance information for the first 10 PCs -- we can access this information `pca_summary$importance`
-pca_summary$importance[, 1:10]
+# Now access the importance information for the first 5 PCs
+pca_summary$importance[, 1:5]
 ```
 
 Now that we've seen the proportion of variance for the first ten PCs, let's prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
@@ -265,12 +269,14 @@ Now that we've seen the proportion of variance for the first ten PCs, let's prep
 In the next chunk, we are going to extract the first two principal components from our `pca` object to prepare a data frame for plotting.
 
 ```{r}
-# Make the first two principal components into a data frame for plotting with `ggplot2`
+# Make the first two PCs into a data frame for plotting with `ggplot2`
 pca_df <- data.frame(pca$x[, 1:2]) %>%
-  # Turn samples_ids stored as rownames into column
+  # Turn samples ids stored as rownames into a column
   tibble::rownames_to_column("refinebio_accession_code") %>%
-  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
-  dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
+  # Bring only the variables that we want from the metadata into this data frame
+  # here we are going to join by `refinebio_accession_code` values
+  dplyr::inner_join(
+    dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
     by = "refinebio_accession_code"
   )
 ```
@@ -288,13 +294,13 @@ pca_plot <- ggplot(
   aes(
     x = PC1,
     y = PC2,
-    color = subgroup # This will label points with different colors for each `subgroup`
+    color = subgroup #Llabel points with different colors for each `subgroup`
   )
 ) +
-  geom_point() + # This tells R that we want a scatterplot
-  theme_classic() # This tells R to return a classic-looking plot with no gridlines
+  geom_point() + # Plot individual points to make a scatterplot
+  theme_classic() # Format as a classic-looking plot with no gridlines
 
-# Print out plot here
+# Print out the plot here
 pca_plot
 ```
 
@@ -310,14 +316,14 @@ pca_plot <- ggplot(
   aes(
     x = PC1,
     y = PC2,
-    color = subgroup, # This will label points with different colors for each `subgroup`
-    shape = histology # This will label points with different colors for each `histology` group
+    color = subgroup, # Draw points with different colors for each `subgroup`
+    shape = histology # Use a different shape for each `histology` group
   )
 ) +
   geom_point() +
   theme_classic()
 
-# Print out plot here
+# Print out the plot here
 pca_plot
 ```
 
@@ -332,11 +338,12 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 
 ```{r}
 # Save plot using `ggsave()` function
-ggsave(file.path(
-  plots_dir,
-  "GSE37382_pca_scatterplot.png" # Replace with name relevant your plotted data
-),
-plot = pca_plot # Here we are giving the function the plot object that we want saved to file
+ggsave(
+  file.path(
+    plots_dir,
+    "GSE37382_pca_scatterplot.png" # Replace with a good file name for your plot
+  ),
+  plot = pca_plot # The plot object that we want saved to file
 )
 ```
 
