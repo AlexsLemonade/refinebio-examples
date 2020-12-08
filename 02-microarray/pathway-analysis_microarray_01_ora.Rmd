@@ -228,8 +228,9 @@ Read in the file that has differential expression results.
 dge_df <- readr::read_tsv(dge_results_file)
 ```
 
-Note you can also supply `dge_url` directly to the `readr::read_tsv()` function and read in the file without downloading it. 
-`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
+Note that `read_tsv()` can also read TSV files directly from a URL and doesn't necessarily require you download the file first.
+If you wanted to use that feature, you could replace the call above with `readr::read_tsv(dge_url)` and skip the download steps.
+
 Let's take a look at what these results from the differential expression analysis look like.
 
 ```{r}
