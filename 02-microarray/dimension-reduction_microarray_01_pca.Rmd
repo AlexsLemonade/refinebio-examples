@@ -203,7 +203,7 @@ df <- readr::read_tsv(data_file) %>%
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
-# Make the data in the order of the metadata
+# Make the sure the columns (samples) are in the same order as the metadata
 df <- df %>%
   dplyr::select(metadata$geo_accession)
 
@@ -225,7 +225,7 @@ This prevents the PCA results from being dominated by a few highly variable gene
 ```{r}
 # Perform Principal Component Analysis (PCA) using the `prcomp()` function
 pca <- prcomp(
-  t(df), # transpose our data frame to obtain PCA scores for samples, not genes
+  t(df), # transpose our data frame to obtain PC scores for samples, not genes
   scale = TRUE # we want the data scaled to have unit variance for each gene
 )
 ```
@@ -262,7 +262,8 @@ The `importance` element of the summary object contains the proportion of varian
 pca_summary$importance[, 1:5]
 ```
 
-Now that we've seen the proportion of variance for the first ten PCs, let's prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+Now that we've seen the proportion of variance for the first set of PCs, let's prepare and plot the PC scores for the first two principal components, the components that explain the largest proportion of the expression variance in our dataset.
+(Note though, that in this case, they explain less than 15% of the total variance!)
 
 ## Prepare a final data frame with PCA results for plotting
 
@@ -283,7 +284,7 @@ pca_df <- data.frame(pca$x[, 1:2]) %>%
 
 ## Plot PCA Results
 
-Now let's plot the PC scores for the first two principal components since we know that they are responsible for the most explained proportion of variance in our dataset. 
+Now let's plot the PC scores for the first two principal components.
 
 Let's also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles [@Northcott2012].
 
@@ -304,7 +305,8 @@ pca_plot <- ggplot(
 pca_plot
 ```
 
-Looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to be less distinct as there are some samples clustering with Group 4 as well.
+Looks like Group 4 and SHH groups cluster with each other somewhat, but Group 3 seems to be less distinct, as there are some samples clustering with Group 4 as well.
+Most of the differences that we see between the groups are along the first axis of variation, PC1.
 
 We can add another label to our plot to get more information about our dataset.
 Let's also label the data points based on the histological subtype that each sample belongs to.
@@ -328,7 +330,7 @@ pca_plot
 ```
 
 Adding the histological subtype label to our plot made our plot more informative, but the diffuse Group 3 data doesn't appear to be related to a histology subtype.
-We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
+We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup, or plot other PC values to see if they might also reveal some structure in the data. 
 
 ## Save annotated PCA plot as a PNG
 
