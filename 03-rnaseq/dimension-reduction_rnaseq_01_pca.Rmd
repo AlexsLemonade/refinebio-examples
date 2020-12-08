@@ -321,7 +321,7 @@ plotPCA(
   dds_norm,
   intgroup = c("refinebio_treatment", "refinebio_disease")
   # We are able to add another variable to the intgroup argument
-  # by providing a vector of the variable names with  `c()` function
+  # by providing a vector of the variable names with `c()` function
 )
 ```
 

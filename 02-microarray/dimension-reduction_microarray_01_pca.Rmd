@@ -272,7 +272,7 @@ In the next chunk, we are going to extract the first two principal components fr
 ```{r}
 # Make the first two PCs into a data frame for plotting with `ggplot2`
 pca_df <- data.frame(pca$x[, 1:2]) %>%
-  # Turn samples ids stored as rownames into a column
+  # Turn samples IDs stored as rownames into a column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Bring only the variables that we want from the metadata into this data frame
   # here we are going to join by `refinebio_accession_code` values
