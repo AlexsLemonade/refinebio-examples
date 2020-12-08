@@ -175,7 +175,7 @@ library(org.Dr.eg.db)
 library(magrittr)
 ```
 
-## Import data
+## Download data file
 
 For ORA, we only need a list of gene IDs as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways it shares genes with.
 
@@ -193,18 +193,45 @@ First we will assign the URL to its own variable called, `dge_url`.
 dge_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/02-microarray/results/GSE71270/GSE71270_limma_results.tsv"
 ```
 
-Read in the file that has differential expression results.
-Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `dge_url` in the code below with a path to file you have on your computer like: `file.path("results", "GSE71270_limma_results.tsv")`.
+We will also declare a file path to where we want this file to be downloaded to and we can use the same file path later for reading the file into R. 
 
 ```{r}
-# Read in the contents of your differential expression results file
-# `dge_url` can be replaced with a file path to a TSV file with your
-# desired gene list results
-dge_df <- readr::read_tsv(dge_url)
+dge_results_file <- file.path(
+  results_dir,
+  "GSE71270_limma_results.tsv"
+)
 ```
 
-`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
-Let's take a look at what these contrast results from the differential expression analysis look like.
+Using the URL (`dge_url`) and file path (`dge_results_file`) we can download the file and use the `destfile` argument to specify where it should be saved. 
+
+```{r}
+download.file(
+  dge_url,
+  # The file will be saved to this location and with this name
+  destfile = dge_results_file
+)
+```
+
+Now let's double check that the results file is in the right place.
+
+```{r}
+# Check if the organism orthology file file is in the `data` directory
+file.exists(dge_results_file)
+```
+
+## Import data
+
+Read in the file that has differential expression results.
+
+```{r}
+# Read in the contents of the differential expression results file
+dge_df <- readr::read_tsv(dge_results_file)
+```
+
+Note that `read_tsv()` can also read TSV files directly from a URL and doesn't necessarily require you download the file first.
+If you wanted to use that feature, you could replace the call above with `readr::read_tsv(dge_url)` and skip the download steps.
+
+Let's take a look at what these results from the differential expression analysis look like.
 
 ```{r}
 dge_df
