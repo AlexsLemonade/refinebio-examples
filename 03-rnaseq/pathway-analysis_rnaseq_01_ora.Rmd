@@ -232,7 +232,7 @@ file.exists(gene_module_file)
 Read in the file that has WGCNA gene and module results.
 
 ```{r}
-# Read in the contents of the WGCNA gene moodules file
+# Read in the contents of the WGCNA gene modules file
 gene_module_df <- readr::read_tsv(gene_module_file)
 ```
 
