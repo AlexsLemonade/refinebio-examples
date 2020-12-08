@@ -182,7 +182,7 @@ library(org.Hs.eg.db)
 library(magrittr)
 ```
 
-## Import data
+## Download data file
 
 For ORA, we only need a list of genes of interest and a background gene set as our input, so this example can work for any situations where you have gene list and want to know more about what biological pathways are significantly represented.
 
@@ -201,17 +201,44 @@ First we will assign the URL to its own variable called, `gene_module_url`.
 gene_module_url <- "https://refinebio-examples.s3.us-east-2.amazonaws.com/04-advanced-topics/results/SRP140558_wgcna_gene_to_module.tsv"
 ```
 
-Read in the file that has WGCNA gene and module results.
-Here we are using the URL we set up above, but this can be a local file path instead _i.e._ you can replace `gene_module_url` in the code below with a path to file you have on your computer like: `file.path("results", "SRP140558_results_gene_list.tsv")`.
+We will also declare a file path to where we want this file to be downloaded to and we can use the same file path later for reading the file into R. 
 
 ```{r}
-# Read in the contents of your differential expression results file
-# `gene_module_url` can be replaced with a file path to a TSV file with your
-# desired gene list results
-gene_module_df <- readr::read_tsv(gene_module_url)
+gene_module_file <- file.path(
+  results_dir,
+  "SRP140558_wgcna_gene_to_module.tsv"
+)
 ```
 
-`read_tsv()` can read TSV files online and doesn't necessarily require you download the file first.
+Using the URL (`gene_module_url`) and file path (`gene_module_file`) we can download the file and use the `destfile` argument to specify where it should be saved. 
+
+```{r}
+download.file(
+  gene_module_url,
+  # The file will be saved to this location and with this name
+  destfile = gene_module_file
+)
+```
+
+Now let's double check that the results file is in the right place.
+
+```{r}
+# Check if the file exists
+file.exists(gene_module_file)
+```
+
+## Import data
+
+Read in the file that has WGCNA gene and module results.
+
+```{r}
+# Read in the contents of the WGCNA gene modules file
+gene_module_df <- readr::read_tsv(gene_module_file)
+```
+
+Note that `read_tsv()` can also read TSV files directly from a URL and doesn't necessarily require you download the file first.
+If you wanted to use that feature, you could replace the call above with `readr::read_tsv(gene_module_url)` and skip the download steps.
+
 Let's take a look at this gene module table.
 
 ```{r}
