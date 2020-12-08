@@ -215,7 +215,7 @@ download.file(
 Now let's double check that the results file is in the right place.
 
 ```{r}
-# Check if the organism orthology file file is in the `data` directory
+# Check if the file exists
 file.exists(dge_results_file)
 ```
 

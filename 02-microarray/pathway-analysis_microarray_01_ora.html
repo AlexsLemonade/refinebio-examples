@@ -3739,6 +3739,7 @@ div.tocify {
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
             <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
+            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_02_gsea.html">Pathway Analysis - GSEA</a></li>
             <li><a href="../03-rnaseq/pathway-analysis_rnaseq_03_gsva.html">Pathway Analysis - GSVA</a></li>
 
           </ul>
@@ -3962,7 +3963,7 @@ div.tocify {
 <span id="cb6-4"><a href="#cb6-4"></a>  <span class="dt">destfile =</span> dge_results_file</span>
 <span id="cb6-5"><a href="#cb6-5"></a>)</span></code></pre></div>
 <p>Now let’s double check that the results file is in the right place.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Check if the organism orthology file file is in the `data` directory</span></span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Check if the file exists</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="kw">file.exists</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
@@ -3972,7 +3973,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
