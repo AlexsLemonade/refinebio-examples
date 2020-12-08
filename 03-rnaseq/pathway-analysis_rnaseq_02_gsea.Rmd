@@ -172,7 +172,7 @@ The GSEA algorithm utilizes random sampling so we are going to set the seed to m
 set.seed(2020)
 ```
 
-## Import data 
+## Download data file
 
 We will read in the differential expression results we will download from online.
 These results are from an acute lymphoblastic leukemia (ALL) mouse lymphoid cell model we used for [differential expression analysis](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential-expression_rnaseq_01.html) using `DESeq2` [@Love2014].

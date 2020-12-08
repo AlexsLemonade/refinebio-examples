@@ -3938,8 +3938,8 @@ div.tocify {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Set the seed so our results are reproducible:</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a><span class="kw">set.seed</span>(<span class="dv">2020</span>)</span></code></pre></div>
 </div>
-<div id="import-data" class="section level2">
-<h2><span class="header-section-number">4.2</span> Import data</h2>
+<div id="download-data-file" class="section level2">
+<h2><span class="header-section-number">4.2</span> Download data file</h2>
 <p>We will read in the differential expression results we will download from online. These results are from an acute lymphoblastic leukemia (ALL) mouse lymphoid cell model we used for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/differential-expression_rnaseq_01.html">differential expression analysis</a> using <code>DESeq2</code> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>. The table contains summary statistics including Ensembl gene IDs, log2 fold change values, and adjusted p-values (FDR in this case). We can identify differentially regulated genes by filtering these results and use this list as input to GSEA.</p>
 <p>Instead of using the URL below, you can use a file path to a TSV file with your desired gene list results. First we will assign the URL to its own variable called, <code>dge_url</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Define the url to your differential expression results file</span></span>
@@ -3960,13 +3960,13 @@ div.tocify {
 <span id="cb8-2"><a href="#cb8-2"></a><span class="kw">file.exists</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
-<div id="import-data-1" class="section level2">
+<div id="import-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Import data</h2>
 <p>Read in the file that has differential expression results.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   baseMean = col_double(),
