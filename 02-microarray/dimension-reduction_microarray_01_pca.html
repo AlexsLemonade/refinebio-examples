@@ -3939,7 +3939,7 @@ div.tocify {
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Read in data TSV file</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID column as rownames, leaving a numeric matrix</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID column as rownames, leaving only numeric values</span></span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ──────────────────────────────────────────────
@@ -3998,7 +3998,7 @@ div.tocify {
 <p>In the next chunk, we are going to extract the first two principal components from our <code>pca</code> object to prepare a data frame for plotting.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Make the first two PCs into a data frame for plotting with `ggplot2`</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a>pca_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(pca<span class="op">$</span>x[, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%&gt;%</span></span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="co"># Turn samples ids stored as rownames into a column</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="co"># Turn samples IDs stored as rownames into a column</span></span>
 <span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;refinebio_accession_code&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb20-5"><a href="#cb20-5"></a><span class="st">  </span><span class="co"># Bring only the variables that we want from the metadata into this data frame</span></span>
 <span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span><span class="co"># here we are going to join by `refinebio_accession_code` values</span></span>
