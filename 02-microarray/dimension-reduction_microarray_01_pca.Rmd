@@ -114,7 +114,7 @@ Your new analysis folder should contain:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
-- A folder for `results` (currently empty)  
+- A folder for `results` (currently empty)
     
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
@@ -196,7 +196,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Tuck away the gene ID column as rownames, leaving a numeric matrix
+  # Tuck away the gene ID column as rownames, leaving only numeric values
   tibble::column_to_rownames("Gene")
 ```
 
