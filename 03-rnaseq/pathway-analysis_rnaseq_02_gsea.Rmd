@@ -459,6 +459,9 @@ The ES for each gene set is then normalized to account for the size of the set, 
 Looks like we have gene sets returned as significant at FDR of `0.05`, according to the `p.adjust` column in the table above.
 
 The information we're most likely interested in is in the `results` slot.
+Note that if we didn't have any significant results, our `results` slot would be empty as nothing would have met our `pvalueCutoff` above.
+If we wanted all results returned we would need to set the `pvalueCutoff = 1`.
+
 Let's convert this into a data frame that we can use for further analysis and write to file.
 
 ```{r}
@@ -469,7 +472,6 @@ gsea_result_df <- data.frame(gsea_results@result)
 
 We can visualize GSEA results for individual pathways or gene sets using `enrichplot::gseaplot()`.
 Let's take a look at 2 different pathways -- one with a highly positive NES and one with a highly negative NES -- to get more insight into how ES are calculated.
-Note that if we didn't have any significant pathways, our visualizations below would show up blank as nothing would have met our `pvalueCutoff` above.
 
 ### Most Positive NES
 

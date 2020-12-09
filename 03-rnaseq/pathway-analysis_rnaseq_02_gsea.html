@@ -4152,13 +4152,14 @@ C7: immunologic signatures</code></pre>
 </div>
 <p>Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES. The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.</p>
 <p>Looks like we have gene sets returned as significant at FDR of <code>0.05</code>, according to the <code>p.adjust</code> column in the table above.</p>
-<p>The information we’re most likely interested in is in the <code>results</code> slot. Let’s convert this into a data frame that we can use for further analysis and write to file.</p>
+<p>The information we’re most likely interested in is in the <code>results</code> slot. Note that if we didn’t have any significant results, our <code>results</code> slot would be empty as nothing would have met our <code>pvalueCutoff</code> above. If we wanted all results returned we would need to set the <code>pvalueCutoff = 1</code>.</p>
+<p>Let’s convert this into a data frame that we can use for further analysis and write to file.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>gsea_result_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(gsea_results<span class="op">@</span>result)</span></code></pre></div>
 </div>
 </div>
 <div id="visualizing-results" class="section level2">
 <h2><span class="header-section-number">4.6</span> Visualizing results</h2>
-<p>We can visualize GSEA results for individual pathways or gene sets using <code>enrichplot::gseaplot()</code>. Let’s take a look at 2 different pathways – one with a highly positive NES and one with a highly negative NES – to get more insight into how ES are calculated. Note that if we didn’t have any significant pathways, our visualizations below would show up blank as nothing would have met our <code>pvalueCutoff</code> above.</p>
+<p>We can visualize GSEA results for individual pathways or gene sets using <code>enrichplot::gseaplot()</code>. Let’s take a look at 2 different pathways – one with a highly positive NES and one with a highly negative NES – to get more insight into how ES are calculated.</p>
 <div id="most-positive-nes" class="section level3">
 <h3><span class="header-section-number">4.6.1</span> Most Positive NES</h3>
 <p>Let’s look for the gene set with the most positive NES.</p>
@@ -4260,7 +4261,7 @@ C7: immunologic signatures</code></pre>
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-08                  
+##  date     2020-12-09                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
