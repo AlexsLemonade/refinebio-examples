@@ -348,7 +348,8 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 ```{r}
 # Save plot using `ggsave()` function
 ggsave(
-  file.path(plots_dir,
+  file.path(
+    plots_dir,
     "GSE37382_umap_plot.png" # Replace with a good file name for your plot
   ),
   plot = umap_plot # The plot object that we want saved to file

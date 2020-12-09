@@ -268,7 +268,7 @@ metadata <- metadata %>%
       refinebio_treatment,
       # specify the possible levels in the order we want them to appear
       levels = c("pre-adt", "post-adt")
-    )
+    ),
     refinebio_disease = as.factor(refinebio_disease)
   )
 ```
@@ -435,7 +435,8 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 ```{r}
 # Save plot using `ggsave()` function
 ggsave(
-  file.path(plots_dir,
+  file.path(
+    plots_dir,
     "SRP133573_umap_plot.png" # Replace with a good file name for your plot
   ),
   plot = final_annotated_umap_plot
