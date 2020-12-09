@@ -4040,9 +4040,9 @@ div.tocify {
 <h2><span class="header-section-number">4.9</span> Prepare data frame for plotting</h2>
 <p>Now that we have the results from UMAP, we need to extract the counts data from the <code>umap_results</code> object and merge the variables from the metadata that we will use for annotating our plot.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Make into data frame for plotting with `ggplot2`</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># The umap values we need for plotting are stored in the `layout` element</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># The UMAP values we need for plotting are stored in the `layout` element</span></span>
 <span id="cb22-3"><a href="#cb22-3"></a>umap_plot_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(umap_results<span class="op">$</span>layout) <span class="op">%&gt;%</span></span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="co"># Turn sample IDs stored as row names into column</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="co"># Turn sample IDs stored as row names into a column</span></span>
 <span id="cb22-5"><a href="#cb22-5"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;refinebio_accession_code&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb22-6"><a href="#cb22-6"></a><span class="st">  </span><span class="co"># Add the metadata into this data frame; match by sample IDs</span></span>
 <span id="cb22-7"><a href="#cb22-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(metadata, <span class="dt">by =</span> <span class="st">&quot;refinebio_accession_code&quot;</span>)</span></code></pre></div>

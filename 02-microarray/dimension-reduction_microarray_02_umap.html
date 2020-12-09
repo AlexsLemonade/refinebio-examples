@@ -3962,7 +3962,7 @@ div.tocify {
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Make the sure the columns (samples) are in the same order as the metadata</span></span>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Make sure the columns (samples) are in the same order as the metadata</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span></span>
 <span id="cb14-3"><a href="#cb14-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>geo_accession)</span>
 <span id="cb14-4"><a href="#cb14-4"></a></span>
@@ -3980,9 +3980,9 @@ div.tocify {
 <span id="cb16-4"><a href="#cb16-4"></a>)</span>
 <span id="cb16-5"><a href="#cb16-5"></a></span>
 <span id="cb16-6"><a href="#cb16-6"></a><span class="co"># Make into data frame for plotting with `ggplot2`</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># The umap values we need for plotting are stored in the `layout` element</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># The UMAP values we need for plotting are stored in the `layout` element</span></span>
 <span id="cb16-8"><a href="#cb16-8"></a>umap_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(umap_data<span class="op">$</span>layout) <span class="op">%&gt;%</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a><span class="st">  </span><span class="co"># Turn sample IDs stored as row names into column</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a><span class="st">  </span><span class="co"># Turn sample IDs stored as row names into a column</span></span>
 <span id="cb16-10"><a href="#cb16-10"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;refinebio_accession_code&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb16-11"><a href="#cb16-11"></a><span class="st">  </span><span class="co"># Add on the variables that we want from the metadata into this data frame;</span></span>
 <span id="cb16-12"><a href="#cb16-12"></a><span class="st">  </span><span class="co"># match by sample IDs</span></span>
@@ -4051,7 +4051,7 @@ div.tocify {
 <div id="interpretation-of-umap-plot-and-results" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Interpretation of UMAP plot and results</h3>
 <ol style="list-style-type: decimal">
-<li>Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters (Also why setting the seed is important). This means that you should not rely too heavily on the exact values of UMAP’s output.</li>
+<li>Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, even if ran with the same parameters (Also why setting the seed is important). <!-- TODO: set the seed glossary link --> This means that you should not rely too heavily on the exact values of UMAP’s output.</li>
 </ol>
 <ul>
 <li>One particular limitation of UMAP is that while observed clusters have some meaning, the distance <em>between</em> clusters usually does not (nor does cluster density). The fact that two clusters are near each other should NOT be interpreted to mean that they are more related to each other than to more distant clusters. (There is some disagreement about whether UMAP distances have more meaning, but it is also probably safer to assume they don’t.)</li>
