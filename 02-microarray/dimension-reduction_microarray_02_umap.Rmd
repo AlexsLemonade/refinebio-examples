@@ -223,7 +223,7 @@ df <- readr::read_tsv(data_file) %>%
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
-# Make the sure the columns (samples) are in the same order as the metadata
+# Make sure the columns (samples) are in the same order as the metadata
 df <- df %>%
   dplyr::select(metadata$geo_accession)
 
@@ -245,9 +245,9 @@ umap_data <- umap::umap(
 )
 
 # Make into data frame for plotting with `ggplot2`
-# The umap values we need for plotting are stored in the `layout` element
+# The UMAP values we need for plotting are stored in the `layout` element
 umap_df <- data.frame(umap_data$layout) %>%
-  # Turn sample IDs stored as row names into column
+  # Turn sample IDs stored as row names into a column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Add on the variables that we want from the metadata into this data frame;
   # match by sample IDs
@@ -331,7 +331,8 @@ We could test out other variables as annotation labels to get a further understa
 
 ### Interpretation of UMAP plot and results
 
-1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, and even run to run with the same parameters  (Also why setting the seed is important).
+1. Note that the coordinates of UMAP output for any given cell can change dramatically depending on parameters, even if ran with the same parameters (Also why setting the seed is important).
+<!-- TODO: set the seed glossary link --> 
 This means that you should not rely too heavily on the exact values of UMAP's output.
 
   - One particular limitation of UMAP is that while observed clusters have some meaning, the distance *between* clusters usually does not (nor does cluster density). The fact that two clusters are near each other should NOT be interpreted to mean that they are more related to each other than to more distant clusters. (There is some disagreement about whether UMAP distances have more meaning, but it is also probably safer to assume they don't.)

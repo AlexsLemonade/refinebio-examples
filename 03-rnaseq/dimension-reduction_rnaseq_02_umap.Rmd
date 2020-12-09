@@ -341,9 +341,9 @@ Now that we have the results from UMAP, we need to extract the counts data from 
 
 ```{r}
 # Make into data frame for plotting with `ggplot2`
-# The umap values we need for plotting are stored in the `layout` element
+# The UMAP values we need for plotting are stored in the `layout` element
 umap_plot_df <- data.frame(umap_results$layout) %>%
-  # Turn sample IDs stored as row names into column
+  # Turn sample IDs stored as row names into a column
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Add the metadata into this data frame; match by sample IDs
   dplyr::inner_join(metadata, by = "refinebio_accession_code")
