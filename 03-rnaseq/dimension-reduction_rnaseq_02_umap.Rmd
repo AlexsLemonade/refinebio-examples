@@ -70,11 +70,11 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-email.png" width=500>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>
 
 
 
@@ -82,7 +82,7 @@ We are going to use non-quantile normalized data for this analysis.
 To get this data, you will need to check the box that says "Skip quantile normalization for RNA-seq samples".
 Note that this option will only be available for RNA-seq datasets.
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/skip-quantile-normalization.png" width=500>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/skip-quantile-normalization.png" width=500>
 
 It may take a few minutes for the dataset to process.
 You will get an email when it is ready.
@@ -91,7 +91,6 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [prostate cancer dataset](https://www.refine.bio/experiments/SRP133573).
 
-<!--BRIEFLY SUMMARIZE THIS DATASET-->
 
 The data that we downloaded from refine.bio for this analysis has 175 RNA-seq samples obtained from 20 patients with prostate cancer.
 Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples include pre-ADT biopsies and post-ADT prostatectomy specimens.
@@ -102,9 +101,9 @@ Refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/dcce9a49246a15bfc7bb94a50a082c300c78074f/template/screenshots/download-folder-structure.png" width=400>
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400>
 
-For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).  
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#rna-seq-sample-compendium-download-folder).
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession ids usually look something like `GSE1235` or `SRP12345`.
@@ -226,7 +225,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 expression_df <- readr::read_tsv(data_file) %>%
-  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  # Tuck away the gene ID  column as rownames, leaving only numeric values
   tibble::column_to_rownames("Gene")
 ```
 
@@ -241,24 +240,37 @@ expression_df <- expression_df %>%
 all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 ```
 
-<!--ALL THE ANALYSIS STEPS HERE -->
-
 Now we are going to use a combination of functions from the `DESeq2`, `umap`, and `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation and Projection (UMAP) dimension reduction technique on our pre-ADT and post-ADT samples.
+
+## Prepare data for `DESeq2`
+
+We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+
+```{r}
+# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
+df <- df %>%
+  # Mutate numeric variables to be integers
+  dplyr::mutate_if(is.numeric, round)
+```
 
 ## Prepare metadata for `DESEq2`
 
 We need to make sure all of the metadata column variables, that we would like to use to annotate our plot, are converted into factors.
 
 ```{r}
-# We need to also format the variables from the metadata, that we will be using for annotation of the UMAP plot, into factors
+# convert the columns we will be using for annotation into factors
 metadata <- metadata %>%
-  dplyr::select( # The metadata has many variables, we want to select only those that we will need for plotting later
+  dplyr::select( # select only the columns that we will need for plotting
     refinebio_accession_code,
     refinebio_treatment,
     refinebio_disease
   ) %>%
   dplyr::mutate( # Now let's convert the annotation variables into factors
-    refinebio_treatment = as.factor(refinebio_treatment),
+    refinebio_treatment = factor(
+      refinebio_treatment,
+      # specify the possible levels in the order we want them to appear
+      levels = c("pre-adt", "post-adt")
+    ),
     refinebio_disease = as.factor(refinebio_disease)
   )
 ```
@@ -292,10 +304,24 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = filtered_expression_df, # filtered and rounded counts data
-  colData = metadata, # This is the data frame with the annotation data for the replicates in the counts data frame
-  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  countData = df, # the counts values for all samples in our dataset
+  colData = metadata, # annotation data for the samples in the counts data frame
+  design = ~1 # Here we are not specifying a model
+  # Replace with an appropriate design variable for your analysis
 )
+```
+
+## Define a minimum counts cutoff
+
+We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our plot.
+We are going to do some pre-filtering to keep only genes with 10 or more reads total.
+Note that rows represent gene data and the columns represent sample data in our dataset.
+
+```{r}
+# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
+# only rows that have counts above the cutoff
+genes_to_keep <- rowSums(counts(dds)) >= 10
+dds <- dds[genes_to_keep, ]
 ```
 
 ## Perform DESeq2 normalization and transformation
@@ -304,7 +330,8 @@ We are going to use the `vst()` function from the `DESeq2` package to normalize 
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
 ```{r}
-# Normalize and transform the data in the `DESeqDataSet` object using the `vst()` function from the `DESEq2` R package
+# Normalize and transform the data in the `DESeqDataSet` object
+# using the `vst()` function from the `DESeq2` R package
 dds_norm <- vst(dds)
 ```
 
@@ -320,11 +347,12 @@ Here's some [guidance about choosing parameters](https://cran.r-project.org/web/
 You can also run the following in the RStudio console to get more information on the function and its default parameters: `?umap::umap` or `?umap::umap.defaults`.
 
 ```{r}
-# First we are going to retrieve the normalized data from the `DESeqDataSet` object using the `assay()` function
+# First we are going to retrieve the normalized data
+# from the `DESeqDataSet` object using the `assay()` function
 normalized_counts <- assay(dds_norm) %>%
-  t() # We need to transpose this data in preparation for the `umap()` function
+  t() # We need to transpose this data so each row is a sample
 
-# Now let's tell R to perform UMAP on the normalized data
+# Now perform UMAP on the normalized data
 umap_results <- umap::umap(normalized_counts)
 ```
 
@@ -333,11 +361,23 @@ umap_results <- umap::umap(normalized_counts)
 Now that we have the results from UMAP, we need to extract the counts data from the `umap_results` object and merge the variables from the metadata that we will use for annotating our plot.
 
 ```{r}
-# We need to tell R to create a data frame with the umap values and annotation data in preparation for plotting with `ggplot2`
+# Make into data frame for plotting with `ggplot2`
+# The UMAP values we need for plotting are stored in the `layout` element
 umap_plot_df <- data.frame(umap_results$layout) %>%
-  tibble::rownames_to_column("refinebio_accession_code") %>% # Let's get the rownames into a column so we can merge the annotation data
-  dplyr::inner_join(metadata, by = "refinebio_accession_code") # Let's merge the annotation data using the `refinebio_accession_code` column
+  # Turn sample IDs stored as row names into a column
+  tibble::rownames_to_column("refinebio_accession_code") %>%
+  # Add the metadata into this data frame; match by sample IDs
+  dplyr::inner_join(metadata, by = "refinebio_accession_code")
 ```
+
+Let's take a look at the data frame we created in the chunk above.
+
+```{r}
+umap_plot_df
+```
+
+Here we can see that UMAP took the data from thousands of genes, and reduced it to just two variables, `X1` and `X2`.
+
 
 ## Create UMAP plot
 
@@ -352,7 +392,7 @@ ggplot(
     y = X2
   )
 ) +
-  geom_point() # This tells R that we want a scatterplot
+  geom_point() # Plot individual points to make a scatterplot
 ```
 
 Let's try adding a variable to our plot for annotation.
@@ -366,7 +406,7 @@ ggplot(
   aes(
     x = X1,
     y = X2,
-    color = refinebio_treatment # This will label points with different colors for each `refinebio_treatment` group
+    color = refinebio_treatment # label points with different colors for each `subgroup`
   )
 ) +
   geom_point() # This tells R that we want a scatterplot
@@ -377,17 +417,19 @@ In the next code chunk, we are going to add another variable to our plot for ann
 We'll plot using both `refinebio_treatment` and `refinebio_disease` variables for labels since they are central to the androgen deprivation therapy (ADT) based hypothesis in the [original paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6210624/) [@Sharma2018].
 
 ```{r}
-# Plot using `ggplot()` function
+# Plot using `ggplot()` function and save to an object
 final_annotated_umap_plot <- ggplot(
   umap_plot_df,
   aes(
     x = X1,
     y = X2,
-    color = refinebio_treatment, # This will label points with different colors for each `refinebio_treatment` group
-    shape = refinebio_disease # This will label points with different shapes for each `refinebio_disease` group
+    # plot points with different colors for each `refinebio_treatment` group
+    color = refinebio_treatment,
+    # plot points with different shapes for each `refinebio_disease` group
+    shape = refinebio_disease
   )
 ) +
-  geom_point() # This tells R that we want a scatterplot
+  geom_point() # make a scatterplot
 
 # Display the plot that we saved above
 final_annotated_umap_plot
@@ -413,7 +455,11 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 
 ```{r}
 # Save plot using `ggsave()` function
-ggsave(file.path(plots_dir, "SRP133573_umap_plot.png"), # Replace with name relevant your plotted data
+ggsave(
+  file.path(
+    plots_dir,
+    "SRP133573_umap_plot.png" # Replace with a good file name for your plot
+  ),
   plot = final_annotated_umap_plot
 )
 ```

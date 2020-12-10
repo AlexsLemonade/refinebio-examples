@@ -419,11 +419,150 @@ head(lfc_vector)
 
 ### Run GSEA using the `GSEA()` function
 
-_Will be in upcoming PR_
+Genes were ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, in the previous section.
+In this section, we will implement GSEA to calculate the enrichment score (ES) for each gene set using our pre-ranked gene list.
+
+We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
+
+```{r}
+gsea_results <- GSEA(
+  geneList = lfc_vector, # ordered ranked gene list
+  minGSSize = 25, # minimum gene set size
+  maxGSSize = 500, # maximum gene set set
+  pvalueCutoff = 0.05, # p value cutoff
+  eps = 0, # boundary for calculating the p value
+  seed = TRUE, # set seed to make results reproducible
+  pAdjustMethod = "BH", # Benjamini-Hochberg correction
+  TERM2GENE = dplyr::select(
+    mm_hallmark_sets,
+    gs_name,
+    gene_symbol
+  )
+)
+```
+
+The warning message above tells us that there are few genes that have the same log2 fold change value and they are therefore ranked equally.
+This means that `GSEA()` will arbitrarily choose which comes first in the ranked list [@GSEA-user-guide].
+This percentage of `0.19` is small, so we are not concerned that it will significantly effect our results.
+If the percentage was large on the other hand, we would be concerned about the log2 fold change results.
+
+Let's take a look at the results.
+
+```{r}
+# We can access the results from our `gsea_results` object using `@result`
+head(gsea_results@result)
+```
+
+Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES.
+The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
+
+Looks like we have gene sets returned as significant at FDR of `0.05`, according to the `p.adjust` column in the table above.
+
+The information we're most likely interested in is in the `results` slot.
+Note that if we didn't have any significant results, our `results` slot would be empty as nothing would have met our `pvalueCutoff` above.
+If we wanted all results returned we would need to set the `pvalueCutoff = 1`.
+
+Let's convert this into a data frame that we can use for further analysis and write to file.
+
+```{r}
+gsea_result_df <- data.frame(gsea_results@result)
+```
+
+## Visualizing results
+
+We can visualize GSEA results for individual pathways or gene sets using `enrichplot::gseaplot()`.
+Let's take a look at 2 different pathways -- one with a highly positive NES and one with a highly negative NES -- to get more insight into how ES are calculated.
+
+### Most Positive NES
+
+Let's look for the gene set with the most positive NES.
+
+```{r}
+gsea_result_df %>%
+  # Use `slice_max()` to return the top n observation using `NES` as the ordering variable
+  dplyr::slice_max(NES, n = 3)
+```
+
+The gene set `HALLMARK_MYC_TARGETS_V2` has the most positive NES score.
+
+```{r}
+most_positive_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HALLMARK_MYC_TARGETS_V2",
+  title = "HALLMARK_MYC_TARGETS_V2",
+  color.line = "#0d76ff"
+)
+most_positive_nes_plot
+```
+
+The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
+As mentioned earlier, an ES is calculated by starting with the most highly ranked genes (according to the gene-level log2 fold change values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+In this case, the most highly positive enrichment score's data are being displayed.
+
+The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
+
+Let's save to PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP123625_gsea_enrich_positive_plot.png"),
+  plot = most_positive_nes_plot
+)
+```
+
+### Most Negative NES
+
+Let's look for the gene set with the most negative NES.
+
+```{r}
+gsea_result_df %>%
+  # Use `slice_min()` to return the bottom n observation using `NES` as the ordering
+  # variable
+  dplyr::slice_min(NES, n = 3)
+```
+
+The gene set `HALLMARK_HYPOXIA` has the most negative NES.
+
+```{r}
+most_negative_nes_plot <- enrichplot::gseaplot(
+  gsea_results,
+  geneSetID = "HALLMARK_HYPOXIA",
+  title = "HALLMARK_HYPOXIA",
+  color.line = "#0d76ff"
+)
+most_negative_nes_plot
+```
+
+Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
+As we know, the ES is calculated by starting with the most highly ranked genes (according to the gene-level log2 fold change values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
+A negative enrichment score will be returned when not many of the genes are found at the top of the list, as this would mean decreasing the score a great deal thus producing a negative value.
+In this case, the most negative enrichment score's data are being displayed.
+
+Let's save this plot to PNG.
+
+```{r}
+ggplot2::ggsave(file.path(plots_dir, "SRP123625_gsea_enrich_negative_plot.png"),
+  plot = most_negative_nes_plot
+)
+```
+
+## Write results to file
+
+```{r}
+readr::write_tsv(
+  gsea_result_df,
+  file.path(
+    results_dir,
+    "SRP123625_gsea_results.tsv"
+  )
+)
+```
 
 # Resources for further learning
 
-_Will be in upcoming PR_
+- [clusterProfiler paper](https://doi.org/10.1089/omi.2011.0118) [@Yu2012].
+- [clusterProfiler book](https://yulab-smu.github.io/clusterProfiler-book/index.html) [@clusterProfiler-book].
+- [This handy review](https://doi.org/10.1371/journal.pcbi.1002375) which summarizes the different types of pathway analysis and their limitations [@Khatri2012].
+- See this [Broad Institute page](https://www.gsea-msigdb.org/gsea/index.jsp) for more on GSEA and MSigDB [@GSEA-broad-institute].
 
 # Session info
 
