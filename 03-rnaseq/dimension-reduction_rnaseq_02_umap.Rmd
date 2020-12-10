@@ -242,17 +242,6 @@ all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 
 Now we are going to use a combination of functions from the `DESeq2`, `umap`, and `ggplot2` packages to perform and visualize the results of the Uniform Manifold Approximation and Projection (UMAP) dimension reduction technique on our pre-ADT and post-ADT samples.
 
-## Prepare data for `DESeq2`
-
-We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
-
-```{r}
-# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
-df <- df %>%
-  # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, round)
-```
-
 ## Prepare metadata for `DESEq2`
 
 We need to make sure all of the metadata column variables, that we would like to use to annotate our plot, are converted into factors.
@@ -304,24 +293,11 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df, # the counts values for all samples in our dataset
+  countData = filtered_expression_df, # the counts values for all samples in our dataset
   colData = metadata, # annotation data for the samples in the counts data frame
   design = ~1 # Here we are not specifying a model
   # Replace with an appropriate design variable for your analysis
 )
-```
-
-## Define a minimum counts cutoff
-
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our plot.
-We are going to do some pre-filtering to keep only genes with 10 or more reads total.
-Note that rows represent gene data and the columns represent sample data in our dataset.
-
-```{r}
-# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
-# only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds)) >= 10
-dds <- dds[genes_to_keep, ]
 ```
 
 ## Perform DESeq2 normalization and transformation
