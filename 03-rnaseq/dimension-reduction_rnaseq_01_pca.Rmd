@@ -212,7 +212,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   # Tuck away the gene ID column as rownames, leaving only numeric values
   tibble::column_to_rownames("Gene")
 ```
@@ -221,23 +221,15 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the sure the columns (samples) are in the same order as the metadata
-df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+expression_df <- expression_df %>%
+  dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)
+all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 ```
 
 
 Now we are going to use a combination of functions from the `DESeq2` and `ggplot2` packages to perform and visualize the results of the Principal Component Analysis (PCA) dimension reduction technique on our pre-ADT and post-ADT samples.
-
-### Prepare data for `DESeq2`
-
-We need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
-
-```{r}
-# The `DESeqDataSetFromMatrix()` function will need all values as integers
-df <- round(df)
-```
 
 ### Prepare metadata for `DESEq2`
 
@@ -256,6 +248,27 @@ metadata <- metadata %>%
   )
 ```
 
+## Define a minimum counts cutoff
+
+We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize  and create our plot.
+We are going to do some pre-filtering to keep only genes with 10 or more reads total.
+This threshold might vary depending on the number of samples and expression patterns acrosss your data set.
+Note that rows represent gene data and the columns represent sample data in our dataset.
+
+```{r}
+# Define a minimum counts cutoff and filter the data to include
+# only rows (genes) that have total counts above the cutoff
+filtered_expression_df <- expression_df %>%
+  dplyr::filter(rowSums(.) >= 10)
+```
+
+We also need our counts to be rounded before we can use them with the `DESeqDataSetFromMatrix()` function.
+
+```{r}
+# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
+filtered_expression_df <- round(filtered_expression_df)
+```
+
 ## Create a DESeqDataset
 
 We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
@@ -265,25 +278,11 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df, # the counts values for all samples in our dataset
+  countData = filtered_expression_df, # the counts values for all samples in our dataset
   colData = metadata, # annotation data for the samples in the counts data frame
   design = ~1 # Here we are not specifying a model
   # Replace with an appropriate design variable for your analysis
 )
-```
-
-## Define a minimum counts cutoff
-
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize  and create our plot.
-We are going to do some pre-filtering to keep only genes with 10 or more reads total.
-This threshold might vary depending on the number of samples and expression patterns acrosss your data set.
-Note that rows represent gene data and the columns represent sample data in our dataset.
-
-```{r}
-# Filter `DESeqDataSet` object to include only genes
-# with a total count of at least 10 reads across the samples
-genes_to_keep <- rowSums(counts(dds)) >= 10
-dds <- dds[genes_to_keep, ]
 ```
 
 ## Perform DESeq2 normalization and transformation

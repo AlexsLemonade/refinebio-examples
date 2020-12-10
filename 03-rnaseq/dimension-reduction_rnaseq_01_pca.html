@@ -2887,7 +2887,7 @@ a.attachEvent&&a.attachEvent("on"+b,c)},od=function(a,b,c){a.removeEventListener
 b=b.lastChild;for(var c=[];b.firstChild;)c.push(b.removeChild(b.firstChild));return c},sd=function(a,b,c){c=c||100;for(var d={},e=0;e<b.length;e++)d[b[e]]=!0;for(var f=a,h=0;f&&h<=c;h++){if(d[String(f.tagName).toLowerCase()])return f;f=f.parentElement}return null},td=function(a){fd.sendBeacon&&fd.sendBeacon(a)||md(a)},ud=function(a,b){var c=a[b];c&&"string"===typeof c.animVal&&(c=c.animVal);return c};var vd={},wd=function(a){return void 0==vd[a]?!1:vd[a]};var xd=[];function yd(){var a=hd("google_tag_data",{});a.ics||(a.ics={entries:{},set:zd,update:Ad,addListener:Bd,notifyListeners:Cd,active:!1});return a.ics}
 function zd(a,b,c,d,e,f){var h=yd();h.active=!0;if(void 0!=b){var k=h.entries,l=k[a]||{},r=l.region,q=c&&g(c)?c.toUpperCase():void 0;d=d.toUpperCase();e=e.toUpperCase();if(q===e||(q===d?r!==e:!q&&!r)){var n=!!(f&&0<f&&void 0===l.update),t={region:q,initial:"granted"===b,update:l.update,quiet:n};k[a]=t;n&&G.setTimeout(function(){k[a]===t&&t.quiet&&(t.quiet=!1,Dd(a),Cd(),Fc("TAGGING",2))},f)}}}
 function Ad(a,b){var c=yd();c.active=!0;if(void 0!=b){var d=Ed(a),e=c.entries,f=e[a]=e[a]||{};f.update="granted"===b;var h=Ed(a);f.quiet?(f.quiet=!1,Dd(a)):h!==d&&Dd(a)}}function Bd(a,b){xd.push({Xe:a,gh:b})}function Dd(a){for(var b=0;b<xd.length;++b){var c=xd[b];Ca(c.Xe)&&-1!==c.Xe.indexOf(a)&&(c.nf=!0)}}function Cd(a){for(var b=0;b<xd.length;++b){var c=xd[b];if(c.nf){c.nf=!1;try{c.gh({We:a})}catch(d){}}}}
-var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-PA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
+var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-DE",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
 a.join("")},Pd=function(a,b){Id(a,b)};var Td=function(a){return Sd?H.querySelectorAll(a):null},Ud=function(a,b){if(!Sd)return null;if(Element.prototype.closest)try{return a.closest(b)}catch(e){return null}var c=Element.prototype.matches||Element.prototype.webkitMatchesSelector||Element.prototype.mozMatchesSelector||Element.prototype.msMatchesSelector||Element.prototype.oMatchesSelector,d=a;if(!H.documentElement.contains(d))return null;do{try{if(c.call(d,b))return d}catch(e){break}d=d.parentElement||d.parentNode}while(null!==d&&1===d.nodeType);
 return null},Vd=!1;if(H.querySelectorAll)try{var Wd=H.querySelectorAll(":root");Wd&&1==Wd.length&&Wd[0]==H.documentElement&&(Vd=!0)}catch(a){}var Sd=Vd;var Xd=function(a){if(H.hidden)return!0;var b=a.getBoundingClientRect();if(b.top==b.bottom||b.left==b.right||!G.getComputedStyle)return!0;var c=G.getComputedStyle(a,null);if("hidden"===c.visibility)return!0;for(var d=a,e=c;d;){if("none"===e.display)return!0;var f=e.opacity,h=e.filter;if(h){var k=h.indexOf("opacity(");0<=k&&(h=h.substring(k+8,h.indexOf(")",k)),"%"==h.charAt(h.length-1)&&(h=h.substring(0,h.length-1)),f=Math.min(h,f))}if(void 0!==f&&0>=f)return!0;(d=d.parentElement)&&(e=G.getComputedStyle(d,
 null))}return!1};
@@ -3739,6 +3739,7 @@ div.tocify {
             <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
             <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
             <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
+            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_02_gsea.html">Pathway Analysis - GSEA</a></li>
             <li><a href="../03-rnaseq/pathway-analysis_rnaseq_03_gsva.html">Pathway Analysis - GSVA</a></li>
 
           </ul>
@@ -3927,7 +3928,7 @@ Your example analysis folder should now look something like this (except with re
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_character(),
 ##   refinebio_age = col_logical(),
@@ -3943,11 +3944,11 @@ Your example analysis folder should now look something like this (except with re
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Read in data TSV file</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>expression_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID column as rownames, leaving only numeric values</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -3955,52 +3956,50 @@ Your example analysis folder should now look something like this (except with re
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <p>Let’s ensure that the metadata and data are in the same sample order.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Make the sure the columns (samples) are in the same order as the metadata</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>refinebio_accession_code)</span>
-<span id="cb13-3"><a href="#cb13-3"></a></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># Check if this is in the same order</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(df), metadata<span class="op">$</span>refinebio_accession_code)</span></code></pre></div>
+<span id="cb13-2"><a href="#cb13-2"></a>expression_df &lt;-<span class="st"> </span>expression_df <span class="op">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(metadata<span class="op">$</span>refinebio_accession_code)</span>
+<span id="cb13-4"><a href="#cb13-4"></a></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="co"># Check if this is in the same order</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="kw">all.equal</span>(<span class="kw">colnames</span>(expression_df), metadata<span class="op">$</span>refinebio_accession_code)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 <p>Now we are going to use a combination of functions from the <code>DESeq2</code> and <code>ggplot2</code> packages to perform and visualize the results of the Principal Component Analysis (PCA) dimension reduction technique on our pre-ADT and post-ADT samples.</p>
-<div id="prepare-data-for-deseq2" class="section level3">
-<h3><span class="header-section-number">4.2.1</span> Prepare data for <code>DESeq2</code></h3>
-<p>We need to make sure all of the values in our data are converted to integers as required by a <code>DESeq2</code> function we will use later.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function will need all values as integers</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>df &lt;-<span class="st"> </span><span class="kw">round</span>(df)</span></code></pre></div>
-</div>
 <div id="prepare-metadata-for-deseq2" class="section level3">
-<h3><span class="header-section-number">4.2.2</span> Prepare metadata for <code>DESEq2</code></h3>
+<h3><span class="header-section-number">4.2.1</span> Prepare metadata for <code>DESEq2</code></h3>
 <p>We need to make sure all of the metadata column variables that we would like to use to annotate our plot, are converted into factors.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># convert the columns we will be using for annotation into factors</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>metadata &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</span>
-<span id="cb16-4"><a href="#cb16-4"></a>    <span class="dt">refinebio_treatment =</span> <span class="kw">factor</span>(</span>
-<span id="cb16-5"><a href="#cb16-5"></a>      refinebio_treatment,</span>
-<span id="cb16-6"><a href="#cb16-6"></a>      <span class="co"># specify the possible levels in the order we want them to appear</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a>      <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;pre-adt&quot;</span>, <span class="st">&quot;post-adt&quot;</span>)</span>
-<span id="cb16-8"><a href="#cb16-8"></a>    ),</span>
-<span id="cb16-9"><a href="#cb16-9"></a>    <span class="dt">refinebio_disease =</span> <span class="kw">as.factor</span>(refinebio_disease)</span>
-<span id="cb16-10"><a href="#cb16-10"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># convert the columns we will be using for annotation into factors</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>metadata &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</span>
+<span id="cb15-4"><a href="#cb15-4"></a>    <span class="dt">refinebio_treatment =</span> <span class="kw">factor</span>(</span>
+<span id="cb15-5"><a href="#cb15-5"></a>      refinebio_treatment,</span>
+<span id="cb15-6"><a href="#cb15-6"></a>      <span class="co"># specify the possible levels in the order we want them to appear</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>      <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;pre-adt&quot;</span>, <span class="st">&quot;post-adt&quot;</span>)</span>
+<span id="cb15-8"><a href="#cb15-8"></a>    ),</span>
+<span id="cb15-9"><a href="#cb15-9"></a>    <span class="dt">refinebio_disease =</span> <span class="kw">as.factor</span>(refinebio_disease)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>  )</span></code></pre></div>
 </div>
-</div>
-<div id="create-a-deseqdataset" class="section level2">
-<h2><span class="header-section-number">4.3</span> Create a DESeqDataset</h2>
-<p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Create a `DESeqDataSet` object</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(</span>
-<span id="cb17-3"><a href="#cb17-3"></a>  <span class="dt">countData =</span> df, <span class="co"># the counts values for all samples in our dataset</span></span>
-<span id="cb17-4"><a href="#cb17-4"></a>  <span class="dt">colData =</span> metadata, <span class="co"># annotation data for the samples in the counts data frame</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>  <span class="dt">design =</span> <span class="op">~</span><span class="dv">1</span> <span class="co"># Here we are not specifying a model</span></span>
-<span id="cb17-6"><a href="#cb17-6"></a>  <span class="co"># Replace with an appropriate design variable for your analysis</span></span>
-<span id="cb17-7"><a href="#cb17-7"></a>)</span></code></pre></div>
-<pre><code>## converting counts to integer mode</code></pre>
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
-<h2><span class="header-section-number">4.4</span> Define a minimum counts cutoff</h2>
+<h2><span class="header-section-number">4.3</span> Define a minimum counts cutoff</h2>
 <p>We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize and create our plot. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns acrosss your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Filter `DESeqDataSet` object to include only genes</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="co"># with a total count of at least 10 reads across the samples</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a>genes_to_keep &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">counts</span>(dds)) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span></span>
-<span id="cb19-4"><a href="#cb19-4"></a>dds &lt;-<span class="st"> </span>dds[genes_to_keep, ]</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Define a minimum counts cutoff and filter the data to include</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="co"># only rows (genes) that have total counts above the cutoff</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a>filtered_expression_df &lt;-<span class="st"> </span>expression_df <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">rowSums</span>(.) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>)</span></code></pre></div>
+<p>We also need our counts to be rounded before we can use them with the <code>DESeqDataSetFromMatrix()</code> function.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>filtered_expression_df &lt;-<span class="st"> </span><span class="kw">round</span>(filtered_expression_df)</span></code></pre></div>
+</div>
+<div id="create-a-deseqdataset" class="section level2">
+<h2><span class="header-section-number">4.4</span> Create a DESeqDataset</h2>
+<p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a> and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Create a `DESeqDataSet` object</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(</span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="dt">countData =</span> filtered_expression_df, <span class="co"># the counts values for all samples in our dataset</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="dt">colData =</span> metadata, <span class="co"># annotation data for the samples in the counts data frame</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a>  <span class="dt">design =</span> <span class="op">~</span><span class="dv">1</span> <span class="co"># Here we are not specifying a model</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># Replace with an appropriate design variable for your analysis</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a>)</span></code></pre></div>
+<pre><code>## converting counts to integer mode</code></pre>
 </div>
 <div id="perform-deseq2-normalization-and-transformation" class="section level2">
 <h2><span class="header-section-number">4.5</span> Perform DESeq2 normalization and transformation</h2>
@@ -4092,7 +4091,7 @@ Your example analysis folder should now look something like this (except with re
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-08                  
+##  date     2020-12-09                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package              * version  date       lib source        
@@ -4123,7 +4122,7 @@ Your example analysis folder should now look something like this (except with re
 ##  geneplotter            1.68.0   2020-10-27 [1] Bioconductor  
 ##  generics               0.0.2    2018-11-29 [1] RSPM (R 4.0.0)
 ##  GenomeInfoDb         * 1.26.1   2020-11-20 [1] Bioconductor  
-##  GenomeInfoDbData       1.2.4    2020-12-07 [1] Bioconductor  
+##  GenomeInfoDbData       1.2.4    2020-11-25 [1] Bioconductor  
 ##  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  
 ##  getopt                 1.20.3   2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggplot2              * 3.3.2    2020-06-19 [1] RSPM (R 4.0.1)
