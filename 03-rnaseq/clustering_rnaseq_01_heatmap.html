@@ -3933,7 +3933,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -3952,7 +3952,7 @@ div.tocify {
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -3977,13 +3977,13 @@ div.tocify {
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
 <h2><span class="header-section-number">4.3</span> Define a minimum counts cutoff</h2>
-<p>We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap. We are going to do some pre-filtering to keep only genes with 10 or more reads total. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
+<p>We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis. We are going to do some pre-filtering to keep only genes with 10 or more reads total. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Define a minimum counts cutoff and filter the data to include</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="co"># only rows (genes) that have total counts above the cutoff</span></span>
 <span id="cb16-3"><a href="#cb16-3"></a>filtered_expression_df &lt;-<span class="st"> </span>expression_df <span class="op">%&gt;%</span></span>
 <span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">rowSums</span>(.) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>)</span></code></pre></div>
 <p>We also need our counts to be rounded before we can use them with the <code>DESeqDataSetFromMatrix()</code> function.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers</span></span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function needs the values to be integers</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>filtered_expression_df &lt;-<span class="st"> </span><span class="kw">round</span>(filtered_expression_df)</span></code></pre></div>
 </div>
 <div id="create-a-deseqdataset" class="section level2">
@@ -3991,10 +3991,11 @@ div.tocify {
 <p>We will be using the <code>DESeq2</code> package for <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods">normalizing and transforming our data</a>, which requires us to format our data into a <code>DESeqDataSet</code> object. We turn the data frame (or matrix) into a <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2"><code>DESeqDataSet</code> object</a>. ) and specify which variable labels our experimental groups using the <a href="http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs"><code>design</code> argument</a> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span>. In this chunk of code, we will not provide a specific model to the <code>design</code> argument because we are not performing a differential expression analysis.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Create a `DESeqDataSet` object</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a>dds &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(</span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="dt">countData =</span> filtered_expression_df, <span class="co"># This is the data.frame with the counts values for all replicates in our dataset</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="dt">colData =</span> metadata, <span class="co"># This is the data.frame with the annotation data for the replicates in the counts data.frame</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>  <span class="dt">design =</span> <span class="op">~</span><span class="dv">1</span> <span class="co"># Here we are not specifying a model -- Replace with an appropriate design variable for your analysis</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a>)</span></code></pre></div>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="dt">countData =</span> filtered_expression_df, <span class="co"># the counts values for all samples in our dataset</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="dt">colData =</span> metadata, <span class="co"># annotation data for the samples in the counts data frame</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a>  <span class="dt">design =</span> <span class="op">~</span><span class="dv">1</span> <span class="co"># Here we are not specifying a model</span></span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># Replace with an appropriate design variable for your analysis</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a>)</span></code></pre></div>
 <pre><code>## converting counts to integer mode</code></pre>
 </div>
 <div id="perform-deseq2-normalization-and-transformation" class="section level2">

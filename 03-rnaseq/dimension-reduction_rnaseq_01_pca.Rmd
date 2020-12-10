@@ -250,7 +250,7 @@ metadata <- metadata %>%
 
 ## Define a minimum counts cutoff
 
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize  and create our plot.
+We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis.
 We are going to do some pre-filtering to keep only genes with 10 or more reads total.
 This threshold might vary depending on the number of samples and expression patterns acrosss your data set.
 Note that rows represent gene data and the columns represent sample data in our dataset.
@@ -265,7 +265,7 @@ filtered_expression_df <- expression_df %>%
 We also need our counts to be rounded before we can use them with the `DESeqDataSetFromMatrix()` function.
 
 ```{r}
-# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
+# The `DESeqDataSetFromMatrix()` function needs the values to be integers
 filtered_expression_df <- round(filtered_expression_df)
 ```
 

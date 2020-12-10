@@ -266,7 +266,7 @@ metadata <- metadata %>%
 
 ## Define a minimum counts cutoff
 
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap.
+We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis.
 We are going to do some pre-filtering to keep only genes with 10 or more reads total.
 Note that rows represent gene data and the columns represent sample data in our dataset.
 

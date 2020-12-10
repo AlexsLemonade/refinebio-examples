@@ -243,7 +243,7 @@ Now we are going to use a combination of functions from the `DESeq2` and `pheatm
 
 ## Define a minimum counts cutoff
 
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap.
+We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis.
 We are going to do some pre-filtering to keep only genes with 10 or more reads total.
 Note that rows represent gene data and the columns represent sample data in our dataset.
 
@@ -257,7 +257,7 @@ filtered_expression_df <- expression_df %>%
 We also need our counts to be rounded before we can use them with the `DESeqDataSetFromMatrix()` function.
 
 ```{r}
-# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
+# The `DESeqDataSetFromMatrix()` function needs the values to be integers
 filtered_expression_df <- round(filtered_expression_df)
 ```
 
@@ -270,9 +270,10 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = filtered_expression_df, # This is the data.frame with the counts values for all replicates in our dataset
-  colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
-  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  countData = filtered_expression_df, # the counts values for all samples in our dataset
+  colData = metadata, # annotation data for the samples in the counts data frame
+  design = ~1 # Here we are not specifying a model
+  # Replace with an appropriate design variable for your analysis
 )
 ```
 

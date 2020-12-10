@@ -3928,7 +3928,7 @@ Your example analysis folder should now look something like this (except with re
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_character(),
 ##   refinebio_age = col_logical(),
@@ -3948,7 +3948,7 @@ Your example analysis folder should now look something like this (except with re
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID column as rownames, leaving only numeric values</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -3980,13 +3980,13 @@ Your example analysis folder should now look something like this (except with re
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
 <h2><span class="header-section-number">4.3</span> Define a minimum counts cutoff</h2>
-<p>We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize and create our plot. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns acrosss your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
+<p>We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns acrosss your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Define a minimum counts cutoff and filter the data to include</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="co"># only rows (genes) that have total counts above the cutoff</span></span>
 <span id="cb16-3"><a href="#cb16-3"></a>filtered_expression_df &lt;-<span class="st"> </span>expression_df <span class="op">%&gt;%</span></span>
 <span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="kw">rowSums</span>(.) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>)</span></code></pre></div>
 <p>We also need our counts to be rounded before we can use them with the <code>DESeqDataSetFromMatrix()</code> function.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers</span></span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># The `DESeqDataSetFromMatrix()` function needs the values to be integers</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>filtered_expression_df &lt;-<span class="st"> </span><span class="kw">round</span>(filtered_expression_df)</span></code></pre></div>
 </div>
 <div id="create-a-deseqdataset" class="section level2">
