@@ -3997,7 +3997,7 @@ Your example analysis folder should now look something like this (except with re
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
 <h2><span class="header-section-number">4.4</span> Define a minimum counts cutoff</h2>
-<p>We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize and create our plot. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns acrosss your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
+<p>We want to filter out the genes that have not been expressed or that have low expression counts because we want to reduce noise in our data before we normalize and create our plot. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns across your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Filter `DESeqDataSet` object to include only genes</span></span>
 <span id="cb19-2"><a href="#cb19-2"></a><span class="co"># with a total count of at least 10 reads across the samples</span></span>
 <span id="cb19-3"><a href="#cb19-3"></a>genes_to_keep &lt;-<span class="st"> </span><span class="kw">rowSums</span>(<span class="kw">counts</span>(dds)) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span></span>
@@ -4093,7 +4093,7 @@ Your example analysis folder should now look something like this (except with re
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-10                  
+##  date     2020-12-09                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package              * version  date       lib source        
