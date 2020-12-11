@@ -217,7 +217,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
@@ -232,13 +232,34 @@ Now let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>% dplyr::select(metadata$refinebio_accession_code)
+expression_df <- expression_df %>%
+  dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)
+all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 ```
 
 Now we are going to use a combination of functions from the `DESeq2` and `pheatmap` packages to look at how are samples and genes are clustering.
+
+## Define a minimum counts cutoff
+
+We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis.
+We are going to do some pre-filtering to keep only genes with 10 or more reads total.
+Note that rows represent gene data and the columns represent sample data in our dataset.
+
+```{r}
+# Define a minimum counts cutoff and filter the data to include
+# only rows (genes) that have total counts above the cutoff
+filtered_expression_df <- expression_df %>%
+  dplyr::filter(rowSums(.) >= 10)
+```
+
+We also need our counts to be rounded before we can use them with the `DESeqDataSetFromMatrix()` function.
+
+```{r}
+# The `DESeqDataSetFromMatrix()` function needs the values to be integers
+filtered_expression_df <- round(filtered_expression_df)
+```
 
 ## Create a DESeqDataset
 
@@ -247,30 +268,13 @@ We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexsl
 In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
 
 ```{r}
-# The `DESeqDataSetFromMatrix()` function needs the values to be converted to integers
-df <- df %>%
-  # Mutate numeric variables to be integers
-  dplyr::mutate_if(is.numeric, round)
-
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = df, # This is the data.frame with the counts values for all replicates in our dataset
-  colData = metadata, # This is the data.frame with the annotation data for the replicates in the counts data.frame
-  design = ~1 # Here we are not specifying a model -- Replace with an appropriate design variable for your analysis
+  countData = filtered_expression_df, # the counts values for all samples in our dataset
+  colData = metadata, # annotation data for the samples in the counts data frame
+  design = ~1 # Here we are not specifying a model
+  # Replace with an appropriate design variable for your analysis
 )
-```
-
-## Define a minimum counts cutoff
-
-We want to filter out the genes that have not been expressed or that have low expression counts because we want to remove any possible noise from our data before we normalize the data and create our heatmap.
-We are going to do some pre-filtering to keep only genes with 10 or more reads total.
-Note that rows represent gene data and the columns represent sample data in our dataset.
-
-```{r}
-# Define a minimum counts cutoff and filter `DESeqDataSet` object to include
-# only rows that have counts above the cutoff
-genes_to_keep <- rowSums(counts(dds)) >= 10
-dds <- dds[genes_to_keep, ]
 ```
 
 ## Perform DESeq2 normalization and transformation
