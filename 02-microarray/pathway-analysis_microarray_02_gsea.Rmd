@@ -423,7 +423,7 @@ Let's take a look at the results.
 head(gsea_results@result)
 ```
 
-Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES.
+Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permuted data, which generates a null distribution for the ES.
 The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
 Looks like we have gene sets returned as significant at FDR of `0.05`.
 If we didn't have any, our visualizations below would show up blank as nothing would have met our `pvalueCutoff` above.

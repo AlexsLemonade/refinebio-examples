@@ -96,8 +96,8 @@ We have provided this file for you and the code in this notebook will read in th
 ## About the dataset we are using for this example
 
 For this example analysis, we are using RNA-seq data from an [acute lymphoblastic leukemia (ALL) mouse lymphoid cell model](https://www.refine.bio/experiments/SRP123625) [@Kampen2019].
-All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human wildtype RPL10. 
-Differential expression was performed using these knock-in and wildtype mice designations.
+All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human reference RPL10.
+Differential expression was performed using these mutated and reference RPL10 gene designations.
 
 ## Check out our file structure!
 
@@ -110,13 +110,13 @@ Your new analysis folder should contain:
     
 Your example analysis folder should contain your `.Rmd` and three empty folders (which won't be empty for long!).
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
 If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
-From here you can customize this analysis example to fit your own scientific questions and preferences. 
+From here you can customize this analysis example to fit your own scientific questions and preferences.
 
 ***
 
@@ -453,7 +453,7 @@ Let's take a look at the results.
 head(gsea_results@result)
 ```
 
-Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES.
+Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permuted data, which generates a null distribution for the ES.
 The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.
 
 Looks like we have gene sets returned as significant at FDR of `0.05`, according to the `p.adjust` column in the table above.
