@@ -326,8 +326,6 @@ heatmap <- pheatmap(
   ),
   scale = "row" # Scale values in the direction of genes (rows)
 )
-
-
 ```
 
 We've created a heatmap but although our genes and samples are clustered, there is not much information that we can gather here because we did not provide the `pheatmap()` function with annotation labels for our samples.
@@ -371,7 +369,6 @@ annotation_df <- metadata %>%
       # If none of the above criteria are satisfied,
       # we mark the `mutation` variable as "unknown"
       TRUE ~ "unknown"
-
     )
   ) %>%
   # select only the columns we need for annotation
