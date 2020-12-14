@@ -291,7 +291,8 @@ dds_norm <- rlog(dds)
 
 ## Choose genes of interest
 
-Although you may want to create a heatmap including all of the genes in the dataset, this can produce a very large image that is hard to interpret.Alternatively, the heatmap could be created using only genes of interest.
+Although you may want to create a heatmap including all of the genes in the dataset, this can produce a very large image that is hard to interpret. 
+Alternatively, the heatmap could be created using only genes of interest.
 For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criterion by which you may want to sort your genes, <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, so on.
 
 ```{r}
