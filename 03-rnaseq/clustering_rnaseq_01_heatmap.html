@@ -3949,7 +3949,7 @@ div.tocify {
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Read in data TSV file</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>expression_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as rownames so that</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as row names so that</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="co"># we can have only numeric values to perform calculations on later</span></span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
@@ -4008,7 +4008,7 @@ div.tocify {
 </div>
 <div id="choose-genes-of-interest" class="section level2">
 <h2><span class="header-section-number">4.6</span> Choose genes of interest</h2>
-<p>Although you may want to create a heatmap including all of the genes in the dataset, this can produce a very large image that is hard to interpret.Alternatively, the heatmap could be created using only genes of interest. For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criterion by which you may want to sort your genes, <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, so on.</p>
+<p>Although you may want to create a heatmap including all of the genes in the dataset, this can produce a very large image that is hard to interpret. Alternatively, the heatmap could be created using only genes of interest. For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criterion by which you may want to sort your genes, <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, so on.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Calculate the variance for each gene</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a>variances &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">assay</span>(dds_norm), <span class="dv">1</span>, var)</span>
 <span id="cb21-3"><a href="#cb21-3"></a></span>

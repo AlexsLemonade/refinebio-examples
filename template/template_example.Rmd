@@ -210,7 +210,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Tuck away the gene ID  column as row names
+  # Tuck away the gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
 
