@@ -3952,7 +3952,7 @@ div.tocify {
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Read in data TSV file</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(data_file) <span class="op">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID  column as rownames, leaving only numeric values</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="co"># Tuck away the gene ID  column as row names, leaving only numeric values</span></span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ── Column specification ──────────────────────────────────────────────
@@ -4099,7 +4099,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-11                  
+##  date     2020-12-14                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package     * version date       lib source        
