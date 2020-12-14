@@ -81,8 +81,8 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpression zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-@Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+For this example analysis, we will use this [zebrafish gene expression dataset](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+@Tregnago2016 use microarrays to measure gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
 In this analysis, we will test differential expression between the control and CREB-overexpressing groups.
 
 ## Place the dataset in your new `data/` folder
@@ -219,7 +219,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   # Tuck away the Gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
@@ -228,7 +228,7 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
@@ -238,43 +238,63 @@ all.equal(colnames(df), metadata$geo_accession)
 ## Set up design matrix
 
 `limma` needs a numeric design matrix to signify which are CREB and control samples.
-Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
-Note that the metadata variables that signify the treatment groups might be different across datasets and might not always be underneath the category.
+Here we are using the treatments described in the metadata table in the `genotype/variation` column to create a design matrix where the "control" samples are assigned `0` and the "overexpressing the human CREB" samples are assigned `1`.
+Note that the metadata columns that signify the treatment groups might be different across datasets, and will almost certainly have different contents.
 
-The `genotype/variation` column contains group information we will be using for differential expression.
-But the `/` it contains in its column name makes it more annoying to access.  
+While the `genotype/variation` column contains the group information we will be using for differential expression, the `/` it contains in its column name makes it more annoying to access.  
 Accessing variable that have names with special characters like `/`, or spaces, require extra work-arounds to ignore R's normal interpretations of these characters.
+Here we will rename it as just `genotype` to make our lives later much easier.
+
+We will also recode the contents of the column, as `overexpressing the human CREB"` is a bit of an unruly name. 
+To do this, we will use a function from the `forcats` package, simplifying `"overexpressing the human CREB"` to just `CREB`.
+
 
 ```{r}
+# These renaming steps will not be the same (or might not be needed at all)
+# with a different dataset
 metadata <- metadata %>%
-  dplyr::rename("genotype" = `genotype/variation`) # This step will not be the same (or might not be needed at all) with a different dataset
+  # rename the column
+  dplyr::rename("genotype" = `genotype/variation`) %>%
+  # change the name of the CREB genotype (and make genotype a factor)
+  dplyr::mutate(
+    genotype = forcats::fct_recode(genotype,
+      CREB = "overexpressing the human CREB"
+    )
+  )
 ```
 
 Now we will create a model matrix based on our newly renamed `genotype` variable.
 
 ```{r}
 # Create the design matrix from the genotype information
-des_mat <- model.matrix(~ metadata$genotype)
+des_mat <- model.matrix(~genotype, data = metadata)
+
+# Look at the design matrix
+des_mat
 ```
+
+When we look at this design matrix, we see that there is now a `genotypeCREB` column that defines the group for each sample: 0 for control samples and 1 for the CREB samples. 
+(The model will also fit an intercept for all samples, so we can see that here as well.)
 
 ## Perform differential expression
 
-After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction.
+We will use the `lmFit()` function from the `limma` package to test each gene for differential expression between the two groups using a linear model.
+After fitting our data to the linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction.
 The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
 
 ```{r}
 # Apply linear model to data
-fit <- lmFit(df, design = des_mat)
+fit <- lmFit(expression_df, design = des_mat)
 
 # Apply empirical Bayes to smooth standard errors
 fit <- eBayes(fit)
 
 # Apply multiple testing correction and obtain stats
-stats_df <- topTable(fit, number = nrow(df)) %>%
+stats_df <- topTable(fit, number = nrow(expression_df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-Let's take a peek at what our results table looks like.
+Let's take a peek at our results table.
 
 ```{r}
 head(stats_df)
@@ -290,14 +310,14 @@ To test if these results make sense, we can make a plot of one of top genes.
 Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes.
 
 ```{r}
-top_gene_df <- df %>%
-  # Extract this gene from `df`
+top_gene_df <- expression_df %>%
+  # Extract this gene from `expression_df`
   dplyr::filter(rownames(.) == "ENSDARG00000104315") %>%
   # Transpose so the gene is a column
   t() %>%
-  # Transpose made this a matrix, let's make it back into a data.frame like before
+  # Transpose made this a matrix, let's make it back into a data frame
   data.frame() %>%
-  # Store the sample ids as their own column instead of being row names
+  # Store the sample ids as their own column instead of as row names
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Join on the selected columns from metadata
   dplyr::inner_join(dplyr::select(
