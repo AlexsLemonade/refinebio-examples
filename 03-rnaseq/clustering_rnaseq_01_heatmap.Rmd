@@ -218,7 +218,8 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 expression_df <- readr::read_tsv(data_file) %>%
-  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  # Here we are going to store the gene IDs as rownames so that
+  # we can have only numeric values to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 
@@ -270,8 +271,8 @@ In this chunk of code, we will not provide a specific model to the `design` argu
 ```{r}
 # Create a `DESeqDataSet` object
 dds <- DESeqDataSetFromMatrix(
-  countData = filtered_expression_df, # the counts values for all samples in our dataset
-  colData = metadata, # annotation data for the samples in the counts data frame
+  countData = filtered_expression_df, # the counts values for all samples
+  colData = metadata, # annotation data for the samples
   design = ~1 # Here we are not specifying a model
   # Replace with an appropriate design variable for your analysis
 )
@@ -283,14 +284,15 @@ We are going to use the `rlog()` function from the `DESeq2` package to normalize
 For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
 
 ```{r}
-# Normalize the data in the `DESeqDataSet` object using the `rlog()` function from the `DESEq2` R package
+# Normalize the data in the `DESeqDataSet` object
+# using the `rlog()` function from the `DESEq2` R package
 dds_norm <- rlog(dds)
 ```
 
 ## Choose genes of interest
 
-Although you may want to create a heatmap including all of the genes in the set, alternatively, the heatmap could be created using only genes of interest.
-For this example, we will sort genes by variance, but there are many alternative criterion by which you may want to sort your genes <i>e.g.</i> fold change, t-statistic, membership to a particular gene ontology, so on. 
+Although you may want to create a heatmap including all of the genes in the dataset, this can produce a very large image that is hard to interpret.Alternatively, the heatmap could be created using only genes of interest.
+For this example, we will sort genes by variance and select genes in the upper quartile, but there are many alternative criterion by which you may want to sort your genes, <i>e.g.</i> fold change, t-statistic, membership in a particular gene ontology, so on.
 
 ```{r}
 # Calculate the variance for each gene
@@ -299,7 +301,7 @@ variances <- apply(assay(dds_norm), 1, var)
 # Determine the upper quartile variance cutoff value
 upper_var <- quantile(variances, 0.75)
 
-# Subset the data choosing only genes whose variances are in the upper quartile
+# Filter the data choosing only genes whose variances are in the upper quartile
 df_by_var <- data.frame(assay(dds_norm)) %>%
   dplyr::filter(variances > upper_var)
 ```
@@ -310,21 +312,22 @@ To further customize the heatmap, see a vignette for a guide at this [link](http
 
 ```{r}
 # Create and store the heatmap object
-pheatmap <-
-  pheatmap(
-    df_by_var,
-    cluster_rows = TRUE, # We want to cluster the heatmap by rows (genes in this case)
-    cluster_cols = TRUE, # We also want to cluster the heatmap by columns (samples in this case),
-    show_rownames = FALSE, # We don't want to show the rownames because there are too many genes for the labels to be clearly seen
-    main = "Non-Annotated Heatmap",
-    colorRampPalette(c(
-      "deepskyblue",
-      "black",
-      "yellow"
-    ))(25
-    ),
-    scale = "row" # Scale values in the direction of genes (rows)
-  )
+heatmap <- pheatmap(
+  df_by_var,
+  cluster_rows = TRUE, # Cluster the rows of the heatmap (genes in this case)
+  cluster_cols = TRUE, # Cluster the columns of the heatmap (samples),
+  show_rownames = FALSE, # There are too many genes to clearly show the labels
+  main = "Non-Annotated Heatmap",
+  colorRampPalette(c(
+    "deepskyblue",
+    "black",
+    "yellow"
+  ))(25
+  ),
+  scale = "row" # Scale values in the direction of genes (rows)
+)
+
+
 ```
 
 We've created a heatmap but although our genes and samples are clustered, there is not much information that we can gather here because we did not provide the `pheatmap()` function with annotation labels for our samples.
@@ -338,11 +341,11 @@ You can easily switch this to save to a JPEG or tiff by changing the function an
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "SRP070849_heatmap_non_annotated.png" # Replace file name with a relevant output plot name
+  "SRP070849_heatmap_non_annotated.png" # Replace with a relevant file name
 ))
 
 # Print your heatmap
-pheatmap
+heatmap
 
 # Close the PNG file:
 dev.off()
@@ -356,7 +359,8 @@ From the accompanying [paper](https://pubmed.ncbi.nlm.nih.gov/28193779/), we kno
 We are going to manipulate the metadata and add variables with the information for each sample, from the experimental design briefly described above, that we would like to use to annotate the heatmap.
 
 ```{r}
-# Let's prepare the annotation data.frame for the uncollapsed `DESeqData` set object which will be used to create the technical replicates heatmap
+# Let's prepare the annotation for the uncollapsed `DESeqData` set object
+# which will be used to annotate the heatmap
 annotation_df <- metadata %>%
   # Create a variable to store the cancer type information
   dplyr::mutate(
@@ -364,16 +368,20 @@ annotation_df <- metadata %>%
       startsWith(refinebio_title, "TET2") ~ "TET2",
       startsWith(refinebio_title, "IDH2") ~ "IDH2",
       startsWith(refinebio_title, "WT") ~ "WT",
-      TRUE ~ "unknown" # If none of the above criteria are true, we mark the `mutation` variable as "unknown"
+      # If none of the above criteria are satisfied,
+      # we mark the `mutation` variable as "unknown"
+      TRUE ~ "unknown"
+
     )
   ) %>%
-  # We want to select the variables that we want for annotating the technical replicates heatmap
+  # select only the columns we need for annotation
   dplyr::select(
     refinebio_accession_code,
     mutation,
     refinebio_treatment
   ) %>%
-  # The `pheatmap()` function requires that the row names of our annotation object matches the column names of our `DESeaDataSet` object
+  # The `pheatmap()` function requires that the row names of our annotation
+  # data frame match the column names of our `DESeaDataSet` object
   tibble::column_to_rownames("refinebio_accession_code")
 ```
 
@@ -383,7 +391,7 @@ You can create an annotated heatmap by providing our annotation object to the `a
 
 ```{r}
 # Create and store the annotated heatmap object
-pheatmap_annotated <-
+heatmap_annotated <-
   pheatmap(
     df_by_var,
     cluster_rows = TRUE,
@@ -406,17 +414,17 @@ Now that we have annotation bars on our heatmap, we have a better idea of the sa
 Let's save our annotated heatmap.
 
 ### Save annotated heatmap as a PNG 
-You can easily switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
+You can switch this to save to a JPEG or TIFF by changing the function and file name within the function to the respective file suffix.
 
 ```{r}
 # Open a PNG file
 png(file.path(
   plots_dir,
-  "SRP070849_heatmap_annotated.png" # Replace file name with a relevant output plot name
+  "SRP070849_heatmap_annotated.png" # Replace with a relevant file name
 ))
 
 # Print your heatmap
-pheatmap_annotated
+heatmap_annotated
 
 # Close the PNG file:
 dev.off()
