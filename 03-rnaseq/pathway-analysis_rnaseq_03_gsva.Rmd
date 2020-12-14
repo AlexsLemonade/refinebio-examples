@@ -263,7 +263,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 expression_df <- readr::read_tsv(data_file) %>%
-  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  # Here we are going to store the gene IDs as row names so that we can have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 

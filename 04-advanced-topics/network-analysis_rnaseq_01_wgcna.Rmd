@@ -261,7 +261,7 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Here we are going to store the gene IDs as rownames so that we can have a numeric matrix to perform calculations on later
+  # Here we are going to store the gene IDs as row names so that we can have a numeric matrix to perform calculations on later
   tibble::column_to_rownames("Gene")
 ```
 
@@ -607,7 +607,7 @@ make_module_heatmap <- function(module_name,
   # metadata_df: a data frame with refinebio_accession_code and time_point
   #              as columns. Default is `metadata`.
   # gene_module_key: a data.frame indicating what genes are a part of what modules. Default is `gene_module_key`.
-  # module_eigengenes: a sample x eigengene data.frame with samples as rownames. Default is `module_eigengenes`.
+  # module_eigengenes: a sample x eigengene data.frame with samples as row names. Default is `module_eigengenes`.
   #
   # Returns:
   # A heatmap of expression matrix for a module's genes, with a barplot of the
