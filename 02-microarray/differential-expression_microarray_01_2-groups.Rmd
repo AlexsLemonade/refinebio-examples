@@ -246,7 +246,8 @@ Accessing variable that have names with special characters like `/`, or spaces, 
 Here we will rename it as just `genotype` to make our lives later much easier.
 
 We will also recode the contents of the column, as `overexpressing the human CREB"` is a bit of an unruly name. 
-To do this, we will use a function from the `forcats` package, simplifying `"overexpressing the human CREB"` to just `CREB`.
+To do this, we will use the `fct_recode()` function from the `forcats` package, simplifying `"overexpressing the human CREB"` to just `CREB`.
+We will also use `fct_relevel()` to make sure our `control` samples appear first in the factor levels.
 
 
 ```{r}
@@ -258,8 +259,10 @@ metadata <- metadata %>%
   # change the name of the CREB genotype (and make genotype a factor)
   dplyr::mutate(
     genotype = forcats::fct_recode(genotype,
+      # rename the "overexpressing..." genotype to "CREB"
       CREB = "overexpressing the human CREB"
-    )
+    ) %>%
+      forcats::fct_relevel("control") # make "control" the first level
   )
 ```
 
