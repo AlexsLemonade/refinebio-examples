@@ -269,7 +269,7 @@ Now we will create a model matrix based on our newly renamed `genotype` variable
 des_mat <- model.matrix(~genotype, data = metadata)
 
 # Look at the design matrix
-des_mat
+head(des_mat)
 ```
 
 When we look at this design matrix, we see that there is now a `genotypeCREB` column that defines the group for each sample: 0 for control samples and 1 for the CREB samples. 
@@ -278,7 +278,11 @@ When we look at this design matrix, we see that there is now a `genotypeCREB` co
 ## Perform differential expression
 
 We will use the `lmFit()` function from the `limma` package to test each gene for differential expression between the two groups using a linear model.
-After fitting our data to the linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction.
+After fitting our data to the linear model, in this example we apply empirical Bayes smoothing with the `eBayes()` function.
+
+Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
+
+Because we are testing many different genes at once, we also want to perform some multiple test corrections, which we will do with the Benjamini-Hochberg method while making a table of results with `topTable()`.
 The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
 
 ```{r}
