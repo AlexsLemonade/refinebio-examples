@@ -256,13 +256,13 @@ We will also use `fct_relevel()` to make sure our `control` samples appear first
 metadata <- metadata %>%
   # rename the column
   dplyr::rename("genotype" = `genotype/variation`) %>%
-  # change the name of the CREB genotype (and make genotype a factor)
+  # change the names and order of the genotypes (making the column a factor)
   dplyr::mutate(
-    genotype = forcats::fct_recode(genotype,
+    genotype = genotype %>%
       # rename the "overexpressing..." genotype to "CREB"
-      CREB = "overexpressing the human CREB"
-    ) %>%
-      forcats::fct_relevel("control") # make "control" the first level
+      forcats::fct_recode(CREB = "overexpressing the human CREB") %>%
+      # make "control" the first level of the factor
+      forcats::fct_relevel("control")
   )
 ```
 
