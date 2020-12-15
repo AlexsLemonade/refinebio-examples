@@ -2887,7 +2887,7 @@ a.attachEvent&&a.attachEvent("on"+b,c)},od=function(a,b,c){a.removeEventListener
 b=b.lastChild;for(var c=[];b.firstChild;)c.push(b.removeChild(b.firstChild));return c},sd=function(a,b,c){c=c||100;for(var d={},e=0;e<b.length;e++)d[b[e]]=!0;for(var f=a,h=0;f&&h<=c;h++){if(d[String(f.tagName).toLowerCase()])return f;f=f.parentElement}return null},td=function(a){fd.sendBeacon&&fd.sendBeacon(a)||md(a)},ud=function(a,b){var c=a[b];c&&"string"===typeof c.animVal&&(c=c.animVal);return c};var vd={},wd=function(a){return void 0==vd[a]?!1:vd[a]};var xd=[];function yd(){var a=hd("google_tag_data",{});a.ics||(a.ics={entries:{},set:zd,update:Ad,addListener:Bd,notifyListeners:Cd,active:!1});return a.ics}
 function zd(a,b,c,d,e,f){var h=yd();h.active=!0;if(void 0!=b){var k=h.entries,l=k[a]||{},r=l.region,q=c&&g(c)?c.toUpperCase():void 0;d=d.toUpperCase();e=e.toUpperCase();if(q===e||(q===d?r!==e:!q&&!r)){var n=!!(f&&0<f&&void 0===l.update),t={region:q,initial:"granted"===b,update:l.update,quiet:n};k[a]=t;n&&G.setTimeout(function(){k[a]===t&&t.quiet&&(t.quiet=!1,Dd(a),Cd(),Fc("TAGGING",2))},f)}}}
 function Ad(a,b){var c=yd();c.active=!0;if(void 0!=b){var d=Ed(a),e=c.entries,f=e[a]=e[a]||{};f.update="granted"===b;var h=Ed(a);f.quiet?(f.quiet=!1,Dd(a)):h!==d&&Dd(a)}}function Bd(a,b){xd.push({Xe:a,gh:b})}function Dd(a){for(var b=0;b<xd.length;++b){var c=xd[b];Ca(c.Xe)&&-1!==c.Xe.indexOf(a)&&(c.nf=!0)}}function Cd(a){for(var b=0;b<xd.length;++b){var c=xd[b];if(c.nf){c.nf=!1;try{c.gh({We:a})}catch(d){}}}}
-var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-NJ",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
+var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-PA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
 a.join("")},Pd=function(a,b){Id(a,b)};var Td=function(a){return Sd?H.querySelectorAll(a):null},Ud=function(a,b){if(!Sd)return null;if(Element.prototype.closest)try{return a.closest(b)}catch(e){return null}var c=Element.prototype.matches||Element.prototype.webkitMatchesSelector||Element.prototype.mozMatchesSelector||Element.prototype.msMatchesSelector||Element.prototype.oMatchesSelector,d=a;if(!H.documentElement.contains(d))return null;do{try{if(c.call(d,b))return d}catch(e){break}d=d.parentElement||d.parentNode}while(null!==d&&1===d.nodeType);
 return null},Vd=!1;if(H.querySelectorAll)try{var Wd=H.querySelectorAll(":root");Wd&&1==Wd.length&&Wd[0]==H.documentElement&&(Vd=!0)}catch(a){}var Sd=Vd;var Xd=function(a){if(H.hidden)return!0;var b=a.getBoundingClientRect();if(b.top==b.bottom||b.left==b.right||!G.getComputedStyle)return!0;var c=G.getComputedStyle(a,null);if("hidden"===c.visibility)return!0;for(var d=a,e=c;d;){if("none"===e.display)return!0;var f=e.opacity,h=e.filter;if(h){var k=h.indexOf("opacity(");0<=k&&(h=h.substring(k+8,h.indexOf(")",k)),"%"==h.charAt(h.length-1)&&(h=h.substring(0,h.length-1)),f=Math.min(h,f))}if(void 0!==f&&0>=f)return!0;(d=d.parentElement)&&(e=G.getComputedStyle(d,
 null))}return!1};
@@ -3877,7 +3877,7 @@ div.tocify {
 </div>
 <div id="about-the-dataset-we-are-using-for-this-example" class="section level2">
 <h2><span class="header-section-number">2.4</span> About the dataset we are using for this example</h2>
-<p>For this example analysis, we are using RNA-seq data from an <a href="https://www.refine.bio/experiments/SRP123625">acute lymphoblastic leukemia (ALL) mouse lymphoid cell model</a> <span class="citation">(Kampen <em>et al.</em> <a href="#ref-Kampen2019" role="doc-biblioref">2019</a>)</span>. All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human wildtype RPL10. Differential expression was performed using these knock-in and wildtype mice designations.</p>
+<p>For this example analysis, we are using RNA-seq data from an <a href="https://www.refine.bio/experiments/SRP123625">acute lymphoblastic leukemia (ALL) mouse lymphoid cell model</a> <span class="citation">(Kampen <em>et al.</em> <a href="#ref-Kampen2019" role="doc-biblioref">2019</a>)</span>. All lymphoid mouse cells have human RPL10 but three of the mice have a knock-in R98S mutated RPL10 and three have the human reference RPL10. Differential expression was performed using these mutated and reference RPL10 gene designations.</p>
 </div>
 <div id="check-out-our-file-structure" class="section level2">
 <h2><span class="header-section-number">2.5</span> Check out our file structure!</h2>
@@ -3966,7 +3966,7 @@ div.tocify {
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   baseMean = col_double(),
@@ -4145,7 +4145,7 @@ C7: immunologic signatures</code></pre>
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["ID"],"name":[1],"type":["chr"],"align":["left"]},{"label":["Description"],"name":[2],"type":["chr"],"align":["left"]},{"label":["setSize"],"name":[3],"type":["int"],"align":["right"]},{"label":["enrichmentScore"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["NES"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["pvalue"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["p.adjust"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["qvalues"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["rank"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["leading_edge"],"name":[10],"type":["chr"],"align":["left"]},{"label":["core_enrichment"],"name":[11],"type":["chr"],"align":["left"]}],"data":[{"1":"HALLMARK_HYPOXIA","2":"HALLMARK_HYPOXIA","3":"154","4":"-0.6709954","5":"-2.009141","6":"3.973015e-07","7":"1.867317e-05","8":"1.589206e-05","9":"1823","10":"tags=36%, list=12%, signal=32%","11":"Ero1a/Slc37a4/Mif/Ddit4/P4ha1/Cdkn1b/Glrx/Ndst1/Pfkl/Ugp2/Eno3/Hk2/Slc6a6/Nagk/Tpi1/Atp7a/Ids/Klf7/Slc25a1/Ccng2/Gapdh/Pgm1/Scarb1/Prdx5/Ier3/Hmox1/Klhl24/Gys1/Tpd52/Gpi1/Myh9/Pfkp/Pgk1/Selenbp1/Tnfaip3/Fam162a/Slc2a3/Klf6/Eno1/Ampd3/Col5a1/Nfil3/Rbpj/Ddit3/Selenbp2/Tiparp/Btg1/Anxa2/Plaur/Mt2/Gbe1/Adora2b/Pygm/Ndrg1/S100a4","_rn_":"HALLMARK_HYPOXIA"},{"1":"HALLMARK_TNFA_SIGNALING_VIA_NFKB","2":"HALLMARK_TNFA_SIGNALING_VIA_NFKB","3":"162","4":"-0.6552710","5":"-1.964325","6":"1.926706e-06","7":"4.527760e-05","8":"3.853412e-05","9":"1530","10":"tags=37%, list=10%, signal=34%","11":"Cflar/B4galt5/Il23a/Tnip1/Tnip2/Tnfrsf9/Tgif1/Birc3/Ets2/Nampt/Ier2/Cebpd/Ehd1/Icam1/Tnfaip8/Slc2a6/Slc16a6/Tnfaip2/Sik1/Gch1/Rnf19b/Ier3/Dnajb4/Ifngr2/Gadd45a/Klf9/Litaf/Cebpb/Sqstm1/Tsc22d1/Ldlr/Tnfsf9/Mxd1/Junb/Cd44/Tnfaip3/Ninj1/Slc2a3/Klf6/Abca1/Nfil3/Dusp4/Icosl/Dusp5/Zc3h12a/Cd80/Tiparp/Trib1/Csf1/Klf10/Atp2b1/Btg1/Map3k8/Traf1/Plaur/Nfkbia/Spsb1/Egr3/Cd69/Olr1","_rn_":"HALLMARK_TNFA_SIGNALING_VIA_NFKB"},{"1":"HALLMARK_INFLAMMATORY_RESPONSE","2":"HALLMARK_INFLAMMATORY_RESPONSE","3":"145","4":"-0.6194951","5":"-1.830928","6":"5.388098e-05","7":"8.441354e-04","8":"7.184131e-04","9":"1375","10":"tags=26%, list=9%, signal=24%","11":"Itga5/Ifnar1/Gnai3/Tnfrsf9/Nampt/Icam1/Slc7a1/Gch1/Gp1ba/P2rx7/Ifngr2/Ptgir/Ldlr/Tnfsf9/Lcp2/Mxd1/Hrh1/Nod2/Klf6/Abca1/Pik3r5/Stab1/Il2rb/Emp3/Icosl/Csf1/Atp2b1/Plaur/Nfkbia/Adora2b/Adgre1/Ccr7/Cd69/Olr1/Ptafr/C3ar1/Sell/Clec5a","_rn_":"HALLMARK_INFLAMMATORY_RESPONSE"},{"1":"HALLMARK_IL2_STAT5_SIGNALING","2":"HALLMARK_IL2_STAT5_SIGNALING","3":"169","4":"-0.5674026","5":"-1.713683","6":"4.338181e-04","7":"5.097362e-03","8":"4.338181e-03","9":"1404","10":"tags=24%, list=9%, signal=22%","11":"Bcl2l1/Hk2/Myo1c/Tnfrsf9/Xbp1/Wls/Serpinb6a/Ttc39b/Cyfip1/Snx14/Lclat1/Capg/Casp3/Gpx4/Myo1e/Flt3l/Mxd1/St3gal4/Anxa4/Cd44/F2rl2/Slc2a3/Klf6/Lrrc8c/Nfil3/Il2rb/Amacr/Dhrs3/Nfkbiz/Tiam1/Plec/Csf1/Map3k8/Traf1/Snx9/Nt5e/Selp/Ndrg1/Ahnak/Spp1/Sell","_rn_":"HALLMARK_IL2_STAT5_SIGNALING"},{"1":"HALLMARK_MYC_TARGETS_V1","2":"HALLMARK_MYC_TARGETS_V1","3":"199","4":"0.5492876","5":"1.712469","6":"9.251592e-04","7":"8.696496e-03","8":"7.401273e-03","9":"3350","10":"tags=54%, list=22%, signal=43%","11":"Apex1/Nhp2/Hspe1/Rrp9/Gnl3/Rad23b/Set/Ncbp1/Tardbp/Eif2s2/Nme1/Phb/Hspd1/Ctps/Prpf31/Rps3/Tufm/Pabpc4/Ddx21/Ddx18/Psmc6/Nop56/Eif4g2/Mcm6/Cad/Pa2g4/Pole3/Ube2e1/Ndufab1/Exosc7/Rps6/Sf3a1/Lsm7/Ccna2/Orc2/Psma1/Prdx3/Psmb3/Psmd3/Mcm2/Nap1l1/Srsf2/Syncrip/Hnrnpr/Serbp1/Eef1b2/Kpnb1/Psma7/Hnrnpc/Fbl/Xpo1/Kars/Mrps18b/Nolc1/Xrcc6/Tyms/Srsf7/Psma6/Srm/Srpk1/Npm1/C1qbp/Eif4a1/Acp1/Nop16/Pwp1/Aimp2/Clns1a/Hnrnpu/G3bp1/Rpl22/Ranbp1/Cdc20/U2af1/Pold2/Psmc4/Usp1/Erh/Snrpa1/Cops5/Psma4/Cct3/Txnl4a/Eif3b/Psmd14/Prps2/Bub3/Mcm4/Ran/Rps10/Dhx15/Rrm1/Eif2s1/Glo1/Ppia/Srsf1/Cnbp/Ncbp2/Trim28/Eif3j1/Snrpg/Mcm5/Sf3b3/Stard7/Psmd7/Kpna2/Tra2b","_rn_":"HALLMARK_MYC_TARGETS_V1"},{"1":"HALLMARK_MYC_TARGETS_V2","2":"HALLMARK_MYC_TARGETS_V2","3":"58","4":"0.6832016","5":"1.765574","6":"3.697850e-03","7":"2.896650e-02","8":"2.465234e-02","9":"3245","10":"tags=76%, list=21%, signal=60%","11":"Dctpp1/Ndufaf4/Nop2/Rrp12/Hspe1/Rrp9/Gnl3/Utp20/Ipo4/Ung/Phb/Hspd1/Grwd1/Ddx18/Mybbp1a/Nop56/Plk1/Bysl/Pa2g4/Imp4/Dusp2/Ppan/Sord/Rcl1/Mrto4/Nolc1/Tmem97/Nip7/Noc4l/Srm/Prmt3/Npm1/Nop16/Aimp2/Slc29a2/Wdr74/Pprc1/Mphosph10/Mcm4/Pus1/Slc19a1/Las1l/Mcm5/Exosc5","_rn_":"HALLMARK_MYC_TARGETS_V2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Significance is assessed by permutating the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permutated data, which generates a null distribution for the ES. The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.</p>
+<p>Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permuted data, which generates a null distribution for the ES. The ES for each gene set is then normalized to account for the size of the set, resulting in a normalized enrichment score (NES), and an FDR (false discovery rate) value is calculated to account for multiple hypothesis testing.</p>
 <p>Looks like we have gene sets returned as significant at FDR of <code>0.05</code>, according to the <code>p.adjust</code> column in the table above.</p>
 <p>The information we’re most likely interested in is in the <code>results</code> slot. Note that if we didn’t have any significant results, our <code>results</code> slot would be empty as nothing would have met our <code>pvalueCutoff</code> above. If we wanted all results returned we would need to set the <code>pvalueCutoff = 1</code>.</p>
 <p>Let’s convert this into a data frame that we can use for further analysis and write to file.</p>
@@ -4247,7 +4247,7 @@ C7: immunologic signatures</code></pre>
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-09                  
+##  date     2020-12-15                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
@@ -4269,7 +4269,7 @@ C7: immunologic signatures</code></pre>
 ##  data.table        1.13.0   2020-07-24 [1] RSPM (R 4.0.2)
 ##  DBI               1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  digest            0.6.25   2020-02-23 [1] RSPM (R 4.0.0)
-##  DO.db             2.9      2020-12-02 [1] Bioconductor  
+##  DO.db             2.9      2020-12-11 [1] Bioconductor  
 ##  DOSE              3.16.0   2020-10-27 [1] Bioconductor  
 ##  downloader        0.4      2015-07-09 [1] RSPM (R 4.0.0)
 ##  dplyr             1.0.2    2020-08-18 [1] RSPM (R 4.0.2)
@@ -4287,7 +4287,7 @@ C7: immunologic signatures</code></pre>
 ##  ggraph            2.0.3    2020-05-20 [1] RSPM (R 4.0.2)
 ##  ggrepel           0.8.2    2020-03-08 [1] RSPM (R 4.0.2)
 ##  glue              1.4.2    2020-08-27 [1] RSPM (R 4.0.2)
-##  GO.db             3.12.1   2020-12-02 [1] Bioconductor  
+##  GO.db             3.12.1   2020-12-11 [1] Bioconductor  
 ##  GOSemSim          2.16.1   2020-10-29 [1] Bioconductor  
 ##  graphlayouts      0.7.0    2020-04-25 [1] RSPM (R 4.0.2)
 ##  gridExtra         2.3      2017-09-09 [1] RSPM (R 4.0.0)
@@ -4308,7 +4308,7 @@ C7: immunologic signatures</code></pre>
 ##  msigdbr         * 7.2.1    2020-10-02 [1] RSPM (R 4.0.2)
 ##  munsell           0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  optparse        * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Mm.eg.db    * 3.12.0   2020-12-02 [1] Bioconductor  
+##  org.Mm.eg.db    * 3.12.0   2020-12-11 [1] Bioconductor  
 ##  pillar            1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig         2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  plyr              1.8.6    2020-03-03 [1] RSPM (R 4.0.2)
@@ -4331,7 +4331,7 @@ C7: immunologic signatures</code></pre>
 ##  RSQLite           2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi        0.11     2020-02-07 [1] RSPM (R 4.0.0)
 ##  rvcheck           0.1.8    2020-03-01 [1] RSPM (R 4.0.0)
-##  S4Vectors       * 0.28.0   2020-10-27 [1] Bioconductor  
+##  S4Vectors       * 0.28.1   2020-12-09 [1] Bioconductor  
 ##  scales            1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  scatterpie        0.1.5    2020-09-09 [1] RSPM (R 4.0.2)
 ##  sessioninfo       1.1.1    2018-11-05 [1] RSPM (R 4.0.0)
