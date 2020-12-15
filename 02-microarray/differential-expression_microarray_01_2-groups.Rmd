@@ -282,16 +282,18 @@ After fitting our data to the linear model, in this example we apply empirical B
 
 Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
 
-Because we are testing many different genes at once, we also want to perform some multiple test corrections, which we will do with the Benjamini-Hochberg method while making a table of results with `topTable()`.
-The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
-
 ```{r}
 # Apply linear model to data
 fit <- lmFit(expression_df, design = des_mat)
 
 # Apply empirical Bayes to smooth standard errors
 fit <- eBayes(fit)
+```
 
+Because we are testing many different genes at once, we also want to perform some multiple test corrections, which we will do with the Benjamini-Hochberg method while making a table of results with `topTable()`.
+The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
+
+```{r}
 # Apply multiple testing correction and obtain stats
 stats_df <- topTable(fit, number = nrow(expression_df)) %>%
   tibble::rownames_to_column("Gene")
