@@ -3973,7 +3973,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ───────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4106,10 +4106,11 @@ div.tocify {
 <p>This step is highly variable depending on what your gene list is, what information it contains and what your goals are. You may want to delete this next chunk entirely if you supply an already determined list of genes OR you may need to adjust the cutoffs and column names.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Select genes that are below a cutoff</span></span>
 <span id="cb24-2"><a href="#cb24-2"></a>genes_of_interest &lt;-<span class="st"> </span>dge_annot_df <span class="op">%&gt;%</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="co"># Here we want the top differentially expressed genes and we will use downregulated genes</span></span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(adj.P.Val <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>, logFC <span class="op">&lt;</span><span class="st"> </span><span class="dv">-1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span><span class="co"># We are extracting the gene symbols as a vector</span></span>
-<span id="cb24-6"><a href="#cb24-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">pull</span>(gene_symbol)</span></code></pre></div>
+<span id="cb24-3"><a href="#cb24-3"></a><span class="st">  </span><span class="co"># Here we want the top differentially expressed genes and we will use</span></span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="st">  </span><span class="co"># downregulated genes</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(adj.P.Val <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>, logFC <span class="op">&lt;</span><span class="st"> </span><span class="dv">-1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb24-6"><a href="#cb24-6"></a><span class="st">  </span><span class="co"># We are extracting the gene symbols as a vector</span></span>
+<span id="cb24-7"><a href="#cb24-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">pull</span>(gene_symbol)</span></code></pre></div>
 <p>There are a lot of ways we could make a genes of interest list, and using a p-value cutoff for differential expression analysis is just one way you can do this.</p>
 <p>ORA generally requires you make some sort of arbitrary decision to obtain your genes of interest list and this is one of the approach’s weaknesses – to get to a gene list we’ve removed all other context.</p>
 <p>Because one <code>gene_symbol</code> may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list.</p>
@@ -4133,7 +4134,7 @@ div.tocify {
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>kegg_ora_results &lt;-<span class="st"> </span><span class="kw">enricher</span>(</span>
 <span id="cb28-2"><a href="#cb28-2"></a>  <span class="dt">gene =</span> genes_of_interest, <span class="co"># A vector of your genes of interest</span></span>
 <span id="cb28-3"><a href="#cb28-3"></a>  <span class="dt">pvalueCutoff =</span> <span class="fl">0.1</span>, <span class="co"># Can choose a FDR cutoff</span></span>
-<span id="cb28-4"><a href="#cb28-4"></a>  <span class="dt">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, <span class="co"># Method for multiple testing correction to be used</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>  <span class="dt">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, <span class="co"># Method to be used for multiple testing correction</span></span>
 <span id="cb28-5"><a href="#cb28-5"></a>  <span class="dt">universe =</span> background_set, <span class="co"># A vector containing your background set genes</span></span>
 <span id="cb28-6"><a href="#cb28-6"></a>  <span class="co"># The pathway information should be a data frame with a term name or</span></span>
 <span id="cb28-7"><a href="#cb28-7"></a>  <span class="co"># identifier and the gene identifiers</span></span>
