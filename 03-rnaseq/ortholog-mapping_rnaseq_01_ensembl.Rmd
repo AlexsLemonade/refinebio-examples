@@ -321,7 +321,7 @@ human_mouse_mapped_df <- data.frame("Gene" = mouse_genes) %>%
 
 Here's what the new data frame looks like:
 
-```{r}
+```{r rownames.print = FALSE}
 head(human_mouse_mapped_df, n = 25)
 ```
 

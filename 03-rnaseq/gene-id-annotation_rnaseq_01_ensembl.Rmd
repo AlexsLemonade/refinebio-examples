@@ -356,7 +356,8 @@ final_mapped_df <- data.frame(
 ) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
-  # Join the multiple mappings data from `collapsed_mapped_df` using the Ensembl IDs
+  # Join the multiple mappings data from `collapsed_mapped_df`
+  # using the Ensembl IDs
   dplyr::inner_join(collapsed_mapped_df, by = "Ensembl") %>%
   # Now let's join the rest of the expression data
   dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
@@ -364,9 +365,11 @@ final_mapped_df <- data.frame(
 
 Our `final_mapped_df` object now has a column named `first_mapped_entrez_id` that contains only the first mapped Entrez ID, in addition to the `all_entrez_ids` column that contains all mapped Entrez IDs per Ensembl ID.
 
-```{r}
+```{r rownames.print = FALSE}
 final_mapped_df %>%
-  # Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values include the ";" character -- we know that these are the rows with multiple mapped values
+  # Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values
+  # include the ";" character -- we know that these are the rows with
+  # multiple mapped values
   dplyr::filter(stringr::str_detect(all_entrez_ids, ";")) %>%
   head()
 ```
