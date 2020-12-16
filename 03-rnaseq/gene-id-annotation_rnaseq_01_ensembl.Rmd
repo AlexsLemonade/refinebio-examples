@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using `AnnotationDbi` packages [@Carlson2020-package].
+The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using `AnnotationDbi` packages [@Pages2020-package].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
