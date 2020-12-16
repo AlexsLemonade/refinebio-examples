@@ -269,7 +269,7 @@ des_mat <- model.matrix(~ subgroup + 0, data = filtered_metadata)
 
 Let's take a look at the design matrix we created.
 
-```{r rownames.print = FALSE}
+```{r}
 # Print out part of the design matrix
 head(des_mat)
 ```

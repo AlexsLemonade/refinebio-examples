@@ -264,7 +264,7 @@ metadata <- metadata %>%
 
 Now we will create a model matrix based on our newly renamed `genotype` variable.
 
-```{r rownames.print = FALSE}
+```{r}
 # Create the design matrix from the genotype information
 des_mat <- model.matrix(~genotype, data = metadata)
 
