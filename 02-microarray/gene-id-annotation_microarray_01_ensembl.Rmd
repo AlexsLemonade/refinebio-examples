@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages [@Carlson2020-package].
+The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages [@Pages2020-package].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -83,13 +83,14 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [mouse glioma stem cells dataset](https://www.refine.bio/experiments/GSE13490/cancer-stem-cells-are-enriched-in-the-side-population-cells-in-a-mouse-model-of-glioma).
 
-This dataset has 15 microarray mouse glioma model samples.
-The samples were obtained from parental biological replicates and from resistant sub-line biological replicates that were transplanted into recipient mice.
+This dataset has 15 microarrays measuring gene expression in a transgenic mouse model of glioma.
+The authors compared cells from side populations and non-side populations in both tumor samples and normal neural stem cells.
+
 
 ## Place the dataset in your new `data/` folder
 
 refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
@@ -173,18 +174,21 @@ A full list of the annotation R packages from Bioconductor is at this [link](htt
 
 # Obtaining Annotation for Ensembl IDs - Microarray
 
-Ensembl IDs can be used to obtain various different annotations at the gene/transcript level.
+Refine.bio uses Ensembl IDs as the primary gene identifier in its data sets.
+While this is a consistent and useful identifier, a string of apparently random letters and numbers is not the most user-friendly or informative for interpretation.
+Luckily, we can use the Ensembl IDs that we have to obtain various different annotations at the gene/transcript level.
 Let's get ready to use the Ensembl IDs from our mouse dataset to obtain the associated gene symbols.
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2019].
+In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2019-mouse], which is part of the Bioconductor `AnnotationDbi` framework [@Pages2020-package].
+Bioconductor compiles annotations from various sources, and these packages provide convenient methods to access and translate among those annotations.
 [Other species can be used](#using-a-different-refinebio-dataset-with-this-analysis).
 
 ```{r}
-# Install the mouse package
+# Install the mouse annotation package
 if (!("org.Mm.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Mm.eg.db", update = FALSE)
@@ -192,6 +196,7 @@ if (!("org.Mm.eg.db" %in% installed.packages())) {
 ```
 
 Attach the packages we need for this analysis.
+Note that attaching `org.Mm.eg.db` will automatically also attach `AnnotationDbi`.
 
 ```{r message=FALSE}
 # Attach the library
@@ -236,6 +241,7 @@ df <- df %>%
 
 ## Map Ensembl IDs to gene symbols
 
+The main work of translating among annotations will be done with the the `AnnotationDbi` function `mapIds()`.
 The `mapIds()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
 The default behavior is to return just the first mapped value.
 It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. 
@@ -268,10 +274,10 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable for exploration by turning it into a data frame
+# Let's make our object a bit more manageable by turning it into a data frame
 mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Symbol") %>%
-  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
+  # enframe() makes a `list` column; we will simplify it with unnest()
   # This will result in one row of our data frame per list item
   tidyr::unnest(cols = Symbol)
 ```
@@ -286,7 +292,7 @@ We can see that our data frame has a new column `Symbol`.
 Let's get a summary of the gene symbols returned in the `Symbol` column of our mapped data frame.
 
 ```{r}
-# We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
+# Use the `summary()` function to show the distribution of Symbol values
 summary(mapped_df$Symbol)
 ```
 
@@ -327,11 +333,11 @@ Use `?mapIds` to see more options or strategies.
 # Map ensembl IDs to their associated gene symbols
 filtered_mapped_df <- data.frame(
   "Symbol" = mapIds(
-    org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
+    org.Mm.eg.db, # Replace with annotation package for your organism
     keys = df$Gene,
-    column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
-    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "filter" # This will drop any `Gene`s that have multiple matches
+    column = "SYMBOL", # The type of gene identifiers you would like to map to
+    keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+    multiVals = "filter" # This will drop any genes that have multiple matches
   )
 ) %>%
   # Make an `Ensembl` column to store the rownames
