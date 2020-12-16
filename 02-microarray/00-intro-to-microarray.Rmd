@@ -60,7 +60,7 @@ For many scientific questions, the best available gene expression data may be mi
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
-Refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
+refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
 
 ## About quantile normalization 
 
@@ -83,7 +83,7 @@ See the refine.bio docs for more about the microarray processing steps, includin
 
 - A common and simple reason you may not see your gene of interest is that the microarray chip used in the experiment you are analyzing did not originally have probes designed to target that gene.  
 
-- Refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
+- refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
 This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
 Some probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations), which may result in the gene they targeted being removed. 
 If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column.
