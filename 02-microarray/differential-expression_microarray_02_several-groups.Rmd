@@ -343,7 +343,7 @@ stats_df <- topTable(contrasts_fit, number = nrow(expression_df)) %>%
 
 Let's take a peek at our results table.
 
-```{r}
+```{r rownames.print = FALSE}
 head(stats_df)
 ```
 
@@ -381,7 +381,7 @@ top_gene_df <- expression_df %>%
 
 Let's take a sneak peek at our `top_gene_df`.
 
-```{r}
+```{r rownames.print = FALSE}
 head(top_gene_df)
 ```
 
