@@ -252,20 +252,20 @@ In the next chunk, we will run the `mapIds()` function and supply the `multiVals
 ```{r}
 # Map ensembl IDs to their associated gene symbols
 mapped_list <- mapIds(
-  org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
+  org.Mm.eg.db, # Replace with annotation package for your organism
   keys = expression_df$Gene,
-  column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
-  keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+  keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+  column = "SYMBOL", # The type of gene identifiers you would like to map to
   multiVals = "list"
 )
 ```
 
 ## Explore gene ID conversion
 
-Now, let's take a look at our `mapped_list` to see how the mapping went.
+Now, let's take a look at our mapped object to see how the mapping went.
 
 ```{r}
-# Let's use the `head()` function to take a preview at our mapped list
+# Let's use the `head()` function for a preview of our mapped list
 head(mapped_list)
 ```
 
@@ -274,11 +274,11 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable by turning it into a data frame
+# Let's make our list a bit more manageable by turning it into a data frame
 mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Symbol") %>%
   # enframe() makes a `list` column; we will simplify it with unnest()
-  # This will result in one row of our data frame per list item
+  # This will result in a data frame with one row per list item
   tidyr::unnest(cols = Symbol)
 ```
 
@@ -289,27 +289,26 @@ head(mapped_df)
 ```
 
 We can see that our data frame has a new column `Symbol`.
-Let's get a summary of the gene symbols returned in the `Symbol` column of our mapped data frame.
+Let's get a summary of the gene symbols in the `Symbol` column of our mapped data frame.
 
 ```{r}
 # Use the `summary()` function to show the distribution of Symbol values
-summary(mapped_df$Symbol)
+# We need to use `as.factor()` here to get the counts of unique values
+summary(as.factor(mapped_df$Symbol), maxsum = 10)
 ```
 
-There are 998 `NA`s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
+There are 998 `NA`s in the `Symbol` column, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
-However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
+However, if you have almost all `NA`s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
 
 Now let's check to see if we have any genes that were mapped to multiple symbols.
 
 ```{r}
 multi_mapped <- mapped_df %>%
-  # Let's group by the Ensembl IDs in the `Ensembl` column
-  dplyr::group_by(Ensembl) %>%
-  # Create a new variable containing the number of symbols mapped to each ID
-  dplyr::mutate(gene_symbol_count = dplyr::n()) %>%
+  # Let's count the number of times each Ensembl ID appears in `Ensembl` column
+  dplyr::count(Ensembl, name = "gene_symbol_count") %>%
   # Arrange by the genes with the highest number of symbols mapped
   dplyr::arrange(desc(gene_symbol_count)) %>%
   # Filter to include only the rows with multi mappings
@@ -362,12 +361,12 @@ readr::write_tsv(filtered_mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
-- See our [RNA-seq gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-rna-seq].
+- See our [RNA-seq gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology.
 
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
 
 ```{r}
 # Print session info
