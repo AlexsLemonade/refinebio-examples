@@ -218,7 +218,7 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
+expression_df <- readr::read_tsv(data_file) %>%
   # Tuck away the Gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
@@ -227,14 +227,14 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
+all.equal(colnames(expression_df), metadata$geo_accession)
 
 # Bring back the "Gene" column in preparation for mapping
-df <- df %>%
+expression_df <- expression_df %>%
   tibble::rownames_to_column("Gene")
 ```
 
@@ -253,7 +253,7 @@ In the next chunk, we will run the `mapIds()` function and supply the `multiVals
 # Map ensembl IDs to their associated gene symbols
 mapped_list <- mapIds(
   org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
-  keys = df$Gene,
+  keys = expression_df$Gene,
   column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
   keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
   multiVals = "list"
@@ -296,7 +296,7 @@ Let's get a summary of the gene symbols returned in the `Symbol` column of our m
 summary(mapped_df$Symbol)
 ```
 
-There are 998 NAs in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
+There are 998 `NA`s in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
 998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
@@ -334,16 +334,16 @@ Use `?mapIds` to see more options or strategies.
 filtered_mapped_df <- data.frame(
   "Symbol" = mapIds(
     org.Mm.eg.db, # Replace with annotation package for your organism
-    keys = df$Gene,
-    column = "SYMBOL", # The type of gene identifiers you would like to map to
+    keys = expression_df$Gene,
     keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+    column = "SYMBOL", # The type of gene identifiers you would like to map to
     multiVals = "filter" # This will drop any genes that have multiple matches
   )
 ) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
-  # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  # Join the remaining data from `expression_df` using the Ensembl IDs
+  dplyr::inner_join(expression_df, by = c("Ensembl" = "Gene"))
 ```
 
 Now, let's write our filtered and mapped results to file!
