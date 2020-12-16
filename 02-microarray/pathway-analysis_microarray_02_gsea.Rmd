@@ -18,7 +18,7 @@ Changes at the pathway-level may be statistically significant, and contribute to
 
 GSEA calculates a pathway-level metric, called an enrichment score (ES), by ranking genes by a gene-level statistic.
 This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings [@clusterProfiler-book]. 
-Specifically, genes are ranked from most highly positive to most highly negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not.
+Specifically, genes are ranked from most positive to most negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not.
 In this example, the ES for a pathway is the running sum's maximum deviation from zero.
 GSEA also assesses statistical significance of the scores for each pathway through permutation testing. 
 As a result, each input pathway will have a p-value associated with it that is then corrected for multiple hypothesis testing [@clusterProfiler-book].
