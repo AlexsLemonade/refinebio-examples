@@ -310,7 +310,7 @@ human_zebrafish_mapped_df <- data.frame("Gene" = zebrafish_genes) %>%
 
 Here's what the new data frame looks like:
 
-```{r}
+```{r rownames.print = FALSE}
 head(human_zebrafish_mapped_df, n = 25)
 ```
 
