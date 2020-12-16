@@ -3980,7 +3980,7 @@ Your example analysis folder should now look something like this (except with re
 </div>
 <div id="define-a-minimum-counts-cutoff" class="section level2">
 <h2><span class="header-section-number">4.3</span> Define a minimum counts cutoff</h2>
-<p>We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns acrosss your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
+<p>We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis. We are going to do some pre-filtering to keep only genes with 10 or more reads total. This threshold might vary depending on the number of samples and expression patterns across your data set. Note that rows represent gene data and the columns represent sample data in our dataset.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Define a minimum counts cutoff and filter the data to include</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a><span class="co"># only rows (genes) that have total counts above the cutoff</span></span>
 <span id="cb16-3"><a href="#cb16-3"></a>filtered_expression_df &lt;-<span class="st"> </span>expression_df <span class="op">%&gt;%</span></span>
@@ -4091,7 +4091,7 @@ Your example analysis folder should now look something like this (except with re
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-14                  
+##  date     2020-12-15                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package              * version  date       lib source        
