@@ -300,18 +300,23 @@ The function we will use to map from Ensembl gene IDs to Entrez gene IDs is call
 Let's create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.
 
 ```{r}
-# First let's create a mapped data frame we can join to the differential expression stats
+# First let's create a mapped data frame we can join to the differential
+# expression stats
 dge_mapped_df <- data.frame(
   "entrez_id" = mapIds(
-    org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
+    # Replace with annotation package for the organism relevant to your data
+    org.Dr.eg.db,
     keys = dge_df$Gene,
-    column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
-    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+    # Replace with the type of gene identifiers you would like to map to
+    column = "ENTREZID",
+    # Replace with the type of gene identifiers in your data
+    keytype = "ENSEMBL",
+    # This will keep only the first mapped value for each Ensembl ID
+    multiVals = "first"
   )
 ) %>%
-  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop that
-  # from the data frame
+  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop
+  # that from the data frame
   dplyr::filter(!is.na(entrez_id)) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
@@ -420,16 +425,23 @@ head(t_vector)
 Genes were ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, in the previous section.
 In this section, we will implement GSEA to calculate the enrichment score (ES) for each gene set using our pre-ranked gene list.
 
+The GSEA algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.
+
+```{r}
+# Set the seed so our results are reproducible:
+set.seed(2020)
+```
+
 We can use the `GSEA()` function to perform GSEA with any generic set of gene sets, but there are several functions for using specific, commonly used gene sets (e.g., `gseKEGG()`).
 
 ```{r}
 gsea_results <- GSEA(
-  geneList = t_vector, # ordered ranked gene list
-  minGSSize = 25, # minimum gene set size
-  maxGSSize = 500, # maximum gene set set
-  pvalueCutoff = 0.05, # p value cutoff
-  eps = 0, # boundary for calculating the p value
-  seed = TRUE, # set seed to make results reproducible
+  geneList = t_vector, # Ordered ranked gene list
+  minGSSize = 25, # Minimum gene set size
+  maxGSSize = 500, # Maximum gene set set
+  pvalueCutoff = 0.05, # p-value cutoff
+  eps = 0, # Boundary for calculating the p-value
+  seed = TRUE, # Set seed to make results reproducible
   pAdjustMethod = "BH", # Benjamini-Hochberg correction
   TERM2GENE = dplyr::select(
     dr_hallmark_df,
