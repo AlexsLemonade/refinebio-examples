@@ -2887,7 +2887,7 @@ a.attachEvent&&a.attachEvent("on"+b,c)},od=function(a,b,c){a.removeEventListener
 b=b.lastChild;for(var c=[];b.firstChild;)c.push(b.removeChild(b.firstChild));return c},sd=function(a,b,c){c=c||100;for(var d={},e=0;e<b.length;e++)d[b[e]]=!0;for(var f=a,h=0;f&&h<=c;h++){if(d[String(f.tagName).toLowerCase()])return f;f=f.parentElement}return null},td=function(a){fd.sendBeacon&&fd.sendBeacon(a)||md(a)},ud=function(a,b){var c=a[b];c&&"string"===typeof c.animVal&&(c=c.animVal);return c};var vd={},wd=function(a){return void 0==vd[a]?!1:vd[a]};var xd=[];function yd(){var a=hd("google_tag_data",{});a.ics||(a.ics={entries:{},set:zd,update:Ad,addListener:Bd,notifyListeners:Cd,active:!1});return a.ics}
 function zd(a,b,c,d,e,f){var h=yd();h.active=!0;if(void 0!=b){var k=h.entries,l=k[a]||{},r=l.region,q=c&&g(c)?c.toUpperCase():void 0;d=d.toUpperCase();e=e.toUpperCase();if(q===e||(q===d?r!==e:!q&&!r)){var n=!!(f&&0<f&&void 0===l.update),t={region:q,initial:"granted"===b,update:l.update,quiet:n};k[a]=t;n&&G.setTimeout(function(){k[a]===t&&t.quiet&&(t.quiet=!1,Dd(a),Cd(),Fc("TAGGING",2))},f)}}}
 function Ad(a,b){var c=yd();c.active=!0;if(void 0!=b){var d=Ed(a),e=c.entries,f=e[a]=e[a]||{};f.update="granted"===b;var h=Ed(a);f.quiet?(f.quiet=!1,Dd(a)):h!==d&&Dd(a)}}function Bd(a,b){xd.push({Xe:a,gh:b})}function Dd(a){for(var b=0;b<xd.length;++b){var c=xd[b];Ca(c.Xe)&&-1!==c.Xe.indexOf(a)&&(c.nf=!0)}}function Cd(a){for(var b=0;b<xd.length;++b){var c=xd[b];if(c.nf){c.nf=!1;try{c.gh({We:a})}catch(d){}}}}
-var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-VA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
+var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-PA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
 a.join("")},Pd=function(a,b){Id(a,b)};var Td=function(a){return Sd?H.querySelectorAll(a):null},Ud=function(a,b){if(!Sd)return null;if(Element.prototype.closest)try{return a.closest(b)}catch(e){return null}var c=Element.prototype.matches||Element.prototype.webkitMatchesSelector||Element.prototype.mozMatchesSelector||Element.prototype.msMatchesSelector||Element.prototype.oMatchesSelector,d=a;if(!H.documentElement.contains(d))return null;do{try{if(c.call(d,b))return d}catch(e){break}d=d.parentElement||d.parentNode}while(null!==d&&1===d.nodeType);
 return null},Vd=!1;if(H.querySelectorAll)try{var Wd=H.querySelectorAll(":root");Wd&&1==Wd.length&&Wd[0]==H.documentElement&&(Vd=!0)}catch(a){}var Sd=Vd;var Xd=function(a){if(H.hidden)return!0;var b=a.getBoundingClientRect();if(b.top==b.bottom||b.left==b.right||!G.getComputedStyle)return!0;var c=G.getComputedStyle(a,null);if("hidden"===c.visibility)return!0;for(var d=a,e=c;d;){if("none"===e.display)return!0;var f=e.opacity,h=e.filter;if(h){var k=h.indexOf("opacity(");0<=k&&(h=h.substring(k+8,h.indexOf(")",k)),"%"==h.charAt(h.length-1)&&(h=h.substring(0,h.length-1)),f=Math.min(h,f))}if(void 0!==f&&0>=f)return!0;(d=d.parentElement)&&(e=G.getComputedStyle(d,
 null))}return!1};
@@ -3905,7 +3905,7 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <code>DESeq2</code> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span> for the differential expression testing. We will also use <code>EnhancedVolcano</code> for plotting and <code>apeglm</code> for some log fold change estimates in the results table <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>; Blighe <em>et al.</em> <a href="#ref-Blighe2020" role="doc-biblioref">2020</a>)</span></p>
+<p>In this analysis, we will be using <code>DESeq2</code> <span class="citation">(Love <em>et al.</em> <a href="#ref-Love2014" role="doc-biblioref">2014</a>)</span> for the differential expression testing. We will also use <code>EnhancedVolcano</code> <span class="citation">(Blighe <em>et al.</em> <a href="#ref-Blighe2020" role="doc-biblioref">2020</a>)</span> for plotting and <code>apeglm</code> <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>)</span> for some log fold change estimates in the results table</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;DESeq2&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;DESeq2&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -3999,12 +3999,12 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Print out a preview of `mutation_status`</span></span>
 <span id="cb20-2"><a href="#cb20-2"></a><span class="kw">str</span>(metadata<span class="op">$</span>mutation_status)</span></code></pre></div>
 <pre><code>##  chr [1:6] &quot;R98S&quot; &quot;R98S&quot; &quot;R98S&quot; &quot;reference&quot; &quot;reference&quot; ...</code></pre>
-<p>Currently, <code>mutation_status</code> is a character, which is not necessarily what we want. To make sure it is set how we want for the <code>DESeq</code> object and subsequent testing, let’s change it to a factor so we can explicitly set the levels.</p>
+<p>Currently, <code>mutation_status</code> is stored as a character, which is not necessarily what we want. To make sure it is set how we want for the <code>DESeq</code> object and subsequent testing, let’s change it to a factor so we can explicitly set the levels.</p>
 <p>In the <code>levels</code> argument, we will list <code>reference</code> first since that is our control group.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Make mutation_status a factor and set the levels appropriately</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a>metadata &lt;-<span class="st"> </span>metadata <span class="op">%&gt;%</span></span>
 <span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</span>
-<span id="cb22-4"><a href="#cb22-4"></a>    <span class="co"># Here we will set up the factor aspect of our new variable.</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>    <span class="co"># Here we define the values our factor variable can have and their order.</span></span>
 <span id="cb22-5"><a href="#cb22-5"></a>    <span class="dt">mutation_status =</span> <span class="kw">factor</span>(mutation_status, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;reference&quot;</span>, <span class="st">&quot;R98S&quot;</span>))</span>
 <span id="cb22-6"><a href="#cb22-6"></a>  )</span></code></pre></div>
 <p>Note if you don’t specify <code>levels</code>, the <code>factor()</code> function will set levels in alphabetical order – which sometimes means your control group will not be listed first!</p>
@@ -4024,10 +4024,10 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 </div>
 <div id="create-a-deseq2dataset" class="section level2">
 <h2><span class="header-section-number">4.5</span> Create a DESeq2Dataset</h2>
-<p>We will be using the <code>DESeq2</code> package for differential expression testing, which requires us to format our data into a <code>DESeqDataSet</code> object. First we need to prep our gene expression data frame so it’s in the format that is compatible with the <code>DESeqDataSetFromMatrix()</code> function in the next step.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># We are making our data frame into a matrix and rounding the numbers</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>gene_matrix &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">as.matrix</span>(filtered_expression_df))</span></code></pre></div>
-<p>Now we need to create <code>DESeqDataSet</code> from our expression dataset. We use the <code>mutation_status</code> variable we created in the design formula because that will allow us to model the presence/absence of <em>R98S</em> mutation.</p>
+<p>We will be using the <code>DESeq2</code> package for differential expression testing, which requires us to format our data into a <code>DESeqDataSet</code> object. First we need to prep our gene expression data frame so that all of the count values are integers, making it compatible with the <code>DESeqDataSetFromMatrix()</code> function in the next step.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># round all expression counts</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>gene_matrix &lt;-<span class="st"> </span><span class="kw">round</span>(filtered_expression_df)</span></code></pre></div>
+<p>Now we need to create a <code>DESeqDataSet</code> from our expression dataset. We use the <code>mutation_status</code> variable we created in the design formula because that will allow us to model the presence/absence of <em>R98S</em> mutation.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>ddset &lt;-<span class="st"> </span><span class="kw">DESeqDataSetFromMatrix</span>(</span>
 <span id="cb27-2"><a href="#cb27-2"></a>  <span class="co"># Here we supply non-normalized count data</span></span>
 <span id="cb27-3"><a href="#cb27-3"></a>  <span class="dt">countData =</span> gene_matrix,</span>
@@ -4050,16 +4050,17 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 <pre><code>## fitting model and testing</code></pre>
 <p>Let’s extract the results table from the <code>DESeq</code> object.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>deseq_results &lt;-<span class="st"> </span><span class="kw">results</span>(deseq_object)</span></code></pre></div>
-<p>Here we will use <code>lfcShrink()</code> function to obtain shrunken log fold change estimates based on negative binomial distribution. This will add the estimates to your results table. Using <code>lfcShrink()</code> can help decrease noise and preserve large differences between groups (it requires that <code>apeglm</code> package be installed).</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>deseq_results &lt;-<span class="st"> </span><span class="kw">lfcShrink</span>(deseq_object, <span class="co"># This is the original DESeq2 object with DESeq() already having been ran</span></span>
-<span id="cb37-2"><a href="#cb37-2"></a>  <span class="dt">coef =</span> <span class="dv">2</span>, <span class="co"># This is based on what log fold change coefficient was used in DESeq(), the default is 2.</span></span>
-<span id="cb37-3"><a href="#cb37-3"></a>  <span class="dt">res =</span> deseq_results <span class="co"># This needs to be the DESeq2 results table</span></span>
-<span id="cb37-4"><a href="#cb37-4"></a>)</span></code></pre></div>
+<p>Here we will use <code>lfcShrink()</code> function to obtain shrunken log fold change estimates based on negative binomial distribution. This will add the estimates to your results table. Using <code>lfcShrink()</code> can help decrease noise and preserve large differences between groups (it requires that <code>apeglm</code> package be installed) <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>)</span>.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>deseq_results &lt;-<span class="st"> </span><span class="kw">lfcShrink</span>(</span>
+<span id="cb37-2"><a href="#cb37-2"></a>  deseq_object, <span class="co"># The original DESeq2 object after running DESeq()</span></span>
+<span id="cb37-3"><a href="#cb37-3"></a>  <span class="dt">coef =</span> <span class="dv">2</span>, <span class="co"># The log fold change coefficient used in DESeq(); the default is 2.</span></span>
+<span id="cb37-4"><a href="#cb37-4"></a>  <span class="dt">res =</span> deseq_results <span class="co"># The original DESeq2 results table</span></span>
+<span id="cb37-5"><a href="#cb37-5"></a>)</span></code></pre></div>
 <pre><code>## using &#39;apeglm&#39; for LFC shrinkage. If used in published research, please cite:
 ##     Zhu, A., Ibrahim, J.G., Love, M.I. (2018) Heavy-tailed prior distributions for
 ##     sequence count data: removing the noise and preserving large differences.
 ##     Bioinformatics. https://doi.org/10.1093/bioinformatics/bty895</code></pre>
-<p>Now let’s take a peek at what our results table looks like.</p>
+<p>Now let’s take a peek at what our new results table looks like.</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="kw">head</span>(deseq_results)</span></code></pre></div>
 <pre><code>## log2 fold change (MAP): mutation status R98S vs reference 
 ## Wald test p-value: mutation status R98S vs reference 
@@ -4080,19 +4081,19 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 ## ENSMUSG00000000058 0.001074535
 ## ENSMUSG00000000078 0.000113951
 ## ENSMUSG00000000085 0.682936007</code></pre>
-<p>Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file. Sort and filter the results.</p>
+<p>Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file.</p>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># this is of class DESeqResults -- we want a data frame</span></span>
 <span id="cb41-2"><a href="#cb41-2"></a>deseq_df &lt;-<span class="st"> </span>deseq_results <span class="op">%&gt;%</span></span>
 <span id="cb41-3"><a href="#cb41-3"></a><span class="st">  </span><span class="co"># make into data.frame</span></span>
 <span id="cb41-4"><a href="#cb41-4"></a><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span></span>
-<span id="cb41-5"><a href="#cb41-5"></a><span class="st">  </span><span class="co"># the gene names are rownames -- let&#39;s make this it&#39;s own column for easy</span></span>
-<span id="cb41-6"><a href="#cb41-6"></a><span class="st">  </span><span class="co"># display</span></span>
-<span id="cb41-7"><a href="#cb41-7"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb41-5"><a href="#cb41-5"></a><span class="st">  </span><span class="co"># the gene names are row names -- let&#39;s make them a column for easy display</span></span>
+<span id="cb41-6"><a href="#cb41-6"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Gene&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb41-7"><a href="#cb41-7"></a><span class="st">  </span><span class="co"># add a column for significance threshold results</span></span>
 <span id="cb41-8"><a href="#cb41-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">threshold =</span> padj <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>) <span class="op">%&gt;%</span></span>
-<span id="cb41-9"><a href="#cb41-9"></a><span class="st">  </span><span class="co"># sort by statistic -- the highest values should be genes with higher expression</span></span>
-<span id="cb41-10"><a href="#cb41-10"></a><span class="st">  </span><span class="co"># RPL10 mutated samples</span></span>
+<span id="cb41-9"><a href="#cb41-9"></a><span class="st">  </span><span class="co"># sort by statistic -- the highest values will be genes with</span></span>
+<span id="cb41-10"><a href="#cb41-10"></a><span class="st">  </span><span class="co"># higher expression in RPL10 mutated samples</span></span>
 <span id="cb41-11"><a href="#cb41-11"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">arrange</span>(dplyr<span class="op">::</span><span class="kw">desc</span>(log2FoldChange))</span></code></pre></div>
-<p>Let’s print out what the top results are.</p>
+<p>Let’s print out the top results.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="kw">head</span>(deseq_df)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4114,13 +4115,13 @@ Read more about DESeq2 and why we like it on our <a href="https://alexslemonade.
 <span id="cb44-2"><a href="#cb44-2"></a>  deseq_df,</span>
 <span id="cb44-3"><a href="#cb44-3"></a>  <span class="kw">file.path</span>(</span>
 <span id="cb44-4"><a href="#cb44-4"></a>    results_dir,</span>
-<span id="cb44-5"><a href="#cb44-5"></a>    <span class="st">&quot;SRP123625_differential_expression_results.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
+<span id="cb44-5"><a href="#cb44-5"></a>    <span class="st">&quot;SRP123625_diff_expr_results.tsv&quot;</span> <span class="co"># Replace with a relevant output file name</span></span>
 <span id="cb44-6"><a href="#cb44-6"></a>  )</span>
 <span id="cb44-7"><a href="#cb44-7"></a>)</span></code></pre></div>
 </div>
 <div id="create-a-volcano-plot" class="section level2">
 <h2><span class="header-section-number">4.8</span> Create a volcano plot</h2>
-<p>We’ll use the <code>EnhancedVolcano</code> package’s main function to plot our data <span class="citation">(Zhu <em>et al.</em> <a href="#ref-Zhu2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>We’ll use the <code>EnhancedVolcano</code> package’s main function to plot our data <span class="citation">(Blighe <em>et al.</em> <a href="#ref-Blighe2020" role="doc-biblioref">2020</a>)</span>.</p>
 <p>Here we are plotting the <code>log2FoldChange</code> (which was estimated by <code>lfcShrink</code> step) on the x axis and <code>padj</code> on the y axis. The <code>padj</code> variable are the p values corrected with <code>Benjamini-Hochberg</code> (the default from the <code>results()</code> step).</p>
 <p>Because we are using adjusted p values we can feel safe in making our <code>pCutoff</code> argument <code>0.01</code> (default is <code>1e-05</code>).<br />
 Take a look at all the options for tailoring this plot using <code>?EnhancedVolcano</code>.</p>
@@ -4217,7 +4218,7 @@ Take a look at all the options for tailoring this plot using <code>?EnhancedVolc
 ##  geneplotter            1.68.0     2020-10-27 [1] Bioconductor  
 ##  generics               0.0.2      2018-11-29 [1] RSPM (R 4.0.0)
 ##  GenomeInfoDb         * 1.26.2     2020-12-08 [1] Bioconductor  
-##  GenomeInfoDbData       1.2.4      2020-12-16 [1] Bioconductor  
+##  GenomeInfoDbData       1.2.4      2020-12-11 [1] Bioconductor  
 ##  GenomicRanges        * 1.42.0     2020-10-27 [1] Bioconductor  
 ##  getopt                 1.20.3     2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggalt                  0.4.0      2017-02-15 [1] RSPM (R 4.0.0)

@@ -169,7 +169,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `limma` for differential expression [@Ritchie2015].
-We will also use `EnhancedVolcano` for plotting [@Zhu2018].
+We will also use `EnhancedVolcano` for plotting [@Blighe2020].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
