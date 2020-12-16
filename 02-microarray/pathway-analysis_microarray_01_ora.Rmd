@@ -116,7 +116,7 @@ If the concept of a "file path" is unfamiliar to you; we recommend taking a look
 # Using a different refine.bio dataset with this analysis?
 
 The file we use here has several columns of differential expression summary statistics. 
-If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_url` with a different file path to a read in a similar table of genes with the information that you are interested in. 
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend replacing the `dge_results_file` with a different file path to a read in a similar table of genes with the information that you are interested in. 
 If your gene table differs, many steps will need to be changed or deleted entirely depending on the contents of that file (particularly in the [`Determine our genes of interest list` section](#determined-our-genes-of-interest-list)).
 
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
@@ -237,38 +237,34 @@ Let's take a look at what these results from the differential expression analysi
 dge_df
 ```
 
-## Getting familiar with `clusterProfiler`'s options
+## Getting familiar with MSigDB gene sets available via `msigdbr`
 
-Let's take a look at what organisms the package supports.
+The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005]. 
+We can use the `msigdbr` package to access these gene sets in a format compatible with the package we'll use for analysis, `clusterProfiler` [@Igor2020; @Yu2012].
+
+The gene sets available directly from MSigDB are applicable to human studies.
+`msigdbr` also supports commonly studied model organisms.
+
+Let's take a look at what organisms the package supports with `msigdbr_species()`.
 
 ```{r}
 msigdbr_species()
 ```
 
-The data we're interested in here comes from zebrafish samples, so we can obtain just the gene sets relevant to _D. rerio_ with the `species` argument to `msigdbr()`.
+The data we're interested in here comes from zebrafish samples, so we can obtain only the gene sets relevant to _D. rerio_ with the `species` argument to `msigdbr()`.
 
 ```{r}
 dr_msigdb_df <- msigdbr(species = "Danio rerio")
 ```
 
-MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005].
-
-    H: hallmark gene sets
-    C1: positional gene sets
-    C2: curated gene sets
-    C3: motif gene sets
-    C4: computational gene sets
-    C5: GO gene sets
-    C6: oncogenic signatures
-    C7: immunologic signatures
-
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005] that are distinguished by how they are derived (e.g., computationally mined, curated).
 In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005].
 
 Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000].
 
-First, let's take a look at what information is included in this data frame.
+First, let's take a look at what information is included in the data frame returned by `msigdbr()`.
 
-```{r}
+```{r rownames.print = FALSE}
 head(dr_msigdb_df)
 ```
 
@@ -347,7 +343,7 @@ gene_key_df <- data.frame(
 
 Let's see a preview of `gene_key_df`.
 
-```{r}
+```{r rownames.print = FALSE}
 head(gene_key_df)
 ```
 
@@ -367,7 +363,7 @@ dge_annot_df <- gene_key_df %>%
 
 Let's take a look at what this data frame looks like.
 
-```{r}
+```{r rownames.print = FALSE}
 # Print out a preview
 head(dge_annot_df)
 ```
@@ -405,7 +401,7 @@ ORA generally requires you make some sort of arbitrary decision to obtain your g
 
 Because one `gene_symbol` may map to multiple Ensembl IDs, we need to make sure we have no repeated gene symbols in this list.
 
-```{r}
+```{r rownames.print = FALSE}
 # Reduce to only unique gene symbols
 genes_of_interest <- unique(as.character(genes_of_interest))
 
@@ -432,7 +428,7 @@ Now that we have our background set, our genes of interest, and our pathway info
 kegg_ora_results <- enricher(
   gene = genes_of_interest, # A vector of your genes of interest
   pvalueCutoff = 0.1, # Can choose a FDR cutoff
-  pAdjustMethod = "BH", # What method for multiple testing correction should we use
+  pAdjustMethod = "BH", # Method for multiple testing correction to be used
   universe = background_set, # A vector containing your background set genes
   # The pathway information should be a data frame with a term name or
   # identifier and the gene identifiers
