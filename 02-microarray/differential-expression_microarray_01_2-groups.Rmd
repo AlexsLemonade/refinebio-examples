@@ -301,7 +301,7 @@ stats_df <- topTable(fit, number = nrow(expression_df)) %>%
 
 Let's take a peek at our results table.
 
-```{r}
+```{r rownames.print = FALSE}
 head(stats_df)
 ```
 
