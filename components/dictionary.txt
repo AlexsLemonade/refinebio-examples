@@ -108,8 +108,6 @@ orthology
 overexpressing
 overexpression
 PBMCs
-permutated
-permutating
 pheatmap
 PLOS
 PLX
@@ -125,6 +123,7 @@ quartile
 qusage
 QuSAGE
 README
+recode
 rerio
 ribosomes
 RMA

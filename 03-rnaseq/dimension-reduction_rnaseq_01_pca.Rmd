@@ -252,7 +252,7 @@ metadata <- metadata %>%
 
 We want to filter out the genes that have not been expressed or that have low expression counts since these genes are likely to add noise rather than useful signal to our analysis.
 We are going to do some pre-filtering to keep only genes with 10 or more reads total.
-This threshold might vary depending on the number of samples and expression patterns acrosss your data set.
+This threshold might vary depending on the number of samples and expression patterns across your data set.
 Note that rows represent gene data and the columns represent sample data in our dataset.
 
 ```{r}
