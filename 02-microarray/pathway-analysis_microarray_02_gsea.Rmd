@@ -13,17 +13,8 @@ output:
 
 This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
 
-This particular example analysis shows how you can use Gene Set Enrichment Analysis (GSEA) to detect situations where genes in a predefined gene set or pathway change in a coordinated way between two biological states [@Subramanian2005; @GSEA-broad-institute]. 
-Changes at the pathway-level may be statistically significant, and contribute to phenotypic differences, even if the changes in the expression level of individual genes are small. 
-
-GSEA calculates a pathway-level metric, called an enrichment score (ES), by ranking genes by a gene-level statistic.
-This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings [@clusterProfiler-book]. 
-Specifically, genes are ranked from most positive to most negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not.
-In this example, the ES for a pathway is the running sum's maximum deviation from zero.
-GSEA also assesses statistical significance of the scores for each pathway through permutation testing. 
-As a result, each input pathway will have a p-value associated with it that is then corrected for multiple hypothesis testing [@clusterProfiler-book].
-
-This example uses GSEA pre-ranked, which is a way of running GSEA when you have previously computed gene-level statistics.
+This particular example analysis shows how you can use Gene Set Enrichment Analysis (GSEA) to detect situations where genes in a predefined gene set or pathway change in a coordinated way between two conditions [@Subramanian2005]. 
+Changes at the pathway-level may be statistically significant, and contribute to phenotypic differences, even if the changes in the expression level of individual genes are small.
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -335,17 +326,34 @@ Let's see a preview of `dge_mapped_df`.
 head(dge_mapped_df)
 ```
 
-GSEA requires _unique gene identifiers_ to produce the most accurate results, so we will need to resolve any duplicates found in our dataset.
-The `GSEA()` function will throw a warning if we do not do this ahead of time.
+## Perform gene set enrichment analysis (GSEA)
 
-Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs.
+The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude [@clusterProfiler-book].
+
+GSEA calculates a pathway-level metric, called an enrichment score (sometimes abbreviated as ES), by ranking genes by a gene-level statistic.
+This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings [@clusterProfiler-book]. 
+Specifically, genes are ranked from most positive to most negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not.
+In this example, the enrichment score for a pathway is the running sum's maximum deviation from zero.
+GSEA also assesses statistical significance of the scores for each pathway through permutation testing. 
+As a result, each input pathway will have a p-value associated with it that is then corrected for multiple hypothesis testing [@clusterProfiler-book].
+
+The implementation of GSEA we use in this examples requires a gene list ordered by some statistic (here we'll use the t-statistic calculated as part of differential gene expression analysis) and input gene sets (Hallmark collection). 
+When you use previously computed gene-level statistics with GSEA, it is called GSEA pre-ranked.
+
+### Determine our pre-ranked genes list
+
+The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, where the names in the vector are gene identifiers.
+It requires _unique gene identifiers_ to produce the most accurate results, so we will need to resolve any duplicates found in our dataset.
+(The `GSEA()` function will throw a warning if we do not do this ahead of time.)
+
+Let's check to see if we have any Entrez IDs that mapped to multiple Ensembl IDs in our data frame of differential expression results.
 
 ```{r}
 any(duplicated(dge_mapped_df$entrez_id))
 ```
 
 Looks like we do have duplicated Entrez IDs.
-Let's find out which Entrez IDs have been duplicated.
+Let's find out which ones.
 
 ```{r}
 dup_entrez_ids <- dge_mapped_df %>%
@@ -364,9 +372,9 @@ dge_mapped_df %>%
 
 We can see that the associated values vary for each row.
 
-As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the GSEA steps later. 
+As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the `GSEA()` step. 
 Let's keep the Entrez IDs associated with the higher absolute value of the t-statistic.
-GSEA relies on genes' rankings on the basis of a gene-level statistic and the ES that is calculated reflects the degree to which genes in a gene set are overrepresented in the top or bottom of the rankings [@clusterProfiler-book].
+GSEA relies on genes' rankings on the basis of a gene-level statistic and the enrichment score that is calculated reflects the degree to which genes in a gene set are overrepresented in the top or bottom of the rankings [@clusterProfiler-book].
 
 Retaining the instance of the Entrez ID with the higher absolute value of a gene-level statistic means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, the values less likely to be towards the middle of the ranked gene list.
 We should keep this decision in mind when interpreting our results.
@@ -393,15 +401,6 @@ filtered_dge_mapped_df %>%
 
 Looks like we were able to successfully get rid of the duplicate gene identifiers and keep the observations with the higher absolute value of the t-statistic!
 
-## Perform gene set enrichment analysis (GSEA)
-
-The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude [@clusterProfiler-book].
-The implementation of GSEA we use in this examples requires a gene list ordered by some statistic (here we'll use the t-statistic calculated as part of differential gene expression analysis) and input gene sets (Hallmark collection). 
-
-### Determine our pre-ranked genes list
-
-The `GSEA()` function takes a pre-ranked and sorted named vector of statistics, where the names in the vector are gene identifiers.
-
 In the next chunk, we will create a named vector ranked based on the gene-level t-statistic values.
 
 ```{r}
@@ -422,8 +421,8 @@ head(t_vector)
 
 ### Run GSEA using the `GSEA()` function
 
-Genes were ranked from most highly positive to most highly negative, weighted according to their gene-level statistic, in the previous section.
-In this section, we will implement GSEA to calculate the enrichment score (ES) for each gene set using our pre-ranked gene list.
+Genes were ranked from most positive to most negative, weighted according to their gene-level statistic, in the previous section.
+In this section, we will implement GSEA to calculate the enrichment score for each gene set using our pre-ranked gene list.
 
 The GSEA algorithm utilizes random sampling so we are going to set the seed to make our results reproducible.
 
@@ -451,7 +450,7 @@ gsea_results <- GSEA(
 )
 ```
 
-Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the ES of the gene set for the permuted data, which generates a null distribution for the ES.
+Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the enrichment scores of the gene set for the permuted data, which generates a null distribution for the enrichment score.
 The `pAdjustMethod` arguments to `GSEA()` above specifies what method to use for adjusting the p-values to account for multiple hypothesis testing; the `pvalueCutoff` argument tells the function to only return pathways with adjusted p-values less than that threshold in the `results` slot.
 
 Let's take a look at the table in the `result` slot of `gsea_results`.
@@ -464,7 +463,7 @@ head(gsea_results@result)
 Looks like we have gene sets returned as significant at FDR (false discovery rate) of `0.05`.
 If we did not have results that met the `pvalueCutoff` condition, this table would be empty.
 
-The NES column contains the normalized enrichment score, which normalizes for the gene set size, for that pathway.
+The `NES` column contains the normalized enrichment score, which normalizes for the gene set size, for that pathway.
 
 Let's convert the contents of `result` into a data frame that we can use for further analysis and write to a file later.
 
@@ -501,9 +500,8 @@ most_positive_nes_plot
 ```
 
 Notice how the genes that are in the gene set, indicated by the black bars, tend to be on the left side of the graph indicating that they have positive gene-level scores.
-The red dashed line indicates the peak ES score (the ES is the maximum deviation from zero).
-As mentioned earlier, an ES is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
-In this case, the most highly positive enrichment score's data are being displayed.
+The red dashed line indicates the enrichment score, which is the maximum deviation from zero.
+As mentioned earlier, an enrichment is calculated by starting with the most highly ranked genes (according to the gene-level t-statistic values) and increasing the score when a gene is in the pathway and decreasing the score when a gene is not in the pathway.
 
 The plots returned by `enrichplot::gseaplot` are ggplots, so we can use `ggplot2::ggsave()` to save them to file.
 
@@ -539,10 +537,10 @@ most_negative_nes_plot
 ```
 
 This gene set shows the opposite pattern -- genes in the pathway tend to be on the right side of the graph.
-Again, the red dashed line here indicates the maximum deviation from zero, in other words, the most negative ES score.
-A negative enrichment score will be returned when many genes are near the bottom of the ranked list.
+Again, the red dashed line here indicates the maximum deviation from zero, in other words, the enrichment score.
+A _negative_ enrichment score will be returned when many genes are near the bottom of the ranked list.
 
-Let's save this plot to PNG.
+Let's save this plot to PNG as well.
 
 ```{r}
 ggplot2::ggsave(file.path(plots_dir, "GSE71270_gsea_enrich_negative_plot.png"),
