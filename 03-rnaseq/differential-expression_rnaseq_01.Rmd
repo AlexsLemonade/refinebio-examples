@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-This notebook takes RNA-seq expression data and metadata from refine.bio and identifies differentially expressed genes between two experimental groups. 
+This notebook takes RNA-seq expression data and metadata from refine.bio and identifies differentially expressed genes between two experimental groups.
 
 Differential expression analysis identifies genes with significantly varying expression among experimental groups by comparing the variation among samples within a group to the variation between groups.
 The simplest version of this analysis is comparing two groups where one of those groups is a control group.
@@ -100,7 +100,7 @@ We will perform our differential expression using these knock-in and wild-type m
 ## Place the dataset in your new `data/` folder
 
 refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
 <img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
@@ -182,7 +182,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `DESeq2` [@Love2014] for the differential expression testing.
-We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates  in the results table [@Blighe2020; @Zhu2018]
+We will also use `EnhancedVolcano` [@Blighe2020] for plotting  and `apeglm` [@Zhu2018]for some log fold change estimates  in the results table
 
 ```{r}
 if (!("DESeq2" %in% installed.packages())) {
@@ -285,7 +285,7 @@ Here we will use the `str()` function to print out a preview of the **str**uctur
 str(metadata$mutation_status)
 ```
 
-Currently, `mutation_status` is a character, which is not necessarily what we want.
+Currently, `mutation_status` is stored as a character, which is not necessarily what we want.
 To make sure it is set how we want for the `DESeq` object and subsequent testing, let's change it to a factor so we can explicitly set the levels. 
 
 In the `levels` argument, we will list `reference` first since that is our control group. 
@@ -294,7 +294,7 @@ In the `levels` argument, we will list `reference` first since that is our contr
 # Make mutation_status a factor and set the levels appropriately
 metadata <- metadata %>%
   dplyr::mutate(
-    # Here we will set up the factor aspect of our new variable.
+    # Here we define the values our factor variable can have and their order.
     mutation_status = factor(mutation_status, levels = c("reference", "R98S"))
   )
 ```
@@ -328,14 +328,14 @@ If you have a bigger dataset, you will probably want to make this cutoff larger.
 ## Create a DESeq2Dataset
 
 We will be using the `DESeq2` package for differential expression testing, which requires us to format our data into a `DESeqDataSet` object.
-First we need to prep our gene expression data frame so it's in the format that is compatible with the `DESeqDataSetFromMatrix()` function in the next step. 
+First we need to prep our gene expression data frame so that all of the count values are integers, making it compatible with the `DESeqDataSetFromMatrix()` function in the next step.
 
 ```{r}
-# We are making our data frame into a matrix and rounding the numbers
-gene_matrix <- round(as.matrix(filtered_expression_df))
+# round all expression counts
+gene_matrix <- round(filtered_expression_df)
 ```
 
-Now we need to create `DESeqDataSet` from our expression dataset. 
+Now we need to create a `DESeqDataSet` from our expression dataset.
 We use the `mutation_status` variable we created in the design formula because that will allow us
 to model the presence/absence of _R98S_ mutation.
 
@@ -366,41 +366,42 @@ Let's extract the results table from the `DESeq` object.
 deseq_results <- results(deseq_object)
 ```
 
-Here we will use `lfcShrink()` function to obtain shrunken log fold change estimates based on negative binomial distribution. 
+Here we will use `lfcShrink()` function to obtain shrunken log fold change estimates based on negative binomial distribution.
 This will add the estimates to your results table. 
-Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed).
+Using `lfcShrink()` can help decrease noise and preserve large differences between groups (it requires that `apeglm` package be installed). [@Zhu2018]
 
 ```{r}
-deseq_results <- lfcShrink(deseq_object, # This is the original DESeq2 object with DESeq() already having been ran
-  coef = 2, # This is based on what log fold change coefficient was used in DESeq(), the default is 2.
-  res = deseq_results # This needs to be the DESeq2 results table
+deseq_results <- lfcShrink(
+  deseq_object, # The original DESeq2 object after running DESeq()
+  coef = 2, # The log fold change coefficient used in DESeq(); the default is 2.
+  res = deseq_results # The original DESeq2 results table
 )
 ```
 
-Now let's take a peek at what our results table looks like. 
+Now let's take a peek at what our new results table looks like.
+
 
 ```{r}
 head(deseq_results)
 ```
 
-Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file. 
-Sort and filter the results. 
+Note it is not filtered or sorted, so we will use tidyverse to do this before saving our results to a file.
 
 ```{r}
 # this is of class DESeqResults -- we want a data frame
 deseq_df <- deseq_results %>%
   # make into data.frame
   as.data.frame() %>%
-  # the gene names are rownames -- let's make this it's own column for easy
-  # display
+  # the gene names are row names -- let's make them a column for easy display
   tibble::rownames_to_column("Gene") %>%
+  # add a column for significance threshold results
   dplyr::mutate(threshold = padj < 0.05) %>%
-  # sort by statistic -- the highest values should be genes with higher expression
-  # RPL10 mutated samples
+  # sort by statistic -- the highest values will be genes with
+  # higher expression in RPL10 mutated samples
   dplyr::arrange(dplyr::desc(log2FoldChange))
 ```
 
-Let's print out what the top results are. 
+Let's print out the top results.
 
 ```{r}
 head(deseq_df)
@@ -425,14 +426,14 @@ readr::write_tsv(
   deseq_df,
   file.path(
     results_dir,
-    "SRP123625_differential_expression_results.tsv" # Replace with a relevant output file name
+    "SRP123625_diff_expr_results.tsv" # Replace with a relevant output file name
   )
 )
 ```
 
 ## Create a volcano plot
 
-We'll use the `EnhancedVolcano` package's main function to plot our data [@Zhu2018].
+We'll use the `EnhancedVolcano` package's main function to plot our data [@Blighe2020].
 
 Here we are plotting the `log2FoldChange` (which was estimated by `lfcShrink` step) on the x axis and `padj` on the y axis.
 The `padj` variable are the p values corrected with `Benjamini-Hochberg` (the default from the `results()` step).
