@@ -192,7 +192,7 @@ First we'll declare a sensible file path for this.
 # Declare what we want the downloaded file to be called and its location
 zebrafish_hgnc_file <- file.path(
   data_dir,
-  # Can change what the file will be called locally
+  # The the file will have locally
   "human_zebrafish_hcop_fifteen_column.txt.gz"
 )
 ```
@@ -258,7 +258,7 @@ We stored our file path for the dataset in an object named `data_file` in [this 
 ```{r}
 # Read in data TSV file
 zebrafish_genes <- readr::read_tsv(data_file) %>%
-  # We only want the gene IDs so let's pull the `Gene` column
+  # We only want the gene IDs so let's keep only the `Gene` column
   dplyr::select("Gene")
 ```
 
@@ -267,7 +267,7 @@ zebrafish_genes <- readr::read_tsv(data_file) %>%
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
 ```{r}
-# Let's take a look at the first 6 items of `zebrafish_genes`
+# Let's take a look at the first 6 rows of `zebrafish_genes`
 head(zebrafish_genes)
 ```
 
@@ -291,16 +291,16 @@ any(duplicated(human_zebrafish_key))
 ```
 
 We do have duplicates!
-We don't want to handle duplicate data, so let's remove those duplicates before moving forward.
+Let's remove those duplicates before moving forward, as they provide no extra information at this point.
 
 ```{r}
 human_zebrafish_key <- human_zebrafish_key %>%
-  # We need to use the `distinct()` function to remove duplicates resulting from
-  # ignoring the additional columns in the `zebrafish` object
+  # Use the `distinct()` function to remove duplicates resulting from
+  # dropping the additional columns in the `zebrafish` data frame
   dplyr::distinct()
 ```
 
-Now let's join the mapped data from `human_zebrafish_key` with the gene data in `zebrafish_genes`. 
+Now let's join the mapped data from `human_zebrafish_key` with the gene data in `zebrafish_genes`.
 We are using a "left join" here so that we get at least one row per zebrafish gene, even if there is no matching human symbol in the mapping table.
 
 ```{r}
@@ -325,8 +325,13 @@ Let's get a summary of the human gene symbols returned in our mapped data frame,
 # We can use the `count()` function to get a tally of how many
 # `zebrafish_ensembl` IDs there are per `human_symbol`
 human_zebrafish_mapped_df %>%
+  # Remove the support column
+  dplyr::select(Gene, human_symbol) %>%
+  # Remove any remaining duplicates
+  dplyr::distinct() %>%
+  # count the number of rows per human gene
   dplyr::count(human_symbol) %>%
-  # Sort by highest `n` which would be the human gene symbol with the most
+  # Sort by highest `n` which will be the human gene symbol with the most
   # mapped zebrafish Ensembl IDs
   dplyr::arrange(desc(n))
 ```
@@ -356,7 +361,9 @@ human_zebrafish_mapped_df %>%
   dplyr::filter(human_symbol == "MATR3")
 ```
 
-We can see that we have multiple zebrafish Ensembl IDs that mapped to the same gene, but we also still have some duplicate Ensembl IDs here because the `support` column was different in the original data set!
+We can see that we have multiple zebrafish Ensembl IDs that mapped to the same gene. 
+(Notice that we also still have some duplicate Ensembl ID/human symbol pairs here because the `support` column was different in the original data set!
+This is why we removed that column before counting above.)
 
 
 ## Collapse zebrafish genes mapping to multiple human genes
@@ -370,8 +377,8 @@ In the next chunk, we show how we can collapse all the human gene symbols into o
 collapsed_human_symbol_df <- human_zebrafish_mapped_df %>%
   # Group by zebrafish Ensembl IDs
   dplyr::group_by(Gene) %>%
-  # Collapse the mapped values in `human_zebrafish_mapped_df` to one column named
-  # `all_human_symbols`, removing any duplicate human symbols
+  # Collapse the mapped values in `human_zebrafish_mapped_df` to a
+  # `all_human_symbols` column, removing any duplicated human symbols
   # note that we will lose the `support` column in this summarizing step
   dplyr::summarize(
     # combine unique symbols with semicolons between them
@@ -405,11 +412,11 @@ Since multiple zebrafish Ensembl gene IDs map to the same human symbol, we may w
 *This is not at all straightforward!* (see [this paper](https://doi.org/10.1093/bioinformatics/btaa468) for just one example) [@Stamboulian2020].
 Gene duplications along the zebrafish lineage may result in complicated relationships among genes, especially with regard to divisions of function.
 
-Simply combining expression values across zebrafish transcripts using an average or other summary statistic may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
+Simply combining expression values across zebrafish transcripts that correspond to the same human gene using an average or other summary statistic may result in the loss of a lot of data and will likely not be representative of the zebrafish biology.
 One thing we might do to make the problem somewhat simpler is to reduce the number of multi-mapped genes by requiring a certain level of support for each mapping from across the various databases included in `HCOP`.
 This will not fully solve the problem (and may not even be desirable in some cases), but we present it here as an example of an approach one might take.
 
-Therefore, we will use the `support` column to decide which mappings to retain.
+To do this, we will use the `support` column to decide which mappings to retain.
 Let's take a look at `support`.
 
 ```{r}
@@ -417,25 +424,30 @@ head(human_zebrafish_mapped_df$support)
 ```
 
 Looks like we have a variety of databases for multiple mappings, but we do have some instances of only one database reported in support of the mapping.
-As we noted earlier, an orthology prediction where more than one of the databases concur would be considered reliable.
-Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will take the mappings with more than one database to support the assertion.
+As we noted earlier, an orthology prediction where more than one of the databases concur would be considered more reliable.
+Therefore, where we have multi-mapped zebrafish Ensembl gene IDs, we will retain the mappings with more than one database to support the assertion.
 
 Before we do, let's take a look how many multi-mapped genes there are in the data frame.
 
 ```{r}
 human_zebrafish_mapped_df %>%
+  # Remove the support column
+  dplyr::select(Gene, human_symbol) %>%
+  # Remove any remaining duplicates
+  dplyr::distinct() %>%
   # Count the number of rows in the dataframe for each symbol
   dplyr::count(human_symbol) %>%
   # Filter out the symbols without multimapped genes
   dplyr::filter(n > 1)
 ```
-Looks like we have 4,211 human gene symbols with multiple mappings.
+Looks like we have 4,169 human gene symbols with multiple mappings.
 
 Now let's filter out the less reliable mappings.
 
 ```{r}
 filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
   # Count the number of databases in the support column
+  # by using the number of commas that separate the databases
   dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>%
   # Now filter to the rows where more than one database supports the mapping 
   dplyr::filter(n_databases > 1)
@@ -447,12 +459,16 @@ Let's count how many multi-mapped genes we have now.
 
 ```{r}
 filtered_zebrafish_ensembl_df %>%
+  # Remove the support column
+  dplyr::select(Gene, human_symbol) %>%
+  # Remove any remaining duplicates
+  dplyr::distinct() %>%
   # Count the number of rows in the dataframe for each symbol
   dplyr::count(human_symbol) %>%
   # Filter to the symbols with multimapped genes
   dplyr::filter(n > 1)
 ```
-Now we only have 1,717 multi-mapped genes, compared to the 4,211 that we began with.
+Now we only have 1,695 multi-mapped genes, compared to the 4,169 that we began with.
 Although we haven't filtered down to zero multi-mapped genes, we have hopefully removed some of the less _reliable_ mappings.
 
 ### Write results to file
