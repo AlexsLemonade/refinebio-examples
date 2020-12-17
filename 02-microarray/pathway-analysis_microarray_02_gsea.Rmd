@@ -306,8 +306,8 @@ dge_mapped_df <- data.frame(
     multiVals = "first"
   )
 ) %>%
-  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop
-  # that from the data frame
+  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier,
+  # drop that from the data frame
   dplyr::filter(!is.na(entrez_id)) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
@@ -328,7 +328,7 @@ head(dge_mapped_df)
 
 ## Perform gene set enrichment analysis (GSEA)
 
-The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude [@clusterProfiler-book].
+The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude [@Subramanian2005].
 
 GSEA calculates a pathway-level metric, called an enrichment score (sometimes abbreviated as ES), by ranking genes by a gene-level statistic.
 This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings [@clusterProfiler-book]. 
@@ -451,7 +451,7 @@ gsea_results <- GSEA(
 ```
 
 Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the enrichment scores of the gene set for the permuted data, which generates a null distribution for the enrichment score.
-The `pAdjustMethod` arguments to `GSEA()` above specifies what method to use for adjusting the p-values to account for multiple hypothesis testing; the `pvalueCutoff` argument tells the function to only return pathways with adjusted p-values less than that threshold in the `results` slot.
+The `pAdjustMethod` argument to `GSEA()` above specifies what method to use for adjusting the p-values to account for multiple hypothesis testing; the `pvalueCutoff` argument tells the function to only return pathways with adjusted p-values less than that threshold in the `results` slot.
 
 Let's take a look at the table in the `result` slot of `gsea_results`.
 
@@ -482,7 +482,7 @@ Let's look at the 3 gene sets with the most positive NES.
 
 ```{r rownames.print = FALSE}
 gsea_result_df %>%
-  # This orders the results by the NES value and takes the top 3 rows
+  # This returns the 3 rows with the largest NES values
   dplyr::slice_max(n = 3, order_by = NES)
 ```
 
@@ -519,7 +519,7 @@ Let's look for the 3 gene sets with the most negative NES.
 
 ```{r rownames.print=FALSE}
 gsea_result_df %>%
-  # This orders the results by the NES value and takes the bottom 3 rows
+  # Return the 3 rows with the smallest (most negative) NES values
   dplyr::slice_min(n = 3, order_by = NES)
 ```
 
