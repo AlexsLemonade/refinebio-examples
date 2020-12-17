@@ -82,7 +82,7 @@ You will get an email when it is ready.
 ## About the dataset we are using for this example
 
 For this example analysis, we will use this [zebrafish gene expression dataset](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-@Tregnago2016 use microarrays to measure gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+@Tregnago2016 used microarrays to measure gene expression of ten zebrafish samples, five overexpressing human CREB, as well as five control samples.
 In this analysis, we will test differential expression between the control and CREB-overexpressing groups.
 
 ## Place the dataset in your new `data/` folder
