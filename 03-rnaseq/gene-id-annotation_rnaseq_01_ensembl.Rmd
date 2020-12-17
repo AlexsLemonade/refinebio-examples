@@ -374,7 +374,7 @@ Our `final_mapped_df` object now has a column named `first_mapped_entrez_id` tha
 
 Let's look at the multi-mapped data again
 
-```{r}
+```{r rownames.print = FALSE}
 final_mapped_df %>%
   # Filter `final_mapped_df` to rows with multiple mapped values
   dplyr::filter(stringr::str_detect(all_entrez_ids, ";")) %>%

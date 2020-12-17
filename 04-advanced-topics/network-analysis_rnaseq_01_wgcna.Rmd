@@ -517,7 +517,7 @@ stats_df <- limma::topTable(fit, number = ncol(module_eigengenes)) %>%
 Let's take a look at the results. 
 They are sorted with the most significant results at the top.
 
-```{r}
+```{r rownames.print = FALSE}
 head(stats_df)
 ```
 

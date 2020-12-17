@@ -403,7 +403,7 @@ deseq_df <- deseq_results %>%
 
 Let's print out the top results.
 
-```{r}
+```{r rownames.print = FALSE}
 head(deseq_df)
 ```
 
