@@ -1,7 +1,7 @@
 ---
 title: "Ortholog Mapping - Microarray"
 author: "CCDL for ALSF"
-date: "October 2020"
+date: "December 2020"
 output:
   html_notebook:
     toc: true
@@ -383,7 +383,7 @@ collapsed_human_symbol_df <- human_zebrafish_mapped_df %>%
   dplyr::summarize(
     # combine unique symbols with semicolons between them
     all_human_symbols = paste(
-      sort(unique(human_symbol)), 
+      sort(unique(human_symbol)),
       collapse = ";"
     )
   )
@@ -449,7 +449,7 @@ filtered_zebrafish_ensembl_df <- human_zebrafish_mapped_df %>%
   # Count the number of databases in the support column
   # by using the number of commas that separate the databases
   dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>%
-  # Now filter to the rows where more than one database supports the mapping 
+  # Now filter to the rows where more than one database supports the mapping
   dplyr::filter(n_databases > 1)
 
 head(filtered_zebrafish_ensembl_df)

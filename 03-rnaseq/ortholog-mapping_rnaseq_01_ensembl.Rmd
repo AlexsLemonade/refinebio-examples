@@ -1,7 +1,7 @@
 ---
 title: "Ortholog Mapping - RNA-seq"
 author: "CCDL for ALSF"
-date: "October 2020"
+date: "December 2020"
 output:   
   html_notebook:
     toc: true
@@ -33,7 +33,7 @@ You can open this `.Rmd` file in RStudio and follow the rest of these steps from
 ## Set up your analysis folders 
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
+We have set up some code that will automatically set up a folder structure for you.
 Run this next chunk to set up your folders! 
 
 If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
@@ -380,12 +380,12 @@ collapsed_human_ensembl_df <- human_mouse_mapped_df %>%
   # Group by mouse Ensembl IDs
   dplyr::group_by(Gene) %>%
   # Collapse the mapped values in `human_mouse_mapped_df` to a
-  # `all_human_symbols` column, removing any duplicated human symbols
+  # `all_human_ensembl` column, removing any duplicated human symbols
   # note that we will lose the `support` column in this summarizing step
   dplyr::summarize(
     # combine unique symbols with semicolons between them
-    all_human_symbols = paste(
-      sort(unique(human_symbol)),
+    all_human_ensembl = paste(
+      sort(unique(human_ensembl)),
       collapse = ";"
     )
   )
