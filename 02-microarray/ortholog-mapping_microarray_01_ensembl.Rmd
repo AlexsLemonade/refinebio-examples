@@ -192,7 +192,7 @@ First we'll declare a sensible file path for this.
 # Declare what we want the downloaded file to be called and its location
 zebrafish_hgnc_file <- file.path(
   data_dir,
-  # The the file will have locally
+  # The name the file will have locally
   "human_zebrafish_hcop_fifteen_column.txt.gz"
 )
 ```
@@ -206,7 +206,7 @@ If you are looking for a different species, see the [directory page of the HGNC 
 download.file(
   paste0(
     "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
-    # Replace with the file name of the species conversion you are looking for
+    # Replace with the file name for the species conversion you want
     "human_zebrafish_hcop_fifteen_column.txt.gz"
   ),
   # The file will be saved to the name and location we defined earlier
@@ -317,7 +317,7 @@ head(human_zebrafish_mapped_df, n = 10)
 
 Looks like we have mapped symbols!
 
-So now we have all the zebrafish genes mapped to human, but there might be places where there are multiple zebrafish genes that are orthologous to the same human gene, or vice versa. 
+So now we have all the zebrafish genes mapped to human, but there might be places where there are multiple zebrafish genes that are orthologous to the same human gene, or vice versa.
 
 Let's get a summary of the human gene symbols returned in our mapped data frame, `human_zebrafish_mapped_df`. 
 
@@ -339,7 +339,7 @@ human_zebrafish_mapped_df %>%
 There are certainly a good number of places where we mapped multiple zebrafish Ensembl IDs to the same human symbol!
 We'll look at this in a bit.
 
-We can also see that there 738 zebrafish Ensembl IDs that did not map to a human symbol. 
+We can also see that there 738 zebrafish Ensembl IDs that did not map to a human symbol.
 These are the ones with a value of NA.
 This is okay because we do not expect everything to map neatly across species.
 
@@ -362,7 +362,7 @@ human_zebrafish_mapped_df %>%
 ```
 
 We can see that we have multiple zebrafish Ensembl IDs that mapped to the same gene. 
-(Notice that we also still have some duplicate Ensembl ID/human symbol pairs here because the `support` column was different in the original data set!
+(Notice that we also still have some duplicate zebrafish Ensembl ID/human symbol pairs here because the `support` column was different in the original data set!
 This is why we removed that column before counting above.)
 
 
