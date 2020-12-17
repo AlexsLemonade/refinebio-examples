@@ -297,8 +297,8 @@ Let's get a summary of the gene symbols in the `Symbol` column of our mapped dat
 summary(as.factor(mapped_df$Symbol), maxsum = 10)
 ```
 
-There are 998 `NA`s in the `Symbol` column, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
-998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
+There are 942 `NA`s in the `Symbol` column, which means that 942 out of the 17918 Ensembl IDs did not map to gene symbols.
+942 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
 However, if you have almost all `NA`s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
@@ -329,7 +329,7 @@ This will remove all instances of multiple mappings and return a list of only th
 Use `?mapIds` to see more options or strategies.
 
 ```{r}
-# Map ensembl IDs to their associated gene symbols
+# Map Ensembl IDs to their associated gene symbols
 filtered_mapped_df <- data.frame(
   "Symbol" = mapIds(
     org.Mm.eg.db, # Replace with annotation package for your organism

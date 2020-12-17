@@ -70,7 +70,7 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
@@ -296,8 +296,8 @@ Let's get a summary of the values returned in the `Entrez` column of our mapped 
 summary(as.factor(mapped_df$Entrez), maxsum = 10)
 ```
 
-There are 9102 `NA`s in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs.
-This means if you are depending on `Entrez` IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.
+There are 9026 `NA`s in our data frame, which means that 9026 out of the 31882 Ensembl IDs did not map to Entrez IDs.
+This means if you are depending on `Entrez` IDs for your downstream analyses, you may not be able to use the 9026 unmapped genes.
 
 Now let's check to see how many genes we have that were mapped to multiple IDs.
 
