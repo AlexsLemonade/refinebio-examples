@@ -4030,27 +4030,28 @@ div.tocify {
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to gene symbols (<code>SYMBOL</code>), we could just as easily use it to convert to and from any of these <code>keytypes()</code> listed above.</p>
 <p>The function we will use to map from Ensembl gene IDs to gene symbols is called <code>mapIds()</code> and comes from the <code>AnnotationDbi</code>.</p>
 <p>Let’s create a data frame that shows the mapped gene symbols along with the differential expression stats for the respective Ensembl IDs.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential expression stats</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>dge_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb17-3"><a href="#cb17-3"></a>  <span class="dt">gene_symbol =</span> <span class="kw">mapIds</span>(</span>
-<span id="cb17-4"><a href="#cb17-4"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>    org.Mm.eg.db,</span>
-<span id="cb17-6"><a href="#cb17-6"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
-<span id="cb17-7"><a href="#cb17-7"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb17-8"><a href="#cb17-8"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
-<span id="cb17-9"><a href="#cb17-9"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb17-10"><a href="#cb17-10"></a>    <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
-<span id="cb17-11"><a href="#cb17-11"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
-<span id="cb17-12"><a href="#cb17-12"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
-<span id="cb17-13"><a href="#cb17-13"></a>  )</span>
-<span id="cb17-14"><a href="#cb17-14"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb17-15"><a href="#cb17-15"></a><span class="st">  </span><span class="co"># If an Ensembl gene identifier doesn&#39;t map to a gene symbol, drop that</span></span>
-<span id="cb17-16"><a href="#cb17-16"></a><span class="st">  </span><span class="co"># from the data frame</span></span>
-<span id="cb17-17"><a href="#cb17-17"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(gene_symbol)) <span class="op">%&gt;%</span></span>
-<span id="cb17-18"><a href="#cb17-18"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
-<span id="cb17-19"><a href="#cb17-19"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb17-20"><a href="#cb17-20"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
-<span id="cb17-21"><a href="#cb17-21"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(dge_df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="co"># expression stats</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>dge_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb17-4"><a href="#cb17-4"></a>  <span class="dt">gene_symbol =</span> <span class="kw">mapIds</span>(</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>    org.Mm.eg.db,</span>
+<span id="cb17-7"><a href="#cb17-7"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
+<span id="cb17-12"><a href="#cb17-12"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
+<span id="cb17-14"><a href="#cb17-14"></a>  )</span>
+<span id="cb17-15"><a href="#cb17-15"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb17-16"><a href="#cb17-16"></a><span class="st">  </span><span class="co"># If an Ensembl gene identifier doesn&#39;t map to a gene symbol, drop that</span></span>
+<span id="cb17-17"><a href="#cb17-17"></a><span class="st">  </span><span class="co"># from the data frame</span></span>
+<span id="cb17-18"><a href="#cb17-18"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(gene_symbol)) <span class="op">%&gt;%</span></span>
+<span id="cb17-19"><a href="#cb17-19"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
+<span id="cb17-20"><a href="#cb17-20"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb17-21"><a href="#cb17-21"></a><span class="st">  </span><span class="co"># Now let&#39;s join the rest of the expression data</span></span>
+<span id="cb17-22"><a href="#cb17-22"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">inner_join</span>(dge_df, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;Ensembl&quot;</span> =<span class="st"> &quot;Gene&quot;</span>))</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>This <code>1:many mapping between keys and columns</code> message means that some Ensembl gene identifiers map to multiple gene symbols. In this case, it’s also possible that a gene symbol will map to multiple Ensembl IDs. For the purpose of performing GSEA later in this notebook, we keep only the first mapped IDs. Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
 <p>Let’s see a preview of <code>dge_mapped_df</code>.</p>
