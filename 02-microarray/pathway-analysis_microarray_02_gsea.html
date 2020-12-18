@@ -3906,7 +3906,7 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html"><code>clusterProfiler</code></a> package to perform GSEA and the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package which contains gene sets from the <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">Molecular Signatures Database (MSigDB)</a> already in the tidy format required by <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Dolgalev2020" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>.</p>
+<p>In this analysis, we will be using <a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html"><code>clusterProfiler</code></a> package to perform GSEA and the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package which contains gene sets from the <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">Molecular Signatures Database (MSigDB)</a> already in the tidy format required by <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>.</p>
 <p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html"><code>org.Dr.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson <a href="#ref-Carlson2019-zebrafish" role="doc-biblioref">2019</a>)</span>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;clusterProfiler&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
@@ -3963,7 +3963,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -3984,7 +3984,7 @@ div.tocify {
 </div>
 <div id="getting-familiar-with-msigdb-gene-sets-available-via-msigdbr" class="section level2">
 <h2><span class="header-section-number">4.4</span> Getting familiar with MSigDB gene sets available via <code>msigdbr</code></h2>
-<p>The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>. We can use the <code>msigdbr</code> package to access these gene sets in a format compatible with the package we’ll use for analysis, <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Dolgalev2020" role="doc-biblioref">2020</a>)</span>.</p>
+<p>The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>. We can use the <code>msigdbr</code> package to access these gene sets in a format compatible with the package we’ll use for analysis, <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>)</span>.</p>
 <p>The gene sets available directly from MSigDB are applicable to human studies. <code>msigdbr</code> also supports commonly studied model organisms.</p>
 <p>Let’s take a look at what organisms the package supports with <code>msigdbr_species()</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">msigdbr_species</span>()</span></code></pre></div>
@@ -3993,7 +3993,7 @@ div.tocify {
 {"columns":[{"label":["species_name"],"name":[1],"type":["chr"],"align":["left"]},{"label":["species_common_name"],"name":[2],"type":["chr"],"align":["left"]}],"data":[{"1":"Bos taurus","2":"cattle"},{"1":"Caenorhabditis elegans","2":"roundworm"},{"1":"Canis lupus familiaris","2":"dog"},{"1":"Danio rerio","2":"zebrafish"},{"1":"Drosophila melanogaster","2":"fruit fly"},{"1":"Gallus gallus","2":"chicken"},{"1":"Homo sapiens","2":"human"},{"1":"Mus musculus","2":"house mouse"},{"1":"Rattus norvegicus","2":"Norway rat"},{"1":"Saccharomyces cerevisiae","2":"baker's or brewer's yeast"},{"1":"Sus scrofa","2":"pig"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>MSigDB contains <a href="https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp">8 different gene set collections</a> <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span> that are distinguished by how they are derived (e.g., computationally mined, curated).</p>
+<p>MSigDB contains <a href="https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp">8 different gene set collections</a> <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span> that are distinguished by how they are derived (e.g., computationally mined, curated).</p>
 <p>In this example, we will use a collection called Hallmark gene sets for GSEA <span class="citation">(Liberzon <em>et al.</em> <a href="#ref-Liberzon2015" role="doc-biblioref">2015</a>)</span>. Here’s an excerpt of <a href="https://www.gsea-msigdb.org/gsea/msigdb/collection_details.jsp#H">the collection description from MSigDB</a>:</p>
 <blockquote>
 <p>Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression. These gene sets were generated by a computational methodology based on identifying gene set overlaps and retaining genes that display coordinate expression. The hallmarks reduce noise and redundancy and provide a better delineated biological space for GSEA.</p>
@@ -4029,25 +4029,25 @@ div.tocify {
 ## [21] &quot;SYMBOL&quot;       &quot;UNIGENE&quot;      &quot;UNIPROT&quot;      &quot;ZFIN&quot;</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to Entrez IDs (<code>ENTREZID</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to gene symbols (<code>SYMBOL</code>).</p>
 <p>Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
-<p>The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called <code>mapIds()</code>.</p>
+<p>The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called <code>mapIds()</code> and comes from the <code>AnnotationDbi</code> package.</p>
 <p>Let’s create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="co"># expression stats</span></span>
 <span id="cb17-3"><a href="#cb17-3"></a>dge_mapped_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb17-4"><a href="#cb17-4"></a>  <span class="st">&quot;entrez_id&quot;</span> =<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb17-4"><a href="#cb17-4"></a>  <span class="dt">entrez_id =</span> <span class="kw">mapIds</span>(</span>
 <span id="cb17-5"><a href="#cb17-5"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
 <span id="cb17-6"><a href="#cb17-6"></a>    org.Dr.eg.db,</span>
 <span id="cb17-7"><a href="#cb17-7"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
-<span id="cb17-8"><a href="#cb17-8"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
-<span id="cb17-10"><a href="#cb17-10"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
 <span id="cb17-12"><a href="#cb17-12"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
 <span id="cb17-13"><a href="#cb17-13"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
 <span id="cb17-14"><a href="#cb17-14"></a>  )</span>
 <span id="cb17-15"><a href="#cb17-15"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb17-16"><a href="#cb17-16"></a><span class="st">  </span><span class="co"># If an Ensembl gene identifier doesn&#39;t map to a Entrez gene identifier, drop</span></span>
-<span id="cb17-17"><a href="#cb17-17"></a><span class="st">  </span><span class="co"># that from the data frame</span></span>
+<span id="cb17-16"><a href="#cb17-16"></a><span class="st">  </span><span class="co"># If an Ensembl gene identifier doesn&#39;t map to a Entrez gene identifier,</span></span>
+<span id="cb17-17"><a href="#cb17-17"></a><span class="st">  </span><span class="co"># drop that from the data frame</span></span>
 <span id="cb17-18"><a href="#cb17-18"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(entrez_id)) <span class="op">%&gt;%</span></span>
 <span id="cb17-19"><a href="#cb17-19"></a><span class="st">  </span><span class="co"># Make an `Ensembl` column to store the rownames</span></span>
 <span id="cb17-20"><a href="#cb17-20"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Ensembl&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -4065,8 +4065,8 @@ div.tocify {
 </div>
 <div id="perform-gene-set-enrichment-analysis-gsea" class="section level2">
 <h2><span class="header-section-number">4.6</span> Perform gene set enrichment analysis (GSEA)</h2>
-<p>The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>)</span>.</p>
-<p>GSEA calculates a pathway-level metric, called an enrichment score (sometimes abbreviated as ES), by ranking genes by a gene-level statistic. This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>)</span>. Specifically, genes are ranked from most positive to most negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not. In this example, the enrichment score for a pathway is the running sum’s maximum deviation from zero. GSEA also assesses statistical significance of the scores for each pathway through permutation testing. As a result, each input pathway will have a p-value associated with it that is then corrected for multiple hypothesis testing <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>)</span>.</p>
+<p>The goal of GSEA is to detect situations where many genes in a gene set change in a coordinated way, even when individual changes are small in magnitude <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>.</p>
+<p>GSEA calculates a pathway-level metric, called an enrichment score (sometimes abbreviated as ES), by ranking genes by a gene-level statistic. This score reflects whether or not a gene set or pathway is overrepresented at the top or bottom of the gene rankings <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>. Specifically, genes are ranked from most positive to most negative based on their statistic and a running sum is calculated by starting with the most highly ranked genes and increasing the score when a gene is in the pathway and decreasing the score when a gene is not. In this example, the enrichment score for a pathway is the running sum’s maximum deviation from zero. GSEA also assesses statistical significance of the scores for each pathway through permutation testing. As a result, each input pathway will have a p-value associated with it that is then corrected for multiple hypothesis testing <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>.</p>
 <p>The implementation of GSEA we use in this examples requires a gene list ordered by some statistic (here we’ll use the t-statistic calculated as part of differential gene expression analysis) and input gene sets (Hallmark collection). When you use previously computed gene-level statistics with GSEA, it is called GSEA pre-ranked.</p>
 <div id="determine-our-pre-ranked-genes-list" class="section level3">
 <h3><span class="header-section-number">4.6.1</span> Determine our pre-ranked genes list</h3>
@@ -4090,7 +4090,7 @@ div.tocify {
   </script>
 </div>
 <p>We can see that the associated values vary for each row.</p>
-<p>As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the <code>GSEA()</code> step. Let’s keep the Entrez IDs associated with the higher absolute value of the t-statistic. GSEA relies on genes’ rankings on the basis of a gene-level statistic and the enrichment score that is calculated reflects the degree to which genes in a gene set are overrepresented in the top or bottom of the rankings <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>)</span>.</p>
+<p>As we mentioned earlier, we will want to remove duplicated gene identifiers in preparation for the <code>GSEA()</code> step. Let’s keep the Entrez IDs associated with the higher absolute value of the t-statistic. GSEA relies on genes’ rankings on the basis of a gene-level statistic and the enrichment score that is calculated reflects the degree to which genes in a gene set are overrepresented in the top or bottom of the rankings <span class="citation">(Yu <a href="#ref-clusterProfiler-book" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>)</span>.</p>
 <p>Retaining the instance of the Entrez ID with the higher absolute value of a gene-level statistic means that we will retain the value that is likely to be more highly- or lowly-ranked or, put another way, the values less likely to be towards the middle of the ranked gene list. We should keep this decision in mind when interpreting our results. For example, if all the duplicate identifiers happened to be in a particular gene set, we may get an overly optimistic view of how perturbed that gene set is because we preferentially selected instances of the identifier that have a higher absolute value of the statistic used for ranking.</p>
 <p>We are removing values for two genes here, so it is unlikely to have a considerable impact on our results.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>filtered_dge_mapped_df &lt;-<span class="st"> </span>dge_mapped_df <span class="op">%&gt;%</span></span>
@@ -4147,7 +4147,7 @@ div.tocify {
 <pre><code>## GSEA analysis...</code></pre>
 <pre><code>## leading edge analysis...</code></pre>
 <pre><code>## done...</code></pre>
-<p>Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the enrichment scores of the gene set for the permuted data, which generates a null distribution for the enrichment score. The <code>pAdjustMethod</code> arguments to <code>GSEA()</code> above specifies what method to use for adjusting the p-values to account for multiple hypothesis testing; the <code>pvalueCutoff</code> argument tells the function to only return pathways with adjusted p-values less than that threshold in the <code>results</code> slot.</p>
+<p>Significance is assessed by permuting the gene labels of the pre-ranked gene list and recomputing the enrichment scores of the gene set for the permuted data, which generates a null distribution for the enrichment score. The <code>pAdjustMethod</code> argument to <code>GSEA()</code> above specifies what method to use for adjusting the p-values to account for multiple hypothesis testing; the <code>pvalueCutoff</code> argument tells the function to only return pathways with adjusted p-values less than that threshold in the <code>results</code> slot.</p>
 <p>Let’s take a look at the table in the <code>result</code> slot of <code>gsea_results</code>.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co"># We can access the results from our gseaResult object using `@result`</span></span>
 <span id="cb36-2"><a href="#cb36-2"></a><span class="kw">head</span>(gsea_results<span class="op">@</span>result)</span></code></pre></div>
@@ -4169,7 +4169,7 @@ div.tocify {
 <h3><span class="header-section-number">4.7.1</span> Most Positive NES</h3>
 <p>Let’s look at the 3 gene sets with the most positive NES.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>gsea_result_df <span class="op">%&gt;%</span></span>
-<span id="cb38-2"><a href="#cb38-2"></a><span class="st">  </span><span class="co"># This orders the results by the NES value and takes the top 3 rows</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="st">  </span><span class="co"># This returns the 3 rows with the largest NES values</span></span>
 <span id="cb38-3"><a href="#cb38-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">slice_max</span>(<span class="dt">n =</span> <span class="dv">3</span>, <span class="dt">order_by =</span> NES)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4198,7 +4198,7 @@ div.tocify {
 <h3><span class="header-section-number">4.7.2</span> Most Negative NES</h3>
 <p>Let’s look for the 3 gene sets with the most negative NES.</p>
 <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>gsea_result_df <span class="op">%&gt;%</span></span>
-<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="co"># This orders the results by the NES value and takes the bottom 3 rows</span></span>
+<span id="cb42-2"><a href="#cb42-2"></a><span class="st">  </span><span class="co"># Return the 3 rows with the smallest (most negative) NES values</span></span>
 <span id="cb42-3"><a href="#cb42-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">slice_min</span>(<span class="dt">n =</span> <span class="dv">3</span>, <span class="dt">order_by =</span> NES)</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -4258,7 +4258,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-17                  
+##  date     2020-12-18                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
@@ -4280,7 +4280,7 @@ div.tocify {
 ##  data.table        1.13.0   2020-07-24 [1] RSPM (R 4.0.2)
 ##  DBI               1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  digest            0.6.25   2020-02-23 [1] RSPM (R 4.0.0)
-##  DO.db             2.9      2020-12-16 [1] Bioconductor  
+##  DO.db             2.9      2020-12-01 [1] Bioconductor  
 ##  DOSE              3.16.0   2020-10-27 [1] Bioconductor  
 ##  downloader        0.4      2015-07-09 [1] RSPM (R 4.0.0)
 ##  dplyr             1.0.2    2020-08-18 [1] RSPM (R 4.0.2)
@@ -4298,7 +4298,7 @@ div.tocify {
 ##  ggraph            2.0.3    2020-05-20 [1] RSPM (R 4.0.2)
 ##  ggrepel           0.8.2    2020-03-08 [1] RSPM (R 4.0.2)
 ##  glue              1.4.2    2020-08-27 [1] RSPM (R 4.0.2)
-##  GO.db             3.12.1   2020-12-16 [1] Bioconductor  
+##  GO.db             3.12.1   2020-12-01 [1] Bioconductor  
 ##  GOSemSim          2.16.1   2020-10-29 [1] Bioconductor  
 ##  graphlayouts      0.7.0    2020-04-25 [1] RSPM (R 4.0.2)
 ##  gridExtra         2.3      2017-09-09 [1] RSPM (R 4.0.0)
@@ -4319,7 +4319,7 @@ div.tocify {
 ##  msigdbr         * 7.2.1    2020-10-02 [1] RSPM (R 4.0.2)
 ##  munsell           0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  optparse        * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Dr.eg.db    * 3.12.0   2020-12-16 [1] Bioconductor  
+##  org.Dr.eg.db    * 3.12.0   2020-12-01 [1] Bioconductor  
 ##  pillar            1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig         2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  plyr              1.8.6    2020-03-03 [1] RSPM (R 4.0.2)
@@ -4342,7 +4342,7 @@ div.tocify {
 ##  RSQLite           2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi        0.11     2020-02-07 [1] RSPM (R 4.0.0)
 ##  rvcheck           0.1.8    2020-03-01 [1] RSPM (R 4.0.0)
-##  S4Vectors       * 0.28.1   2020-12-09 [1] Bioconductor  
+##  S4Vectors       * 0.28.0   2020-10-27 [1] Bioconductor  
 ##  scales            1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  scatterpie        0.1.5    2020-09-09 [1] RSPM (R 4.0.2)
 ##  sessioninfo       1.1.1    2018-11-05 [1] RSPM (R 4.0.0)
@@ -4371,14 +4371,17 @@ div.tocify {
 <div id="ref-Carlson2019-zebrafish">
 <p>Carlson M., 2019 Genome wide annotation for zebrafish. <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html">https://bioconductor.org/packages/release/data/annotation/html/org.Dr.eg.db.html</a></p>
 </div>
-<div id="ref-Dolgalev2020">
-<p>Dolgalev I., 2020 <em>msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
+<div id="ref-Igor2020">
+<p>Dolgalev I., 2020 <em>Msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
 </div>
 <div id="ref-Khatri2012">
 <p>Khatri P., M. Sirota, and A. J. Butte, 2012 Ten years of pathway analysis: Current approaches and outstanding challenges. PLOS Computational Biology 8: e1002375. <a href="https://doi.org/10.1371/journal.pcbi.1002375">https://doi.org/10.1371/journal.pcbi.1002375</a></p>
 </div>
 <div id="ref-Liberzon2015">
 <p>Liberzon A., C. Birger, H. Thorvaldsdóttir, M. Ghandi, and J. P. Mesirov <em>et al.</em>, 2015 The molecular signatures database hallmark gene set collection. Cell Systems 1. <a href="https://doi.org/10.1016/j.cels.2015.12.004">https://doi.org/10.1016/j.cels.2015.12.004</a></p>
+</div>
+<div id="ref-Liberzon2011">
+<p>Liberzon A., A. Subramanian, R. Pinchback, H. Thorvaldsdóttir, and P. Tamayo <em>et al.</em>, 2011 Molecular signatures database (MSigDB) 3.0. Bioinformatics 27: 1739–1740. <a href="https://doi.org/10.1093/bioinformatics/btr260">https://doi.org/10.1093/bioinformatics/btr260</a></p>
 </div>
 <div id="ref-Ritchie2015">
 <p>Ritchie M. E., B. Phipson, D. Wu, Y. Hu, and C. W. Law <em>et al.</em>, 2015 limma powers differential expression analyses for RNA-sequencing and microarray studies. Nucleic Acids Research 43: e47. <a href="https://doi.org/10.1093/nar/gkv007">https://doi.org/10.1093/nar/gkv007</a></p>
