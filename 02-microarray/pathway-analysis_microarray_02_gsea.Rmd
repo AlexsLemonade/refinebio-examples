@@ -286,7 +286,7 @@ Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
 [the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
-The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
+The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()` and comes from the `AnnotationDbi` package.
 
 Let's create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.
 
@@ -298,10 +298,10 @@ dge_mapped_df <- data.frame(
     # Replace with annotation package for the organism relevant to your data
     org.Dr.eg.db,
     keys = dge_df$Gene,
-    # Replace with the type of gene identifiers you would like to map to
-    column = "ENTREZID",
     # Replace with the type of gene identifiers in your data
     keytype = "ENSEMBL",
+    # Replace with the type of gene identifiers you would like to map to
+    column = "ENTREZID",
     # This will keep only the first mapped value for each Ensembl ID
     multiVals = "first"
   )

@@ -3878,7 +3878,7 @@ div.tocify {
 <p>We have provided this file for you and the code in this notebook will read in the results that are stored online. If you’d like to follow the steps for creating this results file from the refine.bio data, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">that WGCNA example</a>.</p>
 <p>Module 19 was the most differentially expressed between the datasets’ two time points (during illness and recovering from illness).</p>
 <p>The heatmap below summarizes the expression of the genes that make up module 19.</p>
-<p><img src="data:application/xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPEVycm9yPjxDb2RlPkFjY2Vzc0RlbmllZDwvQ29kZT48TWVzc2FnZT5BY2Nlc3MgRGVuaWVkPC9NZXNzYWdlPjxSZXF1ZXN0SWQ+RDdFMEQxNjc0N0YwODcwMTwvUmVxdWVzdElkPjxIb3N0SWQ+Rmo3TVVYOGJubzlWa2JJSkptN2tESlcrN1FhZGJEMDdHNVdTaU9reXdlTkFEcnh5bWtQT3BIM1ArYkhFRmpBdUhTOVdPM2JqRlNZPTwvSG9zdElkPjwvRXJyb3I+" width="500/"></p>
+<p><img src="data:application/xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPEVycm9yPjxDb2RlPkFjY2Vzc0RlbmllZDwvQ29kZT48TWVzc2FnZT5BY2Nlc3MgRGVuaWVkPC9NZXNzYWdlPjxSZXF1ZXN0SWQ+MjUzOERERjM2M0IxRjQ3OTwvUmVxdWVzdElkPjxIb3N0SWQ+TjNRUTNobzB0THNVTDRFeCtrOGQzTnVYRUYzRTdEZXlwbVNzY1FtWVRXVkl2R0QzMjMzMmEyTnZ3WEJyMzhacHZ6aldiWUpVa0VVPTwvSG9zdElkPjwvRXJyb3I+" width="500/"></p>
 <p>Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. This plot demonstrates how these genes, together as a module, are differentially expressed between the two time points.</p>
 </div>
 <div id="check-out-our-file-structure" class="section level2">
@@ -3974,7 +3974,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the WGCNA gene modules file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ──────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
@@ -4037,20 +4037,22 @@ div.tocify {
 ## [21] &quot;PROSITE&quot;      &quot;REFSEQ&quot;       &quot;SYMBOL&quot;       &quot;UCSCKG&quot;      
 ## [25] &quot;UNIGENE&quot;      &quot;UNIPROT&quot;</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to Entrez IDs (<code>ENTREZID</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to gene symbols (<code>SYMBOL</code>).</p>
-<p>The function we will use to map from Ensembl gene IDs to Entrez IDs is called <code>mapIds()</code>.</p>
+<p>The function we will use to map from Ensembl gene IDs to Entrez IDs is called <code>mapIds()</code> and comes from the <code>AnnotationDbi</code> package.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># This returns a named vector which we can convert to a data frame, where</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="co"># the keys (Ensembl IDs) are the names</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a>entrez_vector &lt;-<span class="st"> </span><span class="kw">mapIds</span>(org.Hs.eg.db, <span class="co"># Specify the annotation package</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="co"># The vector of gene identifiers we want to map</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>  <span class="dt">keys =</span> gene_module_df<span class="op">$</span>gene,</span>
-<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># The type of gene identifier we want returned</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a>  <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
-<span id="cb18-8"><a href="#cb18-8"></a>  <span class="co"># What type of gene identifiers we&#39;re starting with</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>entrez_vector &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a>  org.Hs.eg.db,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># The vector of gene identifiers we want to map</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="dt">keys =</span> gene_module_df<span class="op">$</span>gene,</span>
+<span id="cb18-8"><a href="#cb18-8"></a>  <span class="co"># Replace with the type of gene identifiers in your data</span></span>
 <span id="cb18-9"><a href="#cb18-9"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
-<span id="cb18-10"><a href="#cb18-10"></a>  <span class="co"># In the case of 1:many mappings, return the</span></span>
-<span id="cb18-11"><a href="#cb18-11"></a>  <span class="co"># first one. This is default behavior!</span></span>
-<span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
-<span id="cb18-13"><a href="#cb18-13"></a>)</span></code></pre></div>
+<span id="cb18-10"><a href="#cb18-10"></a>  <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb18-11"><a href="#cb18-11"></a>  <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
+<span id="cb18-12"><a href="#cb18-12"></a>  <span class="co"># In the case of 1:many mappings, return the</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a>  <span class="co"># first one. This is default behavior!</span></span>
+<span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
+<span id="cb18-15"><a href="#cb18-15"></a>)</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>This message is letting us know that sometimes Ensembl gene identifiers will map to multiple Entrez IDs. In this case, it’s also possible that an Entrez ID will map to multiple Ensembl IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">RNA-seq gene ID conversion example</a>.</p>
 <p>Let’s create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.</p>
@@ -4211,7 +4213,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-17                  
+##  date     2020-12-18                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        

@@ -3973,7 +3973,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4040,20 +4040,22 @@ div.tocify {
 ## [17] &quot;PFAM&quot;         &quot;PMID&quot;         &quot;PROSITE&quot;      &quot;REFSEQ&quot;      
 ## [21] &quot;SYMBOL&quot;       &quot;UNIGENE&quot;      &quot;UNIPROT&quot;      &quot;ZFIN&quot;</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to gene symbols (<code>SYMBOL</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to Entrez IDs (<code>ENTREZID</code>).</p>
-<p>The function we will use to map from Ensembl gene IDs to gene symbols is called <code>mapIds()</code>.</p>
+<p>The function we will use to map from Ensembl gene IDs to gene symbols is called <code>mapIds()</code> and comes from the <code>AnnotationDbi</code> package.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># This returns a named vector which we can convert to a data frame, where</span></span>
 <span id="cb18-2"><a href="#cb18-2"></a><span class="co"># the keys (Ensembl IDs) are the names</span></span>
-<span id="cb18-3"><a href="#cb18-3"></a>symbols_vector &lt;-<span class="st"> </span><span class="kw">mapIds</span>(org.Dr.eg.db, <span class="co"># Specify the annotation package</span></span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="co"># The vector of gene identifiers we want to map</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>  <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
-<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># The type of gene identifier we want returned</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a>  <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
-<span id="cb18-8"><a href="#cb18-8"></a>  <span class="co"># What type of gene identifiers we&#39;re starting with</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>symbols_vector &lt;-<span class="st"> </span><span class="kw">mapIds</span>(</span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a>  org.Dr.eg.db,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>  <span class="co"># The vector of gene identifiers we want to map</span></span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
+<span id="cb18-8"><a href="#cb18-8"></a>  <span class="co"># Replace with the type of gene identifiers in your data</span></span>
 <span id="cb18-9"><a href="#cb18-9"></a>  <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
-<span id="cb18-10"><a href="#cb18-10"></a>  <span class="co"># In the case of 1:many mappings, return the</span></span>
-<span id="cb18-11"><a href="#cb18-11"></a>  <span class="co"># first one. This is default behavior!</span></span>
-<span id="cb18-12"><a href="#cb18-12"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
-<span id="cb18-13"><a href="#cb18-13"></a>)</span></code></pre></div>
+<span id="cb18-10"><a href="#cb18-10"></a>  <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb18-11"><a href="#cb18-11"></a>  <span class="dt">column =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
+<span id="cb18-12"><a href="#cb18-12"></a>  <span class="co"># In the case of 1:many mappings, return the</span></span>
+<span id="cb18-13"><a href="#cb18-13"></a>  <span class="co"># first one. This is default behavior!</span></span>
+<span id="cb18-14"><a href="#cb18-14"></a>  <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
+<span id="cb18-15"><a href="#cb18-15"></a>)</span></code></pre></div>
 <pre><code>## &#39;select()&#39; returned 1:many mapping between keys and columns</code></pre>
 <p>This message is letting us know that sometimes Ensembl gene identifiers will map to multiple gene symbols. In this case, it’s also possible that a gene symbol will map to multiple Ensembl IDs. For more about how to explore this, take a look at our <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">microarray gene ID conversion example</a>.</p>
 <p>Let’s create a two column data frame that shows the gene symbols and their Ensembl IDs side-by-side.</p>
@@ -4221,7 +4223,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-17                  
+##  date     2020-12-18                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package         * version  date       lib source        
