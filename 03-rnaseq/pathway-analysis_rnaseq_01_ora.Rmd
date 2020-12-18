@@ -139,7 +139,7 @@ From here you can customize this analysis example to fit your own scientific que
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Dolgalev2020; @Subramanian2005].
+In this analysis, we will be using [`clusterProfiler`](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) package to perform ORA and the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package which contains gene sets from the [Molecular Signatures Database (MSigDB)](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp) already in the tidy format required by `clusterProfiler` [@Yu2012; @Dolgalev2020; @Subramanian2005; @Liberzon2011].
 
 We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package [@Carlson2020-human] to perform gene identifier conversion and [`ggupset`](https://cran.r-project.org/web/packages/ggupset/readme/README.html) to make an UpSet plot [@Ahlmann-Eltze2020].
 
@@ -247,8 +247,8 @@ gene_module_df
 
 ## Getting familiar with MSigDB gene sets available via `msigdbr`
 
-The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005]. 
-We can use the `msigdbr` package to access these gene sets in a format compatible with the package we'll use for analysis, `clusterProfiler` [@Igor2020; @Yu2012].
+The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005; @Liberzon2011]. 
+We can use the `msigdbr` package to access these gene sets in a format compatible with the package we'll use for analysis, `clusterProfiler` [@Dolgalev2020; @Yu2012].
 
 The gene sets available directly from MSigDB are applicable to human studies.
 `msigdbr` also supports commonly studied model organisms.
@@ -265,8 +265,8 @@ The data we're interested in here comes from human samples, so we can obtain onl
 hs_msigdb_df <- msigdbr(species = "Homo sapiens")
 ```
 
-MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005] that are distinguished by how they are derived (e.g., computationally mined, curated).
-In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005].
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005; @Liberzon2011] that are distinguished by how they are derived (e.g., computationally mined, curated).
+In this example, we will use pathways that are gene sets considered to be "canonical representations of a biological process compiled by domain experts" and are a subset of `C2: curated gene sets` [@Subramanian2005;  @Liberzon2011].
 
 Specifically, we will use the [KEGG (Kyoto Encyclopedia of Genes and Genomes)](https://www.genome.jp/kegg/) pathways [@Kanehisa2000].
 
@@ -313,18 +313,20 @@ keytypes(org.Hs.eg.db)
 
 Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`).
 
-The function we will use to map from Ensembl gene IDs to Entrez IDs is called `mapIds()`.
+The function we will use to map from Ensembl gene IDs to Entrez IDs is called `mapIds()` and comes from the `AnnotationDbi` package.
 
 ```{r}
 # This returns a named vector which we can convert to a data frame, where
 # the keys (Ensembl IDs) are the names
-entrez_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
+entrez_vector <- mapIds(
+  # Replace with annotation package for the organism relevant to your data
+  org.Hs.eg.db,
   # The vector of gene identifiers we want to map
   keys = gene_module_df$gene,
-  # The type of gene identifier we want returned
-  column = "ENTREZID",
-  # What type of gene identifiers we're starting with
+  # Replace with the type of gene identifiers in your data
   keytype = "ENSEMBL",
+  # Replace with the type of gene identifiers you would like to map to
+  column = "ENTREZID",
   # In the case of 1:many mappings, return the
   # first one. This is default behavior!
   multiVals = "first"
