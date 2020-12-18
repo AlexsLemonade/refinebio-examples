@@ -294,7 +294,7 @@ Let's create a data frame that shows the mapped Entrez IDs along with the differ
 # First let's create a mapped data frame we can join to the differential
 # expression stats
 dge_mapped_df <- data.frame(
-  "entrez_id" = mapIds(
+  entrez_id = mapIds(
     # Replace with annotation package for the organism relevant to your data
     org.Dr.eg.db,
     keys = dge_df$Gene,
