@@ -3963,7 +3963,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the differential expression results file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>dge_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(dge_results_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────
 ## cols(
 ##   Gene = col_character(),
 ##   logFC = col_double(),
@@ -4029,7 +4029,7 @@ div.tocify {
 ## [21] &quot;SYMBOL&quot;       &quot;UNIGENE&quot;      &quot;UNIPROT&quot;      &quot;ZFIN&quot;</code></pre>
 <p>Even though we’ll use this package to convert from Ensembl gene IDs (<code>ENSEMBL</code>) to Entrez IDs (<code>ENTREZID</code>), we could just as easily use it to convert from an Ensembl transcript ID (<code>ENSEMBLTRANS</code>) to gene symbols (<code>SYMBOL</code>).</p>
 <p>Take a look at our other gene identifier conversion examples for examples with different species and gene ID types: <a href="https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html">the microarray example</a> and <a href="https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">the RNA-seq example</a>.</p>
-<p>The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called <code>mapIds()</code>.</p>
+<p>The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called <code>mapIds()</code> and comes from the <code>AnnotationDbi</code> package.</p>
 <p>Let’s create a data frame that shows the mapped Entrez IDs along with the differential expression stats for the respective Ensembl IDs.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># First let&#39;s create a mapped data frame we can join to the differential</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="co"># expression stats</span></span>
@@ -4038,10 +4038,10 @@ div.tocify {
 <span id="cb17-5"><a href="#cb17-5"></a>    <span class="co"># Replace with annotation package for the organism relevant to your data</span></span>
 <span id="cb17-6"><a href="#cb17-6"></a>    org.Dr.eg.db,</span>
 <span id="cb17-7"><a href="#cb17-7"></a>    <span class="dt">keys =</span> dge_df<span class="op">$</span>Gene,</span>
-<span id="cb17-8"><a href="#cb17-8"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
-<span id="cb17-10"><a href="#cb17-10"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
-<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    <span class="co"># Replace with the type of gene identifiers in your data</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>    <span class="dt">keytype =</span> <span class="st">&quot;ENSEMBL&quot;</span>,</span>
+<span id="cb17-10"><a href="#cb17-10"></a>    <span class="co"># Replace with the type of gene identifiers you would like to map to</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    <span class="dt">column =</span> <span class="st">&quot;ENTREZID&quot;</span>,</span>
 <span id="cb17-12"><a href="#cb17-12"></a>    <span class="co"># This will keep only the first mapped value for each Ensembl ID</span></span>
 <span id="cb17-13"><a href="#cb17-13"></a>    <span class="dt">multiVals =</span> <span class="st">&quot;first&quot;</span></span>
 <span id="cb17-14"><a href="#cb17-14"></a>  )</span>

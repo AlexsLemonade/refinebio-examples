@@ -313,18 +313,20 @@ keytypes(org.Hs.eg.db)
 
 Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`), we could just as easily use it to convert from an Ensembl transcript ID (`ENSEMBLTRANS`) to gene symbols (`SYMBOL`).
 
-The function we will use to map from Ensembl gene IDs to Entrez IDs is called `mapIds()`.
+The function we will use to map from Ensembl gene IDs to Entrez IDs is called `mapIds()` and comes from the `AnnotationDbi` package.
 
 ```{r}
 # This returns a named vector which we can convert to a data frame, where
 # the keys (Ensembl IDs) are the names
-entrez_vector <- mapIds(org.Hs.eg.db, # Specify the annotation package
+entrez_vector <- mapIds(
+  # Replace with annotation package for the organism relevant to your data
+  org.Hs.eg.db,
   # The vector of gene identifiers we want to map
   keys = gene_module_df$gene,
-  # The type of gene identifier we want returned
-  column = "ENTREZID",
-  # What type of gene identifiers we're starting with
+  # Replace with the type of gene identifiers in your data
   keytype = "ENSEMBL",
+  # Replace with the type of gene identifiers you would like to map to
+  column = "ENTREZID",
   # In the case of 1:many mappings, return the
   # first one. This is default behavior!
   multiVals = "first"
