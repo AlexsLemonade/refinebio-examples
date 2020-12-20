@@ -102,5 +102,8 @@ RUN pip3 install \
     "pytz==2020.1" \
     "snakemake==5.20.1"
 
+# Load a library that isn't installed
+RUN Rscript -e "library(SCAN.UPC)"    
+
 # set final workdir for commands
 WORKDIR /home/rstudio
