@@ -26,7 +26,8 @@ In the context of [refine.bio](https://www.refine.bio/), we use these techniques
 The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
 In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
 
-We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. 
+We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
 
 ### How to choose a pathway analysis?
 
@@ -144,7 +145,7 @@ Your new analysis folder should contain:
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
-- A folder for `genesets` (currently empty)
+- A folder for `gene_sets` (currently empty)
 
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
@@ -437,7 +438,7 @@ mapped_df %>%
 
 As an example using the strategy we described, for `GSM917111`'s data in the first column, `0.2294387` is larger than `0.1104345` so moving forward, Entrez gene `6013` will have `0.2294387` value and the `0.1104345` would be dropped from the dataset. 
 This is just one method of handling duplicate gene identifiers.
-See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other commonly used strategies, such as taking the median expression value, 
+See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other commonly used strategies, such as taking the median expression value.
 
 Now, let's implement the maximum value method for all samples and Entrez IDs using tidyverse functions. 
 ```{r}
