@@ -11,7 +11,7 @@ output:
 
 # Purpose of this analysis
 
-The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages [@Carlson2020-package].
+The purpose of this notebook is to provide an example of mapping gene IDs for microarray data obtained from refine.bio using `AnnotationDbi` packages [@Pages2020-package].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
@@ -44,7 +44,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -52,7 +52,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -83,18 +83,19 @@ You will get an email when it is ready.
 
 For this example analysis, we will use this [mouse glioma stem cells dataset](https://www.refine.bio/experiments/GSE13490/cancer-stem-cells-are-enriched-in-the-side-population-cells-in-a-mouse-model-of-glioma).
 
-This dataset has 15 microarray mouse glioma model samples.
-The samples were obtained from parental biological replicates and from resistant sub-line biological replicates that were transplanted into recipient mice.
+This dataset has 15 microarrays measuring gene expression in a transgenic mouse model of glioma.
+The authors compared cells from side populations and non-side populations in both tumor samples and normal neural stem cells.
+
 
 ## Place the dataset in your new `data/` folder
 
-refine.bio will send you a download button in the email when it is ready. 
-Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+refine.bio will send you a download button in the email when it is ready.
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400>
 
-For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).
 
 The `<experiment_accession_id>` folder has the data and metadata TSV files you will need for this example analysis.
 Experiment accession IDs usually look something like `GSE1235` or `SRP12345`. 
@@ -125,19 +126,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE13490") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "GSE13490")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "GSE13490.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "GSE13490.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_GSE13490.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_GSE13490.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -146,7 +152,7 @@ file.exists(metadata_file)
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
@@ -154,12 +160,12 @@ If you'd like to adapt an example analysis to use a different dataset from [refi
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
-refine.bio data comes with gene level data with Ensembl IDs. 
+refine.bio data comes with gene level data identified by Ensembl IDs.
 Although this example notebook uses Ensembl IDs from Mouse, (<i>Mus musculus</i>), to obtain gene symbols this notebook can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.
 
-<b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
+<b>For different species</b>, wherever the abbreviation `org.Mm.eg.db` or `Mm` is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for <i>Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
 In the case of our [RNA-seq gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html), a Zebrafish (<i>Danio rerio</i>) dataset is used, meaning `org.Dr.eg.db` or `Dr` would also need to be used there.
-A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
+A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData).
 
 ***
 
@@ -168,18 +174,21 @@ A full list of the annotation R packages from Bioconductor is at this [link](htt
 
 # Obtaining Annotation for Ensembl IDs - Microarray
 
-Ensembl IDs can be used to obtain various different annotations at the gene/transcript level.
+refine.bio uses Ensembl IDs as the primary gene identifier in its data sets.
+While this is a consistent and useful identifier, a string of apparently random letters and numbers is not the most user-friendly or informative for interpretation.
+Luckily, we can use the Ensembl IDs that we have to obtain various different annotations at the gene/transcript level.
 Let's get ready to use the Ensembl IDs from our mouse dataset to obtain the associated gene symbols.
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2019].
+In this analysis, we will be using the `org.Mm.eg.db` R package [@Carlson2019-mouse], which is part of the Bioconductor `AnnotationDbi` framework [@Pages2020-package].
+Bioconductor compiles annotations from various sources, and these packages provide convenient methods to access and translate among those annotations.
 [Other species can be used](#using-a-different-refinebio-dataset-with-this-analysis).
 
 ```{r}
-# Install the mouse package
+# Install the mouse annotation package
 if (!("org.Mm.eg.db" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("org.Mm.eg.db", update = FALSE)
@@ -187,8 +196,9 @@ if (!("org.Mm.eg.db" %in% installed.packages())) {
 ```
 
 Attach the packages we need for this analysis.
+Note that attaching `org.Mm.eg.db` will automatically also attach `AnnotationDbi`.
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(org.Mm.eg.db)
 
@@ -208,8 +218,8 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
-  # Tuck away the Gene ID column as rownames
+expression_df <- readr::read_tsv(data_file) %>%
+  # Tuck away the Gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
 
@@ -217,20 +227,21 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$geo_accession)
+all.equal(colnames(expression_df), metadata$geo_accession)
 
 # Bring back the "Gene" column in preparation for mapping
-df <- df %>%
+expression_df <- expression_df %>%
   tibble::rownames_to_column("Gene")
 ```
 
 
 ## Map Ensembl IDs to gene symbols
 
+The main work of translating among annotations will be done with the the `AnnotationDbi` function `mapIds()`.
 The `mapIds()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
 The default behavior is to return just the first mapped value.
 It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. 
@@ -241,20 +252,20 @@ In the next chunk, we will run the `mapIds()` function and supply the `multiVals
 ```{r}
 # Map ensembl IDs to their associated gene symbols
 mapped_list <- mapIds(
-  org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
-  keys = df$Gene,
-  column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
-  keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+  org.Mm.eg.db, # Replace with annotation package for your organism
+  keys = expression_df$Gene,
+  keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+  column = "SYMBOL", # The type of gene identifiers you would like to map to
   multiVals = "list"
 )
 ```
 
 ## Explore gene ID conversion
 
-Now, let's take a look at our `mapped_list` to see how the mapping went.
+Now, let's take a look at our mapped object to see how the mapping went.
 
 ```{r}
-# Let's use the `head()` function to take a preview at our mapped list
+# Let's use the `head()` function for a preview of our mapped list
 head(mapped_list)
 ```
 
@@ -263,11 +274,11 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable for exploration by turning it into a data frame
+# Let's make our list a bit more manageable by turning it into a data frame
 mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Symbol") %>%
-  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
-  # This will result in one row of our data frame per list item
+  # enframe() makes a `list` column; we will simplify it with unnest()
+  # This will result in a data frame with one row per list item
   tidyr::unnest(cols = Symbol)
 ```
 
@@ -278,27 +289,27 @@ head(mapped_df)
 ```
 
 We can see that our data frame has a new column `Symbol`.
-Let's get a summary of the gene symbols returned in the `Symbol` column of our mapped data frame.
+Let's get a summary of the gene symbols in the `Symbol` column of our mapped data frame.
 
 ```{r}
-# We can use the `summary()` function to get a better idea of the distribution of symbols in the `Symbol` column
-summary(mapped_df$Symbol)
+# Use the `summary()` function to show the distribution of Symbol values
+# We need to use `as.factor()` here to get the counts of unique values
+# `maxsum = 10` limits the summary to 10 distinct values
+summary(as.factor(mapped_df$Symbol), maxsum = 10)
 ```
 
-There are 998 NAs in our data frame, which means that 998 out of the 17918 Ensembl IDs did not map to gene symbols.
-998 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
+There are 942 `NA`s in the `Symbol` column, which means that 942 out of the 17918 Ensembl IDs did not map to gene symbols.
+942 out of 17918 is not too bad a rate, in our opinion, but note that different gene identifier types will have different mapping rates and that is to be expected.
 Regardless, it is always good to be aware of how many genes you are potentially "losing" if you rely on this new gene identifier you've mapped to for downstream analyses.
 
-However, if you have almost all NAs it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
+However, if you have almost all `NA`s it is possible that the function was executed incorrectly or you may want to consider using a different gene identifier, if possible.
 
 Now let's check to see if we have any genes that were mapped to multiple symbols.
 
 ```{r}
 multi_mapped <- mapped_df %>%
-  # Let's group by the Ensembl IDs in the `Ensembl` column
-  dplyr::group_by(Ensembl) %>%
-  # Create a new variable containing the number of symbols mapped to each ID
-  dplyr::mutate(gene_symbol_count = dplyr::n()) %>%
+  # Let's count the number of times each Ensembl ID appears in `Ensembl` column
+  dplyr::count(Ensembl, name = "gene_symbol_count") %>%
   # Arrange by the genes with the highest number of symbols mapped
   dplyr::arrange(desc(gene_symbol_count)) %>%
   # Filter to include only the rows with multi mappings
@@ -319,20 +330,20 @@ This will remove all instances of multiple mappings and return a list of only th
 Use `?mapIds` to see more options or strategies.
 
 ```{r}
-# Map ensembl IDs to their associated gene symbols
+# Map Ensembl IDs to their associated gene symbols
 filtered_mapped_df <- data.frame(
   "Symbol" = mapIds(
-    org.Mm.eg.db, # Replace with annotation package for the organism relevant to your data
-    keys = df$Gene,
-    column = "SYMBOL", # Replace with the type of gene identifiers you would like to map to
-    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "filter" # This will drop any `Gene`s that have multiple matches
+    org.Mm.eg.db, # Replace with annotation package for your organism
+    keys = expression_df$Gene,
+    keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+    column = "SYMBOL", # The type of gene identifiers you would like to map to
+    multiVals = "filter" # This will drop any genes that have multiple matches
   )
 ) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
-  # Join the remaining data from `df` using the Ensembl IDs
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  # Join the remaining data from `expression_df` using the Ensembl IDs
+  dplyr::inner_join(expression_df, by = c("Ensembl" = "Gene"))
 ```
 
 Now, let's write our filtered and mapped results to file!
@@ -351,12 +362,12 @@ readr::write_tsv(filtered_mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
-- See our [RNA-seq gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-rna-seq].
+- See our [RNA-seq gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology.
 
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
 
 ```{r}
 # Print session info

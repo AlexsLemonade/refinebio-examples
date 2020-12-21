@@ -10,6 +10,7 @@ _site
 */plots/*
 */results/*
 */data/*
+*/gene_sets/*
 
 # markdown spellcheck
 .spelling

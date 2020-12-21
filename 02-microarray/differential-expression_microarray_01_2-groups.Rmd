@@ -44,7 +44,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -52,7 +52,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -81,8 +81,8 @@ You will get an email when it is ready.
 
 ## About the dataset we are using for this example
 
-For this example analysis, we will use this [CREB overexpression zebrafish](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
-@Tregnago2016 measured microarray gene expression of zebrafish samples overexpressing human CREB, as well as control samples.
+For this example analysis, we will use this [zebrafish gene expression dataset](https://www.refine.bio/experiments/GSE71270/creb-overexpression-induces-leukemia-in-zebrafish-by-blocking-myeloid-differentiation-process).
+@Tregnago2016 used microarrays to measure gene expression of ten zebrafish samples, five overexpressing human CREB, as well as five control samples.
 In this analysis, we will test differential expression between the control and CREB-overexpressing groups.
 
 ## Place the dataset in your new `data/` folder
@@ -124,19 +124,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE71270") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "GSE71270")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "GSE71270.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "GSE71270.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_GSE71270.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_GSE71270.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -164,7 +169,7 @@ From here you can customize this analysis example to fit your own scientific que
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
 In this analysis, we will be using `limma` for differential expression [@Ritchie2015].
-We will also use `EnhancedVolcano` for plotting and `apeglm` for some log fold change estimates in the results table [@Blighe2020; @Zhu2018].
+We will also use `EnhancedVolcano` for plotting [@Blighe2020].
 
 ```{r}
 if (!("limma" %in% installed.packages())) {
@@ -175,15 +180,11 @@ if (!("EnhancedVolcano" %in% installed.packages())) {
   # Install this package if it isn't installed yet
   BiocManager::install("EnhancedVolcano", update = FALSE)
 }
-if (!("apeglm" %in% installed.packages())) {
-  # Install this package if it isn't installed yet
-  BiocManager::install("apeglm", update = FALSE)
-}
 ```
 
 Attach the packages we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(limma)
 
@@ -214,8 +215,8 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
-  # Tuck away the Gene ID column as rownames
+expression_df <- readr::read_tsv(data_file) %>%
+  # Tuck away the Gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
 
@@ -223,7 +224,7 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$geo_accession)
 
 # Check if this is in the same order
@@ -233,45 +234,74 @@ all.equal(colnames(df), metadata$geo_accession)
 ## Set up design matrix
 
 `limma` needs a numeric design matrix to signify which are CREB and control samples.
-Here we are using the treatments supplied in the metadata to create a design matrix where the "none" samples are assigned `0` and the "amputated" samples are assigned `1`.
-Note that the metadata variables that signify the treatment groups might be different across datasets and might not always be underneath the category.
+Here we are using the treatments described in the metadata table in the `genotype/variation` column to create a design matrix where the "control" samples are assigned `0` and the "overexpressing the human CREB" samples are assigned `1`.
+Note that the metadata columns that signify the treatment groups might be different across datasets, and will almost certainly have different contents.
 
-The `genotype/variation` column contains group information we will be using for differential expression.
-But the `/` it contains in its column name makes it more annoying to access.  
+While the `genotype/variation` column contains the group information we will be using for differential expression, the `/` it contains in its column name makes it more annoying to access.  
 Accessing variable that have names with special characters like `/`, or spaces, require extra work-arounds to ignore R's normal interpretations of these characters.
+Here we will rename it as just `genotype` to make our lives later much easier.
+
+We will also recode the contents of the column, as `overexpressing the human CREB"` is a bit of an unruly name. 
+To do this, we will use the `fct_recode()` function from the `forcats` package, simplifying `"overexpressing the human CREB"` to just `CREB`.
+We will also use `fct_relevel()` to make sure our `control` samples appear first in the factor levels.
+
 
 ```{r}
+# These renaming steps will not be the same (or might not be needed at all)
+# with a different dataset
 metadata <- metadata %>%
-  dplyr::rename("genotype" = `genotype/variation`) # This step will not be the same (or might not be needed at all) with a different dataset
+  # rename the column
+  dplyr::rename("genotype" = `genotype/variation`) %>%
+  # change the names and order of the genotypes (making the column a factor)
+  dplyr::mutate(
+    genotype = genotype %>%
+      # rename the "overexpressing..." genotype to "CREB"
+      forcats::fct_recode(CREB = "overexpressing the human CREB") %>%
+      # make "control" the first level of the factor
+      forcats::fct_relevel("control")
+  )
 ```
 
 Now we will create a model matrix based on our newly renamed `genotype` variable.
 
 ```{r}
 # Create the design matrix from the genotype information
-des_mat <- model.matrix(~ metadata$genotype)
+des_mat <- model.matrix(~genotype, data = metadata)
+
+# Look at the design matrix
+head(des_mat)
 ```
+
+When we look at this design matrix, we see that there is now a `genotypeCREB` column that defines the group for each sample: 0 for control samples and 1 for the CREB samples. 
+(The model will also fit an intercept for all samples, so we can see that here as well.)
 
 ## Perform differential expression
 
-After applying our data to linear model, in this example we apply empirical Bayes smoothing and Benjamini-Hochberg multiple testing correction.
-The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
+We will use the `lmFit()` function from the `limma` package to test each gene for differential expression between the two groups using a linear model.
+After fitting our data to the linear model, in this example we apply empirical Bayes smoothing with the `eBayes()` function.
+
+Here's a [nifty article and example](http://varianceexplained.org/r/empirical_bayes_baseball/) about what the empirical Bayes smoothing is for [@bayes-estimates].
 
 ```{r}
 # Apply linear model to data
-fit <- lmFit(df, design = des_mat)
+fit <- lmFit(expression_df, design = des_mat)
 
 # Apply empirical Bayes to smooth standard errors
 fit <- eBayes(fit)
+```
 
+Because we are testing many different genes at once, we also want to perform some multiple test corrections, which we will do with the Benjamini-Hochberg method while making a table of results with `topTable()`.
+The `topTable()` function default is to use Benjamini-Hochberg but this can be changed to a different method using the `adjust.method` argument (see the `?topTable` help page for more about the options).
+
+```{r}
 # Apply multiple testing correction and obtain stats
-stats_df <- topTable(fit, number = nrow(df)) %>%
+stats_df <- topTable(fit, number = nrow(expression_df)) %>%
   tibble::rownames_to_column("Gene")
 ```
 
-Let's take a peek at what our results table looks like.
+Let's take a peek at our results table.
 
-```{r}
+```{r rownames.print = FALSE}
 head(stats_df)
 ```
 
@@ -285,14 +315,14 @@ To test if these results make sense, we can make a plot of one of top genes.
 Let's try extracting the data for `ENSDARG00000104315` and set up its own data frame for plotting purposes.
 
 ```{r}
-top_gene_df <- df %>%
-  # Extract this gene from `df`
+top_gene_df <- expression_df %>%
+  # Extract this gene from `expression_df`
   dplyr::filter(rownames(.) == "ENSDARG00000104315") %>%
   # Transpose so the gene is a column
   t() %>%
-  # Transpose made this a matrix, let's make it back into a data.frame like before
+  # Transpose made this a matrix, let's make it back into a data frame
   data.frame() %>%
-  # Store the sample ids as their own column instead of being row names
+  # Store the sample ids as their own column instead of as row names
   tibble::rownames_to_column("refinebio_accession_code") %>%
   # Join on the selected columns from metadata
   dplyr::inner_join(dplyr::select(

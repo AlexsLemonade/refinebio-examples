@@ -9,7 +9,7 @@ output:
 
 Data analyses are generally not "one size fits all"; this is particularly true when with approaches used to analyze RNA-seq and microarray data.
 The characteristics of the data produced by these two technologies can be quite different.
-This tutorial has example analyses [organized by technology](../01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand. 
+This tutorial has example analyses [organized by technology](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#about-how-this-tutorial-book-is-structured) so you can follow examples that are more closely tailored to the nature of the data at hand.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -28,7 +28,7 @@ This tutorial has example analyses [organized by technology](../01-getting-start
 
 ## Introduction to microarray technology
 
-Microarrays measure gene expression using chips filled with oligonucleotide probes designed to hybridize to labeled RNA samples. 
+Microarrays measure gene expression using chips filled with oligonucleotide probes designed to hybridize to labeled RNA samples.
 After hybridization, the microarrays are scanned, and the fluorescence intensity for each probe is measured.
 The fluorescence intensity indicates the number of labeled fragments bound and therefore the relative quantity of the transcript the probe is designed for. 
 
@@ -36,7 +36,7 @@ The fluorescence intensity indicates the number of labeled fragments bound and t
 
 [based on diagram from @microarray-video]
 
-There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays). 
+There are many different kinds of microarray platforms, which can be broadly separated into single-color and [two-color arrays](https://www.ebi.ac.uk/training/online/course/functional-genomics-ii-common-technologies-and-data-analysis-methods/microarrays).
 At this time, refine.bio only supports single-color arrays, so our examples and advice are generally from the perspective of using single-color array.
 The diagram above shows an overview of the single-color array process which includes extracting the total RNA from a sample, labeling the RNA with fluorescent dye, hybridizing the labels, and scanning the fluorescent image to analyze the fluorescence intensity.
 
@@ -45,27 +45,31 @@ A longer list of specific arrays that are supported by refine.bio can be found [
 
 As with all experimental methods, microarrays have strengths and limitations that you should consider in regards to your scientific questions. 
 
-### Microarray data **strengths**:  
+### Microarray data **strengths**:
 
-- Microarray is generally less expensive than RNA-seq - you can afford more replicates and get higher statistical power [@Tarca2006]. 
-- Microarray has generally had a faster turn-around than RNA-seq [@LCSciences2014].
+- Microarrays historically were less expensive than RNA-seq allowing for more replicates and greater statistical power [@Tarca2006].
+- Microarrays generally had a faster turn-around than RNA-seq [@LCSciences2014].
 
-### Microarray data **limitations**:  
+As a result of these historical advantages, vast quantities of data have been generated worldwide using microarrays.
+The microarray data compiled by refine.bio includes over 500,000 individual samples across over 25,000 experiments.
+For many scientific questions, the best available gene expression data may be microarray based!
 
-- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014]. 
+### Microarray data **limitations**:
+
+- If a transcript doesn't have a probe designed to it on a microarray, it won't be measured; standard microarrays can't be used for transcript discovery [@Mantione2014].
 - A chip's probe designs are only as up to date as the genome annotation at the time it was designed [@Mantione2014].
 - As is true for all techniques that involve nucleotide hybridization (RNA-seq too); microarray probes come with some biases depending on their nucleotide sequence composition (like GC bias). 
 
-Refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
+refine.bio drops outdated probes based on [Brainarray’s annotation packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) and uses [SCAN](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3508193/pdf/nihms401888.pdf) normalization methods prior to your downloads to help address these probe nucleotide composition biases [@Dai2005; @Piccolo2012].
 
 ## About quantile normalization 
 
 Microarray chips are generally experimentally processed in groups of chips - this can lead to [experimental batch effects](https://en.wikipedia.org/wiki/Batch_effect#:~:text=In%20molecular%20biology%2C%20a%20batch,of%20interest%20in%20an%20experiment). 
 To minimize this, all refine.bio microarray data downloads come [quantile-normalized](https://en.wikipedia.org/wiki/Quantile_normalization) which enables more confident comparisons of expression levels among experiments.
-Different microarray chips are also a type of batch effect, but quantile normalization allows us to compare data from different chips that to a limited degree if we proceed with caution. 
+The use of different microarray chips is also a type of batch effect, but quantile normalization allows us to compare data from different chips to a limited degree, if we proceed with caution.
 See the refine.bio docs for more about the microarray processing steps, including the [quantile normalization](http://docs.refine.bio/en/latest/main_text.html#quantile-normalization).
 
-## More resources on microarray technology: 
+## More resources on microarray technology:
 
 - [Getting started in gene expression microarray analysis](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000543) [@Slonim2009].
 - [Microarray and its applications](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3467903/) [@Govindarajan2012].
@@ -79,13 +83,13 @@ See the refine.bio docs for more about the microarray processing steps, includin
 
 - A common and simple reason you may not see your gene of interest is that the microarray chip used in the experiment you are analyzing did not originally have probes designed to target that gene.  
 
-- Refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
+- refine.bio uses [Brainarray packages](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/) to annotate the microarray probe data for microarray platforms that have this available [@Dai2005]. 
 This annotation identifies which probes map to which genes according to the updated transcriptome annotation (which likely changed since the microarray’s probes were first designed). 
 Some probes may have since become obsolete (they do not bind reliably to one location according to updated genome annotations), which may result in the gene they targeted being removed. 
 If your gene of interest was covered by the original probes of the microarray chip and the version of the Brainarray package used maintains that it is still accurate, your gene of interest will show up in the Gene column.
 You can find your dataset’s microarray chip and Brainarray version information on the refine.bio dataset page and [by following these instructions](TODO: Put link to refine.bio docs FAQ when https://github.com/AlexsLemonade/refinebio-docs/issues/137 is addressed).
 
 - One additional reason you may not see a gene of interest applies only if you are refine.bio's [aggregate by species](https://docs.refine.bio/en/latest/main_text.html#aggregations) option.
-When data is aggregated across different platforms, only the genes common to both/all experiments aggregated will be kept. 
+When data is aggregated across different platforms, only the genes common to all experiments aggregated will be kept.
 
 ## References

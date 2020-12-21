@@ -45,6 +45,11 @@ option_list <- list(
     opt_str = c("-s", "--style"), action = "store_true",
     default = FALSE,
     help = "Style input file before processing"
+  ),
+  make_option(
+    opt_str = c("-i", "--include_file"), type = "character",
+    default = NULL,
+    help = "File with R code to include for rendering"
   )
 )
 
@@ -66,7 +71,10 @@ if (!file.exists(opt$rmd)) {
 if (!file.exists(opt$bib_file)) {
   stop("File specified for --bib_file option is not at the specified file path.")
 } else {
-  header_line <- paste("bibliography:", opt$bib_file)
+  header_line <- paste0(
+    "bibliography: ", normalizePath(opt$bib_file), "\n",
+    "link-citations: TRUE"
+  )
 }
 # Check for a citation style
 if (!is.null(opt$cite_style)){
@@ -76,6 +84,22 @@ if (!is.null(opt$cite_style)){
     header_line <- paste0(header_line, "\n", "csl: ", normalizePath(opt$cite_style))
   }
 }
+
+# Check for an R code inclusion file and create a chunk to source it
+if (!is.null(opt$include_file)){
+  if (!file.exists(opt$include_file)) {
+    stop("File specified for --include_file option is not at the specified file path.")
+  } else {
+    # create a hidden chunk to source the include file
+    include_chunk <- paste0(
+      '```{r, include = FALSE}\n',
+      'source("', normalizePath(opt$include_file), '")\n',
+      '```'
+    )
+
+  }
+}
+
 
 # If no output html filename specification, make one from the original filename
 if (is.null(opt$html)) {
@@ -91,7 +115,7 @@ if (opt$style) {
 }
 
 # Specify the temp file
-tmp_file <- stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-header-changed.Rmd")
+tmp_file <- stringr::str_replace(opt$rmd, "\\.Rmd$", "-tmp-torender.Rmd")
 
 # Read in as lines
 lines <- readr::read_lines(opt$rmd)
@@ -99,15 +123,22 @@ lines <- readr::read_lines(opt$rmd)
 # Find which lines are the beginning and end of the header chunk
 header_range <- which(lines == "---")
 
-# Stop if no chunk found
-if (length(header_range) == 0) {
-  stop("Not finding the `---` which is at the beginning of the header.")
+# Stop if no header found
+if (length(header_range) < 2) {
+  stop("Not finding the `---` which are at the beginning and end of the header.")
+}
+
+
+# Add the include chunk after the header
+if (!is.null(opt$include_file)){
+  lines <- append(lines, include_chunk, header_range[2])
 }
 
 # Add the bibliography specification line at the beginning of the chunk
 new_lines <- append(lines, header_line, header_range[1])
 
-# Write to an tmp file
+
+# Write to a tmp file
 readr::write_lines(new_lines, tmp_file)
 
 # Declare path to google analytics bit
@@ -116,7 +147,7 @@ google_analytics_file <- normalizePath(file.path("components", "google-analytics
 # Declare path to footer
 footer_file <- normalizePath(file.path("components", "footer.html"))
 
-# Render the header added notebook
+# Render the modified notebook
 rmarkdown::render(tmp_file,
   output_format = rmarkdown::html_document(
     toc = TRUE, toc_depth = 2,
@@ -131,5 +162,5 @@ rmarkdown::render(tmp_file,
   output_file = output_file
 )
 
-# Remove the temporary header change .Rmd tmp file
+# Remove the modified .Rmd tmp file
 file.remove(tmp_file)
