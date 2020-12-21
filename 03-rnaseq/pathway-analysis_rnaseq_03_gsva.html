@@ -2887,7 +2887,7 @@ a.attachEvent&&a.attachEvent("on"+b,c)},od=function(a,b,c){a.removeEventListener
 b=b.lastChild;for(var c=[];b.firstChild;)c.push(b.removeChild(b.firstChild));return c},sd=function(a,b,c){c=c||100;for(var d={},e=0;e<b.length;e++)d[b[e]]=!0;for(var f=a,h=0;f&&h<=c;h++){if(d[String(f.tagName).toLowerCase()])return f;f=f.parentElement}return null},td=function(a){fd.sendBeacon&&fd.sendBeacon(a)||md(a)},ud=function(a,b){var c=a[b];c&&"string"===typeof c.animVal&&(c=c.animVal);return c};var vd={},wd=function(a){return void 0==vd[a]?!1:vd[a]};var xd=[];function yd(){var a=hd("google_tag_data",{});a.ics||(a.ics={entries:{},set:zd,update:Ad,addListener:Bd,notifyListeners:Cd,active:!1});return a.ics}
 function zd(a,b,c,d,e,f){var h=yd();h.active=!0;if(void 0!=b){var k=h.entries,l=k[a]||{},r=l.region,q=c&&g(c)?c.toUpperCase():void 0;d=d.toUpperCase();e=e.toUpperCase();if(q===e||(q===d?r!==e:!q&&!r)){var n=!!(f&&0<f&&void 0===l.update),t={region:q,initial:"granted"===b,update:l.update,quiet:n};k[a]=t;n&&G.setTimeout(function(){k[a]===t&&t.quiet&&(t.quiet=!1,Dd(a),Cd(),Fc("TAGGING",2))},f)}}}
 function Ad(a,b){var c=yd();c.active=!0;if(void 0!=b){var d=Ed(a),e=c.entries,f=e[a]=e[a]||{};f.update="granted"===b;var h=Ed(a);f.quiet?(f.quiet=!1,Dd(a)):h!==d&&Dd(a)}}function Bd(a,b){xd.push({Xe:a,gh:b})}function Dd(a){for(var b=0;b<xd.length;++b){var c=xd[b];Ca(c.Xe)&&-1!==c.Xe.indexOf(a)&&(c.nf=!0)}}function Cd(a){for(var b=0;b<xd.length;++b){var c=xd[b];if(c.nf){c.nf=!1;try{c.gh({We:a})}catch(d){}}}}
-var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-PA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
+var Ed=function(a){var b=yd().entries[a]||{};return void 0!==b.update?b.update:void 0!==b.initial?b.initial:void 0},Fd=function(a){return!(yd().entries[a]||{}).quiet},Gd=function(){return wd("gtag_cs_api")?yd().active:!1},Hd=function(a,b){yd().addListener(a,b)},Id=function(a,b){function c(){for(var e=0;e<b.length;e++)if(!Fd(b[e]))return!0;return!1}if(c()){var d=!1;Hd(b,function(e){d||c()||(d=!0,a(e))})}else a({})},Jd=function(a,b){if(!1===Ed(b)){var c=!1;Hd([b],function(d){!c&&Ed(b)&&(a(d),c=!0)})}};var Kd=[C.s,C.F],Ld=function(a){var b=a[C.Cf];b&&E(40);var c=a[C.Df];c&&E(41);for(var d=Ca(b)?b:[b],e=0;e<d.length;++e)for(var f=0;f<Kd.length;f++){var h=Kd[f],k=a[Kd[f]],l=d[e];yd().set(h,k,l,"US","US-VA",c)}},Md=function(a,b){for(var c=0;c<Kd.length;c++){var d=Kd[c],e=a[Kd[c]];yd().update(d,e)}yd().notifyListeners(b)},Nd=function(a){var b=Ed(a);return void 0!=b?b:!0},Od=function(){for(var a=[],b=0;b<Kd.length;b++){var c=Ed(Kd[b]);a[b]=!0===c?"1":!1===c?"0":"-"}return"G1"+
 a.join("")},Pd=function(a,b){Id(a,b)};var Td=function(a){return Sd?H.querySelectorAll(a):null},Ud=function(a,b){if(!Sd)return null;if(Element.prototype.closest)try{return a.closest(b)}catch(e){return null}var c=Element.prototype.matches||Element.prototype.webkitMatchesSelector||Element.prototype.mozMatchesSelector||Element.prototype.msMatchesSelector||Element.prototype.oMatchesSelector,d=a;if(!H.documentElement.contains(d))return null;do{try{if(c.call(d,b))return d}catch(e){break}d=d.parentElement||d.parentNode}while(null!==d&&1===d.nodeType);
 return null},Vd=!1;if(H.querySelectorAll)try{var Wd=H.querySelectorAll(":root");Wd&&1==Wd.length&&Wd[0]==H.documentElement&&(Vd=!0)}catch(a){}var Sd=Vd;var Xd=function(a){if(H.hidden)return!0;var b=a.getBoundingClientRect();if(b.top==b.bottom||b.left==b.right||!G.getComputedStyle)return!0;var c=G.getComputedStyle(a,null);if("hidden"===c.visibility)return!0;for(var d=a,e=c;d;){if("none"===e.display)return!0;var f=e.opacity,h=e.filter;if(h){var k=h.indexOf("opacity(");0<=k&&(h=h.substring(k+8,h.indexOf(")",k)),"%"==h.charAt(h.length-1)&&(h=h.substring(0,h.length-1)),f=Math.min(h,f))}if(void 0!==f&&0>=f)return!0;(d=d.parentElement)&&(e=G.getComputedStyle(d,
 null))}return!1};
@@ -4081,7 +4081,7 @@ div.tocify {
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a><span class="co"># Read in metadata TSV file</span></span>
 <span id="cb41-2"><a href="#cb41-2"></a>metadata &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(metadata_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_logical(),
 ##   refinebio_accession_code = col_character(),
@@ -4098,7 +4098,7 @@ div.tocify {
 <span id="cb43-3"><a href="#cb43-3"></a><span class="st">  </span><span class="co"># Here we are going to store the gene IDs as row names so that we can have a numeric matrix to perform calculations on later</span></span>
 <span id="cb43-4"><a href="#cb43-4"></a><span class="st">  </span>tibble<span class="op">::</span><span class="kw">column_to_rownames</span>(<span class="st">&quot;Gene&quot;</span>)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   .default = col_double(),
 ##   Gene = col_character()
@@ -4520,8 +4520,8 @@ div.tocify {
 ##  genefilter             1.72.0   2020-10-27 [1] Bioconductor  
 ##  geneplotter            1.68.0   2020-10-27 [1] Bioconductor  
 ##  generics               0.0.2    2018-11-29 [1] RSPM (R 4.0.0)
-##  GenomeInfoDb         * 1.26.1   2020-11-20 [1] Bioconductor  
-##  GenomeInfoDbData       1.2.4    2020-12-01 [1] Bioconductor  
+##  GenomeInfoDb         * 1.26.2   2020-12-08 [1] Bioconductor  
+##  GenomeInfoDbData       1.2.4    2020-12-21 [1] Bioconductor  
 ##  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  
 ##  getopt                 1.20.3   2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggplot2                3.3.2    2020-06-19 [1] RSPM (R 4.0.1)
@@ -4533,7 +4533,7 @@ div.tocify {
 ##  hms                    0.5.3    2020-01-08 [1] RSPM (R 4.0.0)
 ##  htmltools              0.5.0    2020-06-16 [1] RSPM (R 4.0.1)
 ##  httr                   1.4.2    2020-07-20 [1] RSPM (R 4.0.2)
-##  IRanges              * 2.24.0   2020-10-27 [1] Bioconductor  
+##  IRanges              * 2.24.1   2020-12-12 [1] Bioconductor  
 ##  jsonlite               1.7.1    2020-09-07 [1] RSPM (R 4.0.2)
 ##  knitr                  1.30     2020-09-22 [1] RSPM (R 4.0.2)
 ##  lattice                0.20-41  2020-04-02 [2] CRAN (R 4.0.2)
@@ -4550,7 +4550,7 @@ div.tocify {
 ##  mvtnorm                1.1-1    2020-06-09 [1] RSPM (R 4.0.0)
 ##  nlme                   3.1-148  2020-05-24 [2] CRAN (R 4.0.2)
 ##  optparse             * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Hs.eg.db         * 3.12.0   2020-12-01 [1] Bioconductor  
+##  org.Hs.eg.db         * 3.12.0   2020-12-21 [1] Bioconductor  
 ##  pheatmap               1.0.12   2019-01-04 [1] RSPM (R 4.0.0)
 ##  pillar                 1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig              2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
@@ -4571,7 +4571,7 @@ div.tocify {
 ##  rmarkdown              2.4      2020-09-30 [1] RSPM (R 4.0.2)
 ##  RSQLite                2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi             0.11     2020-02-07 [1] RSPM (R 4.0.0)
-##  S4Vectors            * 0.28.0   2020-10-27 [1] Bioconductor  
+##  S4Vectors            * 0.28.1   2020-12-09 [1] Bioconductor  
 ##  scales                 1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  sessioninfo            1.1.1    2018-11-05 [1] RSPM (R 4.0.0)
 ##  stringi                1.5.3    2020-09-09 [1] RSPM (R 4.0.2)
