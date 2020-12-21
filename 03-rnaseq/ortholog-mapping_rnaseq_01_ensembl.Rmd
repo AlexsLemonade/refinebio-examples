@@ -216,7 +216,7 @@ If you are looking for a different species, see the [directory page of the HGNC 
 ```{r}
 download.file(
   paste0(
-    "ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
+    "http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
     # Replace with the file name for the species conversion you want
     "human_mouse_hcop_fifteen_column.txt.gz"
   ),
