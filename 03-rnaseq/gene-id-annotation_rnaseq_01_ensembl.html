@@ -4013,7 +4013,8 @@ div.tocify {
 <p>We can see that our data frame has a new column <code>Entrez</code>. Let’s get a summary of the values returned in the <code>Entrez</code> column of our mapped data frame.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Use the `summary()` function to show the distribution of Entrez values</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="co"># We need to use `as.factor()` here to get the count of unique values</span></span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Entrez), <span class="dt">maxsum =</span> <span class="dv">10</span>)</span></code></pre></div>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="co"># `maxsum = 10` limits the summary to 10 distinct values</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Entrez), <span class="dt">maxsum =</span> <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## 100126027 100150038 100331412    794549    554097    794406 100536331 
 ##        28        28        28        28        11         7         6 
 ## 100148591   (Other)      NA&#39;s 
@@ -4123,7 +4124,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-17                  
+##  date     2020-12-21                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package       * version date       lib source        
