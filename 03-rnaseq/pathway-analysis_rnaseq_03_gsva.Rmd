@@ -340,7 +340,7 @@ vst_df <- assay(dds_norm) %>%
 
 The function that we will use to run GSVA wants the gene sets to be in a list where each pathway has its own gene list inside of it. 
 
-Here we are obtaining the pathway information from the main function of the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Igor2020].
+Here we are obtaining the pathway information from the main function of the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Dolgalev2020].
 Because we are using human data in this example, we supply the formal organism name to the `species` argument. 
 We will want only the hallmark pathways, so we use the `category = "H"` argument.
 
