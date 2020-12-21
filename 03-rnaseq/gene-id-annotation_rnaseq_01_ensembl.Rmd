@@ -293,6 +293,7 @@ Let's get a summary of the values returned in the `Entrez` column of our mapped 
 ```{r}
 # Use the `summary()` function to show the distribution of Entrez values
 # We need to use `as.factor()` here to get the count of unique values
+# `maxsum = 10` limits the summary to 10 distinct values
 summary(as.factor(mapped_df$Entrez), maxsum = 10)
 ```
 

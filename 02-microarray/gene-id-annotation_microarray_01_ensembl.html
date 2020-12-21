@@ -4036,7 +4036,8 @@ div.tocify {
 <p>We can see that our data frame has a new column <code>Symbol</code>. Let’s get a summary of the gene symbols in the <code>Symbol</code> column of our mapped data frame.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Use the `summary()` function to show the distribution of Symbol values</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="co"># We need to use `as.factor()` here to get the counts of unique values</span></span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Symbol), <span class="dt">maxsum =</span> <span class="dv">10</span>)</span></code></pre></div>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="co"># `maxsum = 10` limits the summary to 10 distinct values</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">summary</span>(<span class="kw">as.factor</span>(mapped_df<span class="op">$</span>Symbol), <span class="dt">maxsum =</span> <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>##       Cyp2c39          Pms2 0610005C13Rik 0610009B22Rik 0610009L18Rik 
 ##             2             2             1             1             1 
 ## 0610010F05Rik 0610012G03Rik 0610030E20Rik       (Other)          NA&#39;s 
@@ -4112,7 +4113,7 @@ div.tocify {
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       Etc/UTC                     
-##  date     2020-12-17                  
+##  date     2020-12-21                  
 ## 
 ## ─ Packages ─────────────────────────────────────────────────────────
 ##  package       * version date       lib source        
@@ -4137,14 +4138,14 @@ div.tocify {
 ##  glue            1.4.2   2020-08-27 [1] RSPM (R 4.0.2)
 ##  hms             0.5.3   2020-01-08 [1] RSPM (R 4.0.0)
 ##  htmltools       0.5.0   2020-06-16 [1] RSPM (R 4.0.1)
-##  IRanges       * 2.24.0  2020-10-27 [1] Bioconductor  
+##  IRanges       * 2.24.1  2020-12-12 [1] Bioconductor  
 ##  jsonlite        1.7.1   2020-09-07 [1] RSPM (R 4.0.2)
 ##  knitr           1.30    2020-09-22 [1] RSPM (R 4.0.2)
 ##  lifecycle       0.2.0   2020-03-06 [1] RSPM (R 4.0.0)
 ##  magrittr      * 1.5     2014-11-22 [1] RSPM (R 4.0.0)
 ##  memoise         1.1.0   2017-04-21 [1] RSPM (R 4.0.0)
 ##  optparse      * 1.6.6   2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Mm.eg.db  * 3.12.0  2020-12-11 [1] Bioconductor  
+##  org.Mm.eg.db  * 3.12.0  2020-12-16 [1] Bioconductor  
 ##  pillar          1.4.6   2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig       2.0.3   2019-09-22 [1] RSPM (R 4.0.0)
 ##  ps              1.4.0   2020-10-07 [1] RSPM (R 4.0.2)

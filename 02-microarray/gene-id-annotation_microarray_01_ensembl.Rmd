@@ -294,6 +294,7 @@ Let's get a summary of the gene symbols in the `Symbol` column of our mapped dat
 ```{r}
 # Use the `summary()` function to show the distribution of Symbol values
 # We need to use `as.factor()` here to get the counts of unique values
+# `maxsum = 10` limits the summary to 10 distinct values
 summary(as.factor(mapped_df$Symbol), maxsum = 10)
 ```
 
