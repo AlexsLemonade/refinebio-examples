@@ -347,7 +347,7 @@ We'll look at this in a bit.
 
 We can also see that there 19,126 mouse Ensembl IDs that did not map to a human Ensembl ID.
 These are the rows with a value of NA.
-This seems like a lot, but many of these may not be "real" genes, and we do not expect everything to map neatly across species.
+This seems like a lot, but most of these are likely to be non-protein-coding genes that do not map easily across species.
 
 
 ## Take a look at some multi-mappings
