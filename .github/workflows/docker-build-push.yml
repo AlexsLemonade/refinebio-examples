@@ -4,7 +4,7 @@ name: Build, Render, and Push
 # events only for the master branch
 on:
   push:
-    branches: [ staging, master ]
+    branches: [ staging, master, polish-orthologs ]
 
 jobs:
   # This workflow contains a single job called "build-all"
