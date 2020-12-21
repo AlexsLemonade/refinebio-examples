@@ -260,7 +260,7 @@ all.equal(colnames(expression_df)[-1], metadata$geo_accession)
 
 The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
 
-We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package like we did in earlier notebooks [@Igor2020].
+We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package like we did in earlier notebooks [@Dolgalev2020].
 
 Note that when reading in the Hallmark collection file in this manner, the data is only compatible with _Homo sapiens_ datasets.
 

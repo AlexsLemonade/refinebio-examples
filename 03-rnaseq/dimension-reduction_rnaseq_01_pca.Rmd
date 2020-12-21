@@ -94,7 +94,7 @@ Patients underwent androgen deprivation therapy (ADT) and RNA-seq samples includ
 
 ## Place the dataset in your new `data/` folder
 
-Refine.bio will send you a download button in the email when it is ready.
+refine.bio will send you a download button in the email when it is ready.
 Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`.
 Double clicking should unzip this for you and create a folder of the same name.  
 
