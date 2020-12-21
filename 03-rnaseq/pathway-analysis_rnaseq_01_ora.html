@@ -3878,7 +3878,7 @@ div.tocify {
 <p>We have provided this file for you and the code in this notebook will read in the results that are stored online. If you’d like to follow the steps for creating this results file from the refine.bio data, we suggest going through <a href="https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">that WGCNA example</a>.</p>
 <p>Module 19 was the most differentially expressed between the datasets’ two time points (during illness and recovering from illness).</p>
 <p>The heatmap below summarizes the expression of the genes that make up module 19.</p>
-<p><img src="data:application/xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPEVycm9yPjxDb2RlPkFjY2Vzc0RlbmllZDwvQ29kZT48TWVzc2FnZT5BY2Nlc3MgRGVuaWVkPC9NZXNzYWdlPjxSZXF1ZXN0SWQ+RURCODVGRjI1MEY1MzlGOTwvUmVxdWVzdElkPjxIb3N0SWQ+TDBIZVdVTm9TbEd4TktyTlQ0S1Avb3FTNFRNMjJRdUJkYzA3YkNmcWdCdy9jUkVhQ1MwZi9ZVFgzajFQVUlJTnFpUHRtYkV4Q2ZNPTwvSG9zdElkPjwvRXJyb3I+" width="500/"></p>
+<p><img src="data:application/xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPEVycm9yPjxDb2RlPkFjY2Vzc0RlbmllZDwvQ29kZT48TWVzc2FnZT5BY2Nlc3MgRGVuaWVkPC9NZXNzYWdlPjxSZXF1ZXN0SWQ+RDk1MEY4MUYzNEQ0Njc4OTwvUmVxdWVzdElkPjxIb3N0SWQ+T3Q4Q0s2Wjc2bGJIVzB0bStLSldidFliaXo3WlRPenJUZEVMelVsVHVSRFJSL2xtSk40T3ZPNmdaZ3BVemdEVWFpNGlHZkVjUmVNPTwvSG9zdElkPjwvRXJyb3I+" width="500/"></p>
 <p>Each row is a gene that is a member of module 19, and the composite expression of these genes, called an eigengene, is shown in the barplot below. This plot demonstrates how these genes, together as a module, are differentially expressed between the two time points.</p>
 </div>
 <div id="check-out-our-file-structure" class="section level2">
@@ -3974,7 +3974,7 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Read in the contents of the WGCNA gene modules file</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>gene_module_df &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_tsv</span>(gene_module_file)</span></code></pre></div>
 <pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────────────
 ## cols(
 ##   gene = col_character(),
 ##   module = col_character()
@@ -4235,7 +4235,7 @@ div.tocify {
 ##  data.table        1.13.0   2020-07-24 [1] RSPM (R 4.0.2)
 ##  DBI               1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  digest            0.6.25   2020-02-23 [1] RSPM (R 4.0.0)
-##  DO.db             2.9      2020-12-01 [1] Bioconductor  
+##  DO.db             2.9      2020-12-16 [1] Bioconductor  
 ##  DOSE              3.16.0   2020-10-27 [1] Bioconductor  
 ##  downloader        0.4      2015-07-09 [1] RSPM (R 4.0.0)
 ##  dplyr             1.0.2    2020-08-18 [1] RSPM (R 4.0.2)
@@ -4254,7 +4254,7 @@ div.tocify {
 ##  ggrepel           0.8.2    2020-03-08 [1] RSPM (R 4.0.2)
 ##  ggupset           0.3.0    2020-05-05 [1] RSPM (R 4.0.0)
 ##  glue              1.4.2    2020-08-27 [1] RSPM (R 4.0.2)
-##  GO.db             3.12.1   2020-12-01 [1] Bioconductor  
+##  GO.db             3.12.1   2020-12-16 [1] Bioconductor  
 ##  GOSemSim          2.16.1   2020-10-29 [1] Bioconductor  
 ##  graphlayouts      0.7.0    2020-04-25 [1] RSPM (R 4.0.2)
 ##  gridExtra         2.3      2017-09-09 [1] RSPM (R 4.0.0)
@@ -4262,7 +4262,7 @@ div.tocify {
 ##  hms               0.5.3    2020-01-08 [1] RSPM (R 4.0.0)
 ##  htmltools         0.5.0    2020-06-16 [1] RSPM (R 4.0.1)
 ##  igraph            1.2.6    2020-10-06 [1] RSPM (R 4.0.2)
-##  IRanges         * 2.24.0   2020-10-27 [1] Bioconductor  
+##  IRanges         * 2.24.1   2020-12-12 [1] Bioconductor  
 ##  jsonlite          1.7.1    2020-09-07 [1] RSPM (R 4.0.2)
 ##  knitr             1.30     2020-09-22 [1] RSPM (R 4.0.2)
 ##  labeling          0.3      2014-08-23 [1] RSPM (R 4.0.0)
@@ -4275,7 +4275,7 @@ div.tocify {
 ##  msigdbr         * 7.2.1    2020-10-02 [1] RSPM (R 4.0.2)
 ##  munsell           0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  optparse        * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Hs.eg.db    * 3.12.0   2020-12-01 [1] Bioconductor  
+##  org.Hs.eg.db    * 3.12.0   2020-12-16 [1] Bioconductor  
 ##  pillar            1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig         2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  plyr              1.8.6    2020-03-03 [1] RSPM (R 4.0.2)
@@ -4298,7 +4298,7 @@ div.tocify {
 ##  RSQLite           2.2.1    2020-09-30 [1] RSPM (R 4.0.2)
 ##  rstudioapi        0.11     2020-02-07 [1] RSPM (R 4.0.0)
 ##  rvcheck           0.1.8    2020-03-01 [1] RSPM (R 4.0.0)
-##  S4Vectors       * 0.28.0   2020-10-27 [1] Bioconductor  
+##  S4Vectors       * 0.28.1   2020-12-09 [1] Bioconductor  
 ##  scales            1.1.1    2020-05-11 [1] RSPM (R 4.0.0)
 ##  scatterpie        0.1.5    2020-09-09 [1] RSPM (R 4.0.2)
 ##  sessioninfo       1.1.1    2018-11-05 [1] RSPM (R 4.0.0)

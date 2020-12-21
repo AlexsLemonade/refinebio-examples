@@ -103,10 +103,12 @@ NES
 Northcott
 oocyte
 ortholog
+orthologous
 orthologs
 orthology
 overexpressing
 overexpression
+overrepresented
 PBMCs
 pheatmap
 PLOS
