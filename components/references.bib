@@ -6,7 +6,21 @@
   note   = {R package version 0.3.0},
   url    = {https://github.com/const-ae/ggupset}
 }
-  
+ 
+@article{Alter2000,
+  doi = {10.1073/pnas.97.18.10101},
+  url = {https://doi.org/10.1073/pnas.97.18.10101},
+  year = {2000},
+  month = aug,
+  publisher = {Proceedings of the National Academy of Sciences},
+  volume = {97},
+  number = {18},
+  pages = {10101--10106},
+  author = {O. Alter and P. O. Brown and D. Botstein},
+  title = {Singular value decomposition for genome-wide expression data processing and modeling},
+  journal = {Proceedings of the National Academy of Sciences}
+}
+
 @website{annotation-packages,
   title  = {Packages found under {AnnotationData}},
   author = {{R Bioconductor Team}},
@@ -56,7 +70,7 @@ labeling},
   url    = {https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c}
 }
 
-@website{Carlson2019,
+@website{Carlson2019-mouse,
   title  = {Genome wide annotation for Mouse},
   author = {Marc Carlson},
   year   = {2019},
@@ -76,14 +90,6 @@ labeling},
   year   = {2020},
   note   = {R package version 3.11.4},
   url    = {http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html}
-}
-
-
-@website{Carlson2020-package,
-  title  = {{AnnotationDbi}},
-  author = {Marc Carlson},
-  year   = {2020},
-  url    = {https://www.bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}
 }
 
 @website{Carlson2020-vignette,
@@ -110,6 +116,7 @@ labeling},
 @website{clusterProfiler-book,
   title  = {{clusterProfiler}: universal enrichment tool for functional and comparative study},
   author = {Guangchuang Yu},
+  year = {2020},
   url    = {http://yulab-smu.top/clusterProfiler-book/index.html}
 }
 
@@ -144,6 +151,15 @@ labeling},
   url    = {https://hbctraining.github.io/DGE_workshop/lessons/04_DGE_DESeq2_analysis.html}
 }
 
+@manual{Dolgalev2020,
+  title  = {{msigdbr}: {MSigDB} Gene Sets for Multiple Organisms in a Tidy Data Format},
+  author = {Igor Dolgalev},
+  year   = {2020},
+  note   = {https://igordot.github.io/msigdbr,
+https://github.com/igordot/msigdbr},
+  url    = {https://cran.r-project.org/web/packages/msigdbr/index.html}
+}
+
 @website{Freytag2019,
   title  = {Workshop: Dimension reduction with {R}},
   author = {Saskia Freytag},
@@ -163,6 +179,13 @@ labeling},
   author = {{Childhood Cancer Data Lab}},
   year   = {2020},
   url    = {https://github.com/AlexsLemonade/refinebio-examples/blob/master/03-rnaseq/gene-id-convert_rnaseq_01_ensembl.html}
+}
+
+@website{gene-set-testing-rnaseq,
+    author = {Stephane Ballereau and Mark Dunning and Abbi Edwards and Oscar Rueda and Ashley Sawle},
+    title = {{RNA-seq} analysis in {R}: Gene Set Testing for {RNA-seq}},
+    year = {2018},
+    url  = {https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html}
 }
 
 @manual{Gonzalez2014,
@@ -195,6 +218,20 @@ labeling},
   url     = {https://pubmed.ncbi.nlm.nih.gov/25361968/}
 }
 
+@website{GSEA-broad-institute,
+  title  = {{GSEA}: Gene Set Enrichment Analysis},
+  author = {{UC San Diego and Broad Institute Team}},
+  url    = {https://www.gsea-msigdb.org/gsea/index.jsp}
+}
+
+@website{GSEA-user-guide,
+  title  = {Gene Set Enrichment Analysis (GSEA) User Guide},
+  author = {{Broad Institute Team}},
+  month  = {November},
+  year   = {2019},
+  url    = {https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html}
+}
+
 @article{Gu2016,
   title   = {Complex heatmaps reveal patterns and correlations in multidimensional genomic data},
   author  = {Zuguang Gu and Roland Eils and Matthias Schlesner},
@@ -218,6 +255,19 @@ labeling},
   year   = {2016},
   url    = {https://bitesizebio.com/13542/what-everyone-should-know-about-rna-seq/}
 }
+  
+@article{Meng2019,
+  author  = {Hailong Meng and Gur Yaari and Christopher R. Bolen and Stefan Avey and Steven H. Kleinstein},
+  title   = {Gene set meta-analysis with Quantitative Set Analysis for Gene Expression (QuSAGE)},
+  journal = {PLoS Computat Biol.},
+  year    = {2019},
+  volume  = {15},
+  number  = {4},
+  pages   = {e1006899},
+  month   = {April},
+  doi     = {10.1371/journal.pcbi.1006899},
+  url     = {https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1006899}
+}
 
 @article{Hansen2010,
   author  = {Hansen, K. D.  and Brenner, S. E.  and Dudoit, S. },
@@ -231,6 +281,52 @@ labeling},
   doi     = {10.1093/nar/gkq224},
   url     = {https://pubmed.ncbi.nlm.nih.gov/20395217/}
 }
+
+@article{Hanzelmann2013,
+  author  = {Sonja H{\"a}nzelmann and Robert Castelo and Justin Guinney},
+  title   = {Biases in {Illumina} transcriptome sequencing caused by random hexamer priming},
+  journal = {BMC Bioinformatics},
+  year    = {2013},
+  volume  = {14},
+  number  = {7},
+  doi     = {10.1186/1471-2105-14-7},
+  url     = {https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7}
+}
+
+@article{Hanzelmann2013,
+  doi = {10.1186/1471-2105-14-7},
+  url = {https://doi.org/10.1186/1471-2105-14-7},
+  year = {2013},
+  publisher = {Springer Science and Business Media {LLC}},
+  volume = {14},
+  number = {1},
+  pages = {7},
+  author = {Sonja H{\"a}nzelmann and Robert Castelo and Justin Guinney},
+  title = {{GSVA}: gene set variation analysis for microarray and {RNA}-Seq data},
+  journal = {{BMC} Bioinformatics}
+}
+
+@website{Hanzelmann-github,
+  title  = {GSVA},
+  author = {Sonja Hänzelmann and Robert Castelo and Justin Guinney},
+  year   = {2013},
+  url    = {https://github.com/rcastelo/GSVA/blob/master/man/gsva.Rd}
+}
+
+@manual{Hanzelmann-gsva-vignette,
+    title = {GSVA: The Gene Set Variation Analysis package for microarray and RNA-seq data},
+    author = {Sonja H{\"a}nzelmann and Robert Castelo and Justin Guinney},
+    year = {2020},
+    url = {https://www.bioconductor.org/packages/release/bioc/vignettes/GSVA/inst/doc/GSVA.pdf},
+}
+
+@manual{Hastie2020,
+    title = {impute: Imputation for microarray data},
+    author = {Trevor Hastie and Robert Tibshirani and Balasubramanian Narasimhan and Gilbert Chu},
+    year = {2020},
+    note = {R package version 1.64.0},
+    url = {https://www.bioconductor.org/packages/devel/bioc/manuals/impute/man/impute.pdf},
+  }
 
 @website{hcop-help,
   title  = {HCOP help},
@@ -252,19 +348,23 @@ labeling},
   url     = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4509590/}
 }
 
-@manual{Igor2020,
-  title  = {msigdbr: MSigDB Gene Sets for Multiple Organisms in a Tidy Data Format},
-  author = {Igor Dolgalev},
-  year   = {2020},
-  note   = {https://igordot.github.io/msigdbr,
-https://github.com/igordot/msigdbr},
-  url    = {https://cran.r-project.org/web/packages/msigdbr/index.html}
-}
-
 @website{intro-microarray-slides,
   title  = {Introduction to gene expression microarray data analysis},
   author = {Hao Wu},
   url    = {http://web1.sph.emory.edu/users/hwu30/teaching/bioc/GE1.pdf}
+}
+
+@article{Kampen2019,
+  doi = {10.1038/s41467-019-10508-2},
+  year = {2019},
+  month = jun,
+  publisher = {Springer Science and Business Media {LLC}},
+  volume = {10},
+  number = {1},
+  author = {Kim R. Kampen and Laura Fancello and Tiziana Girardi and Gianmarco Rinaldi and M{\'{e}}lanie Planque and Sergey O. Sulima and Fabricio Loayza-Puch and Benno Verbelen and Stijn Vereecke and Jelle Verbeeck and Joyce Op de Beeck and Jonathan Royaert and Pieter Vermeersch and David Cassiman and Jan Cools and Reuven Agami and Mark Fiers and Sarah-Maria Fendt and Kim De Keersmaecker},
+  title = {Translatome analysis reveals altered serine and glycine metabolism in T-cell acute lymphoblastic leukemia cells},
+  journal = {Nature Communications},
+   url = {https://doi.org/10.1038/s41467-019-10508-2},
 }
 
 @article{Kanehisa2000,
@@ -278,6 +378,12 @@ https://github.com/igordot/msigdbr},
   month   = {Jan},
   doi     = {10.1093/nar/28.1.27},
   url     = {https://www.genome.jp/kegg/}
+}
+
+@website{KhanAcademy,
+  author  = {Khan Academy},
+  title   = {Introduction to eigenvalues and eigenvectors},
+  url     = {https://www.khanacademy.org/math/linear-algebra/alternate-bases/eigen-everything/v/linear-algebra-introduction-to-eigenvalues-and-eigenvectors}
 }
 
 @article{Khatri2012,
@@ -315,12 +421,89 @@ https://github.com/igordot/msigdbr},
   url    = {https://cran.r-project.org/web/packages/umap/umap.pdf}
 }
 
+@article{Korotkevich2019,
+  author  = {Gennady Korotkevich and Vladimir Sukhov and Alexey Sergushichev},
+  title   = {Fast gene set enrichment analysis},
+  journal = {bioRxiv},
+  year    = {2019},
+  number  = {060012},
+  doi     = {10.1101/060012},
+  url     = {https://doi.org/10.1101/060012}
+}
+
+@article{Langfelder2007,
+  doi = {10.1186/1752-0509-1-54},
+  url = {https://doi.org/10.1186/1752-0509-1-54},
+  year = {2007},
+  month = nov,
+  publisher = {Springer Science and Business Media {LLC}},
+  volume = {1},
+  number = {1},
+  author = {Peter Langfelder and Steve Horvath},
+  title = {Eigengene networks for studying the relationships between co-expression modules},
+  journal = {{BMC} Systems Biology}
+}
+
+@article{Langfelder2008,
+  doi = {10.1186/1471-2105-9-559},
+  url = {https://doi.org/10.1186/1471-2105-9-559},
+  year = {2008},
+  month = dec,
+  publisher = {Springer Science and Business Media {LLC}},
+  volume = {9},
+  number = {1},
+  author = {Peter Langfelder and Steve Horvath},
+  title = {{WGCNA}: an R package for weighted correlation network analysis},
+  journal = {{BMC} Bioinformatics}
+}
+
+@article{Langfelder2016,
+  url = {https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/Rpackages/WGCNA/Tutorials/},
+  year = {2016},
+  month = Feb,
+  author = {Peter Langfelder and Steve Horvath},
+  title = {Tutorials for the {WGCNA} package},
+}
+
+@website{Langfelder2018,
+  url = {https://peterlangfelder.com/2018/11/25/signed-or-unsigned-which-network-type-is-preferable/},
+  year = {2018},
+  month = Nov,
+  author = {Peter Langfelder},
+  title = {Signed or unsigned: which network type is preferable?},
+}
+
 @website{LCSciences2014,
   title  = {Microarray or {RNA} Sequencing?},
   author = {LCSciences},
   month  = {Oct},
   year   = {2014},
   url    = {https://www.lcsciences.com/news/microarray-or-rna-sequencing/}
+}
+
+@article{Liberzon2011,
+  doi = {10.1093/bioinformatics/btr260},
+  url = {https://doi.org/10.1093/bioinformatics/btr260},
+  year = {2011},
+  month = may,
+  publisher = {Oxford University Press ({OUP})},
+  volume = {27},
+  number = {12},
+  pages = {1739--1740},
+  author = {Arthur Liberzon and Aravind Subramanian and Reid Pinchback and Helga Thorvaldsdóttir and Pablo Tamayo and Jill P Mesirov},
+  title = {Molecular signatures database ({MSigDB}) 3.0},
+  journal = {Bioinformatics}
+}
+
+@article{Liberzon2015,
+  title   = {The Molecular Signatures Database Hallmark Gene Set Collection},
+  author  = {Arthur Liberzon and Chet Birger and Helga Thorvaldsdóttir and Mahmoud Ghandi and Jill P. Mesirov and Pablo Tamayo},
+  year    = {2015},
+  journal = {Cell Systems},
+  volume  = {1},
+  number  = {6},
+  doi     = {10.1016/j.cels.2015.12.004},
+  url     = {https://dx.doi.org/10.1016%2Fj.cels.2015.12.004}
 }
 
 @article{Love2014,
@@ -368,6 +551,13 @@ https://github.com/igordot/msigdbr},
   month  = {May},
   year   = {2020},
   url    = {https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html}
+}
+
+@website{Malhotra2018,
+  title  = {Decoding Gene Set Variation Analysis},
+  author = {Saksham Malhotra},
+  year   = {2018},
+  url    = {https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3}
 }
 
 @article{Mantione2014,
@@ -449,12 +639,27 @@ https://github.com/igordot/msigdbr},
   url     = {https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3683624}
 }
 
+@manual{Pages2020-package,
+  title   = {{AnnotationDbi}: Manipulation of {SQLite}-based annotations in {Bioconductor}},
+  author  = {Hervé Pagès and Marc Carlson and Seth Falcon and Nianhua Li},
+  year    = {2020},
+  url     = {https://bioconductor.org/packages/release/bioc/html/AnnotationDbi.html}
+}
+
 @website{pca-visually-explained,
   title  = {Principal Component Analysis Explained Visually},
   author = {Victor Powell and Lewis Lehe},
   url    = {https://setosa.io/ev/principal-component-analysis/}
 }
 
+@manual{Pedersen2020,
+    title = {ggforce: Accelerating 'ggplot2'},
+    author = {Thomas Lin Pedersen},
+    year = {2020},
+    url = {https://ggforce.data-imaginist.com},
+    github = {https://github.com/thomasp85/ggforce},
+  }
+  
 @article{Pepke2009,
   author  = {Pepke, S.  and Wold, B.  and Mortazavi, A. },
   title   = {Computation for {ChIP-seq} and {RNA-seq} studies},
@@ -487,6 +692,14 @@ https://github.com/igordot/msigdbr},
   year   = {2016},
   url    = {http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html}
 }
+
+@manual{Puthier2015,
+  title = {Statistics for {B}ioinformatics - {P}racticals - {G}ene enrichment statistics},
+  author = {Denis Puthier and Jacques {van Helden}},
+  year = {2015},
+  month = {Nov},
+  url  = {https://dputhier.github.io/ASG/practicals/go_statistics_td/go_statistics_td_2015.html},
+  }
 
 @manual{R-base,
   title        = {{R}: A Language and Environment for Statistical Computing},
@@ -758,6 +971,19 @@ https://github.com/igordot/msigdbr},
   doi     = {10.1089/omi.2011.0118},
   note    = {PMID: 22455463},
   url     = {https://doi.org/10.1089/omi.2011.0118}
+}
+
+@article{Zhang2005,
+  doi = {10.2202/1544-6115.1128},
+  url = {https://doi.org/10.2202/1544-6115.1128},
+  year = {2005},
+  month = jan,
+  publisher = {Walter de Gruyter {GmbH}},
+  volume = {4},
+  number = {1},
+  author = {Bin Zhang and Steve Horvath},
+  title = {A General Framework for Weighted Gene Co-Expression Network Analysis},
+  journal = {Statistical Applications in Genetics and Molecular Biology}
 }
 
 @article{Zhang2017,

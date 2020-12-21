@@ -49,7 +49,7 @@ RUN Rscript -e  "install.packages( \
 
 # Install bioconductor packages
 # org.Mm.eg.db and org.Dr.eg.db are required for gene mapping
-RUN R -e "options(warn = 2); BiocManager::install( \
+RUN Rscript -e "options(warn = 2); BiocManager::install( \
     c('affy', \
       'apeglm', \
       'Biobase', \
@@ -58,11 +58,15 @@ RUN R -e "options(warn = 2); BiocManager::install( \
       'DESeq2', \
       'EnhancedVolcano', \
       'ggupset', \
+      'GSVA', \
+      'impute', \
       'limma', \
       'marray', \
       'msigdbr', \
       'org.Mm.eg.db', \
-      'org.Dr.eg.db'), \
+      'org.Dr.eg.db', \
+      'org.Hs.eg.db', \
+      'qusage'), \
      update = FALSE)"
 
 # Installs packages needed for plottings
@@ -80,6 +84,9 @@ RUN Rscript -e  "install.packages( \
 # Install packages from github
 # Need this package to make plots colorblind friendly
 RUN Rscript -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
+
+# Install WGCNA
+RUN Rscript -e  "options(warn = 2); install.packages('WGCNA')"
 
 # Install python libraries
 ##########################

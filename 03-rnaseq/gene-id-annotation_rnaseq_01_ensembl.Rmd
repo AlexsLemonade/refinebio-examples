@@ -11,14 +11,14 @@ output:
 
 # Purpose of this analysis
 
-The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using `AnnotationDbi` packages [@Carlson2020-package].
+The purpose of this notebook is to provide an example of mapping gene IDs for RNA-seq data obtained from refine.bio using `AnnotationDbi` packages [@Pages2020-package].
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
 
 # How to run this example
 
 For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
-We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before.
 
 ## Obtain the `.Rmd` file
 
@@ -44,7 +44,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -52,7 +52,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -70,7 +70,7 @@ Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP
 
 Click the "Download Now" button on the right side of this screen.  
 
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>
 
 Fill out the pop up window with your email and our Terms and Conditions:  
 
@@ -128,19 +128,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "SRP040561") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "SRP040561")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "SRP040561.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "SRP040561.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_SRP040561.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_SRP040561.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -149,7 +154,7 @@ file.exists(metadata_file)
 
 If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
 
-If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds).
 
 # Using a different refine.bio dataset with this analysis?
 
@@ -157,12 +162,12 @@ If you'd like to adapt an example analysis to use a different dataset from [refi
 We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
 From here you can customize this analysis example to fit your own scientific questions and preferences. 
 
-refine.bio data comes with gene level data with Ensembl IDs. 
-Although this example script uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.
+refine.bio data comes with gene level data identified by Ensembl IDs.
+Although this example notebook uses Ensembl IDs from Zebrafish, (<i>Danio rerio</i>), to obtain Entrez IDs this script can be easily converted for use with different species or annotation types <i>e.g.</i> protein IDs, gene ontology, accession numbers.
 
 <b>For different species</b>, wherever the abbreviation `org.Dr.eg.db` or `Dr` is written, it must be replaced with the respective species abbreviation <i>e.g.</i> for<i> Homo sapiens</i> `org.Hs.eg.db` or `Hs` would be used.
 In the case of our [microarray gene identifier annotation example notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html), a Mouse (<i>Mus musculus</i>) dataset is used, meaning `org.Mm.eg.db` or `Mm` would also need to be used there.
-A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData) [@annotation-packages].
+A full list of the annotation R packages from Bioconductor is at this [link](https://bioconductor.org/packages/release/BiocViews.html#___AnnotationData).
 
 ***
 
@@ -170,14 +175,18 @@ A full list of the annotation R packages from Bioconductor is at this [link](htt
 
 # Obtaining Annotation for Ensembl IDs - RNA-seq
 
-Ensembl IDs can be used to obtain various different annotations at the gene/transcript level.
+refine.bio uses Ensembl IDs as the primary gene identifier in its data sets.
+While this is a consistent and useful identifier, a string of apparently random letters and numbers is not the most user-friendly or informative for interpretation.
+Luckily, we can use the Ensembl IDs that we have to obtain various different annotations at the gene/transcript level.
 Let's get ready to use the Ensembl IDs from our zebrafish dataset to obtain the associated Entrez IDs.
 
 ## Install libraries
 
 See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
 
-In this analysis, we will be using the `org.Dr.eg.db` R package [@Carlson2019-zebrafish].
+In this analysis, we will be using the `org.Dr.eg.db` R package [@Carlson2019-zebrafish], which is part of the Bioconductor `AnnotationDbi` framework [@Pages2020-package].
+Bioconductor compiles annotations from various sources, and these packages provide convenient methods to access and translate among those annotations.
+[Other species can be used](#using-a-different-refinebio-dataset-with-this-analysis).
 
 ```{r}
 # Install the Zebrafish package
@@ -188,8 +197,9 @@ if (!("org.Dr.eg.db" %in% installed.packages())) {
 ```
 
 Attach the packages we need for this analysis.
+Note that attaching `org.Mm.eg.db` will automatically also attach `AnnotationDbi`.
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(org.Dr.eg.db)
 
@@ -209,8 +219,8 @@ We stored our file paths as objects named `metadata_file` and `data_file` in [th
 metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
-df <- readr::read_tsv(data_file) %>%
-  # Tuck away the Gene ID column as rownames
+expression_df <- readr::read_tsv(data_file) %>%
+  # Tuck away the Gene ID column as row names
   tibble::column_to_rownames("Gene")
 ```
 
@@ -218,14 +228,14 @@ Let's ensure that the metadata and data are in the same sample order.
 
 ```{r}
 # Make the data in the order of the metadata
-df <- df %>%
+expression_df <- expression_df %>%
   dplyr::select(metadata$refinebio_accession_code)
 
 # Check if this is in the same order
-all.equal(colnames(df), metadata$refinebio_accession_code)
+all.equal(colnames(expression_df), metadata$refinebio_accession_code)
 
 # Bring back the "Gene" column in preparation for mapping
-df <- df %>%
+expression_df <- expression_df %>%
   tibble::rownames_to_column("Gene")
 ```
 
@@ -233,7 +243,7 @@ df <- df %>%
 
 The `mapIds()` function has a `multiVals` argument which denotes what to do when there are multiple mapped values for a single gene identifier.
 The default behavior is to return just the first mapped value.
-It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step. 
+It is good to keep in mind that various downstream analyses may benefit from varied strategies at this step.
 Use `?mapIds` to see more options or strategies.
 
 In the next chunk, we will run the `mapIds()` function and supply the `multiVals` argument with the `"list"` option in order to get a large list with all the mapped values found for each gene identifier.
@@ -241,10 +251,10 @@ In the next chunk, we will run the `mapIds()` function and supply the `multiVals
 ```{r}
 # Map Ensembl IDs to their associated Entrez IDs
 mapped_list <- mapIds(
-  org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
-  keys = df$Gene,
-  column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
+  org.Dr.eg.db, # Replace with annotation package for your organism
+  keys = expression_df$Gene,
   keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
+  column = "ENTREZID", # The type of gene identifiers you would like to map to
   multiVals = "list"
 )
 ```
@@ -254,7 +264,7 @@ mapped_list <- mapIds(
 Now, let's take a look at our mapped object to see how the mapping went.
 
 ```{r}
-# Let's use the `head()` function to take a preview at our mapped list
+# Let's use the `head()` function for a preview of our mapped list
 head(mapped_list)
 ```
 
@@ -263,10 +273,10 @@ However, the data is now in a `list` object, making it a little more difficult t
 We are going to turn our list object into a data frame object in the next chunk.
 
 ```{r}
-# Let's make our object a bit more manageable for exploration by turning it into a data frame
+# Let's make our list a bit more manageable by turning it into a data frame
 mapped_df <- mapped_list %>%
   tibble::enframe(name = "Ensembl", value = "Entrez") %>%
-  # enframe makes a `list` column, so we will convert that to simpler format with `unnest()
+  # enframe() makes a `list` column; we will simplify it with unnest()
   # This will result in one row of our data frame per list item
   tidyr::unnest(cols = Entrez)
 ```
@@ -281,24 +291,26 @@ We can see that our data frame has a new column `Entrez`.
 Let's get a summary of the values returned in the `Entrez` column of our mapped data frame.
 
 ```{r}
-# We can use the `summary()` function to get a better idea of the distribution of values in the `Entrez` column
-summary(as.factor(mapped_df$Entrez)) # We need to use the `as.factor()` function here in order to get the count of each unique value returned
+# Use the `summary()` function to show the distribution of Entrez values
+# We need to use `as.factor()` here to get the count of unique values
+# `maxsum = 10` limits the summary to 10 distinct values
+summary(as.factor(mapped_df$Entrez), maxsum = 10)
 ```
 
-There are 9102 NAs in our data frame, which means that 9102 out of the 31882 Ensembl IDs did not map to Entrez IDs.
-This means if you are depending on `Entrez` IDs for your downstream analyses, you may not be able to use the 9102 unmapped genes.
+There are 9026 `NA`s in our data frame, which means that 9026 out of the 31882 Ensembl IDs did not map to Entrez IDs.
+This means if you are depending on `Entrez` IDs for your downstream analyses, you may not be able to use the 9026 unmapped genes.
 
 Now let's check to see how many genes we have that were mapped to multiple IDs.
 
 ```{r}
-multi_mapped_df <- mapped_df %>%
+multi_mapped <- mapped_df %>%
   # Let's count the number of times each Ensembl ID appears in `Ensembl` column
   dplyr::count(Ensembl, name = "entrez_id_count") %>%
   # Arrange by the genes with the highest number of Entrez IDs mapped
   dplyr::arrange(desc(entrez_id_count))
 
 # Let's look at the first 6 rows of our `multi_mapped` object
-head(multi_mapped_df)
+head(multi_mapped)
 ```
 
 Looks like we have one case where one Ensembl ID mapped to 15 Entrez IDs!
@@ -315,7 +327,7 @@ In the next chunk, we show how we can collapse all the Entrez IDs into one colum
 collapsed_mapped_df <- mapped_df %>%
   # Group by Ensembl IDs
   dplyr::group_by(Ensembl) %>%
-  # Collapse the mapped values in `mapped_df` into one column named `all_entrez_ids`
+  # Collapse the Entrez IDs `mapped_df` into one column named `all_entrez_ids`
   dplyr::summarize(all_entrez_ids = paste(Entrez, collapse = ";"))
 ```
 
@@ -323,7 +335,9 @@ Let's take a look at our new collapsed `all_entrez_ids` column in the `collapsed
 
 ```{r}
 collapsed_mapped_df %>%
-  # Filter `collapsed_mapped_df` to include only the rows where `all_entrez_ids` values include the ";" character -- we know that these are the rows with multiple mapped values
+  # Filter `collapsed_mapped_df` to include only the rows where
+  # `all_entrez_ids` values include the ";" character --
+  # these are the rows with multiple mapped values
   dplyr::filter(stringr::str_detect(all_entrez_ids, ";")) %>%
   # We only need a preview here
   head()
@@ -333,7 +347,7 @@ You may have a list of Entrez IDs you are interested in, in which case, the abov
 In a different study, you may want the oldest Entrez ID (which is probably first), in which case, you can create a column that stores just the first mapped Entrez ID that comes up for each Ensembl ID.
 We will do this in the next section by re-running the `mapIds()` function with `multiVals = "first"`.
 
-### Map Ensembl IDs to gene symbols -- keeping only the first mapped value
+### Map Ensembl IDs to Entrez -- keeping only the first mapped value
 
 If we don't have a particular preference of which Entrez ID is returned, we can have `mapIds()` use its default of returning the first Entrez ID listed.
 
@@ -342,26 +356,28 @@ Let's re-run `mapIds()`, this time using `multiVals = "first"`.
 ```{r}
 final_mapped_df <- data.frame(
   "first_mapped_entrez_id" = mapIds(
-    org.Dr.eg.db, # Replace with annotation package for the organism relevant to your data
-    keys = df$Gene,
-    column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
-    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+    org.Dr.eg.db, # Replace with annotation package for your organism
+    keys = expression_df$Gene,
+    keytype = "ENSEMBL", # Replace with the gene identifiers used in your data
+    column = "ENTREZID", # The type of gene identifiers you would like to map to
+    multiVals = "first" # Keep only the first mapped value for each Ensembl ID
   )
 ) %>%
   # Make an `Ensembl` column to store the rownames
   tibble::rownames_to_column("Ensembl") %>%
-  # Join the multiple mappings data from `collapsed_mapped_df` using the Ensembl IDs
+  # Add the multiple mappings data from `collapsed_mapped_df` using Ensembl IDs
   dplyr::inner_join(collapsed_mapped_df, by = "Ensembl") %>%
-  # Now let's join the rest of the expression data
-  dplyr::inner_join(df, by = c("Ensembl" = "Gene"))
+  # Now let's add on the rest of the expression data
+  dplyr::inner_join(expression_df, by = c("Ensembl" = "Gene"))
 ```
 
 Our `final_mapped_df` object now has a column named `first_mapped_entrez_id` that contains only the first mapped Entrez ID, in addition to the `all_entrez_ids` column that contains all mapped Entrez IDs per Ensembl ID.
 
-```{r}
+Let's look at the multi-mapped data again
+
+```{r rownames.print = FALSE}
 final_mapped_df %>%
-  # Filter `final_mapped_df` to preview the rows where `all_entrez_ids` values include the ";" character -- we know that these are the rows with multiple mapped values
+  # Filter `final_mapped_df` to rows with multiple mapped values
   dplyr::filter(stringr::str_detect(all_entrez_ids, ";")) %>%
   head()
 ```
@@ -381,7 +397,7 @@ readr::write_tsv(final_mapped_df, file.path(
 # Resources for further learning
 
 - Marc Carlson has prepared a nice [Introduction to Bioconductor Annotation Packages](https://bioconductor.org/packages/release/bioc/vignettes/AnnotationDbi/inst/doc/IntroToAnnotationPackages.pdf) [@Carlson2020-vignette]
-- See our [microarray gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology [@gene-id-annotation-microarray].
+- See our [microarray gene ID conversion notebook](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) as another applicable example, since the steps for this workflow do not change with technology.
 
 # Session info
 

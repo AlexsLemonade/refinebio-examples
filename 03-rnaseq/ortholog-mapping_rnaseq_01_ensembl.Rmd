@@ -1,7 +1,7 @@
 ---
 title: "Ortholog Mapping - RNA-seq"
 author: "CCDL for ALSF"
-date: "October 2020"
+date: "December 2020"
 output:   
   html_notebook:
     toc: true
@@ -33,7 +33,7 @@ You can open this `.Rmd` file in RStudio and follow the rest of these steps from
 ## Set up your analysis folders 
 
 Good file organization is helpful for keeping your data analysis project on track!
-We have set up some code that will automatically set up a folder structure for you. 
+We have set up some code that will automatically set up a folder structure for you.
 Run this next chunk to set up your folders! 
 
 If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
@@ -45,7 +45,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -53,7 +53,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -92,7 +92,7 @@ For this example analysis, we will use this [acute myeloid leukemia sample datas
 
 The data that we downloaded from refine.bio for this analysis has 19 samples (obtained from 19 acute myeloid leukemia (AML) mouse models), containing RNA-sequencing results for types of AML under controlled treatment conditions.
 More specifically, IDH2-mutant AML mouse models were treated with either vehicle or AG-221 (the first small molecule in-vivo inhibitor of IDH2 to enter clinical trials).
-While, the TET2-mutant AML mouse models were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).
+The TET2-mutant AML mouse models were treated with vehicle or 5-Azacytidine (Decitabine, hypomethylating agent).
 
 ## Place the dataset in your new `data/` folder
 
@@ -133,19 +133,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "SRP070849") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "SRP070849")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "SRP070849.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "SRP070849.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_SRP070849.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_SRP070849.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -175,7 +180,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 Attach a package we need for this analysis.
 
-```{r}
+```{r message=FALSE}
 # We will need this so we can use the pipe: %>%
 library(magrittr)
 ```
@@ -187,38 +192,51 @@ The [HGNC database](https://www.genenames.org/) currently contains over 39,000 p
 
 The [HGNC Comparison of Orthology Predictions (HCOP)](https://www.genenames.org/tools/hcop/) is a search tool that combines orthology predictions for a specified human gene, or set of human genes from a variety of sources, including Ensembl Compara, HGNC, and NCBI Gene Orthology [@Wright2005].
 In general, an orthology prediction where most of the databases concur would be considered the reliable, and we will use this to prioritize mapping in cases where there is more than one possible ortholog for a gene.
-HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes [@hcop-help].
+HCOP was originally designed to show orthology predictions between human and mouse, but has been expanded to include data from 18 genomes, including mouse, which we will use in this notebook [@hcop-help].
 
-First, we need to download the file from the server holding the HGNC data.
-Go to this [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](ftp://ftp.ebi.ac.uk/pub/databases/genenames/hcop/).
+We can download the human mouse file we need for this example using `download.file()` command. 
+For this notebook, we want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
 
-This is where the files that reflect the data provided via the [HGNC database](https://www.genenames.org/) are maintained.
-Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
-
-*Note:* If you are using Safari (or the above FTP server link does not open in a web browser), you may need to go to the [link for the HCOP search tool](https://www.genenames.org/tools/hcop/) and scroll down to "Bulk Downloads" to choose a file to download.
-Here, you can find the same files you would find at the server linked above.
-
-To download a file, click the file name.
-For this notebook, you will want to download the file named `human_mouse_hcop_fifteen_column.txt.gz`.
-If you are using a different dataset, you can replace `mouse` in `human_mouse_hcop_fifteen_column.txt.gz` with the name of the species you have data for, and click on that file to download.
-
-<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/3d4e8a9be91eee5e95a5875d5e897e9ed4cfeac4/template/screenshots/download-hgnc-mouse-file.png" width=400>
-
-Next, move the `human_mouse_hcop_fifteen_column.txt.gz` file into your `data/` folder.
-
-*Note:* If you are using Safari, this file will automatically be decompressed, so the name of the file would instead be `human_mouse_hcop_fifteen_column.txt` (don't forget to change the file name in the chunk below if this is the case).
-
-Now let's double check that the file is in the right place.
+First we'll declare a sensible file path for this. 
 
 ```{r}
-# Define the file path to organism orthology file downloaded from the HGNC database
-mouse_hgnc_file <- file.path("data", "human_mouse_hcop_fifteen_column.txt.gz")
+# Declare what we want the downloaded file to be called and its location
+mouse_hgnc_file <- file.path(
+  data_dir,
+  # The name the file will have locally
+  "human_mouse_hcop_fifteen_column.txt.gz"
+)
+```
 
+Using the file path we just declared, we can use the `destfile` argument to download the file we need to this directory and use this file name. 
+
+We are downloading this orthology predictions file from the [HGNC database](https://www.genenames.org/).
+If you are looking for a different species, see the [directory page of the HGNC Comparison of Orthology Predictions (HCOP) files](http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/) and find the file name of the species you are looking for.
+
+```{r}
+download.file(
+  paste0(
+    "http://ftp.ebi.ac.uk/pub/databases/genenames/hcop/",
+    # Replace with the file name for the species conversion you want
+    "human_mouse_hcop_fifteen_column.txt.gz"
+  ),
+  # The file will be saved to the name and location we defined earlier
+  destfile = mouse_hgnc_file
+)
+```
+
+If you are using a different dataset, in the last chunk you can replace `mouse` in `human_mouse_hcop_fifteen_column.txt.gz` with the name of the species you have data for (if you see it listed in the directory).
+
+Ortholog species files with the '6 Column' output returns the raw assertions, Ensembl gene IDs and Entrez Gene IDs for human and one other species, while the '15 Column' output includes additional information such as the chromosomal location, accession numbers and the databases that support the assertions.
+
+Now let's double check that the mouse ortholog file is in the right place.
+
+```{r}
 # Check if the organism orthology file file is in the `data` directory
 file.exists(mouse_hgnc_file)
 ```
 
-In the next chunk, we will read in the orthology file that was just downloaded.
+Now we can read in the orthology file that we downloaded.
 
 ```{r}
 # Read in the data from HGNC
@@ -250,8 +268,8 @@ We stored our data file path as an object named `data_file` in [this previous st
 ```{r}
 # Read in data TSV file
 mouse_genes <- readr::read_tsv(data_file) %>%
-  # We only want the gene IDs so let's pull the `Gene` column
-  dplyr::pull("Gene")
+  # We only want the gene IDs so let's keep only the `Gene` column
+  dplyr::select("Gene")
 ```
 
 ## Mapping mouse Ensembl gene IDs to human Ensembl gene IDs
@@ -259,7 +277,7 @@ mouse_genes <- readr::read_tsv(data_file) %>%
 refine.bio data uses Ensembl gene identifiers, which will be in the first column.
 
 ```{r}
-# Let's take a look at the first 6 items of `mouse_genes`
+# Let's take a look at the first 6 rows of `mouse_genes`
 head(mouse_genes)
 ```
 
@@ -287,8 +305,8 @@ We don't want to handle duplicate data, so let's remove those duplicates before 
 
 ```{r}
 human_mouse_key <- human_mouse_key %>%
-  # We need to use the `distinct()` function to remove duplicates resulted from
-  # ignoring the additional columns in the `mouse` object
+  # Use the `distinct()` function to remove duplicates resulting from
+  # dropping the additional columns in the `mouse` data frame
   dplyr::distinct()
 ```
 
@@ -296,40 +314,41 @@ Now let's join the mapped data from `human_mouse_key` with the gene data in `mou
 
 ```{r}
 # First, we need to convert our vector of mouse genes into a data frame
-human_mouse_mapped_df <- data.frame("Gene" = mouse_genes) %>%
+human_mouse_mapped_df <- mouse_genes %>%
   # Now we can join the mapped data
   dplyr::left_join(human_mouse_key, by = c("Gene" = "mouse_ensembl"))
 ```
 
 Here's what the new data frame looks like:
 
-```{r}
-head(human_mouse_mapped_df, n = 25)
-```
-
-Let's get a summary of the Ensembl IDs returned in the `human_ensembl` column of our mapped data frame.
-
-```{r}
-# We can use this `count()` function after `group_by()`to get a count of how many
-# `mouse_ensembl` IDs there are per `human_ensembl` IDs
-human_mouse_mapped_df %>%
-  dplyr::group_by(human_ensembl) %>%
-  dplyr::count() %>%
-  # Sort by highest `n` which would be the human Ensembl ID with the most mapped
-  # mouse Ensembl IDs
-  dplyr::arrange(desc(n))
+```{r rownames.print = FALSE}
+head(human_mouse_mapped_df, n = 10)
 ```
 
 Looks like we have mapped IDs!
 
-Now, let's get an idea of how many mouse Ensembl IDs we have that were not mapped to human Ensembl IDs.
+So now we have all the mouse genes mapped to human, but there might be places where there are multiple mouse genes that are orthologous to the same human gene, or vice versa.
+
+Let's get a summary of the Ensembl IDs returned in the `human_ensembl` column of our mapped data frame.
 
 ```{r}
-sum(is.na(human_mouse_mapped_df$human_ensembl))
+# We can use this `count()` function to get a tally of how many
+# `mouse_ensembl` IDs there are per `human_ensembl` IDs
+human_mouse_mapped_df %>%
+  # Count the number of rows per human gene
+  dplyr::count(human_ensembl) %>%
+  # Sort by highest `n` which will be the human Ensembl ID with the most mapped
+  # mouse Ensembl IDs
+  dplyr::arrange(desc(n))
 ```
 
-We have 18,801 NAs, which means we have 18,801 mouse Ensembl IDs out of the 64,816 in `human_mouse_mapped_df`, that were not mapped to human Ensembl IDs.
-This is okay because we do not expect everything to map across species.
+There are certainly a good number of places where we mapped multiple mouse Ensembl IDs to the same human symbol!
+We'll look at this in a bit.
+
+We can also see that there 19,126 mouse Ensembl IDs that did not map to a human Ensembl ID.
+These are the rows with a value of NA.
+This seems like a lot, but most of these are likely to be non-protein-coding genes that do not map easily across species.
+
 
 ## Take a look at some multi-mappings
 
@@ -360,9 +379,16 @@ In the next chunk, we show how we can collapse all the human Ensembl IDs into on
 collapsed_human_ensembl_df <- human_mouse_mapped_df %>%
   # Group by mouse Ensembl IDs
   dplyr::group_by(Gene) %>%
-  # Collapse the mapped values in `human_mouse_mapped_df` into one column named
-  # `all_human_ensembls` -- note that we will lose the `support` column in this summarizing step
-  dplyr::summarize(all_human_ensembls = paste(human_ensembl, collapse = ";"))
+  # Collapse the mapped values in `human_mouse_mapped_df` to a
+  # `all_human_ensembl` column, removing any duplicated human symbols
+  # note that we will lose the `support` column in this summarizing step
+  dplyr::summarize(
+    # combine unique symbols with semicolons between them
+    all_human_ensembl = paste(
+      sort(unique(human_ensembl)),
+      collapse = ";"
+    )
+  )
 
 head(collapsed_human_ensembl_df)
 ```
@@ -407,26 +433,22 @@ Before we do, let's take a look how many multi-mapped genes there are in the dat
 
 ```{r}
 human_mouse_mapped_df %>%
-  # Group by human Ensembl IDs
-  dplyr::group_by(human_ensembl) %>%
   # Count the number of rows in the data frame for each Ensembl ID
-  dplyr::count() %>%
+  dplyr::count(human_ensembl) %>%
   # Filter out the symbols without multimapped genes
   dplyr::filter(n > 1)
 ```
 
-Looks like we have 6,608 human gene Ensembl IDs with multiple mappings.
+Looks like we have 6,971 human gene Ensembl IDs with multiple mappings.
 
 Now let's filter out the less reliable mappings.
 
 ```{r}
 filtered_mouse_ensembl_df <- human_mouse_mapped_df %>%
-  # Count the number of databases in the support column for each prediction
+  # Count the number of databases in the support column
+  # by using the number of commas that separate the databases
   dplyr::mutate(n_databases = stringr::str_count(support, ",") + 1) %>%
-  # Group by human Ensembl IDs
-  dplyr::group_by(human_ensembl) %>%
-  # Now filter for the rows with more than one database in support for each
-  # human Ensembl ID
+  # Now filter to the rows where more than one database supports the mapping
   dplyr::filter(n_databases > 1)
 
 head(filtered_mouse_ensembl_df)
@@ -444,7 +466,7 @@ filtered_mouse_ensembl_df %>%
   dplyr::filter(n > 1)
 ```
 
-Now we only have 2,532 multi-mapped genes, compared to the 6,608 that we began with.
+Now we only have 2,702 multi-mapped genes, compared to the 6,608 that we began with.
 Although we haven't filtered down to zero multi-mapped genes, we have hopefully removed some of the less _reliable_ mappings.
 
 ### Write results to file

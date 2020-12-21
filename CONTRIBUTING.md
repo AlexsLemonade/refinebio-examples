@@ -8,7 +8,9 @@
   - [Setting up the docker container](#setting-up-the-docker-container)
   - [Docker image updates](#docker-image-updates)
 - [Download the datasets](#download-the-datasets)
-- [Add a new analysis](#add-a-new-analysis)
+- [Adding a new analysis](#adding-a-new-analysis)
+  - [Draft PR: Big picture reviews](#draft-pr-big-picture-reviews)
+  - [Refined PRs: Detailed reviews](#refined-prs-detailed-reviews)
   - [Setting up a new analysis file](#setting-up-a-new-analysis-file)
     - [How to use the template.Rmd](#how-to-use-the-templatermd)
     - [Adding datasets to the S3 bucket](#adding-datasets-to-the-s3-bucket)
@@ -89,18 +91,35 @@ For development purposes, you can download all the datasets for the example note
 scripts/download-data.sh
 ```
 
-## Add a new analysis
+## Adding a new analysis
 
-Here are the summarized steps for adding a new analysis.
-Click on the links to go to the detailed instructions for each step.
+Our PR process for adding a new analysis involves two stages which are 2-3 (or more) PRs.
+This splitting up an analysis into multiple PRs helps make the review process more manageable.
+This process ensures that discussions around the big picture: conceptual decisions, what steps are included, which packages are used, are generally concluded before review moves on to the details and further polishing.
+Note that all the following steps describe PRs to `staging` branch only (see more [about the branch set up](#pull-requests)).
+
+### Draft PR: Big picture reviews  
 
 - On your new git branch, [set up the analysis file from the template](#setting-up-the-analysis-file).
-- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
+- Get the basic steps for the analysis set up and create a draft PR for a big picture review (Not all descriptions need to be 100% word-smithed, but the general steps/outline should be reflected).
+- Try to highlight things that encapsulate main concepts as ready for review using a `**REVIEW**` tag and/or use a `**DRAFT**` tag to indicate a section that hasn't really been worked on much yet.
+- After the general outline of the analysis has been agreed upon through a reviewing process, incorporate the major feedback from the draft PR process before you split off new branches to file your refined PRs.
+- Keep the original draft PR open for easy reference.
+
+### Refined PRs: Detailed reviews  
+
+Break up the steps of the analysis into manageable review chunks on their own branches for detailed review (you may want to discuss what the chunks should be on the Draft PR).
+- Delete any `**REVIEW/DRAFT**` tags leftover from the draft PR.
+- Make sure each steps' explanations are fully realized for these PRs.
+- Ensure that the notebook adheres to [the guidelines](#guidelines-for-analysis-notebooks).
 - [Cite sources and add them to the reference.bib file](#citing-sources-in-text)
+- If the file has been [added to snakemake](#add-new-analyses-to-the-snakefile), in the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally) to make sure it runs.
+
+These steps should be done in the first refined PR, but don't need to be done again:
+- Add a [link to the html file to `_navbar.html`](#add-new-analyses-to-the-navbar)
 - Add [data and metadata files to S3](#adding-datasets-to-the-s3-bucket)
 - Add not yet added packages needed for this analysis to the Dockerfile (make sure it successfully builds).
 - Add the [expected output html file to snakemake](#add-new-analyses-to-the-snakefile)
-- In the Docker container, run [snakemake for rendering](#how-to-re-render-the-notebooks-locally)
 
 ### Setting up a new analysis file
 
@@ -479,12 +498,15 @@ Hopefully the error message helps you track down the problem, but you can also c
 ### About the render-notebooks.R script
 
 The `render-notebooks.R` script adds a `bibliography:` specification in the `.Rmd` header so all citations are automatically rendered.
+A file with other R code to include can also be specified, which should be used to set options for rendering, such as the output width.
+No code that affects the computational behavior of the notebook should be included here, as it will be sourced in a hidden chunk and not visible to users.
 It also adds other components like CSS styling, a footer, and Google Analytics (these items are all hard-coded into the script).
 
 **Options:**
 - `--rmd`: provided by snakemake, the input `.Rmd` file to render.   
 - `--bib_file`: File path for the  `bibliography:` header option.
-Default is the `references.bib` in the `components` folder.  
+- `--cite_style`: File path for a CSL file to control citation style 
+- `--include_file`: File path for code to be sourced at the start of the notebook but hidden from rendering.
 - `--html`: Default is to save the output `.html` file the same name as the input `.Rmd` file. This option allows you to specify an output file name. Default is used by snakemake.
 
 ### Add new analyses to the Snakefile

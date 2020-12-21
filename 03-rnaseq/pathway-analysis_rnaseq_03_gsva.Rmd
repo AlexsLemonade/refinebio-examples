@@ -1,0 +1,699 @@
+---
+title: "Gene set variation analysis - RNA-seq"
+author: "CCDL for ALSF"
+date: "December 2020"
+output:  
+  html_notebook:
+    toc: true
+    toc_float: true
+    number_sections: true
+---
+
+# Purpose of this analysis
+
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
+
+In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis [@Hanzelmann2013].
+GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
+We'll make a heatmap of the enrichment matrix, but you can use the GSVA scores for a number of other downstream analyses such as differential expression analysis.
+
+⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+### What is pathway analysis?
+
+Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment.
+In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
+The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
+In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
+
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. 
+We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+
+### How to choose a pathway analysis?
+
+This table summarizes the pathway analyses examples in this module.
+
+|Analysis|What is required for input|What output looks like |✅ Pros| ⚠️ Cons|
+|--------|--------------------------|-----------------------|-------|-------|
+|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|- Simple<br><br> - Inexpensive computationally to calculate p-values| - Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways|
+|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes|- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible|
+|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis|- Does not require two groups to compare upfront<br><br> - Normally distributed scores|- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n > 10|
+
+# How to run this example
+
+For general information about our tutorials and the basic software packages you will need, please see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-this-tutorial-is-structured).
+We recommend taking a look at our [Resources for Learning R](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#resources-for-learning-r) if you have not written code in R before. 
+
+## Obtain the `.Rmd` file
+
+To run this example yourself, [download the `.Rmd` for this analysis by clicking this link](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.Rmd).
+
+Clicking this link will most likely send this to your downloads folder on your computer. 
+Move this `.Rmd` file to where you would like this example and its files to be stored.
+
+You can open this `.Rmd` file in RStudio and follow the rest of these steps from there. (See our [section about getting started with R notebooks](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) if you are unfamiliar with `.Rmd` files.)
+
+## Set up your analysis folders 
+
+Good file organization is helpful for keeping your data analysis project on track!
+We have set up some code that will automatically set up a folder structure for you. 
+Run this next chunk to set up your folders! 
+
+If you have trouble running this chunk, see our [introduction to using `.Rmd`s](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-and-use-rmds) for more resources and explanations. 
+
+```{r}
+# Create the data folder if it doesn't exist
+if (!dir.exists("data")) {
+  dir.create("data")
+}
+
+# Define the file path to the plots directory
+plots_dir <- "plots"
+
+# Create the plots folder if it doesn't exist
+if (!dir.exists(plots_dir)) {
+  dir.create(plots_dir)
+}
+
+# Define the file path to the results directory
+results_dir <- "results"
+
+# Create the results folder if it doesn't exist
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+```
+
+In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+
+## Obtain the dataset from refine.bio
+
+For general information about downloading data for these examples, see our ['Getting Started' section](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#how-to-get-the-data). 
+
+Go to this [dataset's page on refine.bio](https://www.refine.bio/experiments/SRP140558).
+
+Click the "Download Now" button on the right side of this screen.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-now.png" width=200>  
+
+Fill out the pop up window with your email and our Terms and Conditions:  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-email.png" width=500>  
+
+It may take a few minutes for the dataset to process.
+You will get an email when it is ready.
+
+## About the dataset we are using for this example
+
+For this example analysis, we will use this [acute viral bronchiolitis dataset](https://www.refine.bio/experiments/SRP140558).
+The data that we downloaded from refine.bio for this analysis has 62 paired peripheral blood mononuclear cell RNA-seq samples obtained from 31 patients.
+Samples were collected at two time points: during their first, acute bronchiolitis visit (abbreviated "AV") and their recovery, their post-convalescence visit (abbreviated "CV").
+
+## Place the dataset in your new `data/` folder
+
+refine.bio will send you a download button in the email when it is ready. 
+Follow the prompt to download a zip file that has a name with a series of letters and numbers and ends in `.zip`. 
+Double clicking should unzip this for you and create a folder of the same name.  
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/download-folder-structure.png" width=400> 
+
+For more details on the contents of this folder see [these docs on refine.bio](http://docs.refine.bio/en/latest/main_text.html#downloadable-files).  
+
+The `SRP140558` folder has the data and metadata TSV files you will need for this example analysis.
+Experiment accession ids usually look something like `GSE1235` or `SRP12345`. 
+
+Copy and paste the `SRP140558` folder into your newly created `data/` folder.
+
+## Check out our file structure!
+
+Your new analysis folder should contain: 
+
+- The example analysis `.Rmd` you downloaded  
+- A folder called "data" which contains:
+  - The `SRP140558` folder which contains:
+    - The gene expression  
+    - The metadata TSV  
+- A folder for `plots` (currently empty)  
+- A folder for `results` (currently empty)  
+
+Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
+
+<img src="https://github.com/AlexsLemonade/refinebio-examples/raw/40e47f4d3f39283effbd9843a457168061be9680/template/screenshots/analysis-folder-structure.png" width=400>
+
+In order for our example here to run without a hitch, we need these files to be in these locations so we've constructed a test to check before we get started with the analysis. 
+These chunks will declare your file paths and double check that your files are in the right place. 
+
+First we will declare our file paths to our data and metadata files, which should be in our data directory.
+This is handy to do because if we want to switch the dataset (see next section for more on this) we are using for this analysis, we will only have to change the file path here to get started.  
+
+```{r}
+# Define the file path to the data directory
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "SRP140558")
+
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "SRP140558.tsv")
+
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_SRP140558.tsv")
+```
+
+Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above.  
+
+```{r}
+# Check if the gene expression matrix file is at the path stored in `data_file`
+file.exists(data_file)
+
+# Check if the metadata file is at the file path stored in `metadata_file`
+file.exists(metadata_file)
+```
+
+If the chunk above printed out `FALSE` to either of those tests, you won't be able to run this analysis _as is_ until those files are in the appropriate place.
+
+If the concept of a "file path" is unfamiliar to you; we recommend taking a look at our [section about file paths](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#an-important-note-about-file-paths-and-Rmds). 
+
+# Using a different refine.bio dataset with this analysis?
+
+If you'd like to adapt an example analysis to use a different dataset from [refine.bio](https://www.refine.bio/), we recommend placing the files in the `data/` directory you created and changing the filenames and paths in the notebook to match these files (we've put comments to signify where you would need to change the code).
+We suggest saving plots and results to `plots/` and `results/` directories, respectively, as these are automatically created by the notebook.
+From here you can customize this analysis example to fit your own scientific questions and preferences. 
+
+***
+
+<!-- Do not delete this line --> <a name="analysis" style="padding-top:56px;margin-top:-56px;">&nbsp;</a>
+
+# Gene set variation analysis - RNA-Seq
+
+## Install libraries
+
+See our Getting Started page with [instructions for package installation](https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install) for a list of the other software you will need, as well as more tips and resources.
+
+We will be using `DESeq2` to normalize and transform our RNA-seq data before running GSVA, so we will need to install that [@Love2014].
+
+In this analysis, we will be using the [`GSVA`](https://www.bioconductor.org/packages/release/bioc/html/GSVA.html) package to perform GSVA and the [`qusage`](https://www.bioconductor.org/packages/release/bioc/html/qusage.html) package to read in the GMT file containing the gene set data [@Hanzelmann2013; @Yaari2013].
+
+We will also need the [`org.Hs.eg.db`](https://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html) package to perform gene identifier conversion [@Carlson2020-human].
+
+We'll create a heatmap from our pathway analysis results using `pheatmap` [@Slowikowski2017].
+
+```{r}
+if (!("DESeq2" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("DESeq2", update = FALSE)
+}
+
+if (!("GSVA" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("GSVA", update = FALSE)
+}
+
+if (!("qusage" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("qusage", update = FALSE)
+}
+
+if (!("org.Hs.eg.db" %in% installed.packages())) {
+  # Install this package if it isn't installed yet
+  BiocManager::install("org.Hs.eg.db", update = FALSE)
+}
+
+if (!("pheatmap" %in% installed.packages())) {
+  # Install pheatmap
+  install.packages("pheatmap", update = FALSE)
+}
+```
+
+Attach the packages we need for this analysis.
+
+```{r}
+# Attach the DESeq2 library
+library(DESeq2)
+
+# Attach the `qusage` library
+library(qusage)
+
+# Attach the `GSVA` library
+library(GSVA)
+
+# Human annotation package we'll use for gene identifier conversion
+library(org.Hs.eg.db)
+
+# We will need this so we can use the pipe: %>%
+library(magrittr)
+```
+
+## Import and set up data
+
+Data downloaded from refine.bio include a metadata tab separated values (TSV) file and a data TSV file.
+This chunk of code will read the both TSV files and add them as data frames to your environment.
+
+We stored our file paths as objects named `metadata_file` and `data_file` in [this previous step](#check-out-our-file-structure).
+
+```{r}
+# Read in metadata TSV file
+metadata <- readr::read_tsv(metadata_file)
+
+# Read in data TSV file
+expression_df <- readr::read_tsv(data_file) %>%
+  # Here we are going to store the gene IDs as row names so that we can have a numeric matrix to perform calculations on later
+  tibble::column_to_rownames("Gene")
+```
+
+Let's ensure that the metadata and data are in the same sample order.
+
+```{r}
+# Make the data in the order of the metadata
+expression_df <- expression_df %>%
+  dplyr::select(metadata$refinebio_accession_code)
+
+# Check if this is in the same order
+all.equal(colnames(expression_df), metadata$refinebio_accession_code)
+```
+
+### Prepare data for `DESeq2`
+
+There are two things we need to do to prep our expression data for DESeq2. 
+
+First, we need to make sure all of the values in our data are converted to integers as required by a `DESeq2` function we will use later.
+
+Then, we need to filter out the genes that have not been expressed or that have low expression counts since we can not be as confident in those genes being reliably measured. 
+We are going to do some pre-filtering to keep only genes with 50 or more reads in total across the samples.
+
+```{r}
+expression_df <- expression_df %>%
+  # Only keep rows that have total counts above the cutoff
+  dplyr::filter(rowSums(.) >= 50) %>%
+  # The next DESeq2 functions need the values to be converted to integers
+  round()
+```
+
+## Create a DESeqDataset
+
+We will be using the `DESeq2` package for [normalizing and transforming our data](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods), which requires us to format our data into a `DESeqDataSet` object.
+We turn the data frame (or matrix) into a [`DESeqDataSet` object](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#02_About_DESeq2) and specify which variable labels our experimental groups using the [`design` argument](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#multi-factor-designs) [@Love2014].
+In this chunk of code, we will not provide a specific model to the `design` argument because we are not performing a differential expression analysis.
+
+```{r}
+# Create a `DESeqDataSet` object
+dds <- DESeqDataSetFromMatrix(
+  countData = expression_df, # Our prepped data frame with counts
+  colData = metadata, # Data frame with annotation for our samples
+  design = ~1 # Here we are not specifying a model
+)
+```
+
+## Perform DESeq2 normalization and transformation
+
+We often suggest normalizing and transforming your data for various applications including for GSVA. 
+We are going to use the `vst()` function from the `DESeq2` package to normalize and transform the data.
+For more information about these transformation methods, [see here](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/00-intro-to-rnaseq.html#deseq2-transformation-methods). 
+
+```{r}
+# Normalize and transform the data in the `DESeqDataSet` object using the `vst()`
+# function from the `DESEq2` R package
+dds_norm <- vst(dds)
+```
+
+At this point, if your data set has any outlier samples, you should look into removing them as they can affect your results. 
+For this example data set, we will skip this step (there are no obvious outliers) and proceed.
+
+But now we are ready to format our dataset for input into `gsva::gsva()`.
+We need to extract the normalized counts to a matrix and make it into a data frame so we can use with tidyverse functions later. 
+
+```{r}
+# Retrieve the normalized data from the `DESeqDataSet`
+vst_df <- assay(dds_norm) %>%
+  as.data.frame() %>% # Make into a data frame
+  tibble::rownames_to_column("ensembl_id") # Make Gene IDs into their own column
+```
+
+### Import Gene Sets
+
+The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005; @Liberzon2011].
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005; @Liberzon2011] that are distinguished by how they are derived (e.g., computationally mined, curated).
+
+In this example, we will use a collection called Hallmark gene sets for GSVA [@Liberzon2015].
+Here's an excerpt of [the collection description from MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/collection_details.jsp#H):
+
+> Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression.
+> These gene sets were generated by a computational methodology based on identifying gene set overlaps and retaining genes that display coordinate expression.
+
+Here we are obtaining the pathway information from the main function of the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package [@Dolgalev2020].
+Because we are using human data in this example, we supply the formal organism name to the `species` argument. 
+We will want only the hallmark pathways, so we use the `category = "H"` argument.
+
+```{r}
+hallmark_gene_sets <- msigdbr::msigdbr(
+  species = "Homo sapiens", # Can change this to what species you need
+  category = "H" # Only hallmark gene sets
+)
+```
+
+Let's take a look at the format of `hallmarks_gene_set`.
+
+```{r rownames.print=FALSE}
+head(hallmark_gene_sets)
+```
+
+We can see this object is in a tabular format; each row corresponds to a gene and gene set pair. 
+A row exists if that gene (`entrez_gene`, `gene_symbol`) belongs to a gene set (`gs_name`).
+
+The function that we will use to run GSVA wants the gene sets to be in a list, where each entry in the list is a vector of genes that comprise the pathway the element is named for. 
+In the next step, we'll demonstrate how to go from this data frame format to a list.
+
+For this example we will use Entrez IDs (but note that there are gene symbols we could use just as easily).
+The info we need is in two columns: `entrez_gene` contains the gene ID and `gs_name` contains the name of the pathway that the gene is a part of. 
+
+To make this into the list format we need, we can use the `split()` function.
+We want a list where each element of the list is a vector that contains the Entrez gene IDs that are in a particular pathway set. 
+
+```{r}
+hallmarks_list <- split(
+  hallmark_gene_sets$entrez_gene, # The genes we want split into pathways
+  hallmark_gene_sets$gs_name # The pathways made as the higher levels of the list
+)
+```
+
+What does this `hallmarks_list` look like?
+
+```{r}
+head(hallmarks_list, n = 2)
+```
+
+Looks like we have a list of gene sets with associated Entrez IDs.
+
+In our gene expression data frame, `expression_df` we have Ensembl gene identifiers.
+So we will need to convert our Ensembl IDs into Entrez IDs for GSVA.
+
+### Gene identifier conversion
+
+We're going to convert our identifiers in `expression_df` to Entrez IDs, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!
+
+The annotation package `org.Hs.eg.db` contains information for different identifiers [@Carlson2020-human].
+`org.Hs.eg.db` is specific to _Homo sapiens_ -- this is what the `Hs` in the package name is referencing.
+
+We can see what types of IDs are available to us in an annotation package with `keytypes()`.
+
+```{r}
+keytypes(org.Hs.eg.db)
+```
+
+We' use this package to convert from Ensembl gene IDs (`ENSEMBL`) to Entrez IDs (`ENTREZID`) -- since this is the IDs we used in our `hallmarks_list` in the previous step. 
+But, we could just as easily use it to convert to gene symbols (`SYMBOL`) if we had built `hallmarks_list` using gene symbols. 
+
+The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()` and comes from the `AnnotationDbi` package.
+
+Let's create a data frame that shows the mapped Entrez IDs along with the gene expression values for the respective Ensembl IDs.
+
+```{r}
+# First let's create a mapped data frame we can join to the gene expression values
+mapped_df <- data.frame(
+  "entrez_id" = mapIds(
+    # Replace with annotation package for the organism relevant to your data
+    org.Hs.eg.db,
+    keys = vst_df$ensembl_id,
+    # Replace with the type of gene identifiers in your data
+    keytype = "ENSEMBL",
+    # Replace with the type of gene identifiers you would like to map to
+    column = "ENTREZID",
+    # This will keep only the first mapped value for each Ensembl ID
+    multiVals = "first"
+  )
+) %>%
+  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier,
+  # drop that from the data frame
+  dplyr::filter(!is.na(entrez_id)) %>%
+  # Make an `Ensembl` column to store the row names
+  tibble::rownames_to_column("Ensembl") %>%
+  # Now let's join the rest of the expression data
+  dplyr::inner_join(vst_df, by = c("Ensembl" = "ensembl_id"))
+```
+
+This `1:many mapping between keys and columns` message means that some Ensembl gene identifiers map to multiple Entrez IDs.
+In this case, it's also possible that a Entrez ID will map to multiple Ensembl IDs.
+For the purpose of performing GSVA later in this notebook, we keep only the first mapped IDs.
+
+For more info on gene ID conversion, take a look at our other examples:
+[the microarray example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
+
+Let's see a preview of `mapped_df`.
+
+```{r rownames.print=FALSE}
+head(mapped_df)
+```
+
+We will want to keep in mind that GSVA requires that data is in a matrix with the gene identifiers as row names.
+In order to successfully turn our data frame into a matrix, we will need to ensure that we do not have any duplicate gene identifiers.
+
+Let's count up how many Entrez IDs mapped to multiple Ensembl IDs.
+
+```{r}
+sum(duplicated(mapped_df$entrez_id))
+```
+
+Looks like we have 68 duplicated Entrez IDs.
+
+#### Handling duplicate gene identifiers
+
+As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for running GSVA.
+ 
+For RNA-seq processing in refine.bio, transcripts were quantified (Ensembl transcript IDs) and aggregated to the gene-level (Ensembl gene IDs). 
+For a single Entrez ID that maps to multiple Ensembl gene IDs, we will use the values associated with the Ensembl gene ID that seems to be most highly expressed.
+Specifically, we're going retain the Ensembl gene ID with maximum mean expression value.
+We expect that this approach may be a better reflection of the reads that were quantified than taking the mean or median of the values for multiple Ensembl gene IDs would be.
+
+Our example doesn't contain too many duplicates; ultimately we only are losing 68 rows of data.
+If you find yourself using a dataset that has large proportion of duplicates, we'd recommend exercising some caution and exploring how well values for multiple gene IDs are correlated and the identity of those genes.
+
+First, we first need to calculate the gene means, but we'll need to move our non-numeric variables (the gene ID columns) out of the way for that calculation. 
+
+```{r}
+# First let's determine the gene means
+gene_means <- rowMeans(mapped_df %>% dplyr::select(-Ensembl, -entrez_id))
+
+# Let's add this as a column in our `mapped_df`.
+mapped_df <- mapped_df %>%
+  # Add gene_means as a column called gene_means
+  dplyr::mutate(gene_means) %>%
+  # Reorder the columns so `gene_means` column is upfront
+  dplyr::select(Ensembl, entrez_id, gene_means, dplyr::everything())
+```
+
+Now we can filter out the duplicate gene identifiers using the gene mean values.
+First, we'll use `dplyr::arrange()` by `gene_means` such that the the rows will be in order of highest gene mean to lowest gene mean.
+For the duplicate values of `entrez_id`, the row with the lower index will be the one that's kept by `dplyr::distinct()`.
+In practice, this means that we'll keep the instance of the Entrez ID with the highest gene mean value as intended.
+
+```{r}
+filtered_mapped_df <- mapped_df %>%
+  # Sort so that the highest mean expression values are at the top
+  dplyr::arrange(dplyr::desc(gene_means)) %>%
+  # Filter out the duplicated rows using `dplyr::distinct()`
+  dplyr::distinct(entrez_id, .keep_all = TRUE)
+```
+
+Let's do our check again to see if we still have duplicates.
+
+```{r}
+sum(duplicated(filtered_mapped_df$entrez_id))
+```
+
+We now have `0` duplicates which is what we want. All set!
+
+Now we should prep this data so GSVA can use it. 
+
+```{r}
+filtered_mapped_matrix <- filtered_mapped_df %>%
+  # GSVA can't the Ensembl IDs so we should drop this column as well as the means
+  dplyr::select(-Ensembl, -gene_means) %>%
+  # We need to store our gene identifiers as row names
+  tibble::column_to_rownames("entrez_id") %>%
+  # Now we can convert our object into a matrix
+  as.matrix()
+```
+
+Note that if we had duplicate gene identifiers here, we would not be able to set them as row names.
+
+## Gene Set Variation Analysis
+
+GSVA fits a model and ranks genes based on their expression level relative to the sample distribution [@Hanzelmann2013].
+The pathway-level score calculated is a way of asking how genes _within_ a gene set vary as compared to genes that are _outside_ of that gene set [@Malhotra2018].
+
+The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) [@Hanzelmann2013].
+This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change [@Hanzelmann2013].
+
+The output is a gene set by sample matrix of GSVA scores.
+
+### Perform GSVA
+
+Let's perform GSVA using the `gsva()` function.
+See `?gsva` for more options.
+
+```{r}
+gsva_results <- gsva(
+  filtered_mapped_matrix,
+  hallmarks_list,
+  method = "gsva",
+  # Appropriate for our vst transformed data
+  kcdf = "Gaussian",
+  # Minimum gene set size
+  min.sz = 15,
+  # Maximum gene set size
+  max.sz = 500,
+  # Compute Gaussian-distributed scores
+  mx.diff = TRUE,
+  # Don't print out the progress bar
+  verbose = FALSE
+)
+```
+
+Note that the `gsva()` function documentation says we can use `kcdf = "Gaussian"` if we have expression values that are continuous such as log-CPMs, log-RPKMs or log-TPMs, but we would use `kcdf = "Poisson"` on integer counts.
+Our `vst()` transformed data is on a log2-like scale, so `Gaussian` works for us. 
+
+Let's explore what the output of `gsva()` looks like.
+
+```{r}
+# Print 6 rows,
+head(gsva_results[, 1:10])
+```
+
+## Write results to file
+
+Let's write all of our GSVA results to file.
+
+```{r}
+gsva_results %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("pathway") %>%
+  readr::write_tsv(file.path(
+    results_dir,
+    "SRP140558_gsva_results.tsv"
+  ))
+```
+
+## Visualizing results with a heatmap
+
+Let's make a heatmap for our pathways! 
+
+### Neaten up our metadata labels
+
+We will want our heatmap to include some information about the sample labels, but unfortunately some of the metadata for this dataset are not set up into separate, neat columns. 
+
+The most salient information for these samples is combined into one column, `refinebio_title`. 
+Let's preview what this column looks like. 
+
+```{r}
+head(metadata$refinebio_title)
+```
+
+If we used these labels as is, it wouldn't be very informative!
+
+Looking at the author's descriptions, PBMCs were collected at two time points: during the patients' first, acute bronchiolitis visit (abbreviated "AV") and their recovery visit, (called post-convalescence and abbreviated "CV").
+
+We can create a new variable, `time_point`, that states this info more clearly. 
+This new `time_point` variable will have two labels: `acute illness` and `recovering` based on the `AV` or `CV` coding located in the `refinebio_title` string variable. 
+
+```{r}
+annot_df <- metadata %>%
+  # We need the sample IDs and the main column that contains the metadata info
+  dplyr::select(
+    refinebio_accession_code,
+    refinebio_title
+  ) %>%
+  # Create our `time_point` variable based on `refinebio_title`
+  dplyr::mutate(
+    time_point = dplyr::case_when(
+      # Create our new variable based whether the refinebio_title column
+      # contains _AV_ or _CV_
+      stringr::str_detect(refinebio_title, "_AV_") ~ "acute illness",
+      stringr::str_detect(refinebio_title, "_CV_") ~ "recovering"
+    )
+  ) %>%
+  # We don't need the older version of the variable anymore
+  dplyr::select(-refinebio_title)
+```
+
+These time point samples are paired, so you could also add the `refinebio_subject` to the labels. 
+For simplicity, we've left them off for now. 
+
+The `pheatmap::pheatmap()` will want the annotation data frame to have matching row names to the data we supply it (which is our `gsva_results`).
+
+```{r}
+annot_df <- annot_df %>%
+  # pheatmap will want our sample names that match our data to
+  tibble::column_to_rownames("refinebio_accession_code")
+```
+
+### Set up the heatmap itself
+
+Great! We're all set. 
+We can see that they are in a wide format with the GSVA scores for each sample spread across a row associated with each pathway.
+
+```{r}
+pathway_heatmap <- pheatmap::pheatmap(gsva_results,
+  annotation_col = annot_df, # Add metadata labels!
+  show_colnames = FALSE, # Don't show sample labels
+  fontsize_row = 6 # Shrink the pathway labels a tad
+)
+
+# Print out heatmap here
+pathway_heatmap
+```
+
+Here we've used clustering and can see that samples somewhat cluster by `time_point`. 
+
+We can also see that some pathways that share biology seem to cluster together (e.g. `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`). 
+Pathways may cluster together, or have similar GSVA scores, because the genes in those pathways overlap.
+
+Taking this example, we can look at how many genes are in common for `HALLMARK_INTERFERON_ALPHA_RESPONSE` and `HALLMARK_INTERFERON_GAMMA_RESPONSE`.
+
+```{r}
+length(intersect(
+  hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE,
+  hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE
+))
+```
+
+These `73` genes out of `HALLMARK_INTERFERON_ALPHA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_ALPHA_RESPONSE)` and `hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE`'s `r length(hallmarks_list$HALLMARK_INTERFERON_GAMMA_RESPONSE)` is probably why those cluster together.
+
+The pathways share genes and are not independent!
+
+Now, let's save this plot to PNG.
+
+```{r}
+# Replace file name with a relevant output plot name
+heatmap_png_file <- file.path(plots_dir, "SRP140558_heatmap.png")
+
+# Open a PNG file - width and height arguments control the size of the output
+png(heatmap_png_file, width = 1000, height = 800)
+
+# Print your heatmap
+pathway_heatmap
+
+# Close the PNG file:
+dev.off()
+```
+
+# Resources for further learning
+
+- [GSVA Paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-7) [@Hanzelmann2013]
+- [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) [@GSEA-user-guide].
+- [Decoding Gene Set Variation Analysis](https://towardsdatascience.com/decoding-gene-set-variation-analysis-8193a0cfda3) [@Malhotra2018]
+- [Make heatmaps in R with pheatmap](https://slowkow.com/notes/pheatmap-tutorial/) [@Slowikowski2017]
+- To customize heatmaps even further than the functions in the `pheatmap` package allow, see the [ComplexHeatmap Complete Reference Manual](https://jokergoo.github.io/ComplexHeatmap-reference/book/) [@Gu2016]
+
+# Session info
+
+At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+
+```{r}
+# Print session info
+sessioninfo::session_info()
+```
+
+# References

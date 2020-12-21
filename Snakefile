@@ -8,7 +8,9 @@ rule target:
         "02-microarray/dimension-reduction_microarray_01_pca.html",
         "02-microarray/dimension-reduction_microarray_02_umap.html",
         "02-microarray/gene-id-annotation_microarray_01_ensembl.html",
-        "02-microarray/pathway-analysis_microarray_02_ora.html",
+        "02-microarray/pathway-analysis_microarray_01_ora.html",
+        "02-microarray/pathway-analysis_microarray_02_gsea.html",
+        "02-microarray/pathway-analysis_microarray_03_gsva.html",
         "02-microarray/ortholog-mapping_microarray_01_ensembl.html",
         "03-rnaseq/00-intro-to-rnaseq.html",
         "03-rnaseq/clustering_rnaseq_01_heatmap.html",
@@ -17,7 +19,12 @@ rule target:
         "03-rnaseq/dimension-reduction_rnaseq_02_umap.html",
         "03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html",
         "03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html",
-        "04-advanced-topics/00-intro-to-advanced-topics.html"
+        "03-rnaseq/pathway-analysis_rnaseq_01_ora.html",
+        "03-rnaseq/pathway-analysis_rnaseq_02_gsea.html",
+        "03-rnaseq/pathway-analysis_rnaseq_03_gsva.html",
+        "04-advanced-topics/00-intro-to-advanced-topics.html",
+        "04-advanced-topics/network-analysis_rnaseq_01_wgcna.html"
+
 
 rule render_citations:
     input:
@@ -29,5 +36,6 @@ rule render_citations:
         " --rmd {input.rmd}"
         " --bib_file components/references.bib"
         " --cite_style components/genetics.csl"
+        " --include_file components/include.R"
         " --html {output}"
         " --style"
