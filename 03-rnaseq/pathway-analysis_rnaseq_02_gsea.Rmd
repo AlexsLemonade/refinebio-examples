@@ -226,7 +226,7 @@ dge_df
 ## Getting familiar with MSigDB gene sets available via `msigdbr`
 
 The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005; @Liberzon2011].
-We can use the `msigdbr` package to access these gene sets in a format compatible with the package we'll use for analysis, `clusterProfiler` [@Igor2020; @Yu2012].
+We can use the `msigdbr` package to access these gene sets in a format compatible with the package we'll use for analysis, `clusterProfiler` [@Dolgalev2020; @Yu2012].
 
 The gene sets available directly from MSigDB are applicable to human studies.
 `msigdbr` also supports commonly studied model organisms.
