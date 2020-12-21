@@ -329,7 +329,7 @@ human_zebrafish_mapped_df %>%
   dplyr::select(Gene, human_symbol) %>%
   # Remove any remaining duplicates
   dplyr::distinct() %>%
-  # count the number of rows per human gene
+  # Count the number of rows per human gene
   dplyr::count(human_symbol) %>%
   # Sort by highest `n` which will be the human gene symbol with the most
   # mapped zebrafish Ensembl IDs
@@ -345,7 +345,7 @@ This is okay because we do not expect everything to map neatly across species.
 
 ## Take a look at some multi-mappings
 
-If a zebrafish Ensembl gene ID maps to multiple human symbols, the associated Ensemble ID values will get duplicated in our output data.
+If a zebrafish Ensembl gene ID maps to multiple human symbols, the associated Ensembl ID values will get duplicated in our output data.
 Let's look at the `ENSDARG00000069142` example below.
 
 ```{r}
@@ -431,7 +431,7 @@ Before we do, let's take a look how many multi-mapped genes there are in the dat
 
 ```{r}
 human_zebrafish_mapped_df %>%
-  # Remove the support column
+  # Remove the `support` column
   dplyr::select(Gene, human_symbol) %>%
   # Remove any remaining duplicates
   dplyr::distinct() %>%

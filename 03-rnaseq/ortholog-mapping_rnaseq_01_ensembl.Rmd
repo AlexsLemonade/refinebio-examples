@@ -335,19 +335,19 @@ Let's get a summary of the Ensembl IDs returned in the `human_ensembl` column of
 # We can use this `count()` function to get a tally of how many
 # `mouse_ensembl` IDs there are per `human_ensembl` IDs
 human_mouse_mapped_df %>%
-  # count the number of rows per human gene
+  # Count the number of rows per human gene
   dplyr::count(human_ensembl) %>%
   # Sort by highest `n` which will be the human Ensembl ID with the most mapped
   # mouse Ensembl IDs
   dplyr::arrange(desc(n))
 ```
 
-There are certainly a good number of places where we mapped multiple zebrafish Ensembl IDs to the same human symbol!
+There are certainly a good number of places where we mapped multiple mouse Ensembl IDs to the same human symbol!
 We'll look at this in a bit.
 
 We can also see that there 19,126 mouse Ensembl IDs that did not map to a human Ensembl ID.
 These are the rows with a value of NA.
-This seems like a lot, but many of these may not be "real" genes, and we  do not expect everything to map neatly across species.
+This seems like a lot, but many of these may not be "real" genes, and we do not expect everything to map neatly across species.
 
 
 ## Take a look at some multi-mappings
