@@ -296,6 +296,7 @@ The function that we will use to run GSVA requires the gene sets to be in a list
 We are going to download a [GMT file](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) that contains the the Hallmark gene sets [@Liberzon2015] from MSigDB [@Subramanian2005; @Liberzon2011] to the `gene_sets` directory.
 
 Note that when downloading GMT files from MSigDB, only _Homo sapiens_ gene sets are supported.
+If you'd like to use MSigDB gene sets with GSVA for a commonly studied model organism, check out [our RNA-seq GSVA example](http://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html).
 
 ```{r}
 hallmarks_gmt_url <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt"
