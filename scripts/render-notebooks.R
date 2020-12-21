@@ -59,9 +59,6 @@ opt <- parse_args(OptionParser(option_list = option_list))
 # Get working directory
 base_dir <- getwd()
 
-# Normalize file path
-opt$bib_file <- normalizePath(opt$bib_file)
-
 # Check that the rmd file exists
 if (!file.exists(opt$rmd)) {
   stop("Rmd file specified with --rmd is not found.")
