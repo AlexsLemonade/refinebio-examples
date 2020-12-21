@@ -44,7 +44,7 @@ if (!dir.exists("data")) {
 }
 
 # Define the file path to the plots directory
-plots_dir <- "plots" # Can replace with path to desired output plots directory
+plots_dir <- "plots"
 
 # Create the plots folder if it doesn't exist
 if (!dir.exists(plots_dir)) {
@@ -52,7 +52,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the results directory
-results_dir <- "results" # Can replace with path to desired output results directory
+results_dir <- "results"
 
 # Create the results folder if it doesn't exist
 if (!dir.exists(results_dir)) {
@@ -114,7 +114,7 @@ Your new analysis folder should contain:
     - The gene expression  
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
-- A folder for `results` (currently empty)  
+- A folder for `results` (currently empty)
     
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
@@ -128,19 +128,24 @@ This is handy to do because if we want to switch the dataset (see next section f
 
 ```{r}
 # Define the file path to the data directory
-data_dir <- file.path("data", "GSE37382") # Replace with accession number which will be the name of the folder the files will be in
+# Replace with the path of the folder the files will be in
+data_dir <- file.path("data", "GSE37382")
 
-# Declare the file path to the gene expression matrix file using the data directory saved as `data_dir`
-data_file <- file.path(data_dir, "GSE37382.tsv") # Replace with file path to your dataset
+# Declare the file path to the gene expression matrix file
+# inside directory saved as `data_dir`
+# Replace with the path to your dataset file
+data_file <- file.path(data_dir, "GSE37382.tsv")
 
-# Declare the file path to the metadata file using the data directory saved as `data_dir`
-metadata_file <- file.path(data_dir, "metadata_GSE37382.tsv") # Replace with file path to your metadata
+# Declare the file path to the metadata file
+# inside the directory saved as `data_dir`
+# Replace with the path to your metadata file
+metadata_file <- file.path(data_dir, "metadata_GSE37382.tsv")
 ```
 
 Now that our file paths are declared, we can use the `file.exists()` function to check that the files are where we specified above. 
 
 ```{r}
-# Check if the gene expression matrix file is at the file path stored in `data_file`
+# Check if the gene expression matrix file is at the path stored in `data_file`
 file.exists(data_file)
 
 # Check if the metadata file is at the file path stored in `metadata_file`
@@ -170,7 +175,7 @@ See our Getting Started page with [instructions for package installation](https:
 
 Attach the packages we need for this analysis:
 
-```{r}
+```{r message=FALSE}
 # Attach the library
 library(ggplot2)
 
@@ -191,14 +196,14 @@ metadata <- readr::read_tsv(metadata_file)
 
 # Read in data TSV file
 df <- readr::read_tsv(data_file) %>%
-  # Tuck away the gene ID  column as rownames
+  # Tuck away the gene ID column as row names, leaving only numeric values
   tibble::column_to_rownames("Gene")
 ```
 
 Let's ensure that the metadata and data are in the same sample order. 
 
 ```{r}
-# Make the data in the order of the metadata
+# Make the sure the columns (samples) are in the same order as the metadata
 df <- df %>%
   dplyr::select(metadata$geo_accession)
 
@@ -213,24 +218,28 @@ Now we are going to use a combination of functions from base R and the `ggplot2`
 
 In this code chunk, we are going to perform Principal Component Analysis (PCA) on our data and create a data frame using the PCA scores and the variables from our metadata that we are going to use to annotate our plot later.
 We are using the base R `prcomp()` function to perform Principal Component Analysis (PCA) here.
+The `prcomp()` function calculates principal component scores for each row of a matrix, but our data is arranged with each sample in a column, so we will need to transpose the data frame first.
+In most cases, we will want to use the `scale = TRUE` argument so that all of the expression measurements have the same variance.
+This prevents the PCA results from being dominated by a few highly variable genes.
 
 ```{r}
 # Perform Principal Component Analysis (PCA) using the `prcomp()` function
 pca <- prcomp(
-  t(df), # We have to transpose our data frame so we are obtaining PCA scores for samples instead of genes
-  scale = TRUE # This tells R that we want the variables scaled to have unit variance
+  t(df), # transpose our data frame to obtain PC scores for samples, not genes
+  scale = TRUE # we want the data scaled to have unit variance for each gene
 )
 ```
 
-Let's take a preview at the PCA results.
-We are using indexing to only print out the first 10 PCs: `[, 1:10]`.
+Let's take a preview of the PCA results.
+Each row will be a sample, as in the transposed data matrix we used as input, and each column is one of the new principal component (PC) values.
+We are using indexing to only print out the first 5 PC columns: `[, 1:5]`.
 
 ```{r}
 # We can access the results from our `pca` object using `$x`
-head(pca$x[, 1:10])
+head(pca$x[, 1:5])
 ```
 
-In total, we do have 285 principal component values, because we provided 285 sample's data.
+In total, we have 285 principal component values, because we provided 285 samples' data (we will always have as many PCs as the smaller dimension of the input data matrix).
 
 ## Explore Variance in PCA Results
 
@@ -246,33 +255,36 @@ The `summary()` function reports the proportion of variance explained by each pr
 pca_summary <- summary(pca)
 ```
 
-By accessing the `importance` element, which contains the proportion of variance explained by each principal component, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
+The `importance` element of the summary object contains the proportion of variance explained by each principal component along with other statistics, with `pca_summary$importance`, we can use indexing to only look at the first `n` PCs.
 
 ```{r}
-# Now access the importance information for the first 10 PCs -- we can access this information `pca_summary$importance`
-pca_summary$importance[, 1:10]
+# Now access the importance information for the first 5 PCs
+pca_summary$importance[, 1:5]
 ```
 
-Now that we've seen the proportion of variance for the first ten PCs, let's prepare and plot the PC scores for the first two principal components, the components responsible for the most explained proportion of variance in our dataset. 
+Now that we've seen the proportion of variance for the first set of PCs, let's prepare and plot the PC scores for the first two principal components, the components that explain the largest proportion of the expression variance in our dataset.
+(Note though, that in this case, they explain less than 15% of the total variance!)
 
 ## Prepare a final data frame with PCA results for plotting
 
 In the next chunk, we are going to extract the first two principal components from our `pca` object to prepare a data frame for plotting.
 
 ```{r}
-# Make the first two principal components into a data frame for plotting with `ggplot2`
+# Make the first two PCs into a data frame for plotting with `ggplot2`
 pca_df <- data.frame(pca$x[, 1:2]) %>%
-  # Turn samples_ids stored as rownames into column
+  # Turn samples IDs stored as row names into a column
   tibble::rownames_to_column("refinebio_accession_code") %>%
-  # Bring only the variables that we want from the metadata into this data frame -- here we are going to join by `refinebio_accession_code` values
-  dplyr::inner_join(dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
+  # Bring only the variables that we want from the metadata into this data frame
+  # here we are going to join by `refinebio_accession_code` values
+  dplyr::inner_join(
+    dplyr::select(metadata, refinebio_accession_code, histology, subgroup),
     by = "refinebio_accession_code"
   )
 ```
 
 ## Plot PCA Results
 
-Now let's plot the PC scores for the first two principal components since we know that they are responsible for the most explained proportion of variance in our dataset. 
+Now let's plot the PC scores for the first two principal components.
 
 Let's also label the data points based on their genotype subgroup since medulloblastoma has been found to comprise of subgroups that each have molecularly distinct profiles [@Northcott2012].
 
@@ -283,17 +295,18 @@ pca_plot <- ggplot(
   aes(
     x = PC1,
     y = PC2,
-    color = subgroup # This will label points with different colors for each `subgroup`
+    color = subgroup # label points with different colors for each `subgroup`
   )
 ) +
-  geom_point() + # This tells R that we want a scatterplot
-  theme_classic() # This tells R to return a classic-looking plot with no gridlines
+  geom_point() + # Plot individual points to make a scatterplot
+  theme_classic() # Format as a classic-looking plot with no gridlines
 
-# Print out plot here
+# Print out the plot here
 pca_plot
 ```
 
-Looks like Group 4 and SHH groups somewhat cluster with each other but Group 3 seems to be less distinct as there are some samples clustering with Group 4 as well.
+Looks like Group 4 and SHH groups cluster with each other somewhat, but Group 3 seems to be less distinct, as there are some samples clustering with Group 4 as well.
+Most of the differences that we see between the groups are along the first axis of variation, PC1.
 
 We can add another label to our plot to get more information about our dataset.
 Let's also label the data points based on the histological subtype that each sample belongs to.
@@ -305,19 +318,19 @@ pca_plot <- ggplot(
   aes(
     x = PC1,
     y = PC2,
-    color = subgroup, # This will label points with different colors for each `subgroup`
-    shape = histology # This will label points with different colors for each `histology` group
+    color = subgroup, # Draw points with different colors for each `subgroup`
+    shape = histology # Use a different shape for each `histology` group
   )
 ) +
   geom_point() +
   theme_classic()
 
-# Print out plot here
+# Print out the plot here
 pca_plot
 ```
 
 Adding the histological subtype label to our plot made our plot more informative, but the diffuse Group 3 data doesn't appear to be related to a histology subtype.
-We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup.
+We could test out other variables as annotation labels to get a further understanding of the cluster behavior of each subgroup, or plot other PC values to see if they might also reveal some structure in the data.
 
 ## Save annotated PCA plot as a PNG
 
@@ -327,17 +340,18 @@ You can easily switch this to save to a JPEG or TIFF by changing the file name w
 
 ```{r}
 # Save plot using `ggsave()` function
-ggsave(file.path(
-  plots_dir,
-  "GSE37382_pca_scatterplot.png" # Replace with name relevant your plotted data
-),
-plot = pca_plot # Here we are giving the function the plot object that we want saved to file
+ggsave(
+  file.path(
+    plots_dir,
+    "GSE37382_pca_scatterplot.png" # Replace with a good file name for your plot
+  ),
+  plot = pca_plot # The plot object that we want saved to file
 )
 ```
 
 # Resources for further learning
 
-- [Overall PCA Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c) [@Brems2017] 
+- [Overall PCA Explanation by Matt Brems](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c) [@Brems2017]
 - [A visual explanation of PCA](http://setosa.io/ev/principal-component-analysis/) [@pca-visually-explained]
 - [Guidelines on choosing dimension reduction methods](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1006907&type=printable) [@Nguyen2019]
 - [More on `ggplot2`](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) [@Prabhakaran2016]
@@ -345,7 +359,7 @@ plot = pca_plot # Here we are giving the function the plot object that we want s
 # Session info
 
 At the end of every analysis, before saving your notebook, we recommend printing out your session info. 
-This helps make your code more reproducible by recording what versions of software and packages you used to run this. 
+This helps make your code more reproducible by recording what versions of software and packages you used to run this.
 
 ```{r}
 # Print session info

@@ -81,9 +81,9 @@ if (!("VennDiagram" %in% installed.packages())) {
 
 Attach the `limma` library:
 
-```{r}
-# Magrittr pipe
-`%>%` <- dplyr::`%>%`
+```{r message=FALSE}
+# We will need this so we can use the pipe: %>%
+library(magrittr)
 
 # Attach library
 library(limma)
@@ -109,6 +109,7 @@ if (!dir.exists(plots_dir)) {
 }
 
 # Define the file path to the data directory
+# Replace with the path of the folder the files will be in
 data_dir <- "data" # Replace with path to data directory
 ```
 
