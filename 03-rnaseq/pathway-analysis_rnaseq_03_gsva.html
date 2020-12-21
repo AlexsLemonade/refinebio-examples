@@ -4152,7 +4152,7 @@ div.tocify {
 <div id="import-gene-sets" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Import Gene Sets</h3>
 <p>The function that we will use to run GSVA wants the gene sets to be in a list where each pathway has its own gene list inside of it.</p>
-<p>Here we are obtaining the pathway information from the main function of the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package <span class="citation">(Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>)</span>. Because we are using human data in this example, we supply the formal organism name to the <code>species</code> argument. We will want only the hallmark pathways, so we use the <code>category = &quot;H&quot;</code> argument.</p>
+<p>Here we are obtaining the pathway information from the main function of the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package <span class="citation">(Dolgalev <a href="#ref-Dolgalev2020" role="doc-biblioref">2020</a>)</span>. Because we are using human data in this example, we supply the formal organism name to the <code>species</code> argument. We will want only the hallmark pathways, so we use the <code>category = &quot;H&quot;</code> argument.</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>hallmark_gene_sets &lt;-<span class="st"> </span>msigdbr<span class="op">::</span><span class="kw">msigdbr</span>(</span>
 <span id="cb52-2"><a href="#cb52-2"></a>  <span class="dt">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>, <span class="co"># Can change this to what species you need</span></span>
 <span id="cb52-3"><a href="#cb52-3"></a>  <span class="dt">category =</span> <span class="st">&quot;H&quot;</span> <span class="co"># Only hallmark gene sets</span></span>
@@ -4557,7 +4557,7 @@ div.tocify {
 ##  geneplotter            1.68.0   2020-10-27 [1] Bioconductor  
 ##  generics               0.0.2    2018-11-29 [1] RSPM (R 4.0.0)
 ##  GenomeInfoDb         * 1.26.2   2020-12-08 [1] Bioconductor  
-##  GenomeInfoDbData       1.2.4    2020-12-18 [1] Bioconductor  
+##  GenomeInfoDbData       1.2.4    2020-12-16 [1] Bioconductor  
 ##  GenomicRanges        * 1.42.0   2020-10-27 [1] Bioconductor  
 ##  getopt                 1.20.3   2019-03-22 [1] RSPM (R 4.0.0)
 ##  ggplot2                3.3.2    2020-06-19 [1] RSPM (R 4.0.1)
@@ -4586,7 +4586,7 @@ div.tocify {
 ##  mvtnorm                1.1-1    2020-06-09 [1] RSPM (R 4.0.0)
 ##  nlme                   3.1-148  2020-05-24 [2] CRAN (R 4.0.2)
 ##  optparse             * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Hs.eg.db         * 3.12.0   2020-12-18 [1] Bioconductor  
+##  org.Hs.eg.db         * 3.12.0   2020-12-16 [1] Bioconductor  
 ##  pheatmap               1.0.12   2019-01-04 [1] RSPM (R 4.0.0)
 ##  pillar                 1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig              2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
@@ -4638,8 +4638,8 @@ div.tocify {
 <div id="ref-Carlson2020-human">
 <p>Carlson M., 2020 <em>org.Hs.eg.db: Genome wide annotation for human</em>. <a href="http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html">http://bioconductor.org/packages/release/data/annotation/html/org.Hs.eg.db.html</a></p>
 </div>
-<div id="ref-Igor2020">
-<p>Dolgalev I., 2020 <em>Msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
+<div id="ref-Dolgalev2020">
+<p>Dolgalev I., 2020 <em>msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
 </div>
 <div id="ref-Gu2016">
 <p>Gu Z., R. Eils, and M. Schlesner, 2016 Complex heatmaps reveal patterns and correlations in multidimensional genomic data. Bioinformatics. <a href="https://doi.org/10.1093/bioinformatics/btw313">https://doi.org/10.1093/bioinformatics/btw313</a></p>

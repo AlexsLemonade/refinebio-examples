@@ -3906,8 +3906,8 @@ div.tocify {
 <div id="install-libraries" class="section level2">
 <h2><span class="header-section-number">4.1</span> Install libraries</h2>
 <p>See our Getting Started page with <a href="https://alexslemonade.github.io/refinebio-examples/01-getting-started/getting-started.html#what-you-need-to-install">instructions for package installation</a> for a list of the other software you will need, as well as more tips and resources.</p>
-<p>In this analysis, we will be using <a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html"><code>clusterProfiler</code></a> package to perform GSEA and the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package which contains gene sets from the <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">Molecular Signatures Database (MSigDB)</a> already in the tidy format required by <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>.</p>
-<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html"><code>org.Mm.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson <a href="#ref-Carlson2019" role="doc-biblioref">2019</a>)</span>.</p>
+<p>In this analysis, we will be using <a href="https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html"><code>clusterProfiler</code></a> package to perform GSEA and the <a href="https://cran.r-project.org/web/packages/msigdbr/index.html"><code>msigdbr</code></a> package which contains gene sets from the <a href="https://www.gsea-msigdb.org/gsea/msigdb/index.jsp">Molecular Signatures Database (MSigDB)</a> already in the tidy format required by <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Dolgalev2020" role="doc-biblioref">2020</a>; Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>.</p>
+<p>We will also need the <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html"><code>org.Mm.eg.db</code></a> package to perform gene identifier conversion <span class="citation">(Carlson <a href="#ref-Carlson2019-mouse" role="doc-biblioref">2019</a>)</span>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="cf">if</span> (<span class="op">!</span>(<span class="st">&quot;clusterProfiler&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>())) {</span>
 <span id="cb2-2"><a href="#cb2-2"></a>  <span class="co"># Install this package if it isn&#39;t installed yet</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a>  BiocManager<span class="op">::</span><span class="kw">install</span>(<span class="st">&quot;clusterProfiler&quot;</span>, <span class="dt">update =</span> <span class="ot">FALSE</span>)</span>
@@ -3984,7 +3984,7 @@ div.tocify {
 </div>
 <div id="getting-familiar-with-msigdb-gene-sets-available-via-msigdbr" class="section level2">
 <h2><span class="header-section-number">4.4</span> Getting familiar with MSigDB gene sets available via <code>msigdbr</code></h2>
-<p>The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>. We can use the <code>msigdbr</code> package to access these gene sets in a format compatible with the package we’ll use for analysis, <code>clusterProfiler</code> <span class="citation">(Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>; Dolgalev <a href="#ref-Igor2020" role="doc-biblioref">2020</a>)</span>.</p>
+<p>The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses <span class="citation">(Subramanian <em>et al.</em> <a href="#ref-Subramanian2005" role="doc-biblioref">2005</a>; Liberzon <em>et al.</em> <a href="#ref-Liberzon2011" role="doc-biblioref">2011</a>)</span>. We can use the <code>msigdbr</code> package to access these gene sets in a format compatible with the package we’ll use for analysis, <code>clusterProfiler</code> <span class="citation">(<span class="citeproc-not-found" data-reference-id="Igor2020"><strong>???</strong></span>; Yu <em>et al.</em> <a href="#ref-Yu2012" role="doc-biblioref">2012</a>)</span>.</p>
 <p>The gene sets available directly from MSigDB are applicable to human studies. <code>msigdbr</code> also supports commonly studied model organisms.</p>
 <p>Let’s take a look at what organisms the package supports with <code>msigdbr_species()</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">msigdbr_species</span>()</span></code></pre></div>
@@ -4018,7 +4018,7 @@ div.tocify {
 <div id="gene-identifier-conversion" class="section level2">
 <h2><span class="header-section-number">4.5</span> Gene identifier conversion</h2>
 <p>We’re going to convert our identifiers in <code>dge_df</code> to gene symbols, but you can, with the change of a single argument, use the same code to convert to many other types of identifiers!</p>
-<p>The annotation package <code>org.Mm.eg.db</code> contains information for different identifiers <span class="citation">(Carlson <a href="#ref-Carlson2019" role="doc-biblioref">2019</a>)</span>. <code>org.Mm.eg.db</code> is specific to <em>Mus musculus</em> – this is what the <code>Mm</code> in the package name is referencing.</p>
+<p>The annotation package <code>org.Mm.eg.db</code> contains information for different identifiers <span class="citation">(Carlson <a href="#ref-Carlson2019-mouse" role="doc-biblioref">2019</a>)</span>. <code>org.Mm.eg.db</code> is specific to <em>Mus musculus</em> – this is what the <code>Mm</code> in the package name is referencing.</p>
 <p>We can see what types of IDs are available to us in an annotation package with <code>keytypes()</code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">keytypes</span>(org.Mm.eg.db)</span></code></pre></div>
 <pre><code>##  [1] &quot;ACCNUM&quot;       &quot;ALIAS&quot;        &quot;ENSEMBL&quot;      &quot;ENSEMBLPROT&quot; 
@@ -4274,7 +4274,7 @@ div.tocify {
 ##  data.table        1.13.0   2020-07-24 [1] RSPM (R 4.0.2)
 ##  DBI               1.1.0    2019-12-15 [1] RSPM (R 4.0.0)
 ##  digest            0.6.25   2020-02-23 [1] RSPM (R 4.0.0)
-##  DO.db             2.9      2020-12-18 [1] Bioconductor  
+##  DO.db             2.9      2020-12-16 [1] Bioconductor  
 ##  DOSE              3.16.0   2020-10-27 [1] Bioconductor  
 ##  downloader        0.4      2015-07-09 [1] RSPM (R 4.0.0)
 ##  dplyr             1.0.2    2020-08-18 [1] RSPM (R 4.0.2)
@@ -4292,7 +4292,7 @@ div.tocify {
 ##  ggraph            2.0.3    2020-05-20 [1] RSPM (R 4.0.2)
 ##  ggrepel           0.8.2    2020-03-08 [1] RSPM (R 4.0.2)
 ##  glue              1.4.2    2020-08-27 [1] RSPM (R 4.0.2)
-##  GO.db             3.12.1   2020-12-18 [1] Bioconductor  
+##  GO.db             3.12.1   2020-12-16 [1] Bioconductor  
 ##  GOSemSim          2.16.1   2020-10-29 [1] Bioconductor  
 ##  graphlayouts      0.7.0    2020-04-25 [1] RSPM (R 4.0.2)
 ##  gridExtra         2.3      2017-09-09 [1] RSPM (R 4.0.0)
@@ -4313,7 +4313,7 @@ div.tocify {
 ##  msigdbr         * 7.2.1    2020-10-02 [1] RSPM (R 4.0.2)
 ##  munsell           0.5.0    2018-06-12 [1] RSPM (R 4.0.0)
 ##  optparse        * 1.6.6    2020-04-16 [1] RSPM (R 4.0.0)
-##  org.Mm.eg.db    * 3.12.0   2020-12-18 [1] Bioconductor  
+##  org.Mm.eg.db    * 3.12.0   2020-12-16 [1] Bioconductor  
 ##  pillar            1.4.6    2020-07-10 [1] RSPM (R 4.0.2)
 ##  pkgconfig         2.0.3    2019-09-22 [1] RSPM (R 4.0.0)
 ##  plyr              1.8.6    2020-03-03 [1] RSPM (R 4.0.2)
@@ -4365,11 +4365,11 @@ div.tocify {
 <div id="ref-gene-set-testing-rnaseq">
 <p>Ballereau S., M. Dunning, A. Edwards, O. Rueda, and A. Sawle, 2018 RNA-seq analysis in R: Gene set testing for RNA-seq. <a href="https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html">https://bioinformatics-core-shared-training.github.io/cruk-summer-school-2018/RNASeq2018/html/06_Gene_set_testing.nb.html</a></p>
 </div>
-<div id="ref-Carlson2019">
+<div id="ref-Carlson2019-mouse">
 <p>Carlson M., 2019 Genome wide annotation for mouse. <a href="https://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html">https://bioconductor.org/packages/release/data/annotation/html/org.Mm.eg.db.html</a></p>
 </div>
-<div id="ref-Igor2020">
-<p>Dolgalev I., 2020 <em>Msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
+<div id="ref-Dolgalev2020">
+<p>Dolgalev I., 2020 <em>msigdbr: MSigDB gene sets for multiple organisms in a tidy data format</em>. <a href="https://cran.r-project.org/web/packages/msigdbr/index.html">https://cran.r-project.org/web/packages/msigdbr/index.html</a></p>
 </div>
 <div id="ref-Kampen2019">
 <p>Kampen K. R., L. Fancello, T. Girardi, G. Rinaldi, and M. Planque <em>et al.</em>, 2019 Translatome analysis reveals altered serine and glycine metabolism in t-cell acute lymphoblastic leukemia cells. Nature Communications 10. <a href="https://doi.org/10.1038/s41467-019-10508-2">https://doi.org/10.1038/s41467-019-10508-2</a></p>
