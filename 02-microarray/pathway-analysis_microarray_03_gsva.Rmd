@@ -11,18 +11,34 @@ output:
 
 # Purpose of this analysis
 
-This example is one of pathway analysis module set, we recommend looking at the [pathway analysis introduction](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_00_intro.html) to help you determine which pathway analysis method is best suited for your purposes.
+This example is one of pathway analysis module set, we recommend looking at the [pathway analysis table below](#how-to-choose-a-pathway-analysis) to help you determine which pathway analysis method is best suited for your purposes.
 
-In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis.
-Gene set variation analysis (GSVA) constitutes a starting point to build pathway-centric models of biology.
-Rather than contextualizing some results you have received from another analysis like DGE, GSVA is designed to provide an estimate of pathway variation for each of the samples in an experiment.
-This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change [@Hanzelmann2013].
-
-GSVA determines the relative enrichment of gene sets across samples using a non-parametric approach.
-GSVA transforms a gene by sample gene expression matrix into a gene set by sample pathway enrichment matrix [@Hanzelmann-github].
-You can use these scores for other downstream analyses; in this analysis we will perform differential expression to determine what pathway is most different across our variable of interest. 
+In this example we will cover a method called Gene Set Variation Analysis (GSVA) to calculate gene set or pathway scores on a per-sample basis [@Hanzelmann2013]. 
+You can use the GSVA scores for other downstream analyses. 
+In this analysis, we will test GSVA scores for differential expression. 
 
 ⬇️ [**Jump to the analysis code**](#analysis) ⬇️
+
+### What is pathway analysis?
+
+Pathway analysis refers to any one of many techniques that uses predetermined sets of genes that are related or coordinated in their expression in some way (e.g., participate in the same molecular process, are regulated by the same transcription factor) to interpret a high-throughput experiment.
+In the context of [refine.bio](https://www.refine.bio/), we use these techniques to analyze and interpret genome-wide gene expression experiments.
+The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
+In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
+
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. 
+We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+
+### How to choose a pathway analysis?
+
+This table summarizes the pathway analyses examples in this module.
+
+|Analysis|What is required for input|What output looks like |✅ Pros| ⚠️ Cons|
+|--------|--------------------------|-----------------------|-------|-------|
+|[**ORA (Over-representation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_01_ora.html)|A list of gene IDs (no stats needed)|A per-pathway hypergeometric test result|- Simple<br><br> - Inexpensive computationally to calculate p-values| - Requires arbitrary thresholds and ignores any statistics associated with a gene<br><br> - Assumes independence of genes and pathways|
+|[**GSEA (Gene Set Enrichment Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_02_gsea.html)|A list of genes IDs with gene-level summary statistics|A per-pathway enrichment score|- Includes all genes (no arbitrary threshold!)<br><br> - Attempts to measure coordination of genes|- Permutations can be expensive<br><br> - Does not account for pathway overlap<br><br> - Two-group comparisons not always appropriate/feasible|
+|[**GSVA (Gene Set Variation Analysis)**](https://alexslemonade.github.io/refinebio-examples/02-microarray/pathway-analysis_microarray_03_gsva.html)|A gene expression matrix (like what you get from refine.bio directly)|Pathway-level scores on a per-sample basis|- Does not require two groups to compare upfront<br><br> - Normally distributed scores|- Scores are not a good fit for gene sets that contain genes that go up AND down<br><br> - Method doesn’t assign statistical significance itself<br><br> - Recommended sample size n > 10|
+
 
 # How to run this example
 
@@ -67,9 +83,17 @@ results_dir <- "results"
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
 }
+
+# Define the file path to the gene_sets directory
+gene_sets_dir <- "gene_sets"
+
+# Create the gene_sets folder if it doesn't exist
+if (!dir.exists(gene_sets_dir)) {
+  dir.create(gene_sets_dir)
+}
 ```
 
-In the same place you put this `.Rmd` file, you should now have three new empty folders called `data`, `plots`, and `results`!
+In the same place you put this `.Rmd` file, you should now have four new empty folders called `data`, `plots`, `results`, and `gene_sets`!
 
 ## Obtain the dataset from refine.bio
 
@@ -121,6 +145,7 @@ Your new analysis folder should contain:
     - The metadata TSV  
 - A folder for `plots` (currently empty)  
 - A folder for `results` (currently empty)  
+- A folder for `gene_sets` (currently empty)
 
 Your example analysis folder should now look something like this (except with respective experiment accession ID and analysis notebook name you are using): 
 
@@ -258,25 +283,63 @@ all.equal(colnames(expression_df)[-1], metadata$geo_accession)
 
 ### Import Gene Sets
 
-The function that we will use to run GSVA wants the gene sets to be in a list, rather than a tidy data frame.
+The Molecular Signatures Database (MSigDB) is a resource that contains annotated gene sets that can be used for pathway or gene set analyses [@Subramanian2005; @Liberzon2011].
+MSigDB contains [8 different gene set collections](https://www.gsea-msigdb.org/gsea/msigdb/collections.jsp) [@Subramanian2005; @Liberzon2011] that are distinguished by how they are derived (e.g., computationally mined, curated).
 
-We are therefore going to read in the Hallmark collection of gene sets file directly from [MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/index.jsp), rather than using the [`msigdbr`](https://cran.r-project.org/web/packages/msigdbr/index.html) package like we did in earlier notebooks [@Dolgalev2020].
+In this example, we will use a collection called Hallmark gene sets for GSVA [@Liberzon2015].
+Here's an excerpt of [the collection description from MSigDB](https://www.gsea-msigdb.org/gsea/msigdb/collection_details.jsp#H):
 
-Note that when reading in the Hallmark collection file in this manner, the data is only compatible with _Homo sapiens_ datasets.
+> Hallmark gene sets summarize and represent specific well-defined biological states or processes and display coherent expression.
+> These gene sets were generated by a computational methodology based on identifying gene set overlaps and retaining genes that display coordinate expression.
+
+The function that we will use to run GSVA requires the gene sets to be in a list.
+We are going to download a [GMT file](https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29) that contains the the Hallmark gene sets [@Liberzon2015] from MSigDB [@Subramanian2005; @Liberzon2011] to the `gene_sets` directory.
+
+Note that when downloading GMT files from MSigDB, only _Homo sapiens_ gene sets are supported.
+If you'd like to use MSigDB gene sets with GSVA for a commonly studied model organism, check out [our RNA-seq GSVA example](http://alexslemonade.github.io/refinebio-examples/03-rnaseq/pathway-analysis_rnaseq_03_gsva.html).
 
 ```{r}
-# R can often read in data from a URL
-hallmarks_url <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt"
+hallmarks_gmt_url <- "https://data.broadinstitute.org/gsea-msigdb/msigdb/release/7.2/h.all.v7.2.entrez.gmt"
+```
 
+We will also declare a file path to where we want this file to be downloaded to and we can use the same file path later for reading the file into R. 
+
+```{r}
+hallmarks_gmt_file <- file.path(
+  gene_sets_dir,
+  "h.all.v7.2.entrez.gmt"
+)
+```
+
+Using the URL (`hallmarks_gmt_url`) and file path (`hallmark_gmt_file`) we can download the file and use the `destfile` argument to specify where it should be saved. 
+
+```{r}
+download.file(
+  hallmarks_gmt_url,
+  # The file will be saved to this location and with this name
+  destfile = hallmarks_gmt_file
+)
+```
+
+Now let's double check that the file that contains the gene sets is in the right place.
+
+```{r}
+# Check if the file exists
+file.exists(hallmarks_gmt_file)
+```
+
+Now we're ready to read the file into R with `qusage::read.gmt()`.
+
+```{r}
 # QuSAGE is another pathway analysis method, the `qusage` package has a function
-# for reading GMT files and turning them into a list
-hallmarks_list <- qusage::read.gmt(hallmarks_url)
+# for reading GMT files and turning them into a list that we can use with GSVA
+hallmarks_list <- qusage::read.gmt(hallmarks_gmt_file)
 ```
 
 What does this `hallmarks_list` look like?
 
 ```{r}
-head(hallmarks_list)
+head(hallmarks_list, n = 2)
 ```
 
 Looks like we have a list of gene sets with associated Entrez IDs.
@@ -302,23 +365,28 @@ Even though we'll use this package to convert from Ensembl gene IDs (`ENSEMBL`) 
 Take a look at our other gene identifier conversion examples for examples with different species and gene ID types:
 [the microarray example](https://alexslemonade.github.io/refinebio-examples/02-microarray/gene-id-annotation_microarray_01_ensembl.html) and [the RNA-seq example](https://alexslemonade.github.io/refinebio-examples/03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html).
 
-The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()`.
+The function we will use to map from Ensembl gene IDs to Entrez gene IDs is called `mapIds()` and comes from the `AnnotationDbi` package.
 
 Let's create a data frame that shows the mapped Entrez IDs along with the gene expression values for the respective Ensembl IDs.
 
 ```{r}
-# First let's create a mapped data frame we can join to the gene expression values
+# First let's create a mapped data frame we can join to the gene expression
+# values
 mapped_df <- data.frame(
   "entrez_id" = mapIds(
-    org.Hs.eg.db, # Replace with annotation package for the organism relevant to your data
+    # Replace with annotation package for the organism relevant to your data
+    org.Hs.eg.db,
     keys = expression_df$Gene,
-    column = "ENTREZID", # Replace with the type of gene identifiers you would like to map to
-    keytype = "ENSEMBL", # Replace with the type of gene identifiers in your data
-    multiVals = "first" # This will keep only the first mapped value for each Ensembl ID
+    # Replace with the type of gene identifiers in your data
+    keytype = "ENSEMBL",
+    # Replace with the type of gene identifiers you would like to map to
+    column = "ENTREZID",
+    # This will keep only the first mapped value for each Ensembl ID
+    multiVals = "first"
   )
 ) %>%
-  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop that
-  # from the data frame
+  # If an Ensembl gene identifier doesn't map to a Entrez gene identifier, drop
+  # that from the data frame
   dplyr::filter(!is.na(entrez_id)) %>%
   # Make an `Ensembl` column to store the row names
   tibble::rownames_to_column("Ensembl") %>%
@@ -333,7 +401,7 @@ For more about how to explore this, take a look at our [microarray gene ID conve
 
 Let's see a preview of `mapped_df`.
 
-```{r}
+```{r rownames.print=FALSE}
 head(mapped_df)
 ```
 
@@ -347,7 +415,7 @@ any(duplicated(mapped_df$entrez_id))
 ```
 
 Looks like we do have duplicated Entrez IDs.
-Let's find out which Entrez IDs have been duplicated.
+Let's find out which ones.
 
 ```{r}
 dup_entrez_ids <- mapped_df %>%
@@ -361,30 +429,30 @@ dup_entrez_ids
 
 As we mentioned earlier, we will not want any duplicate gene identifiers in our data frame when we convert it into a matrix in preparation for the GSVA steps later.
 GSVA is executed on a per sample basis so let's keep the maximum expression value per sample associated with the duplicate Entrez gene identifiers.
-In other words, we will keep only the maximum expression value found across the duplicate Entrez gene identifier instances for each sample or column in this case.
+In other words, we will keep only the maximum expression value found across the duplicate Entrez gene identifier instances for each sample or column.
 
 Let's take a look at the rows associated with the duplicated Entrez IDs and see how this will play out. 
-
 ```{r}
 mapped_df %>%
   dplyr::filter(entrez_id %in% dup_entrez_ids)
 ```
 
 As an example using the strategy we described, for `GSM917111`'s data in the first column, `0.2294387` is larger than `0.1104345` so moving forward, Entrez gene `6013` will have `0.2294387` value and the `0.1104345` would be dropped from the dataset. 
-However, this is just one method of handling duplicate gene identifiers.
-See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other expression values that can be used, like the median expression value for example [@GSEA-user-guide].
-Now, let's implement our choose the max value method for all samples and Entrez IDs using tidyverse functions. 
+This is just one method of handling duplicate gene identifiers.
+See the [Gene Set Enrichment Analysis (GSEA) User guide](https://www.gsea-msigdb.org/gsea/doc/GSEAUserGuideFrame.html) for more information on other commonly used strategies, such as taking the median expression value.
 
+Now, let's implement the maximum value method for all samples and Entrez IDs using tidyverse functions. 
 ```{r}
 max_dup_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
   dplyr::select(-Ensembl) %>%
-  # Filter to include only the rows associated with the duplicate Entrez gene identifiers
+  # Filter to include only the rows associated with the duplicate Entrez gene
+  # identifiers
   dplyr::filter(entrez_id %in% dup_entrez_ids) %>%
   # Group by Entrez IDs
   dplyr::group_by(entrez_id) %>%
-  # Get the maximum expression value using all values associated with each duplicate
-  # Entrez ID for each column or sample in this case
+  # Get the maximum expression value using all values associated with each
+  # duplicate Entrez ID for each column or sample in this case
   dplyr::summarize_all(max)
 
 max_dup_df
@@ -393,15 +461,17 @@ max_dup_df
 We can see `GSM917111` now has the `0.2294387` value for Entrez ID `6013` like expected. 
 Looks like we were able to successfully get rid of the duplicate Entrez gene identifiers!
 
-Now let's combine our de-duplicated data with the rest of the mapped data!
+Now let's combine our newly de-duplicated data with the rest of the mapped data!
 
 ```{r}
 filtered_mapped_df <- mapped_df %>%
   # We won't be using Ensembl IDs moving forward, so we will drop this column
   dplyr::select(-Ensembl) %>%
-  # First let's get the data associated with the Entrez gene identifiers that aren't duplicated
+  # First let's get the data associated with the Entrez gene identifiers that
+  # aren't duplicated
   dplyr::filter(!entrez_id %in% dup_entrez_ids) %>%
-  # Now let's bind the rows of the maximum expression data we stored in `max_dup_df`
+  # Now let's bind the rows of the maximum expression data we stored in
+  # `max_dup_df`
   dplyr::bind_rows(max_dup_df)
 ```
 
@@ -420,10 +490,11 @@ Note that if we had duplicate gene identifiers here, we would not be able to set
 
 ## GSVA - Microarray
 
-Rather than ranking genes based on some gene-level statistic selected by the user, GSVA fits a model and ranks genes based on their expression level relative to the sample distribution.
+GSVA fits a model and ranks genes based on their expression level relative to the sample distribution [@Hanzelmann2013].
 The pathway-level score calculated is a way of asking how genes _within_ a gene set vary as compared to genes that are _outside_ of that gene set [@Malhotra2018].
 
 The idea here is that we will get pathway-level scores for each sample that indicate if genes in a pathway vary concordantly in one direction (over-expressed or under-expressed relative to the overall population) [@Hanzelmann2013].
+This means that GSVA scores will depend on the samples included in the dataset when you run GSVA; if you added more samples and ran GSVA again, you would expect the scores to change [@Hanzelmann2013].
 
 The output is a gene set by sample matrix of GSVA scores.
 
@@ -453,50 +524,48 @@ gsva_results <- gsva(
 Let's explore what the output of `gsva()` looks like.
 
 ```{r}
+# First 6 rows, first 10 columns
 head(gsva_results[, 1:10])
 ```
 
 ## Find differentially expressed pathways
 
 If we want to identify most differentially expressed pathways across subgroups, we can use functionality in the `limma` package to test the GSVA scores.
-This is one approach for working with GSVA scores.
-The `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which allows downstream analyses that make this assumption about the distribution [@Hanzelmann-gsva-vignette].
+
+This is one approach for working with GSVA scores; the `mx.diff = TRUE` argument that we supplied to the `gsva()` function in the previous section means the GSVA output scores should be normally distributed, which can be helpful if you want to perform downstream analyses with approaches that make assumptions of normality [@Hanzelmann-gsva-vignette].
 
 ### Create the design matrix
 
-`limma` needs a numeric design matrix to signify which samples are of which subtype of medulloblastoma.
+`limma` needs a numeric design matrix to indicate which subtype of medulloblastoma a sample originates from.
 Now we will create a model matrix based on our `subgroup` variable.
 We are using a `+ 0` in the model which sets the intercept to 0 so the subgroup effects capture expression for that group, rather than difference from the first group.
-If you have a control group, you might want that to be the intercept.
+If you have a control group, you might want to leave off the `+ 0` so the model includes an intercept representing the control group expression level, with the remaining coefficients the changes relative to that expression level.
 
 ```{r}
 # Create the design matrix
-des_mat <- model.matrix(~ metadata$subgroup + 0)
+des_mat <- model.matrix(~ subgroup + 0, data = metadata)
 ```
 
 Let's take a look at the design matrix we created.
 
 ```{r}
-# Print out the design matrix
+# Print out part of the design matrix
 head(des_mat)
 ```
 
-The design matrix column names are a bit messy, so we will neaten them up by dropping the `metadata$subgroup` designation they all have and for being able to reference them easily later, we want to drop spaces as well. 
+The design matrix column names are a bit messy, so we will neaten them up by dropping the `subgroup` designation they all have and any spaces in names.
 
 ```{r}
 # Make the column names less messy
-colnames(des_mat) <- stringr::str_remove(colnames(des_mat), "metadata\\$subgroup")
+colnames(des_mat) <- stringr::str_remove(colnames(des_mat), "subgroup")
 
 # Do a similar thing but remove spaces in names
 colnames(des_mat) <- stringr::str_remove(colnames(des_mat), " ")
 ```
 
-Side note: If you are wondering why there are two `\` above in `"filtered_metadata\\$subgroup"`, that's called an [escape character](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html#escaping).
-There's a whole universe of things called [regular expressions (regex)](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html) that can be super handy for string manipulations.
-
 ## Perform differential expression on pathway scores
 
-Run the linear model on each pathway (each row of `gsva_results`).
+Run the linear model on each pathway (each row of `gsva_results`) with `lmFit()` and apply empirical Bayes smoothing with `eBayes()`.
 
 ```{r}
 # Apply linear model to data
@@ -522,7 +591,7 @@ contrast_matrix <- makeContrasts(
 )
 ```
 
-Side note: If you did have a control group you wanted to compare each group to, you could make each contrast to that control group, so the formulate would look like `Group3 = Group3 - Control` for each one.
+Side note: If you did have a control group you wanted to compare each group to, you could make each contrast to that control group, so the formulae would look like `Group3 = Group3 - Control` for each one.
 We highly recommend consulting the [limma users guide](https://bioconductor.org/packages/release/bioc/vignettes/limma/inst/doc/usersguide.pdf) for figuring out what your `makeContrasts()` and `model.matrix()` setups should look like [@Ritchie2015].
 
 Now that we have the contrasts matrix set up, we can use it to re-fit the model and re-smooth it with `eBayes()`.
@@ -550,13 +619,13 @@ stats_df <- topTable(contrasts_fit, number = nrow(expression_df)) %>%
 
 Let's take a peek at our results table.
 
-```{r}
+```{r rownames.print=FALSE}
 head(stats_df)
 ```
 
-For each gene, each group's fold change in expression, compared to the average of the other groups is reported.
+For each pathway, each group's fold change in expression, compared to the average of the other groups is reported.
 
-By default, results are ordered from largest `F` value to the smallest, which means your most differentially expressed genes across all groups should be toward the top.
+By default, results are ordered from largest `F` value to the smallest, which means your most differentially expressed pathways across all groups should be toward the top.
 
 This means `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` appears to be the pathway that contains the most significant distribution of scores across subgroups. 
 
@@ -578,7 +647,7 @@ We can see that they are in a wide format with the GSVA scores for each sample s
 
 Now let's convert these results into a data frame and into a long format, using the `tidyr::pivot_longer()` function.
 
-```{r}
+```{r rownames.print=FALSE}
 annotated_results_df <- gsva_results %>%
   # Make this into a data frame
   data.frame() %>%
@@ -601,9 +670,9 @@ Now let's filter to include only the scores associated with our most significant
 top_pathway_annotated_results_df <- annotated_results_df %>%
   # Filter for only scores associated with our most significant pathway
   dplyr::filter(pathway == "HALLMARK_UNFOLDED_PROTEIN_RESPONSE") %>%
-  # Join the column with the group labels that we would like to plot and compare --
-  # Select the variables relevant to your data
+  # Join the column with the group labels that we would like to plot
   dplyr::left_join(metadata %>% dplyr::select(
+    # Select the variables relevant to your data
     refinebio_accession_code,
     subgroup
   ),
@@ -618,13 +687,14 @@ head(top_pathway_annotated_results_df)
 Now let's make a sina plot so we can look at the differences between the `subgroup` groups using our GSVA scores.
 
 ```{r}
-# Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE` the `subgroup` groups in our dataset
+# Sina plot comparing GSVA scores for `HALLMARK_UNFOLDED_PROTEIN_RESPONSE`
+# the `subgroup` groups in our dataset
 sina_plot <-
   ggplot(
     top_pathway_annotated_results_df, # Supply our annotated data frame
     aes(
       x = subgroup, # Replace with a grouping variable relevant to your data
-      y = gsva_score, # Column we created to store the GSVA scores in the last chunk
+      y = gsva_score, # Column we previously created to store the GSVA scores
       color = subgroup # Let's make the groups different colors too
     )
   ) +
@@ -646,7 +716,11 @@ Looks like the `Group 4` samples have lower GSVA scores for `HALLMARK_UNFOLDED_P
 Let's save this plot to PNG.
 
 ```{r}
-ggsave(file.path(plots_dir, "GSE37382_gsva_HALLMARK_UNFOLDED_PROTEIN_RESPONSE_sina_plot.png"),
+ggsave(
+  file.path(
+    plots_dir,
+    "GSE37382_gsva_HALLMARK_UNFOLDED_PROTEIN_RESPONSE_sina_plot.png"
+  ),
   plot = sina_plot
 )
 ```

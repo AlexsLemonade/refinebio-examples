@@ -29,7 +29,8 @@ In the context of [refine.bio](https://www.refine.bio/), we use these techniques
 The rationale for performing pathway analysis is that looking at the pathway-level may be more biologically meaningful than considering individual genes, especially if a large number of genes are differentially expressed between conditions of interest.
 In addition, many relatively small changes in the expression values of genes in the same pathway could lead to a phenotypic outcome and these small changes may go undetected in differential gene expression analysis.
 
-We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
+We highly recommend taking a look at [Ten Years of Pathway Analysis: Current Approaches and Outstanding Challenges](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002375) from @Khatri2012 for a more comprehensive overview. 
+We have provided primary publications and documentation of the methods we will introduce below as well as some recommended reading in the [`Resources for further learning` section](#resources-for-further-learning).
 
 ### How to choose a pathway analysis?
 
