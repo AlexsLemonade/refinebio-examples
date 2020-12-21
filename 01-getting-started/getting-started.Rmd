@@ -23,24 +23,24 @@ output:
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## About refine.bio 
+## About refine.bio
 
 [refine.bio](https://www.refine.bio/about) is a collection of ready-to-use transcriptomic data!
-Publicly available gene expression data is [uniformly processed](http://docs.refine.bio/en/latest/main_text.html#processing-information) and made available for easy download. 
-This tutorial has follow-along examples for use with refine.bio downloads. 
+Publicly available gene expression data is [uniformly processed](http://docs.refine.bio/en/latest/main_text.html#processing-information) and made available for easy download.
+This tutorial has follow-along examples for use with refine.bio downloads.
 
 ## About how this tutorial book is structured 
 
 This tutorial contains follow-along analysis examples for refine.bio gene expression data.
-The analysis examples are organized by technology: ["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section. 
-Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio. 
+The analysis examples are organized by technology: ["microarray"](https://alexslemonade.github.io/refinebio-examples/02-microarray/intro-to-microarray.nb.html) or ["RNA-seq"](https://alexslemonade.github.io/refinebio-examples/03-rna-seq/intro-to-rna-seq.nb.html), in addition to an ["Advanced Topics"](https://alexslemonade.github.io/refinebio-examples/04-advanced-topics/intro-to-advanced-topics.nb.html) section.
+Each analysis is self-contained and provides information with how to obtain the dataset used in the example from refine.bio.
 We encourage you to download the [`.Rmd`](http://rmarkdown.rstudio.com) and follow the "getting started" section in the example before diving into our analysis examples.
 
 **Each analysis contains:**   
 
 - A README that introduces you to the analyses, concepts, requirements, and workflows for that module.  
 - An R Notebook which consists of:  
-    - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio.   
+    - An R markdown (`.Rmd`) file(s) that you can use in RStudio to run the analysis and contains it's own "getting started" section which describes how to download the example dataset from refine.bio.
     - An nb.html file that is the resulting output of the `.Rmd` file rendered as an HTML file.  
 
 ## What you need to install to run the examples 
@@ -63,7 +63,7 @@ Each example module directory will include further instructions for how to follo
 
 ## How to get the data for these examples
 
-Each analysis will include a link to the example dataset's page on [refine.bio](https://www.refine.bio/) [refine.bio] as well as step-by-step instructions of how to set up your data and folders for your analysis. 
+Each analysis will include a link to the example dataset's page on [refine.bio](https://www.refine.bio/) as well as step-by-step instructions of how to set up your data and folders for your analysis. 
 As you become more comfortable with the analysis, we encourage you to switch out this example dataset for another that may better suit your interests and scientific questions. 
 We've placed comments where the code will absolutely need to be changed for a different dataset, but you may find other parts of the analysis you will want to alter to fit your needs.
 Each analysis also includes links to resources and documentation that we hope helps you make useful alterations to the analysis. 
