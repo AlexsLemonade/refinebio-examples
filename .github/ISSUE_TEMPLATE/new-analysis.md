@@ -2,7 +2,7 @@
 name: New analysis example
 about: Use this issue template for filing a new analysis issue
 title: 'New Analysis Example:'
-labels: new analysis example
+labels: ''
 assignees: ''
 
 ---
