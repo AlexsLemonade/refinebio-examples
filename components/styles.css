@@ -4,6 +4,7 @@ body {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   line-height: 1.5;
+  padding-bottom: 0px !important;
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Rubik', sans-serif;
@@ -33,6 +34,9 @@ a {
   color: #386db0;
   line-height: 1;
 }
+.navbar{
+  min-height: 60px;
+}
 .navbar-default, .navbar-nav, .navbar-inverse{
   font-size: 1rem;
   max-width: 100%;
@@ -44,6 +48,8 @@ a {
   font-size: 1rem;
   background-color: #386db0 !important;
   color: #FDFDFD !important;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .navbar-default .navbar-brand{
@@ -52,7 +58,8 @@ a {
   max-width: 100%;
   display: block;
   overflow: visible;
-  padding-bottom: 32px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 ul.dropdown-menu {
@@ -66,4 +73,25 @@ ul.dropdown-menu {
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
   background-color: #386db0 !important;
   color: #FDFDFD !important;
+}
+
+.footer {
+  padding: 30px;
+  background: linear-gradient(#fff,#dfe9f3);
+}
+.footer-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+.button {
+  background-color: #386db0;
+  border-radius: 3px;
+  color: #fff;
+  font-family: Lato,sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 4px 24px;
+  display: inline-block;
+  white-space: nowrap;
+  text-align: center;
 }
