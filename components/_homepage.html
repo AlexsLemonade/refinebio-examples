@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>refine.bio examples</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Rubik&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    // bootstrap
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <link href="components/styles.css" rel="stylesheet" />
+    <link href="index.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- NAVIGATION -->
+    <main>
+       <div id="hero">
+         <div class="wrapper">
+           <div class="flex flex-medium">
+             <p>
+               Explore a variety of example analyses like clustering, differential expression, pathway analysis, etc., for refine.bio datasets.
+             </p>
+             <img src="components/images/hero-image.png">
+           </div>
+         </div>
+       </div>
+       <div id="how-to">
+         <div class="wrapper">
+           <div class="flex flex-column">
+             <p>
+               How to use these examples
+             </p>
+             <p class="text">
+               These examples are available as R notebooks (.Rmd) and can be modified for your refine.bio dataset.
+             </p>
+           </div>
+         </div>
+         <div class="wrapper">
+           <div class="flex flex-large">
+             <div>
+               <p>
+                 Set up
+               </p>
+               <p class="text">
+                 The examples are written in R and use a variety of libraries. Get started by installing the required tools and libraries.
+               </p>
+             </div>
+             <div>
+               <p>
+                 Download and follow along an example analyses
+               </p>
+               <p class="text">
+                 You can use the refine.bio dataset that we use in analysis or you can use a different refine.bio dataset, relevant to your research interests.
+               </p>
+             </div>
+           </div>
+         </div>
+       </div>
+       <div id="examples">
+         <div class="examples">
+           <div class="wrapper">
+             <p>RNA-seq Examples</p>
+           </div>
+           <div class="wrapper">
+             <div class="flex flex-small">
+             <a href="03-rnaseq/clustering_rnaseq_01_heatmap.html" style="background-image: url(components/images/heatmap_SRP070849_annotated.png)">
+               <p>Clustering and Heatmaps</p>
+             </a>
+             <a href="03-rnaseq/differential-expression_rnaseq_01.html" style="background-image: url(components/images/SRP123625_volcano_plot.png)">
+               <p>Differential Expression</p>
+             </a>
+             <a href="03-rnaseq/dimension-reduction_rnaseq_01_pca.html" style="background-image: url(components/images/SRP133573_pca_plot.png)">
+               <p>Dimension Reduction - PCA</p>
+             </a>
+             <a href="03-rnaseq/pathway-analysis_rnaseq_02_gsea.html" style="background-image: url(components/images/SRP123625_gsea_enrich_negative_plot.png)">
+               <p>Pathway Analysis - GSEA</p>
+             </a>
+             </div>
+           </div>
+         </div>
+         <div class="examples">
+           <div class="wrapper">
+           <p>Microarray Examples</p>
+           </div>
+           <div class="wrapper">
+             <div class="flex flex-small">
+               <a href="02-microarray/clustering_microarray_01_heatmap.html"  style="background-image: url(components/images/GSE24862_heatmap_annotated.png)">
+                 <p>Clustering and Heatmaps</p>
+               </a>
+               <a href="02-microarray/differential-expression_microarray_01_2-groups.html" style="background-image: url(components/images/GSE71270_volcano_plot.png)">
+                 <p>Differential Expression</p>
+               </a>
+               <a href="02-microarray/dimension-reduction_microarray_01_pca.html" style="background-image: url(components/images/GSE37382_pca_scatterplot.png)">
+                 <p>Dimension reduction - PCA</p>
+               </a>
+               <a href="02-microarray/pathway-analysis_microarray_02_gsea.html" style="background-image: url(components/images/GSE71270_gsea_enrich_positive_plot.png)">
+                 <p>Pathways Analysis- GSEA</p>
+               </a>
+             </div>
+           </div>
+         </div>
+       </div>
+   </main>
+   <!-- FOOTER -->
+  </body>
+<html>
