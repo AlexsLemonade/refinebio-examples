@@ -119,6 +119,10 @@ main img {
     align-items: center;
   }
 
+  .flex-top {
+    align-items: top;
+  }
+
   .flex-column {
     align-items: start;
     flex-direction: column;
