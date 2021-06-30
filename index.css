@@ -120,7 +120,7 @@ main img {
   }
 
   .flex-top {
-    align-items: top;
+    align-items: start;
   }
 
   .flex-column {
