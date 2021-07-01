@@ -43,15 +43,16 @@ a {
 
 @media screen and (min-width: 768px) and (max-width: 993px ) {
   .nav > li > a {
-    padding: 10px !important;
   }
 }
 
-nav .logo .navbar-brand {
-  padding: 0;
+nav .navbar-brand {
+  padding: 10px 15px;
+  width: 150px;
+  height: auto;
 }
 
-nav .logo .navbar-brand img {
+nav .navbar-brand img {
   width: 100%;
 }
 
@@ -93,15 +94,6 @@ p.footer-text a {
   font-size: 1rem;
   background-color: #386db0 !important;
   color: #FDFDFD !important;
-}
-
-.navbar-default .navbar-brand{
-  color: #FDFDFD; !important;
-  float: left;
-  max-width: 100%;
-  display: block;
-  overflow: visible;
-  padding-bottom: 32px;
 }
 
 ul.dropdown-menu {
