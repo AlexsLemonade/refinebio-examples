@@ -48,17 +48,12 @@ a {
 
 nav .navbar-brand {
   padding: 10px 15px;
-  width: 150px;
+  width: 160px;
   height: auto;
 }
 
 nav .navbar-brand img {
   width: 100%;
-}
-
-
-nav {
-  padding: 10px 0;
 }
 
 .navbar-footer {
