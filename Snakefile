@@ -39,3 +39,8 @@ rule render_citations:
         " --include_file components/include.R"
         " --html {output}"
         " --style"
+
+
+rule render_homepage:
+    shell:
+        "Rscript scripts/render-homepage.R"
