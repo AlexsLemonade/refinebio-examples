@@ -1,4 +1,4 @@
-<div class="navbar navbar-default navbar-footer">
+<div id="footer" class="navbar navbar-default navbar-footer">
   <div class="container-fluid">
     <div class="container">
       <ul class="nav navbar-nav">
@@ -9,3 +9,9 @@
     </div>
   </div>
 </div>
+<script>
+   // move footer to end of document
+   $(document).ready(function () {
+     $("#footer").remove().appendTo('body')
+   })
+</script>
