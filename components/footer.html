@@ -25,7 +25,12 @@
 </div>
 <script>
    // move footer to end of document
+   // Also Rmarkdown adds padding-bottom to the body
+   // move that to margin-top on the footer
    $(document).ready(function () {
      $("#footer").remove().appendTo('body')
+     const padding = $('body').css('padding-bottom')
+     $('body').css('padding-bottom', '0px')
+     $('#footer').css('margin-top', padding)
    })
 </script>
