@@ -21,3 +21,7 @@ Launching a simple server is helpful for previewing changes. In order to mirror 
 ```shell
 python -m SimpleHTTPServer 8000
 ```
+or
+```shell
+python3 -m http.server 8000
+```
