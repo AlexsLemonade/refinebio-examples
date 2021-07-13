@@ -29,8 +29,8 @@ home_lines <- append(home_lines, footer_lines, footer_index)
 # replace any relative sources
 # Rmarkdown looks for an image locally (inside /components)
 # the homepage looks for the file on the server (inside /refinebio-examples/components)
-home_lines <- sub('href="../', 'href="/refinebio-examples/', home_lines)
-home_lines <- sub('src="../', 'src="/refinebio-examples/', home_lines)
+home_lines <- sub('href="../', 'href="', home_lines)
+home_lines <- sub('src="../', 'src="', home_lines)
 
 # save to index.html
 readr::write_lines(home_lines, 'index.html')
