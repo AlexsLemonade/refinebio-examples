@@ -138,8 +138,8 @@ new_lines <- append(lines, header_line, header_range[1])
 # Write to a tmp file
 readr::write_lines(new_lines, tmp_file)
 
-# Declare path to google analytics + fonts
-header_includes_file <- normalizePath(file.path("components", "header-includes.html"))
+# Declare path to google analytics
+google_analytics_file <- normalizePath(file.path("components", "google-analytics.html"))
 
 # Declare path to footer
 footer_file <- normalizePath(file.path("components", "footer.html"))
@@ -152,7 +152,7 @@ rmarkdown::render(tmp_file,
     highlight = "haddock",
     df_print = "paged",
     css = normalizePath(file.path("components", "styles.css")),
-    includes = rmarkdown::includes(in_header = header_includes_file,
+    includes = rmarkdown::includes(in_header = google_analytics_file,
                                    after_body = footer_file)
   ),
   # Save to original html output file name
