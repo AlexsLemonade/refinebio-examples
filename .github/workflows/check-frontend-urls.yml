@@ -8,7 +8,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "style and check"
+  # This workflow contains a single job called "check-frontend-urls"
   check-frontend-urls:
     runs-on: ubuntu-latest
     container:
