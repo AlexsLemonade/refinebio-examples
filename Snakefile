@@ -1,5 +1,6 @@
 rule target:
     input:
+        "index.html",
         "01-getting-started/getting-started.html",
         "02-microarray/00-intro-to-microarray.html",
         "02-microarray/differential-expression_microarray_01_2-groups.html",
