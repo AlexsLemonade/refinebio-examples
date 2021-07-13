@@ -30,6 +30,8 @@ rule target:
 rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
+        nav = "components/_navbar.html",
+        ftr = "components/footer.html",
     output:
         "{basedir}/{basename}.html"
     shell:
@@ -44,7 +46,9 @@ rule render_citations:
 
 rule render_homepage:
     input:
-        "components/_homepage.html"
+        "components/_homepage.html",
+        "components/_navbar.html",
+        "components/footer.html",
     output:
         "index.html"
     shell:
