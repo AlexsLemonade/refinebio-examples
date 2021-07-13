@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../components/fonts/Lato-Regular.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../components/fonts/Rubik-Medium.ttf') format('truetype')
+}
+
 html,
 body {
   font-family: 'Lato', sans-serif;
