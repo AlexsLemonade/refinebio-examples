@@ -8,7 +8,7 @@
 
 
 # read in the homepage partial that contains the comments that will be replaced
-home_file <- normalizePath(file.path("components", "_homepage.html"))
+home_file <- file.path("components", "_homepage.html")
 home_lines <- readr::read_lines(home_file)
 
 # find the comment and replace with the contents of components/_navbar.html
