@@ -42,5 +42,9 @@ rule render_citations:
 
 
 rule render_homepage:
+    input:
+        "components/_homepage.html"
+    output:
+        "index.html"
     shell:
         "Rscript scripts/render-homepage.R"
