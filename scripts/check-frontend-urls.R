@@ -48,7 +48,7 @@ for (expected_id_parts in expected_id_parts_list) {
 
   # add it to missing if not found
   if (!found) {
-    missing_ids <- append(missing_ids, expected_id_path)
+    missing_ids <- c(missing_ids, expected_id_path)
   }
 }
 
