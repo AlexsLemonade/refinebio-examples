@@ -1,10 +1,8 @@
 name: Build, Render, and Push
 
-# Controls when the action will run. Triggers the workflow on push
-# events only for the master branch
 on:
   push:
-    branches: [ staging, master ]
+    branches: [ staging, master, jashapiro/test-build ]
 
 jobs:
   # This workflow contains a single job called "build-all"
@@ -65,10 +63,12 @@ jobs:
         run: | 
           docker tag ccdl/refinebio-examples:latest ccdl/refinebio-examples:release
           docker push ccdl/refinebio-examples:release
-      
-      # download data
+
       - name: Download data
         run: bash scripts/download-data.sh
+        env:
+          AWS_EC2_METADATA_DISABLED: true
+
       - name: Render all pages to html
         run: |
           docker run \
