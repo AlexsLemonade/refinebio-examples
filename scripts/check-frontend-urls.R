@@ -44,10 +44,10 @@ for (expected_id_parts in expected_id_parts_list) {
   expected_id_lines <- readr::read_lines(expected_file)
 
   # check if the id="{expected_id}" exists
-  found_index <- which(grepl(paste0("id=\"", expected_id, "\""), expected_id_lines))
+  found <- any(stringr:str_detect(paste0('id="', expected_id, '"'), expected_id_lines))
 
   # add it to missing if not found
-  if (identical(found_index, integer(0))) {
+  if (!found) {
     missing_ids <- append(missing_ids, expected_id_path)
   }
 }
