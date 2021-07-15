@@ -62,10 +62,10 @@ jobs:
       # retag and push the Docker image if this is master
       - name: Push release Docker image
         if: github.ref == 'refs/heads/master'
-        run: | 
+        run: |
           docker tag ccdl/refinebio-examples:latest ccdl/refinebio-examples:release
           docker push ccdl/refinebio-examples:release
-      
+
       # download data
       - name: Download data
         run: bash scripts/download-data.sh
@@ -91,7 +91,7 @@ jobs:
           git add -A
           git commit -m 'Render html and publish' || echo "No changes to commit"
           git push origin gh-pages || echo "No changes to push"
-      
+
       # If we have a failure, Slack us
       - name: Report failure to Slack
         if: always()
@@ -100,5 +100,5 @@ jobs:
           status: ${{ job.status }}
           notify_when: 'failure'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }} 
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
           SLACK_MESSAGE: 'Build, Render, and Push failed'
