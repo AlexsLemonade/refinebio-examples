@@ -138,11 +138,14 @@ new_lines <- append(lines, header_line, header_range[1])
 # Write to a tmp file
 readr::write_lines(new_lines, tmp_file)
 
-# Declare path to google analytics bit
+# Declare path to google analytics
 google_analytics_file <- normalizePath(file.path("components", "google-analytics.html"))
 
 # Declare path to footer
 footer_file <- normalizePath(file.path("components", "footer.html"))
+
+# Declare path to css
+css_file <- normalizePath(file.path("components", "styles.css"))
 
 # Render the modified notebook
 rmarkdown::render(tmp_file,
@@ -151,7 +154,7 @@ rmarkdown::render(tmp_file,
     toc_float = TRUE, number_sections = TRUE,
     highlight = "haddock",
     df_print = "paged",
-    css = normalizePath(file.path("components", "styles.css")),
+    css = css_file,
     includes = rmarkdown::includes(in_header = google_analytics_file,
                                    after_body = footer_file)
   ),

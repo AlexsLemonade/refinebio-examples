@@ -1,6 +1,6 @@
 <!-- Navigation header for refine.bio example Rmarkdown notebooks -->
 <nav class="navbar navbar-default  navbar-fixed-top">
-  <div class="container">
+  <div class="container-fluid container-nav">
     <div class="navbar-inverse">
       <!-- NOTE: add "navbar-inverse" class for an alternate navbar background -->
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
@@ -8,77 +8,66 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <div class = "logo">
-        <a class="navbar-brand" href="#">
-          <!-- <img src = "../components/refine-bio-ex-logo.svg" alt ="refine.bio examples"> -->
-          refine.bio examples
-        </a>
-      </div>
-
-    <div id="navbar" class="navbar-collapse collapse">
-      <!-- This outer list is the main navigation menu elements -->
-      <ul class="nav navbar-nav">
-        <!-- Getting started (no dropdown) -->
-        <li><a href="../01-getting-started/getting-started.html">Getting Started</a></li>
-
-        <!-- Microarray Dropdown -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Microarray<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <!-- Individual microarray pages go in this list -->
-            <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
-            <li><a href="../02-microarray/clustering_microarray_01_heatmap.html">Clustering and Heatmaps</a></li>
-            <li><a href="../02-microarray/differential-expression_microarray_01_2-groups.html">Differential Expression - 2 groups</a></li>
-            <li><a href="../02-microarray/differential-expression_microarray_02_several-groups.html">Differential Expression - Several groups</a></li>
-            <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
-            <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
-            <li><a href="../02-microarray/pathway-analysis_microarray_01_ora.html">Pathway Analysis - ORA</a></li>
-            <li><a href="../02-microarray/pathway-analysis_microarray_02_gsea.html">Pathway Analysis - GSEA</a></li>
-            <li><a href="../02-microarray/pathway-analysis_microarray_03_gsva.html">Pathway Analysis - GSVA</a></li>
-            <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
-            <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
-
-          </ul>
-        </li> <!--/microarray dropdown-->
-
-        <!-- RNA-Seq dropdown -->
-        <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">RNA-seq<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <!-- Individual RNA-Seq pages go in this list -->
-            <li><a href="../03-rnaseq/00-intro-to-rnaseq.html">Introduction</a></li>
-            <li><a href="../03-rnaseq/clustering_rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
-            <li><a href="../03-rnaseq/differential-expression_rnaseq_01.html">Differential Expression</a></li>
-            <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
-            <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
-            <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
-            <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
-            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
-            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_02_gsea.html">Pathway Analysis - GSEA</a></li>
-            <li><a href="../03-rnaseq/pathway-analysis_rnaseq_03_gsva.html">Pathway Analysis - GSVA</a></li>
-
-          </ul>
-        </li><!--/rna-seq dropdown-->
-
-        <!-- Advanced topics dropdown -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced Topics<span class="caret"></span></a>
+      <a class="navbar-brand" href="../">
+        <img src="../components/refine-bio-ex-logo.svg" alt="refine.bio examples">
+      </a>
+      <div id="navbar" class="navbar-collapse collapse">
+        <!-- This outer list is the main navigation menu elements -->
+        <ul class="nav navbar-nav">
+          <!-- Getting started (no dropdown) -->
+          <li><a href="../01-getting-started/getting-started.html">Getting Started</a></li>
+          <!-- Microarray Dropdown -->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Microarray<span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <!-- Individual Advanced topics pages go in this list -->
-              <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
-              <li><a href="../04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">Network Analysis - WGCNA</a></li>
+              <!-- Individual microarray pages go in this list -->
+              <li><a href="../02-microarray/00-intro-to-microarray.html">Introduction</a></li>
+              <li><a href="../02-microarray/clustering_microarray_01_heatmap.html">Clustering and Heatmaps</a></li>
+              <li><a href="../02-microarray/differential-expression_microarray_01_2-groups.html">Differential Expression - 2 groups</a></li>
+              <li><a href="../02-microarray/differential-expression_microarray_02_several-groups.html">Differential Expression - Several groups</a></li>
+              <li><a href="../02-microarray/dimension-reduction_microarray_01_pca.html">Dimension Reduction - PCA</a></li>
+              <li><a href="../02-microarray/dimension-reduction_microarray_02_umap.html">Dimension Reduction - UMAP</a></li>
+              <li><a href="../02-microarray/pathway-analysis_microarray_01_ora.html">Pathway Analysis - ORA</a></li>
+              <li><a href="../02-microarray/pathway-analysis_microarray_02_gsea.html">Pathway Analysis - GSEA</a></li>
+              <li><a href="../02-microarray/pathway-analysis_microarray_03_gsva.html">Pathway Analysis - GSVA</a></li>
+              <li><a href="../02-microarray/gene-id-annotation_microarray_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
+              <li><a href="../02-microarray/ortholog-mapping_microarray_01_ensembl.html">Ortholog Mapping</a></li>
             </ul>
+          </li> <!--/microarray dropdown-->
+          <!-- RNA-Seq dropdown -->
+          <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">RNA-seq<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <!-- Individual RNA-Seq pages go in this list -->
+              <li><a href="../03-rnaseq/00-intro-to-rnaseq.html">Introduction</a></li>
+              <li><a href="../03-rnaseq/clustering_rnaseq_01_heatmap.html">Clustering and Heatmaps</a></li>
+              <li><a href="../03-rnaseq/differential-expression_rnaseq_01.html">Differential Expression</a></li>
+              <li><a href="../03-rnaseq/dimension-reduction_rnaseq_01_pca.html">Dimension Reduction - PCA</a></li>
+              <li><a href="../03-rnaseq/dimension-reduction_rnaseq_02_umap.html">Dimension Reduction - UMAP</a></li>
+              <li><a href="../03-rnaseq/gene-id-annotation_rnaseq_01_ensembl.html">Ensembl Gene ID Annotation</a></li>
+              <li><a href="../03-rnaseq/ortholog-mapping_rnaseq_01_ensembl.html">Ortholog Mapping</a></li>
+              <li><a href="../03-rnaseq/pathway-analysis_rnaseq_01_ora.html">Pathway Analysis - ORA</a></li>
+              <li><a href="../03-rnaseq/pathway-analysis_rnaseq_02_gsea.html">Pathway Analysis - GSEA</a></li>
+              <li><a href="../03-rnaseq/pathway-analysis_rnaseq_03_gsva.html">Pathway Analysis - GSVA</a></li>
+            </ul>
+          </li><!--/rna-seq dropdown-->
+          <!-- Advanced topics dropdown -->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Advanced Topics<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <!-- Individual Advanced topics pages go in this list -->
+                <li><a href="../04-advanced-topics/00-intro-to-advanced-topics.html">Introduction</a></li>
+                <li><a href="../04-advanced-topics/network-analysis_rnaseq_01_wgcna.html">Network Analysis - WGCNA</a></li>
+              </ul>
+          </li><!--/advanced dropdown-->
+        </ul>
 
-        </li><!--/advanced dropdown-->
-
-      </ul>
-
-      <!-- Right side menubar  -->
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="https://www.refine.bio"> Back to refine.bio</a></li>
-        <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give Feedback</a></li>
-      </ul>
-        </div>
+        <!-- Right side menubar  -->
+        <ul class="nav navbar-nav navbar-right hidden-sm">
+          <li><a href="https://www.refine.bio"> Back to refine.bio</a></li>
+          <li><a href="https://share.hsforms.com/1pQ8pPB70TuG37sVjr-KtXA336z0">Give Feedback</a></li>
+        </ul>
+      </div>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </nav><!--/.navbar -->
