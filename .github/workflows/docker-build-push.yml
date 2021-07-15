@@ -68,6 +68,8 @@ jobs:
 
       # download data
       - name: Download data
+        env:
+          AWS_EC2_METADATA_DISABLED: true
         run: bash scripts/download-data.sh
       - name: Render all pages to html
         run: |
