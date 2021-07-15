@@ -37,10 +37,10 @@ expected_id_paths <- expected_id_paths[!grepl(paste(missing_files, collapse="|")
 # find missing ids
 missing_ids = c()
 
-for (expected_id_path in expected_id_paths) {
-  expected_id_parts <- strsplit(expected_id_path, "#")
-  expected_file <- expected_id_parts[[1]][1]
-  expected_id <- expected_id_parts[[1]][2]
+expected_id_parts_list <- strsplit(expected_id_paths, "#")
+for (expected_id_parts in expected_id_parts_list) {
+  expected_file <- expected_id_parts[1]
+  expected_id <- expected_id_parts[2]
   expected_id_lines <- readr::read_lines(expected_file)
 
   # check if the id="{expected_id}" exists
