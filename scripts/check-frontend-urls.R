@@ -20,14 +20,10 @@ opt <- parse_args(OptionParser(option_list = option_list))
 expected_urls <- fromJSON(txt=opt$links)
 
 # urls -> relatative file paths
-expected_files <- sapply(strsplit(expected_urls, '/refinebio-examples/'), '[', 2)
-
-expected_id_paths <- expected_files[grepl('#', expected_files)]
-
-# remove expected ids from expected_files
-expected_files <- expected_files[!expected_files %in% expected_id_paths]
-# add back the file part of expected_id_paths to test
-expected_files <- c(expected_files, sapply(strsplit(expected_id_paths, "#"), "[", 1))
+expected_files <- stringr::word(expected_urls, 2, sep = '/refinebio-examples/')
+expected_id_paths <- stringr::str_subset(expected_files, '#')
+# remove anchors
+expected_files <- stringr::word(expected_files, 1, sep = '#')
 
 # get a list of all html files in the project
 existing_files <- list.files(pattern = 'html$', recursive = TRUE)
