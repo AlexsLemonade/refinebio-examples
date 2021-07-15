@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4.0.2
+FROM rocker/tidyverse:4.0.5
 LABEL maintainer="ccdl@alexslemonade.org"
 WORKDIR /rocker-build/
 
