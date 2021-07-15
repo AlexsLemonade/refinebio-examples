@@ -71,6 +71,8 @@ jobs:
         env:
           AWS_EC2_METADATA_DISABLED: true
         run: bash scripts/download-data.sh
+
+      # Render Pages
       - name: Render all pages to html
         run: |
           docker run \
