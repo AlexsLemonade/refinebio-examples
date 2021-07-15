@@ -1,5 +1,6 @@
 rule target:
     input:
+        "index.html",
         "01-getting-started/getting-started.html",
         "02-microarray/00-intro-to-microarray.html",
         "02-microarray/differential-expression_microarray_01_2-groups.html",
@@ -29,6 +30,8 @@ rule target:
 rule render_citations:
     input:
         rmd = "{basedir}/{basename}.Rmd",
+        nav = "components/_navbar.html",
+        ftr = "components/footer.html",
     output:
         "{basedir}/{basename}.html"
     shell:
@@ -39,3 +42,14 @@ rule render_citations:
         " --include_file components/include.R"
         " --html {output}"
         " --style"
+
+
+rule render_homepage:
+    input:
+        "components/_homepage.html",
+        "components/_navbar.html",
+        "components/footer.html",
+    output:
+        "index.html"
+    shell:
+        "Rscript scripts/render-homepage.R"
