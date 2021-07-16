@@ -138,7 +138,7 @@ new_lines <- append(lines, header_line, header_range[1])
 # Write to a tmp file
 readr::write_lines(new_lines, tmp_file)
 
-# Declare path to google analytics bit
+# Declare path to google analytics
 google_analytics_file <- normalizePath(file.path("components", "google-analytics.html"))
 
 # Declare path to footer

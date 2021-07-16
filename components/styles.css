@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../components/fonts/Lato-Regular.ttf') format('truetype')
+}
+
+@font-face {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../components/fonts/Rubik-Medium.ttf') format('truetype')
+}
+
 html,
 body {
   font-family: 'Lato', sans-serif;
@@ -33,6 +47,51 @@ a {
   color: #386db0;
   line-height: 1;
 }
+
+.container-nav {
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  max-width: 1096px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 993px ) {
+  .nav > li > a {
+  }
+}
+
+nav .navbar-brand {
+  padding: 10px 15px;
+  width: 160px;
+  height: auto;
+}
+
+nav .navbar-brand img {
+  width: 100%;
+}
+
+.navbar-footer {
+  padding-top: 10px;
+  margin-bottom: 0;
+}
+
+p.footer-text {
+  font-size: .9rem;
+  color: #fdfdfd
+}
+
+
+@media screen and (min-width: 768px) {
+  p.footer-text {
+   padding: 0 15px;
+  }
+}
+
+p.footer-text a {
+  color: #fdfdfd;
+  weight: bold;
+}
+
 .navbar-default, .navbar-nav, .navbar-inverse{
   font-size: 1rem;
   max-width: 100%;
@@ -44,15 +103,6 @@ a {
   font-size: 1rem;
   background-color: #386db0 !important;
   color: #FDFDFD !important;
-}
-
-.navbar-default .navbar-brand{
-  color: #FDFDFD; !important;
-  float: left;
-  max-width: 100%;
-  display: block;
-  overflow: visible;
-  padding-bottom: 32px;
 }
 
 ul.dropdown-menu {
