@@ -3,6 +3,8 @@ name: Check Refinebio Frontend Urls
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  pull:
+    branches: [ davidsmejia/449-check-client-urls ]
   pull_request:
     branches: [ master ]
 
@@ -24,7 +26,8 @@ jobs:
       - name: Run Script to check URLs
         id: get_missing_urls
         run: |
-          links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/master/src/common/examples-links.json
+          # links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/master/src/common/examples-links.json
+          links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/davidsmejia/906-examples-links/src/common/examples-links.json
           results=$(Rscript "scripts/check-frontend-urls.R" --links $links)
           echo "::set-output name=missing_urls::$results"
 
