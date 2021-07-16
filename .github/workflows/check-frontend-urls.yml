@@ -24,7 +24,7 @@ jobs:
       - name: Run Script to check URLs
         id: get_missing_urls
         run: |
-          links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/blob/master/src/common/examples-links.json
+          links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/master/src/common/examples-links.json
           results=$(Rscript "scripts/check-frontend-urls.R" --links $links)
           echo "::set-output name=missing_urls::$results"
 
