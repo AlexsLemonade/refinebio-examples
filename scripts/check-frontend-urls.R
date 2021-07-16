@@ -62,5 +62,5 @@ missing <- c(missing_files, missing_ids)
 if(length(missing) == 0) {
   cat('OK')
 } else {
-  cat(paste0(missing, collapse="\n"))
+  cat(paste(missing, collapse = "\n"))
 }
