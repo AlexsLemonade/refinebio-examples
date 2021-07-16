@@ -1,0 +1,37 @@
+name: Check Refinebio Frontend Urls
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "check-frontend-urls"
+  check-frontend-urls:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/tidyverse:4.0.2
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: Rscript -e "install.packages(c('optparse', 'jsonlite'))"
+
+      - name: Run Script to check URLs
+        id: get_missing_urls
+        run: |
+          links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/master/src/common/examples-links.json
+          results=$(Rscript "scripts/check-frontend-urls.R" --links $links)
+          echo "::set-output name=missing_urls::$results"
+
+      # Fail if any number besides 0 is returned
+      - name: Check if any URLs were missing
+        if: ${{ steps.get_missing_urls.outputs.missing_urls != 'OK' }}
+        run: |
+          echo "Please verify that the following file(s) exist:"
+          echo ${{ steps.get_missing_urls.outputs.missing_urls }}
+          exit 1
