@@ -2,7 +2,7 @@ name: Build, Render, and Push
 
 on:
   push:
-    branches: [ staging, master ]
+    branches: [ staging, master, jashapiro/op-secrets ]
 
 jobs:
   # This workflow contains a single job called "build-all"
