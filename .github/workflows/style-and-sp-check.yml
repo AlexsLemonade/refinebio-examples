@@ -17,6 +17,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Install curl 
+        run: apt-get install curl
+
       - name: Load 1Password secrets
         uses: 1password/load-secrets-action@v1
         with:
