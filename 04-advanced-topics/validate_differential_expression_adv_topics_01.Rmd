@@ -399,7 +399,6 @@ test.gene <- refine.bio.df %>%
 
 # Make a dataframe with the group information
 box.plot <- data.frame(test.gene, subgroup = metadata$subgroup) %>%
-
   # Use ggplot2 to make a boxplot from this info
   ggplot(., aes(x = subgroup, y = test.gene)) +
   geom_boxplot() +
