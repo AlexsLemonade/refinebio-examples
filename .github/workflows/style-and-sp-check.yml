@@ -17,13 +17,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
         # What branch to commit to: the one from the pull request
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Configure git
-          run: |
+        run: |
             git config --global --add safe.directory "$GITHUB_WORKSPACE"
             git config --local user.email "actions@github.com"
             git config --local user.name "GitHub Actions"
