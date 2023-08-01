@@ -22,6 +22,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
+      - name: Configure git
+          run: |
+            git config --global --add safe.directory "$GITHUB_WORKSPACE"
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+
       - name: Install packages
         run: Rscript -e "install.packages(c('styler', 'spelling'))"
 
@@ -48,8 +54,6 @@ jobs:
 
       - name: Commit
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
           git add \*.Rmd
           git commit -m 'Style Rmds' || echo "No changes to commit"
           git push origin || echo "No changes to commit"
