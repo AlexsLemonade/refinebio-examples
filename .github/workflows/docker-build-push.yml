@@ -11,14 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Load 1Password secrets
+        uses: 1password/load-secrets-action@v1
+        with:
+          export-env: true
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.TRAINING_OP_SERVICE_ACCOUNT_TOKEN }}
+          DOCKER_USER: ${{ secrets.OP_DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.OP_DOCKER_PASSWORD }}
+          ACTION_MONITORING_SLACK: ${{ secrets.OP_ACTION_MONITORING_SLACK }}
+          DOCS_BOT_GITHUB_TOKEN: ${{ secrets.OP_DOCS_BOT_GITHUB_TOKEN }}
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: checkout
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           # get the full repo
           fetch-depth: 0
           # use alexslemonade-docs-bot
-          token: ${{ secrets.DOCS_BOT_GITHUB_TOKEN }}
+          token: ${{ env.DOCS_BOT_GITHUB_TOKEN }}
 
       - name: Checkout pages branch and sync with changes
         run: |
@@ -37,30 +48,34 @@ jobs:
 
       # Login to Dockerhub
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_ID }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
       # set up Docker build
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
+
       # Build the Docker image
       - name: Build and Load Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           push: false
           load: true
           context: docker
           file: docker/Dockerfile
           tags: ccdl/refinebio-examples:latest
+
       # push the Docker image if this is staging
       - name: Push Docker image
         if: github.ref == 'refs/heads/staging'
         run: docker push ccdl/refinebio-examples:latest
+
       # retag and push the Docker image if this is master
       - name: Push release Docker image
         if: github.ref == 'refs/heads/master'
-        run: | 
+        run: |
           docker tag ccdl/refinebio-examples:latest ccdl/refinebio-examples:release
           docker push ccdl/refinebio-examples:release
 
@@ -91,14 +106,14 @@ jobs:
           git add -A
           git commit -m 'Render html and publish' || echo "No changes to commit"
           git push origin gh-pages || echo "No changes to push"
-      
+
       # If we have a failure, Slack us
       - name: Report failure to Slack
         if: always()
-        uses: ravsamhq/notify-slack-action@v1.1
+        uses: ravsamhq/notify-slack-action@v2
         with:
           status: ${{ job.status }}
           notify_when: 'failure'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }} 
+          SLACK_WEBHOOK_URL: ${{ env.ACTION_MONITORING_SLACK }}
           SLACK_MESSAGE: 'Build, Render, and Push failed'

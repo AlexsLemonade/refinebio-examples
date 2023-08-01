@@ -12,11 +12,11 @@ jobs:
   check-frontend-urls:
     runs-on: ubuntu-latest
     container:
-      image: rocker/tidyverse:4.0.2
+      image: rocker/tidyverse:4.0.5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: Rscript -e "install.packages(c('optparse', 'jsonlite'))"
@@ -26,7 +26,7 @@ jobs:
         run: |
           links=https://raw.githubusercontent.com/AlexsLemonade/refinebio-frontend/master/src/common/examples-links.json
           results=$(Rscript "scripts/check-frontend-urls.R" --links $links)
-          echo "::set-output name=missing_urls::$results"
+          echo "missing_urls=$results" >> "$GITHUB_OUTPUT"
 
       # Fail if any number besides 0 is returned
       - name: Check if any URLs were missing
