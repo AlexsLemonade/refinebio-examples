@@ -13,11 +13,11 @@ jobs:
   style-n-check:
     runs-on: ubuntu-latest
     container:
-      image: rocker/tidyverse:4.0.2
+      image: rocker/tidyverse:4.0.5
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         # What branch to commit to: the one from the pull request
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -29,10 +29,11 @@ jobs:
         id: spell_check_run
         run: |
           results=$(Rscript "scripts/spell-check.R")
-          echo "::set-output name=sp_chk_results::$results"
+          echo "sp_chk_results=$results" >> "$GITHUB_OUTPUT"
           cat spell_check_results.tsv
+
       - name: Archive spelling errors
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: spell-check-results
           path: spell_check_results.tsv
