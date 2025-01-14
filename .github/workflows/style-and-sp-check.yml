@@ -29,7 +29,7 @@ jobs:
           DOCS_BOT_GITHUB_TOKEN: ${{ secrets.OP_DOCS_BOT_GITHUB_TOKEN }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         # What branch to commit to: the one from the pull request
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -52,7 +52,7 @@ jobs:
           cat spell_check_results.tsv
 
       - name: Archive spelling errors
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: spell-check-results
           path: spell_check_results.tsv
